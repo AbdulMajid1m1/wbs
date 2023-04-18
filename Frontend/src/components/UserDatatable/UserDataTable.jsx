@@ -6,21 +6,17 @@ import { useEffect, useState } from "react";
 
 import { Stack, Autocomplete, TextField } from "@mui/material"
 
-const skills = ['Html', 'css', 'javascript', 'type', 'React', 'Node',]
+const skills = ['Html', 'css', 'javascript', 'type', 'React', 'Node']
 
 const UserDataTable = ({
-  columnsName,
+  columnsName = [],
   data,
   title,
   actionColumnVisibility,
   backButton,
-  nextButton,
   UniqueId,
   handleApiCall,
   deleteBtnEndPoint,
-  shipment,
-  shipmentCl
-
 }) => {
   const navigate = useNavigate();
   const [record, setRecord] = useState([]);
@@ -32,6 +28,15 @@ const UserDataTable = ({
     setMessage(null);
 
   };
+  useEffect(() => {
+    data.map((item, index) => {
+      item.id = index + 1;
+    });
+    setRecord(
+      data.map((item, index) => ({ ...item, id: index + 1 }))
+    );
+  }, [data]);
+
 
   // Retrieve the value with the key "myKey" from localStorage getvalue
   const myValue = localStorage.getItem("userId");
@@ -61,31 +66,6 @@ const UserDataTable = ({
     return column;
   });
 
-  const actionColumn = [
-    // {
-    //   field: "action",
-    //   headerName: "Action",
-    //   width: 150,
-    //   renderCell: (params) => {
-    //     return (
-    //       <div className="cellAction">
-    //         <div
-    //           className="deleteButton"
-    //         //   onClick={() => handleDelete(params.row.id, params.row)}
-    //         >
-    //           Delete
-    //         </div>
-    //         <span
-    //           style={{ textDecoration: "none" }}
-    //         >
-    //           <div className="viewButton">Update</div>
-    //         </span>
-    //       </div>
-    //     );
-    //   },
-    // },
-  ];
-
   const idColumn = [
     {
       field: "id",
@@ -103,32 +83,19 @@ const UserDataTable = ({
         <div className="datatableTitle">
           {title}
           <div className="stackauto">
-            {
-              shipment &&
-              <Stack spacing={2} width='200px'>
-            <Autocomplete 
+            {/* <Stack spacing={2} width='200px'>
+              <Autocomplete
                 options={skills}
-                renderInput={(params) => <TextField {...params} label='SHIPMENT ID'/>}
-                />
-            </Stack>
-              }
-           </div>
+                renderInput={(params) => <TextField {...params} label='SHIPMENT ID' />}
+              />
+            </Stack> */}
+            <input type="text" placeholder="SEARCH BY SHIPMENT ID"
+             className="searchInput"
+            />
+          </div>
 
-           <div className="stackauto2">
-            {
-              shipmentCl &&
-              <Stack spacing={2} width='200px'>
-            <Autocomplete 
-                options={skills}
-                renderInput={(params) => <TextField {...params} label='CONTAINER ID'/>}
-                />
-            </Stack>
-              }
-           </div>
-          
           <span className="leftDatatableTitle">
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
-            {nextButton && <button onClick={() => { navigate(+1) }}>Go Next</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}
             {/* {UniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
           </span>
@@ -145,19 +112,19 @@ const UserDataTable = ({
           className="datagrid"
           rows={record}
           columns={
-            actionColumnVisibility !== false
-              ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
-              : idColumn.concat(columnsWithCustomCell)
+            // actionColumnVisibility !== false
+            //   ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
+            //   : 
+            idColumn.concat(columnsWithCustomCell)
           }
           pageSize={30}
-          
+
           rowsPerPageOptions={[30]}
           checkboxSelection
         />
-  
 
-          {/* Displaying myValue inside the table Value in center*/}
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "-40px", marginLeft: "10px" , }}>
+        {/* Displaying myValue inside the table Value in center*/}
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "-40px", marginLeft: "10px", }}>
           <h1 style={{ whiteSpace: "nowrap" }}>UserId: {myValue}</h1>
           <style>
             {`

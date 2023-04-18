@@ -9,7 +9,7 @@ import { Stack, Autocomplete, TextField } from "@mui/material"
 const skills = ['Html', 'css', 'javascript', 'type', 'React', 'Node']
 
 const UserDataTable = ({
-  columnsName = [],
+  columnsName,
   data,
   title,
   actionColumnVisibility,
@@ -17,7 +17,9 @@ const UserDataTable = ({
   UniqueId,
   handleApiCall,
   deleteBtnEndPoint,
-  shipment
+  shipment,
+  shipmentCl
+
 }) => {
   const navigate = useNavigate();
   const [record, setRecord] = useState([]);
@@ -100,14 +102,29 @@ const UserDataTable = ({
         <div className="datatableTitle">
           {title}
           <div className="stackauto">
-          <Stack spacing={2} width='200px'>
+            {
+              shipment &&
+              <Stack spacing={2} width='200px'>
             <Autocomplete 
                 options={skills}
                 renderInput={(params) => <TextField {...params} label='SHIPMENT ID'/>}
                 />
             </Stack>
+              }
            </div>
 
+           <div className="stackauto">
+            {
+              shipmentCl &&
+              <Stack spacing={2} width='200px'>
+            <Autocomplete 
+                options={skills}
+                renderInput={(params) => <TextField {...params} label='CONTAINER ID'/>}
+                />
+            </Stack>
+              }
+           </div>
+          
           <span className="leftDatatableTitle">
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}
@@ -131,7 +148,7 @@ const UserDataTable = ({
               : idColumn.concat(columnsWithCustomCell)
           }
           pageSize={30}
-
+          
           rowsPerPageOptions={[30]}
           checkboxSelection
         />

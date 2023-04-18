@@ -66,21 +66,44 @@ export const allUserAssetsColumns = [
   ];
 
 
+  // export const AllItems = [
+  //   {
+  //     field: "ITEMID",
+  //     headerName: "ITEM ID",
+  //     width: 180,
+  
+  //   },
+  //   {
+  //     field: "ITEMNAME",
+  //     headerName: "ITEM NAME",
+  //     width: 180,
+  
+  //   },
+  //   {
+  //     field: "ITEMGROUPID",
+  //     headerName: "ITEM GROUP ID",
+  //     width: 180,
+  
+  //   },
+  // ]
+
+
+  
   export const AllItems = [
     {
-      field: "ITEMID",
+      field: "price",
       headerName: "ITEM ID",
       width: 180,
   
     },
     {
-      field: "ITEMNAME",
+      field: "title",
       headerName: "ITEM NAME",
       width: 180,
   
     },
     {
-      field: "ITEMGROUPID",
+      field: "description",
       headerName: "ITEM GROUP ID",
       width: 180,
   

@@ -7,7 +7,7 @@ import { allUserAssetsColumns } from '../utils/datatablesource'
 const FirstTable = () => {
   return (
     <div>
-        <UserDataTable title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns} backButton="Back"/>
+        <UserDataTable title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns} backButton={true} shipment={true}/>
     </div>
   )
 }

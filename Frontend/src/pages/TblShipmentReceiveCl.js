@@ -5,7 +5,7 @@ import { allUserAssetsColumns } from '../utils/datatablesource'
 const TableShipmentReceiveCl = () => {
   return (
     <div>
-        <UserDataTable title="SHIPMENT RECEIVING CL" columnsName={allUserAssetsColumns} backButton="Back"/>
+        <UserDataTable title="SHIPMENT RECEIVING CL" columnsName={allUserAssetsColumns} backButton={true} shipment={true} shipmentCl={true}/>
     </div>
   )
 }

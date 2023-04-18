@@ -6,21 +6,45 @@ import axios from 'axios'
 
 const TblItem = () => {
     const [alldata, setAllData] = useState([]);
-    const [fetchDataState, setFetchDataState] = useState(false);
 
     useEffect(() => {
         axios.get('https://fakestoreapi.com/products')
             .then((response) => {
                 console.log(response.data)
-                setAllData(response.data)
+                setAllData(response.data[0].category)
             })
             .catch(err =>{
                 console.log(err)
             })
     },[])
+
+    //  useEffect(() => {
+    //     const getAllAssetsList = async () => {
+    //       try {
+    
+    //         userRequest.get("/getAllTblItems")
+    //           .then(response => {
+    //             response.data == "no data available" ? setAllData([]) : setAllData(response.data);
+    //             console.log(response?.data);
+    //          // setData(response?.data ?? [])
+    
+    //       })
+    //       .catch(error => {
+    //         // handleUserError(error)
+    //         console.error(error);
+    //       });
+    
+    //       }
+    //       catch (error) {
+    //         console.log(error);
+    //       }
+    //     };
+    //     getAllAssetsList();
+    //   }, []);
+
   return (
     <div>
-        <UserDataTable data={alldata} title="All Items" columnsName={AllItems} backButton={true}/>
+        <UserDataTable data={alldata} title="ALL ITEMS" columnsName={AllItems} backButton={true}/>
     </div>
   )
 }

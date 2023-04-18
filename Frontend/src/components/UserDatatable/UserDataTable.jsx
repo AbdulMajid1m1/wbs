@@ -14,6 +14,7 @@ const UserDataTable = ({
   title,
   actionColumnVisibility,
   backButton,
+  nextButton,
   UniqueId,
   handleApiCall,
   deleteBtnEndPoint,
@@ -113,7 +114,7 @@ const UserDataTable = ({
               }
            </div>
 
-           <div className="stackauto">
+           <div className="stackauto2">
             {
               shipmentCl &&
               <Stack spacing={2} width='200px'>
@@ -127,6 +128,7 @@ const UserDataTable = ({
           
           <span className="leftDatatableTitle">
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
+            {nextButton && <button onClick={() => { navigate(+1) }}>Go Next</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}
             {/* {UniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
           </span>
@@ -152,6 +154,7 @@ const UserDataTable = ({
           rowsPerPageOptions={[30]}
           checkboxSelection
         />
+  
 
           {/* Displaying myValue inside the table Value in center*/}
           <div style={{ display: "flex", justifyContent: "center", marginTop: "-40px", marginLeft: "10px" , }}>

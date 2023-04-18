@@ -16,7 +16,7 @@
 }
 /* Add the following styles to align the "Back" button and "User Name" on the left side */
 .stackauto:first-child {
-    margin-right: auto;
+    margin-right: start;
   }
   
   /* Add the following styles to align the "Send for Barcode" button on the right side */
@@ -24,6 +24,7 @@
     margin-left: auto;
     height: auto;
   }
+  
 .datatable .datatableTitle .leftDatatableTitle {
     display: flex;
     justify-content: flex-end;

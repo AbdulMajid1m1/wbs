@@ -13,15 +13,13 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(cookieParser());
-// app.use("/uploads", express.static(__dirname + "/uploads"));
-// serve static files from the uploads directory
 const uploadFolder = path.join(process.cwd(), "uploads"); // get the absolute path to the uploads folder
 app.use("/uploads", express.static(uploadFolder));
-import FATSDB from "./router/router.js";
+import WBSDB from "./router/router.js";
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/api", FATSDB);
-const PORT = 7001;
+app.use("/api", WBSDB);
+const PORT = 7008;
 app.listen(PORT, () => {
   console.log(`Server started on PORT ${PORT}`);
 });

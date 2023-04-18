@@ -1,4 +1,5 @@
 // import "./UserDataTable.scss";
+import "./UserDataTable.css"
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -96,7 +97,7 @@ const UserDataTable = ({
           <span className="leftDatatableTitle">
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}
-            {UniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>}
+            {/* {UniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
           </span>
         </div>
 

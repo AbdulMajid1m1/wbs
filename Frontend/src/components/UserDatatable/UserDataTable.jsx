@@ -17,6 +17,7 @@ const UserDataTable = ({
   UniqueId,
   handleApiCall,
   deleteBtnEndPoint,
+  shipment
 }) => {
   const navigate = useNavigate();
   const [record, setRecord] = useState([]);
@@ -58,28 +59,28 @@ const UserDataTable = ({
   });
 
   const actionColumn = [
-    {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <div className="cellAction">
-            <div
-              className="deleteButton"
-            //   onClick={() => handleDelete(params.row.id, params.row)}
-            >
-              Delete
-            </div>
-            <span
-              style={{ textDecoration: "none" }}
-            >
-              <div className="viewButton">Update</div>
-            </span>
-          </div>
-        );
-      },
-    },
+    // {
+    //   field: "action",
+    //   headerName: "Action",
+    //   width: 150,
+    //   renderCell: (params) => {
+    //     return (
+    //       <div className="cellAction">
+    //         <div
+    //           className="deleteButton"
+    //         //   onClick={() => handleDelete(params.row.id, params.row)}
+    //         >
+    //           Delete
+    //         </div>
+    //         <span
+    //           style={{ textDecoration: "none" }}
+    //         >
+    //           <div className="viewButton">Update</div>
+    //         </span>
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 
   const idColumn = [

@@ -1,7 +1,8 @@
 import React from 'react'
 import {BrowserRouter, Routes, Route} from "react-router-dom"
 import Login from './pages/Login'
-import FirstTable from './pages/FirstTable'
+import TblShipmentReceving from './pages/TblShipmentReceving'
+import TblShipmentReceiveCl from './pages/TblShipmentReceiveCl'
 
 const App = () => {
   return (
@@ -9,7 +10,8 @@ const App = () => {
       <BrowserRouter>
           <Routes>
               <Route path='/' element={<Login />}/>
-              <Route path='/table' element={<FirstTable />}/>
+              <Route path='/shipment' element={<TblShipmentReceving />}/>
+              <Route path='/shipmentcl' element={<TblShipmentReceiveCl />}/>
           </Routes>
       </BrowserRouter>
     </div>

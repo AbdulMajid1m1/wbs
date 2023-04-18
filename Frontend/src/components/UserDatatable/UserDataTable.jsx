@@ -4,6 +4,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import { Stack, Autocomplete, TextField } from "@mui/material"
+
+const skills = ['Html', 'css', 'javascript', 'type', 'React', 'Node']
+
 const UserDataTable = ({
   columnsName = [],
   data,
@@ -88,12 +92,21 @@ const UserDataTable = ({
 
   return (
     <>
-      {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
-      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+      {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
+      {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
 
       <div className="datatable">
         <div className="datatableTitle">
           {title}
+          <div className="stackauto">
+          <Stack spacing={2} width='200px'>
+            <Autocomplete 
+                options={skills}
+                renderInput={(params) => <TextField {...params} label='SHIPMENT ID'/>}
+                />
+            </Stack>
+           </div>
+
           <span className="leftDatatableTitle">
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}

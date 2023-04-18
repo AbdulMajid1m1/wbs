@@ -12,7 +12,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
 }
+/* Add the following styles to align the "Back" button and "User Name" on the left side */
+.stackauto:first-child {
+    margin-right: auto;
+  }
+  
+  /* Add the following styles to align the "Send for Barcode" button on the right side */
+  .stackauto:last-child {
+    margin-left: auto;
+    height: auto;
+  }
 .datatable .datatableTitle .leftDatatableTitle {
     display: flex;
     justify-content: flex-end;

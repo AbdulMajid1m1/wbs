@@ -9,13 +9,13 @@ export const allUserAssetsColumns = [
     {
       field: "SHIPMENTID",
       headerName: "SHIPMENT ID",
-      width: 230,
+      width: 180,
   
     },
     {
       field: "ENTITY",
       headerName: "ENTITY",
-      width: 180,
+      width: 150,
   
     },
     {

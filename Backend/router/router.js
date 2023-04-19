@@ -1,8 +1,9 @@
 import express from "express";
-// import upload from "../config/multerConfig.js";
 const router = express.Router();
 import WBSDB from "../controllers/controlletrsMSSQL.js";
-import { checkAuthentication, checkRole, generateToken } from "../helpers/apiAuth.js";
+
+// import upload from "../config/multerConfig.js";
+// import { checkAuthentication, checkRole, generateToken } from "../helpers/apiAuth.js";
 // import logoUpload from "../config/multerLogoConfig.js";
 
 
@@ -11,7 +12,76 @@ router.post("/getShipmentDataFromtShipmentReceivingCL", WBSDB.getShipmentDataFro
 router.get("/getAllShipmentDataFromtShipmentReceiving", WBSDB.getAllShipmentDataFromtShipmentReceiving);
 router.get("/getAllShipmentDataFromtShipmentReceived", WBSDB.getAllShipmentDataFromtShipmentReceived);
 router.get("/getAllTblItems", WBSDB.getAllTblItems);
-router.get("/getAllTblItemsCL", WBSDB.getAllTblItemsCL);
 
+
+// to get all the packing slips from the PackingSlipTable  
+router.get("/getAllPackingSlips", WBSDB.getAllPackingSlips);
+
+// to get all the dispatching data from the tbl_Dispatching
+router.get("/getAllTblDispatchingData", WBSDB.getAllTblDispatchingData);
+
+// to get all the palletizing data from the tbl_Shipment_Palletizing
+router.get("/getAllTblShipmentPalletizing", WBSDB.getAllTblShipmentPalletizing);
+
+
+
+
+//  ----------- tbl_Shipment_Receiving_CL APIS Start -----------------
+
+
+router.get("/getAllShipmentDataFromtShipmentReceivingCL", WBSDB.getAllShipmentDataFromtShipmentReceivingCL);
+
+// insert data into the tbl_Shipment_Receiving_CL
+router.post("/insertShipmentRecievingDataCL", WBSDB.insertShipmentRecievingDataCL);
+
+// delete data from the tbl_Shipment_Receiving_CL
+router.delete("/deleteShipmentRecievingDataCL", WBSDB.deleteShipmentRecievingDataCL);
+
+
+// update data from the tbl_Shipment_Receiving_CL
+router.put("/updateShipmentRecievingDataCL", WBSDB.updateShipmentRecievingDataCL);
+
+
+//  ----------- tbl_Shipment_Receiving_CL APIS End -----------------
+
+
+
+
+//  ----------- tbl_Items_CL APIS Start -----------------
+
+router.get("/getAllTblItemsCL", WBSDB.getAllTblItemsCL);
+router.post("/insertTblItemsCLData", WBSDB.insertTblItemsCLData);
+router.delete("/deleteTblItemsCLData", WBSDB.deleteTblItemsCLData);
+router.put("/updateTblItemsCLData", WBSDB.updateTblItemsCLData);
+
+//  ----------- tbl_Items_CL APIS End -----------------
+
+
+
+// ----------- tbl_Shipment_Received_CL APIS Start -----------------
+
+router.get("/getAllTblShipmentReceivedCL", WBSDB.getAllTblShipmentReceivedCL);
+
+router.post("/insertShipmentRecievedDataCL", WBSDB.insertShipmentRecievedDataCL);
+
+router.delete("/deleteShipmentRecievedDataCL", WBSDB.deleteShipmentRecievedDataCL);
+
+router.put("/updateShipmentRecievedDataCL", WBSDB.updateShipmentRecievedDataCL);
+
+// ----------- tbl_Shipment_Received_CL APIS End -----------------
+
+
+// to get all the palletizing data from the tbl_Shipment_Palletizing_CL
+router.get("/getAllTblShipmentPalletizingCL", WBSDB.getAllTblShipmentPalletizingCL);
+
+router.post("/insertShipmentPalletizingDataCL", WBSDB.insertShipmentPalletizingDataCL);
+
+router.delete("/deleteShipmentPalletizingDataCL", WBSDB.deleteShipmentPalletizingDataCL);
+
+router.put("/updateShipmentPalletizingDataCL", WBSDB.updateShipmentPalletizingDataCL);
+
+
+
+// ----------- tbl_Shipment_Palletizing_CL APIS Start -----------------
 export default router;
 

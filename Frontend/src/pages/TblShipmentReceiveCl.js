@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import UserDataTable from '../components/UserDatatable/UserDataTable'
 import { allUserAssetsColumns } from '../utils/datatablesource'
 import userRequest from "../utils/userRequest"
+import SideBar from "../components/SideBar/SideBar"
 
 const TableShipmentReceiveCl = () => {
   const [data, setData] = useState([]);
@@ -12,7 +13,7 @@ const TableShipmentReceiveCl = () => {
    
            userRequest.post("/getShipmentDataFromtShipmentReceivingCL", {
              SHIPMENTID: "BSP-0001008",
-             CONTAINERID: "1"
+            //  CONTAINERID: "1"
            })
              .then(response => {
                // response.data == "no data available" ? setData([]) : setData(response.data);
@@ -35,7 +36,17 @@ const TableShipmentReceiveCl = () => {
 
   return (
     <div>
-        <UserDataTable data={data} title="SHIPMENT RECEIVING CL" columnsName={allUserAssetsColumns} backButton={true} nextButton={true} shipment={true} shipmentCl={true}/>
+        <SideBar />
+        
+        <UserDataTable 
+        
+          data={data} 
+            title="SHIPMENT RECEIVING CL" 
+              columnsName={allUserAssetsColumns} 
+                backButton={true} 
+                   ShipmentIdSearchEnable={true}
+                    ContainerIdSearchEnable={true}
+                   />
     </div>
   )
 }

@@ -7,7 +7,7 @@ import { SyncLoader } from 'react-spinners';
 import SideBar from '../components/SideBar/SideBar';
 
 
-const FirstTable = () => {
+const ShipmentRecevingId = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -51,7 +51,7 @@ const FirstTable = () => {
        backButton={true}
         UniqueId="SHIPMENTID"
         ShipmentIdSearchEnable={true}
-        // ContainerIdSearchEnable={true}
+        ContainerIdSearchEnable={true}
 
        />
 
@@ -81,4 +81,4 @@ const FirstTable = () => {
   )
 }
 
-export default FirstTable
+export default ShipmentRecevingId

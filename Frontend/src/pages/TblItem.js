@@ -11,9 +11,9 @@ const TblItem = () => {
         const getAllAssetsList = async () => {
             try {
 
-                // userRequest.get("/getAllTblItems")
-                // axios.get("http://localhost:7008/api/getAllTblItems")
-                axios.get("http://37.224.47.116:7474/api/getAllTblItems")
+                userRequest.get("/getAllTblItems")
+                    // axios.get("http://localhost:7008/api/getAllTblItems")
+                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
                         // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);

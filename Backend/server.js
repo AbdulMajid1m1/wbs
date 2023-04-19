@@ -6,8 +6,10 @@ import path from "path"
 const app = express();
 const corsOptions = {
   exposedHeaders: ['Content-Length', 'Authorization'],
-  origin: ['http://localhost:3000',
-    'http://161.97.172.46:3000',
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3006',
+    'http://gs1ksa.org:3006',
   ],
   credentials: true
 };
@@ -19,7 +21,7 @@ import WBSDB from "./router/router.js";
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", WBSDB);
-const PORT = 7008;
+const PORT = process.env.PORT || 3005;
 app.listen(PORT, () => {
   console.log(`Server started on PORT ${PORT}`);
 });

@@ -101,7 +101,7 @@ const WBSDB = {
 
     try {
       let query = `
-      SELECT * FROM dbo.tbl_Shipment_Receiving_CL
+      SELECT * FROM dbo.tbl_Shipment_Receiving
       `;
       let request = pool.request();
       const data = await request.query(query);

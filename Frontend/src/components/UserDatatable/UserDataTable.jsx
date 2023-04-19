@@ -3,9 +3,6 @@ import "./UserDataTable.css"
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-
-
 const UserDataTable = ({
   columnsName = [],
   data,
@@ -15,10 +12,14 @@ const UserDataTable = ({
   UniqueId,
   handleApiCall,
   deleteBtnEndPoint,
+  ShipmentIdSearchEnable,
+  ContainerIdSearchEnable,
+
 }) => {
   const navigate = useNavigate();
   const [record, setRecord] = useState([]);
-
+  const [shipmentIdSearch, setShipmentIdSearch] = useState("");
+  const [containerIdSearch, setContainerIdSearch] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const resetSnakeBarMessages = () => {
@@ -35,7 +36,34 @@ const UserDataTable = ({
     );
   }, [data]);
 
+  // const filteredData = shipmentIdSearch
+  //   ? record.filter((item) =>
+  //     item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
+  //   )
+  //   : record;
 
+  const filteredData = shipmentIdSearch && containerIdSearch
+    ? record.filter((item) =>
+      item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) && item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+    )
+    : shipmentIdSearch && !containerIdSearch
+      ? record.filter((item) =>
+        item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
+      )
+      : !shipmentIdSearch && containerIdSearch
+        ? record.filter((item) =>
+          item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+        )
+        : record;
+
+
+
+  const handleSearch = (e) => {
+    // setShipmentIdSearch(e.target.value);
+    e.target.name === "SHIPMENTID" ? setShipmentIdSearch(e.target.value) : setContainerIdSearch(e.target.value);
+    console.log(e.target.name, e.target.value);
+    console.log(shipmentIdSearch, containerIdSearch);
+  };
   // Retrieve the value with the key "myKey" from localStorage getvalue
   const myValue = localStorage.getItem("userId");
   console.log(myValue)
@@ -79,17 +107,31 @@ const UserDataTable = ({
 
       <div className="datatable">
         <div className="datatableTitle">
-          {title}
-          <div className="stackauto">
-            {/* <Stack spacing={2} width='200px'>
-              <Autocomplete
-                options={skills}
-                renderInput={(params) => <TextField {...params} label='SHIPMENT ID' />}
+          <div className="left-div">
+            <span>{title}</span>
+            {ShipmentIdSearchEnable &&
+              ShipmentIdSearchEnable === true ? <span>
+              <input
+                type="text"
+                placeholder="SEARCH BY SHIPMENT ID"
+                name="SHIPMENTID"
+                className="searchInput"
+                onChange={handleSearch}
               />
-            </Stack> */}
-            <input type="text" placeholder="SEARCH BY SHIPMENT ID"
-             className="searchInput"
-            />
+            </span> : null
+            }
+
+            {ContainerIdSearchEnable &&
+              ContainerIdSearchEnable === true ? <span>
+              <input
+                type="text"
+                name="CONTAINERID"
+                placeholder="SEARCH BY CONTAINER ID"
+                className="searchInput"
+                onChange={handleSearch}
+              />
+            </span> : null}
+
           </div>
 
           <span className="leftDatatableTitle">
@@ -98,6 +140,7 @@ const UserDataTable = ({
             {/* {UniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
           </span>
         </div>
+
 
         <DataGrid
 
@@ -108,7 +151,8 @@ const UserDataTable = ({
           }
           }
           className="datagrid"
-          rows={record}
+          // rows={record}
+          rows={filteredData}
           columns={
             // actionColumnVisibility !== false
             //   ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))

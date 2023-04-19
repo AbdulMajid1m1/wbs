@@ -14,21 +14,12 @@
   justify-content: space-between;
   gap: 10px;
 }
-/* Add the following styles to align the "Back" button and "User Name" on the left side */
-.stackauto:first-child {
-  margin-right: start;
-}
-
-/* Add the following styles to align the "Send for Barcode" button on the right side */
-.stackauto:last-child {
-  margin-left: auto;
-  height: auto;
-}
 
 .datatable .datatableTitle .leftDatatableTitle {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
+  flex-grow: 1;
 }
 .datatable .datatableTitle .leftDatatableTitle button {
   text-decoration: none;
@@ -139,7 +130,7 @@
   padding: 5px;
   font-size: 16px;
   outline: none;
-  margin-bottom: 10px;
+
 }
 
 /* serInput placeHodler */
@@ -147,3 +138,16 @@
   color: gray;
   font-size: 16px;
 }
+.datatableTitle .left-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.datatableTitle .left-div > span {
+  flex: 1;
+}
+
+

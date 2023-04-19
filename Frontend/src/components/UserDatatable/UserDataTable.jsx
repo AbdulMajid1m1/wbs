@@ -4,9 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { Stack, Autocomplete, TextField } from "@mui/material"
 
-const skills = ['Html', 'css', 'javascript', 'type', 'React', 'Node']
 
 const UserDataTable = ({
   columnsName = [],

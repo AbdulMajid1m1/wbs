@@ -8,45 +8,40 @@ const TblItem = () => {
     const [alldata, setAllData] = useState([]);
 
     useEffect(() => {
-        axios.get('https://fakestoreapi.com/products')
-            .then((response) => {
-                console.log(response.data)
-                setAllData(response.data[0].category)
-            })
-            .catch(err =>{
-                console.log(err)
-            })
-    },[])
+        const getAllAssetsList = async () => {
+            try {
 
-    //  useEffect(() => {
-    //     const getAllAssetsList = async () => {
-    //       try {
-    
-    //         userRequest.get("/getAllTblItems")
-    //           .then(response => {
-    //             response.data == "no data available" ? setAllData([]) : setAllData(response.data);
-    //             console.log(response?.data);
-    //          // setData(response?.data ?? [])
-    
-    //       })
-    //       .catch(error => {
-    //         // handleUserError(error)
-    //         console.error(error);
-    //       });
-    
-    //       }
-    //       catch (error) {
-    //         console.log(error);
-    //       }
-    //     };
-    //     getAllAssetsList();
-    //   }, []);
+                userRequest.get("/getAllTblItems")
+                    // axios.get("http://localhost:7008/api/getAllTblItems")
+                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
+                    .then(response => {
+                        // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
+                        console.log(response?.data);
 
-  return (
-    <div>
-        <UserDataTable data={alldata} title="ALL ITEMS" columnsName={AllItems} backButton={true}/>
-    </div>
-  )
+                        setAllData(response?.data ?? [])
+
+                    })
+                    .catch(error => {
+                        // handleUserError(error)
+                        console.error(error);
+                    });
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+        };
+        getAllAssetsList();
+    }, []);
+
+    return (
+        <div>
+            <UserDataTable data={alldata} title="ALL ITEMS" columnsName={AllItems} backButton={true}
+
+
+            />
+        </div>
+    )
 }
 
 export default TblItem

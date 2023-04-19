@@ -3,28 +3,23 @@ import "./UserDataTable.css"
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-import { Stack, Autocomplete, TextField } from "@mui/material"
-
-const skills = ['Html', 'css', 'javascript', 'type', 'React', 'Node']
-
 const UserDataTable = ({
-  columnsName,
+  columnsName = [],
   data,
   title,
   actionColumnVisibility,
   backButton,
-  nextButton,
   UniqueId,
   handleApiCall,
   deleteBtnEndPoint,
-  shipment,
-  shipmentCl
+  ShipmentIdSearchEnable,
+  ContainerIdSearchEnable,
 
 }) => {
   const navigate = useNavigate();
   const [record, setRecord] = useState([]);
-
+  const [shipmentIdSearch, setShipmentIdSearch] = useState("");
+  const [containerIdSearch, setContainerIdSearch] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const resetSnakeBarMessages = () => {
@@ -32,7 +27,43 @@ const UserDataTable = ({
     setMessage(null);
 
   };
+  useEffect(() => {
+    data.map((item, index) => {
+      item.id = index + 1;
+    });
+    setRecord(
+      data.map((item, index) => ({ ...item, id: index + 1 }))
+    );
+  }, [data]);
 
+  // const filteredData = shipmentIdSearch
+  //   ? record.filter((item) =>
+  //     item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
+  //   )
+  //   : record;
+
+  const filteredData = shipmentIdSearch && containerIdSearch
+    ? record.filter((item) =>
+      item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) && item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+    )
+    : shipmentIdSearch && !containerIdSearch
+      ? record.filter((item) =>
+        item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
+      )
+      : !shipmentIdSearch && containerIdSearch
+        ? record.filter((item) =>
+          item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+        )
+        : record;
+
+
+
+  const handleSearch = (e) => {
+    // setShipmentIdSearch(e.target.value);
+    e.target.name === "SHIPMENTID" ? setShipmentIdSearch(e.target.value) : setContainerIdSearch(e.target.value);
+    console.log(e.target.name, e.target.value);
+    console.log(shipmentIdSearch, containerIdSearch);
+  };
   // Retrieve the value with the key "myKey" from localStorage getvalue
   const myValue = localStorage.getItem("userId");
   console.log(myValue)
@@ -61,31 +92,6 @@ const UserDataTable = ({
     return column;
   });
 
-  const actionColumn = [
-    // {
-    //   field: "action",
-    //   headerName: "Action",
-    //   width: 150,
-    //   renderCell: (params) => {
-    //     return (
-    //       <div className="cellAction">
-    //         <div
-    //           className="deleteButton"
-    //         //   onClick={() => handleDelete(params.row.id, params.row)}
-    //         >
-    //           Delete
-    //         </div>
-    //         <span
-    //           style={{ textDecoration: "none" }}
-    //         >
-    //           <div className="viewButton">Update</div>
-    //         </span>
-    //       </div>
-    //     );
-    //   },
-    // },
-  ];
-
   const idColumn = [
     {
       field: "id",
@@ -101,38 +107,40 @@ const UserDataTable = ({
 
       <div className="datatable">
         <div className="datatableTitle">
-          {title}
-          <div className="stackauto">
-            {
-              shipment &&
-              <Stack spacing={2} width='200px'>
-            <Autocomplete 
-                options={skills}
-                renderInput={(params) => <TextField {...params} label='SHIPMENT ID'/>}
-                />
-            </Stack>
-              }
-           </div>
+          <div className="left-div">
+            <span>{title}</span>
+            {ShipmentIdSearchEnable &&
+              ShipmentIdSearchEnable === true ? <span>
+              <input
+                type="text"
+                placeholder="SEARCH BY SHIPMENT ID"
+                name="SHIPMENTID"
+                className="searchInput"
+                onChange={handleSearch}
+              />
+            </span> : null
+            }
 
-           <div className="stackauto2">
-            {
-              shipmentCl &&
-              <Stack spacing={2} width='200px'>
-            <Autocomplete 
-                options={skills}
-                renderInput={(params) => <TextField {...params} label='CONTAINER ID'/>}
-                />
-            </Stack>
-              }
-           </div>
-          
+            {ContainerIdSearchEnable &&
+              ContainerIdSearchEnable === true ? <span>
+              <input
+                type="text"
+                name="CONTAINERID"
+                placeholder="SEARCH BY CONTAINER ID"
+                className="searchInput"
+                onChange={handleSearch}
+              />
+            </span> : null}
+
+          </div>
+
           <span className="leftDatatableTitle">
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
-            {nextButton && <button onClick={() => { navigate(+1) }}>Go Next</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}
             {/* {UniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
           </span>
         </div>
+
 
         <DataGrid
 
@@ -143,21 +151,22 @@ const UserDataTable = ({
           }
           }
           className="datagrid"
-          rows={record}
+          // rows={record}
+          rows={filteredData}
           columns={
-            actionColumnVisibility !== false
-              ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
-              : idColumn.concat(columnsWithCustomCell)
+            // actionColumnVisibility !== false
+            //   ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
+            //   : 
+            idColumn.concat(columnsWithCustomCell)
           }
           pageSize={30}
-          
+
           rowsPerPageOptions={[30]}
           checkboxSelection
         />
-  
 
-          {/* Displaying myValue inside the table Value in center*/}
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "-40px", marginLeft: "10px" , }}>
+        {/* Displaying myValue inside the table Value in center*/}
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "-40px", marginLeft: "10px", }}>
           <h1 style={{ whiteSpace: "nowrap" }}>UserId: {myValue}</h1>
           <style>
             {`

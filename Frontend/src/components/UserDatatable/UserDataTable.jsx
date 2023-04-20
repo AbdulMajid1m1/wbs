@@ -16,7 +16,8 @@ const UserDataTable = ({
   ShipmentIdSearchEnable,
   ContainerIdSearchEnable,
   buttonVisibility,
-  addNewNavigation
+  addNewNavigation,
+  detectAddRole
 
 }) => {
   const navigate = useNavigate();
@@ -73,33 +74,90 @@ const UserDataTable = ({
   console.log(myValue)
 
   // Delete Action
+  // const handleDelete = async (id, rowdata) => {
+  //   switch
+  //   (uniqueId) {
+  //     case "assetPrintingId":
+  //       console.log(rowdata.TagNumber);
+  //       data = { TagNumber: rowdata.TagNumber };
+  //       userRequest.delete(deleteBtnEndPoint, { data }).then((response) => {
+  //         console.log(response);
+  //         setMessage(response?.data?.message ?? "User deleted successfully");
+  //         setSeverity("success");
+  //       }).catch((error) => {
+  //         setMessage(error?.message ?? "Something went wrong");
+  //         setSeverity("error");
+  //       }
+  //       )
+
+  //       break;
+  //     default:
+  //       // do nothing
+  //       break;
+  //   }
+
+  //   if (true) {
+  //     setRecord(record.filter((item) => item.id !== id));
+  //     // alert("User deleted successfully");
+  //   }
+  // }
+
   const handleDelete = async (id, rowdata) => {
-    switch
-    (uniqueId) {
-      case "assetPrintingId":
-        console.log(rowdata.TagNumber);
-        data = { TagNumber: rowdata.TagNumber };
-        userRequest.delete(deleteBtnEndPoint, { data }).then((response) => {
-          console.log(response);
-          setMessage(response?.data?.message ?? "User deleted successfully");
-          setSeverity("success");
-        }).catch((error) => {
-          setMessage(error?.message ?? "Something went wrong");
-          setSeverity("error");
-        }
-        )
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      // if(title === "ASSET CATEGORIES")
+      let data;
+      switch
+      (uniqueId) {
+        case "SHIPMENTID":
 
-        break;
-      default:
-        // do nothing
-        break;
-    }
+          data = { SHIPMENTID: rowdata.SHIPMENTID && rowdata.SHIPMENTID.toString() };
+          userRequest.delete(deleteBtnEndPoint, { data }).then((response) => {
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            setSeverity("success");
+          }).catch((error) => {
+            setMessage(error?.message ?? "Something went wrong");
+            setSeverity("error");
+          }
+          )
+        
+          break;
+        default:
+          // do nothing
+          break;
+      }
 
-    if (true) {
-      setRecord(record.filter((item) => item.id !== id));
-      // alert("User deleted successfully");
+      if (true) {
+        setRecord(record.filter((item) => item.id !== id));
+        // alert("User deleted successfully");
+      }
     }
-  }
+  };
+
+  const handleRemoveRole = async (rowdata) => {
+    console.log(rowdata.RoleID);
+    let data = {
+      RoleID: rowdata.RoleID && rowdata.RoleID.toString(),
+
+      UserLoginID: rowdata.UserLoginID && rowdata.UserLoginID.toString()
+    };
+    userRequest.delete("/DeleteUsersRolesAssignedById",
+      { data }).then((response) => {
+        console.log(response);
+        setMessage(response?.data?.message ?? "Role removed successfully");
+
+        // refresh the data table after adding the role
+        setSeverity("success");
+        detectAddRole();
+      }).catch((error) => {
+
+        setMessage(error?.message ?? "Something went wrong");
+        setSeverity("error");
+      }
+      )
+
+  };
+
 
   //Edit
   const handleEdit = async (rowData) => {
@@ -175,6 +233,27 @@ const UserDataTable = ({
             >
               <div className="viewButton">Update</div>
             </span>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const RemoveBtn = [
+    {
+      field: "action",
+      headerName: "Action",
+      width: 130,
+      renderCell: (params) => {
+        return (
+          <div className="cellAction">
+            <div
+              className="deleteButton"
+              onClick={() => handleRemoveRole(params.row)}
+            >
+              REMOVE ROLE
+            </div>
+
           </div>
         );
       },
@@ -258,6 +337,7 @@ const UserDataTable = ({
           columns={
             actionColumnVisibility !== false
               ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
+              // ? idColumn.concat(columnsWithCustomCell.concat(RemoveBtn))
               : idColumn.concat(columnsWithCustomCell)
           }
           pageSize={30}

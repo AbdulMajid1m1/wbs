@@ -48,6 +48,7 @@ const TableShipmentReceiveCl = () => {
             title="SHIPMENT RECEIVING CL" 
               columnsName={allUserAssetsColumns} 
                 backButton={true} 
+                  uniqueId="SHIPMENTID"
                    ShipmentIdSearchEnable={true}
                     ContainerIdSearchEnable={true}
                    />

@@ -48,3 +48,48 @@ export const assetCategoryInput = [
   
   ];
   
+  
+export const allItemsInput = [
+  // {
+  //   id: "allItemsInput1",
+  //   label: "ITEM ID*",
+  //   name: "ITEMID",
+  //   type: "text",
+  //   placeholder: "ITEM ID",
+  // },
+
+  {
+    id: "allItemsInput2",
+    label: "ITEM NAME*",
+    name: "ITEMNAME",
+    type: "text",
+    placeholder: "ITEM NAME",
+  },
+  {
+    id: "allItemsInput3",
+    label: "ITEM GROUP ID*",
+    name: "ITEMGROUPID",
+    type: "text",
+    placeholder: "ITEM GROUP ID",
+  },
+
+];
+
+export const updateAllItemsInput = [
+
+  {
+    id: "allItemsInput1",
+    label: "ITEM NAME*",
+    name: "ITEMNAME",
+    type: "text",
+    placeholder: "ITEM NAME",
+  },
+  {
+    id: "allItemsInput2",
+    label: "ITEM GROUP ID*",
+    name: "ITEMGROUPID",
+    type: "text",
+    placeholder: "ITEM GROUP ID",
+  },
+
+];

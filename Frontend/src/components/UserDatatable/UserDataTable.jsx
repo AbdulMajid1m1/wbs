@@ -111,6 +111,10 @@ const UserDataTable = ({
       case "SHIPMENTID":
         navigate("/update/" + rowData.SHIPMENTID)
         break;
+        case "ITEMNAME":
+        navigate("/allitems/" + rowData.ITEMNAME)
+        break;
+        
       default:
         // do nothing
         break;
@@ -198,9 +202,6 @@ const UserDataTable = ({
             <Link to={addNewNavigation} className="link">
               Add New
             </Link>
-            {/* <button onClick={handleExport}>Export to Excel</button> */}
-            {/* <input id="fileInput" className="chooseFileBtn" type="file" onChange={handleFileChange} /> */}
-            {/* <button onClick={handleImport}>Import from Excel File</button> */}
           </span>
           }
 

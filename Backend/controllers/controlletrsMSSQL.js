@@ -3,16 +3,30 @@ import { pool1, pool2 } from "../config/connection.js"; // import pool1 and pool
 import sql from "mssql";
 pool1.connect().catch((err) => console.log("Error connecting to config1:", err));
 pool2.connect().catch((err) => console.log("Error connecting to config2:", err));
+import bcrypt from "bcrypt";
+const saltRounds = 10;
+
+import jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, "../.env") });
+let jwtSecret = process.env.JWT_SECRET;
+let jwtExpiration = process.env.JWT_EXPIRATION;
+
 
 const WBSDB = {
   async getShipmentDataFromtShipmentReceiving(req, res, next) {
     try {
-      if (!req.body.SHIPMENTID) {
+      if (!req.query.SHIPMENTID) {
         return res.status(400).send({ message: "SHIPMENTID is required." });
       }
 
       let query;
-      if (req.body.CONTAINERID) {
+      if (req.query.CONTAINERID) {
         query = `
           SELECT * FROM dbo.tbl_Shipment_Receiving
           WHERE SHIPMENTID = @SHIPMENTID AND CONTAINERID = @CONTAINERID
@@ -24,10 +38,10 @@ const WBSDB = {
         `;
       }
 
-      let request = pool1.request().input("SHIPMENTID", sql.VarChar, req.body.SHIPMENTID);
+      let request = pool1.request().input("SHIPMENTID", sql.VarChar, req.query.SHIPMENTID);
 
-      if (req.body.CONTAINERID) {
-        request = request.input("CONTAINERID", sql.VarChar, req.body.CONTAINERID);
+      if (req.query.CONTAINERID) {
+        request = request.input("CONTAINERID", sql.VarChar, req.query.CONTAINERID);
       }
 
       const data = await request.query(query);
@@ -45,13 +59,13 @@ const WBSDB = {
 
   async getShipmentDataFromtShipmentReceivingCL(req, res, next) {
     try {
-      if (!req.body.SHIPMENTID) {
+      if (!req.query.SHIPMENTID) {
         return res.status(400).send({ message: "SHIPMENTID is required." });
       }
 
       let query;
 
-      if (req.body.CONTAINERID) {
+      if (req.query.CONTAINERID) {
         query = `
           SELECT * FROM dbo.tbl_Shipment_Receiving_CL
           WHERE SHIPMENTID = @SHIPMENTID AND CONTAINERID = @CONTAINERID
@@ -63,10 +77,10 @@ const WBSDB = {
         `;
       }
 
-      let request = pool2.request().input("SHIPMENTID", sql.VarChar, req.body.SHIPMENTID);
+      let request = pool2.request().input("SHIPMENTID", sql.VarChar, req.query.SHIPMENTID);
 
-      if (req.body.CONTAINERID) {
-        request = request.input("CONTAINERID", sql.VarChar, req.body.CONTAINERID);
+      if (req.query.CONTAINERID) {
+        request = request.input("CONTAINERID", sql.VarChar, req.query.CONTAINERID);
       }
 
       const data = await request.query(query);
@@ -107,7 +121,7 @@ const WBSDB = {
       let query = `
       SELECT * FROM dbo.tbl_Shipment_Receiving_CL
       `;
-      let request = pool1.request();
+      let request = pool2.request();
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "Shipment not found." });
@@ -191,7 +205,7 @@ const WBSDB = {
         ITEMID,
         ITEMNAME,
         ITEMGROUPID,
-      } = req.body;
+      } = req.query;
 
       const query = `
       INSERT INTO dbo.tbl_Items_CL
@@ -219,7 +233,7 @@ const WBSDB = {
     try {
       const {
         ITEMID,
-      } = req.body;
+      } = req.query;
 
       if (!ITEMID) {
         return res.status(400).send({ message: 'ITEMID is required.' });
@@ -253,7 +267,7 @@ const WBSDB = {
         ITEMID,
         ITEMNAME,
         ITEMGROUPID,
-      } = req.body;
+      } = req.query;
 
       if (!ITEMID) {
         return res.status(400).send({ message: 'ITEMID is required.' });
@@ -382,7 +396,7 @@ const WBSDB = {
         ITEMID,
         PURCHID,
         CLASSIFICATION,
-      } = req.body;
+      } = req.query;
 
       const query = `
         INSERT INTO dbo.tbl_Shipment_Receiving_CL
@@ -414,7 +428,7 @@ const WBSDB = {
   async deleteShipmentRecievingDataCL(req, res, next) {
     // delete data from tbl_Shipment_Receiving_CL based on SHIPMENTID
     try {
-      const { SHIPMENTID } = req.body;
+      const { SHIPMENTID } = req.query;
 
       if (!SHIPMENTID) {
         return res.status(400).send({ message: 'shipment ID is required' });
@@ -455,7 +469,7 @@ const WBSDB = {
         ITEMID,
         PURCHID,
         CLASSIFICATION,
-      } = req.body;
+      } = req.query;
 
       if (!SHIPMENTID) {
         return res.status(400).send({ message: 'SHIPMENTID is required.' });
@@ -581,7 +595,7 @@ const WBSDB = {
         PALLET_DATE,
         PALLETCODE,
         BIN
-      } = req.body;
+      } = req.query;
 
       const query = `
         INSERT INTO dbo.tbl_Shipment_Received_CL
@@ -618,24 +632,29 @@ const WBSDB = {
 
   async deleteShipmentRecievedDataCL(req, res, next) {
     try {
-      const { SHIPMENTID } = req.body;
+      const { SERIALNUM } = req.query;
+      console.log(SERIALNUM);
 
-      if (!SHIPMENTID) {
-        return res.status(400).send({ message: "SHIPMENTID is required." });
+      if (!SERIALNUM) {
+        return res.status(400).send({ message: "SERIALNUM is required." });
       }
 
       const query = `
         DELETE FROM dbo.tbl_Shipment_Received_CL
-        WHERE SHIPMENTID = @SHIPMENTID
+        WHERE SERIALNUM = @SERIALNUM
       `;
 
       let request = pool2.request();
-      request.input('SHIPMENTID', sql.NVarChar(255), SHIPMENTID);
+      request.input('SERIALNUM', sql.NVarChar(255), SERIALNUM);
 
       const result = await request.query(query);
+      console.log("Before query execution");
+
+      console.log("After query execution");
+      console.log("Rows affected: ", result.rowsAffected[0]);
 
       if (result.rowsAffected[0] === 0) {
-        return res.status(404).send({ message: "No data found with the given SHIPMENTID." });
+        return res.status(404).send({ message: "No data found with the given SERIALNUM." });
       }
 
       res.status(200).send({ message: 'Shipment data deleted successfully.' });
@@ -667,10 +686,10 @@ const WBSDB = {
         PALLET_DATE,
         PALLETCODE,
         BIN
-      } = req.body;
+      } = req.query;
 
-      if (!SHIPMENTID) {
-        return res.status(400).send({ message: 'SHIPMENTID is required.' });
+      if (!SERIALNUM) {
+        return res.status(400).send({ message: 'SERIALNUM is required.' });
       }
 
       let query = `
@@ -683,6 +702,10 @@ const WBSDB = {
       if (CONTAINERID !== undefined) {
         updateFields.push('CONTAINERID = @CONTAINERID');
         request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
+      }
+      if (SHIPMENTID !== undefined) {
+        updateFields.push('SHIPMENTID = @SHIPMENTID');
+        request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
       }
 
       if (ARRIVALWAREHOUSE !== undefined) {
@@ -710,10 +733,7 @@ const WBSDB = {
         request.input('CLASSIFICATION', sql.Float, CLASSIFICATION);
       }
 
-      if (SERIALNUM !== undefined) {
-        updateFields.push('SERIALNUM = @SERIALNUM');
-        request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
-      }
+
 
       if (RCVDCONFIGID !== undefined) {
         updateFields.push('RCVDCONFIGID = @RCVDCONFIGID');
@@ -756,10 +776,10 @@ const WBSDB = {
       query += updateFields.join(', ');
 
       query += `
-  WHERE SHIPMENTID = @SHIPMENTID
+  WHERE SERIALNUM = @SERIALNUM
 `;
 
-      request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+      request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
 
       const result = await request.query(query);
 
@@ -814,7 +834,7 @@ const WBSDB = {
         CONFIGID,
         WMSLOCATIONID,
         SHIPMENTID,
-      } = req.body;
+      } = req.query;
 
       const query = `
         INSERT INTO dbo.tbl_Shipment_Palletizing_CL
@@ -860,7 +880,7 @@ const WBSDB = {
         CONFIGID,
         WMSLOCATIONID,
         SHIPMENTID,
-      } = req.body;
+      } = req.query;
 
       if (!TRANSFERID) {
         return res.status(400).send({ message: 'TRANSFERID is required.' });
@@ -952,7 +972,7 @@ const WBSDB = {
 
   async deleteShipmentPalletizingDataCL(req, res, next) {
     try {
-      const { TRANSFERID } = req.body;
+      const { TRANSFERID } = req.query;
 
       if (!TRANSFERID) {
         return res.status(400).send({ message: 'TRANSFERID is required.' });
@@ -1003,7 +1023,7 @@ const WBSDB = {
         WMSLOCATIONID,
         ITEMNAME,
         inventTransId
-      } = req.body;
+      } = req.query;
 
       const query = `
       INSERT INTO dbo.tbL_Picking_CL
@@ -1069,7 +1089,7 @@ const WBSDB = {
         WMSLOCATIONID,
         ITEMNAME,
         inventTransId
-      } = req.body;
+      } = req.query;
 
       if (!PICKINGROUTEID) {
         return res.status(400).send({ message: 'PICKINGROUTEID is required.' });
@@ -1159,7 +1179,7 @@ const WBSDB = {
 
   async deleteTblPickingDataCL(req, res, next) {
     try {
-      const { PICKINGROUTEID } = req.body;
+      const { PICKINGROUTEID } = req.query;
 
       if (!PICKINGROUTEID) {
         return res.status(400).send({ message: 'PICKINGROUTEID is required.' });
@@ -1206,7 +1226,7 @@ const WBSDB = {
         NAME,
         CONFIGID,
         PICKINGROUTEID
-      } = req.body;
+      } = req.query;
 
       const query = `
         INSERT INTO dbo.tbl_Dispatching_CL
@@ -1274,7 +1294,7 @@ const WBSDB = {
         NAME,
         CONFIGID,
         PICKINGROUTEID
-      } = req.body;
+      } = req.query;
 
       if (!PACKINGSLIPID) {
         return res.status(400).send({ message: 'PACKINGSLIPID is required.' });
@@ -1365,7 +1385,7 @@ const WBSDB = {
 
   async deleteTblDispatchingDataCL(req, res, next) {
     try {
-      const { PACKINGSLIPID } = req.body;
+      const { PACKINGSLIPID } = req.query;
 
       if (!PACKINGSLIPID) {
         return res.status(400).send({ message: 'PACKINGSLIPID is required.' });
@@ -1409,7 +1429,7 @@ const WBSDB = {
         BIN,
         ZONE_CODE,
         ZONE_NAME,
-      } = req.body;
+      } = req.query;
 
       const query = `
         INSERT INTO dbo.tbl_locations_CL
@@ -1466,7 +1486,7 @@ const WBSDB = {
         BIN,
         ZONE_CODE,
         ZONE_NAME,
-      } = req.body;
+      } = req.query;
 
       if (!LOCATIONS_HFID) {
         return res.status(400).send({ message: 'LOCATIONS_HFID is required.' });
@@ -1538,7 +1558,7 @@ const WBSDB = {
 
   async deleteTblLocationsDataCL(req, res, next) {
     try {
-      const { LOCATIONS_HFID } = req.body;
+      const { LOCATIONS_HFID } = req.query;
 
       const query = `
       DELETE FROM dbo.tbl_locations_CL
@@ -1563,6 +1583,258 @@ const WBSDB = {
 
 
   // ------------------------ tbl_locations_CL Controllers END ------------------------ //
+
+
+
+  // ------------------------ tblUsers Controllers START ------------------------ //
+
+
+
+  // POST request to insert user
+  async insertTblUsersData(req, res, next) {
+    try {
+      const {
+        UserID,
+        UserPassword,
+        Fullname,
+        UserLevel,
+        Loc,
+      } = req.query;
+
+      const hashedPassword = await bcrypt.hash(UserPassword, saltRounds);
+
+      const query = `
+          INSERT INTO dbo.tblUsers
+            (UserID, UserPassword, Fullname, UserLevel, Loc)
+          VALUES
+            (@UserID, @UserPassword, @Fullname, @UserLevel, @Loc)
+        `;
+
+      let request = pool2.request();
+      request.input('UserID', sql.VarChar(255), UserID);
+      request.input('UserPassword', sql.VarChar(255), hashedPassword);
+      request.input('Fullname', sql.VarChar(255), Fullname);
+      request.input('UserLevel', sql.VarChar(255), UserLevel);
+      request.input('Loc', sql.VarChar(255), Loc);
+
+      await request.query(query);
+      res.status(201).send({ message: 'User inserted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  // POST request to authenticate user
+  async loginUser(req, res, next) {
+    try {
+      const {
+        UserID,
+        UserPassword,
+      } = req.query;
+
+      const query = `
+      SELECT * FROM dbo.tblUsers
+      WHERE UserID = @UserID
+    `;
+
+      let request = pool2.request();
+      request.input('UserID', sql.VarChar(255), UserID);
+
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'User not found.' });
+      }
+
+      const user = result.recordset[0];
+      const isPasswordValid = await bcrypt.compare(UserPassword, user.UserPassword);
+
+      if (!isPasswordValid) {
+        return res.status(401).send({ message: 'Invalid password.' });
+      }
+      let tokenPayload = {
+        UserID: user.UserID,
+        UserLevel: user.UserLevel,
+        Loc: user.Loc,
+      };
+      const token = jwt.sign(tokenPayload, jwtSecret,
+        { expiresIn: jwtExpiration });
+
+
+
+        delete user.UserPassword;
+      res.status(200).send({ message: 'Login successful.', user, token });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
+
+  // PUT request to update user
+  async updateTblUsersData(req, res, next) {
+    try {
+      const {
+        UserID,
+        UserPassword,
+        Fullname,
+        UserLevel,
+        Loc,
+      } = req.query;
+
+      if (!UserID) {
+        return res.status(400).send({ message: 'UserID is required.' });
+      }
+
+
+
+      let query = `
+      UPDATE dbo.tblUsers
+      SET `;
+
+      const updateFields = [];
+      const request = pool2.request();
+
+      if (UserPassword !== undefined) {
+        const hashedPassword = await bcrypt.hash(UserPassword, saltRounds);
+        updateFields.push('UserPassword = @UserPassword');
+        request.input('UserPassword', sql.VarChar(255), hashedPassword);
+      }
+
+      if (Fullname !== undefined) {
+        updateFields.push('Fullname = @Fullname');
+        request.input('Fullname', sql.VarChar(255), Fullname);
+      }
+
+      if (UserLevel !== undefined) {
+        updateFields.push('UserLevel = @UserLevel');
+        request.input('UserLevel', sql.VarChar(255), UserLevel);
+      }
+
+      if (Loc !== undefined) {
+        updateFields.push('Loc = @Loc');
+        request.input('Loc', sql.VarChar(255), Loc);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+      WHERE UserID = @UserID
+    `;
+
+      request.input('UserID', sql.VarChar(255), UserID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'User record not found.' });
+      }
+
+      res.status(200).send({ message: 'User updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  // DELETE request to delete user
+  async deleteTblUsersData(req, res, next) {
+    try {
+      const {
+        UserID,
+      } = req.query;
+
+      if (!UserID) {
+        return res.status(400).send({ message: 'UserID is required.' });
+      }
+
+      const query = `
+      DELETE FROM dbo.tblUsers
+      WHERE UserID = @UserID
+    `;
+
+      let request = pool2.request();
+      request.input('UserID', sql.VarChar(255), UserID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'User record not found.' });
+      }
+
+      res.status(200).send({ message: 'User deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  // GET request to fetch all users
+  async getAllTblUsers(req, res, next) {
+    try {
+      const query = `
+      SELECT * FROM dbo.tblUsers
+    `;
+
+      let request = pool2.request();
+
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'No user records found.' });
+      }
+
+      res.status(200).send(result.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  // GET request to fetch a single user by UserID
+  async getSingleTblUsers(req, res, next) {
+    try {
+      const { UserID } = req.query;
+
+      if (!UserID) {
+        return res.status(400).send({ message: 'UserID is required.' });
+      }
+
+      const query = `
+      SELECT * FROM dbo.tblUsers
+      WHERE UserID = @UserID
+    `;
+
+      let request = pool2.request();
+      request.input('UserID', sql.VarChar(255), UserID);
+
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'User record not found.' });
+      }
+
+      res.status(200).send(result.recordset[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
+
 
 
 

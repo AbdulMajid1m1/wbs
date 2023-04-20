@@ -17,37 +17,7 @@ const checkAuthentication = async (req, res, next) => {
     });
   }
 };
-// check roles
-const checkRole = (roles) => {
-  return (req, res, next) => {
-    const assignedRoles = req?.token?.assignedRoles;
-    console.log(assignedRoles)
-    const hasRole = roles.some(role => assignedRoles?.includes(role));
-    if (hasRole) {
-      return next();
-    } else {
-      return res.status(401).json({
-        message: 'Unauthorized.',
-        https: HttpStatus.UNAUTHORIZED,
-      });
-    }
-  };
-};
-const generateToken = async (req, res, next) => {
-  try {
-    let token = await jwtHelper.createToken()
-    return res.json({
-      message: 'token',
-      token: token,
-    });
-  } catch (error) {
-    return res.status(500).json({
 
-      message: 'Invalid Token.',
-      https: HttpStatus.UNAUTHORIZED,
-    });
-  }
-};
 
 const getToken = (req) => {
   let token = '';
@@ -77,8 +47,6 @@ const getToken = (req) => {
 }
 export {
   checkAuthentication,
-  generateToken,
-  checkRole
 
 };
 // checkAuthentication()

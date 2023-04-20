@@ -1,27 +1,28 @@
 import express from "express";
 const router = express.Router();
 import WBSDB from "../controllers/controlletrsMSSQL.js";
+import { checkAuthentication } from "../helpers/apiAuth.js";
 
 // import upload from "../config/multerConfig.js";
 // import { checkAuthentication, checkRole, generateToken } from "../helpers/apiAuth.js";
 // import logoUpload from "../config/multerLogoConfig.js";
 
 
-router.post("/getShipmentDataFromtShipmentReceiving", WBSDB.getShipmentDataFromtShipmentReceiving);
-router.post("/getShipmentDataFromtShipmentReceivingCL", WBSDB.getShipmentDataFromtShipmentReceivingCL);
-router.get("/getAllShipmentDataFromtShipmentReceiving", WBSDB.getAllShipmentDataFromtShipmentReceiving);
-router.get("/getAllShipmentDataFromtShipmentReceived", WBSDB.getAllShipmentDataFromtShipmentReceived);
-router.get("/getAllTblItems", WBSDB.getAllTblItems);
+router.post("/getShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceiving);
+router.post("/getShipmentDataFromtShipmentReceivingCL", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceivingCL);
+router.get("/getAllShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceiving);
+router.get("/getAllShipmentDataFromtShipmentReceived", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceived);
+router.get("/getAllTblItems", checkAuthentication, WBSDB.getAllTblItems);
 
 
 // to get all the packing slips from the PackingSlipTable  
-router.get("/getAllPackingSlips", WBSDB.getAllPackingSlips);
+router.get("/getAllPackingSlips", checkAuthentication, WBSDB.getAllPackingSlips);
 
 // to get all the dispatching data from the tbl_Dispatching
-router.get("/getAllTblDispatchingData", WBSDB.getAllTblDispatchingData);
+router.get("/getAllTblDispatchingData", checkAuthentication, WBSDB.getAllTblDispatchingData);
 
 // to get all the palletizing data from the tbl_Shipment_Palletizing
-router.get("/getAllTblShipmentPalletizing", WBSDB.getAllTblShipmentPalletizing);
+router.get("/getAllTblShipmentPalletizing", checkAuthentication, WBSDB.getAllTblShipmentPalletizing);
 
 
 
@@ -29,17 +30,17 @@ router.get("/getAllTblShipmentPalletizing", WBSDB.getAllTblShipmentPalletizing);
 //  ----------- tbl_Shipment_Receiving_CL APIS Start -----------------
 
 
-router.get("/getAllShipmentDataFromtShipmentReceivingCL", WBSDB.getAllShipmentDataFromtShipmentReceivingCL);
+router.get("/getAllShipmentDataFromtShipmentReceivingCL", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceivingCL);
 
 // insert data into the tbl_Shipment_Receiving_CL
-router.post("/insertShipmentRecievingDataCL", WBSDB.insertShipmentRecievingDataCL);
+router.post("/insertShipmentRecievingDataCL", checkAuthentication, WBSDB.insertShipmentRecievingDataCL);
 
 // delete data from the tbl_Shipment_Receiving_CL
-router.delete("/deleteShipmentRecievingDataCL", WBSDB.deleteShipmentRecievingDataCL);
+router.delete("/deleteShipmentRecievingDataCL", checkAuthentication, WBSDB.deleteShipmentRecievingDataCL);
 
 
 // update data from the tbl_Shipment_Receiving_CL
-router.put("/updateShipmentRecievingDataCL", WBSDB.updateShipmentRecievingDataCL);
+router.put("/updateShipmentRecievingDataCL", checkAuthentication, WBSDB.updateShipmentRecievingDataCL);
 
 
 //  ----------- tbl_Shipment_Receiving_CL APIS End -----------------
@@ -49,10 +50,10 @@ router.put("/updateShipmentRecievingDataCL", WBSDB.updateShipmentRecievingDataCL
 
 //  ----------- tbl_Items_CL APIS Start -----------------
 
-router.get("/getAllTblItemsCL", WBSDB.getAllTblItemsCL);
-router.post("/insertTblItemsCLData", WBSDB.insertTblItemsCLData);
-router.delete("/deleteTblItemsCLData", WBSDB.deleteTblItemsCLData);
-router.put("/updateTblItemsCLData", WBSDB.updateTblItemsCLData);
+router.get("/getAllTblItemsCL", checkAuthentication, WBSDB.getAllTblItemsCL);
+router.post("/insertTblItemsCLData", checkAuthentication, WBSDB.insertTblItemsCLData);
+router.delete("/deleteTblItemsCLData", checkAuthentication, WBSDB.deleteTblItemsCLData);
+router.put("/updateTblItemsCLData", checkAuthentication, WBSDB.updateTblItemsCLData);
 
 //  ----------- tbl_Items_CL APIS End -----------------
 
@@ -60,13 +61,13 @@ router.put("/updateTblItemsCLData", WBSDB.updateTblItemsCLData);
 
 // ----------- tbl_Shipment_Received_CL APIS Start -----------------
 
-router.get("/getAllTblShipmentReceivedCL", WBSDB.getAllTblShipmentReceivedCL);
+router.get("/getAllTblShipmentReceivedCL", checkAuthentication, WBSDB.getAllTblShipmentReceivedCL);
 
-router.post("/insertShipmentRecievedDataCL", WBSDB.insertShipmentRecievedDataCL);
+router.post("/insertShipmentRecievedDataCL", checkAuthentication, WBSDB.insertShipmentRecievedDataCL);
 
-router.delete("/deleteShipmentRecievedDataCL", WBSDB.deleteShipmentRecievedDataCL);
+router.delete("/deleteShipmentRecievedDataCL", checkAuthentication, WBSDB.deleteShipmentRecievedDataCL);
 
-router.put("/updateShipmentRecievedDataCL", WBSDB.updateShipmentRecievedDataCL);
+router.put("/updateShipmentRecievedDataCL", checkAuthentication, WBSDB.updateShipmentRecievedDataCL);
 
 // ----------- tbl_Shipment_Received_CL APIS End -----------------
 
@@ -74,13 +75,13 @@ router.put("/updateShipmentRecievedDataCL", WBSDB.updateShipmentRecievedDataCL);
 // ----------- tbl_Shipment_Palletizing_CL APIS Start -----------------
 
 // to get all the palletizing data from the tbl_Shipment_Palletizing_CL
-router.get("/getAllTblShipmentPalletizingCL", WBSDB.getAllTblShipmentPalletizingCL);
+router.get("/getAllTblShipmentPalletizingCL", checkAuthentication, WBSDB.getAllTblShipmentPalletizingCL);
 
-router.post("/insertShipmentPalletizingDataCL", WBSDB.insertShipmentPalletizingDataCL);
+router.post("/insertShipmentPalletizingDataCL", checkAuthentication, WBSDB.insertShipmentPalletizingDataCL);
 
-router.delete("/deleteShipmentPalletizingDataCL", WBSDB.deleteShipmentPalletizingDataCL);
+router.delete("/deleteShipmentPalletizingDataCL", checkAuthentication, WBSDB.deleteShipmentPalletizingDataCL);
 
-router.put("/updateShipmentPalletizingDataCL", WBSDB.updateShipmentPalletizingDataCL);
+router.put("/updateShipmentPalletizingDataCL", checkAuthentication, WBSDB.updateShipmentPalletizingDataCL);
 
 
 // ----------- tbl_Shipment_Palletizing_CL APIS End -----------------
@@ -88,25 +89,25 @@ router.put("/updateShipmentPalletizingDataCL", WBSDB.updateShipmentPalletizingDa
 
 // ----------- tbL_Picking_CL APIS Start -----------------
 
-router.get("/getAllTblPickingCL", WBSDB.getAllTblPickingCL);
+router.get("/getAllTblPickingCL", checkAuthentication, WBSDB.getAllTblPickingCL);
 
-router.post("/insertTblPickingDataCL", WBSDB.insertTblPickingDataCL);
+router.post("/insertTblPickingDataCL", checkAuthentication, WBSDB.insertTblPickingDataCL);
 
-router.delete("/deleteTblPickingDataCL", WBSDB.deleteTblPickingDataCL);
-router.put("/updateTblPickingDataCL", WBSDB.updateTblPickingDataCL);
+router.delete("/deleteTblPickingDataCL", checkAuthentication, WBSDB.deleteTblPickingDataCL);
+router.put("/updateTblPickingDataCL", checkAuthentication, WBSDB.updateTblPickingDataCL);
 
 
 // ----------- tbL_Picking_CL APIS End -----------------
 
 // ----------- tbl_Dispatching_CL APIS Start -----------------
 
-router.get("/getAllTblDispatchingCL", WBSDB.getAllTblDispatchingCL);
+router.get("/getAllTblDispatchingCL", checkAuthentication, WBSDB.getAllTblDispatchingCL);
 
-router.post("/insertTblDispatchingDataCL", WBSDB.insertTblDispatchingDataCL);
+router.post("/insertTblDispatchingDataCL", checkAuthentication, WBSDB.insertTblDispatchingDataCL);
 
-router.delete("/deleteTblDispatchingDataCL", WBSDB.deleteTblDispatchingDataCL);
+router.delete("/deleteTblDispatchingDataCL", checkAuthentication, WBSDB.deleteTblDispatchingDataCL);
 
-router.put("/updateTblDispatchingDataCL", WBSDB.updateTblDispatchingDataCL);
+router.put("/updateTblDispatchingDataCL", checkAuthentication, WBSDB.updateTblDispatchingDataCL);
 
 
 
@@ -115,16 +116,32 @@ router.put("/updateTblDispatchingDataCL", WBSDB.updateTblDispatchingDataCL);
 
 // ----------- tbl_locations_CL  APIS Start -----------------
 
-router.get("/getAllTblLocationsCL", WBSDB.getAllTblLocationsCL);
+router.get("/getAllTblLocationsCL", checkAuthentication, WBSDB.getAllTblLocationsCL);
 
-router.post("/insertTblLocationsDataCL", WBSDB.insertTblLocationsDataCL);
+router.post("/insertTblLocationsDataCL", checkAuthentication, WBSDB.insertTblLocationsDataCL);
 
-router.delete("/deleteTblLocationsDataCL", WBSDB.deleteTblLocationsDataCL);
+router.delete("/deleteTblLocationsDataCL", checkAuthentication, WBSDB.deleteTblLocationsDataCL);
 
-router.put("/updateTblLocationsDataCL", WBSDB.updateTblLocationsDataCL);
+router.put("/updateTblLocationsDataCL", checkAuthentication, WBSDB.updateTblLocationsDataCL);
 
 // ----------- tbl_locations_CL  APIS End -----------------
 
+
+// ----- tblUsers APIS Start ----------------- 
+
+router.get("/getAllTblUsers", checkAuthentication, WBSDB.getAllTblUsers);
+
+router.get("/getSingleTblUsers", checkAuthentication, WBSDB.getSingleTblUsers);
+
+router.post("/insertTblUsersData", checkAuthentication, WBSDB.insertTblUsersData);
+
+router.delete("/deleteTblUsersData", checkAuthentication, WBSDB.deleteTblUsersData);
+
+router.put("/updateTblUsersData", checkAuthentication, WBSDB.updateTblUsersData);
+
+router.post("/login", WBSDB.loginUser);
+
+// ----- tblUsers APIS End -----------------
 
 export default router;
 

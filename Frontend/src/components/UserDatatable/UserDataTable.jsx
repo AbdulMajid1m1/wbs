@@ -10,7 +10,7 @@ const UserDataTable = ({
   title,
   actionColumnVisibility,
   backButton,
-  UniqueId,
+  uniqueId,
   handleApiCall,
   deleteBtnEndPoint,
   ShipmentIdSearchEnable,
@@ -73,7 +73,7 @@ const UserDataTable = ({
   // Delete Action
   const handleDelete = async (id, rowdata) => {
     switch
-    (UniqueId) {
+    (uniqueId) {
       case "assetPrintingId":
         console.log(rowdata.TagNumber);
         data = { TagNumber: rowdata.TagNumber };
@@ -102,14 +102,14 @@ const UserDataTable = ({
   //Edit
   const handleEdit = async (rowData) => {
 
-    // switch (uniqueId) {
-    //   case "assetCategoriesId":
-    //     navigate("/admin/database-config/asset-categories/update-asset-category/" + rowData.TblMAINSUBSeriesNoID)
-    //     break;
-    //   default:
-    //     // do nothing
-    //     break;
-    // }
+    switch (uniqueId) {
+      case "itemTableId":
+        navigate("/admin/database-config/asset-categories/update-asset-category/" + rowData.TblMAINSUBSeriesNoID)
+        break;
+      default:
+        // do nothing
+        break;
+    }
   };
 
 
@@ -217,7 +217,7 @@ const UserDataTable = ({
           <span className="leftDatatableTitle">
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}
-            {/* {UniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
+            {/* {uniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
           </span>
         </div>
 

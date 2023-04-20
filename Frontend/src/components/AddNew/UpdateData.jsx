@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import { assetCategoryInput } from "../../utils/formSource";
+import userRequest from "../../utils/userRequest";
 // import Sidebar from "../../sidebar/Sidebar";
 // import Navbar from "../../navbar/Navbar";
 // import newRequest from "../../../utils/newRequest";
@@ -32,6 +33,8 @@ const UpdateData = ({ inputs, title,
     // }, []);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState({});
+
     // get state data from navigation 
 
     const [error, setError] = useState(false);
@@ -51,31 +54,16 @@ const UpdateData = ({ inputs, title,
         const storedData = sessionStorage.getItem('edit');
         const parsedData = JSON.parse(storedData);
         // console.log(parsedData)
-
         return parsedData
     })
+    // console.log(rowdata)
 
-    console.log(rowData)
-
+    // Handle Submit
     const handleSubmit = async event => {
-        // if form is not valid, do not submit
-        if (!event.target.checkValidity()) {
-            return;
-        }
         event.preventDefault();
         setIsLoading(true);
         try {
-            const data = {};
-            inputs.forEach(input => {
-                const name = input.name;
-                const value = event.target[name].value;
-
-                data[name] = value;
-            });
-            data['TblMAINSUBSeriesNoID'] = rowData.TblMAINSUBSeriesNoID;
-            console.log("data", data);
-
-            // newRequest.put("/updateMAINSUBSeriesNoById", data)
+            // userRequest.put("/updateShipmentRecievingDataCL", formData)
             //     .then((response) => {
             //         setIsLoading(false);
             //         console.log(response.data);
@@ -86,6 +74,29 @@ const UpdateData = ({ inputs, title,
             //         console.log(error);
             //         setError("Failed to Update");
             //     });
+            userRequest.put("/updateShipmentRecievingDataCL", 
+            {
+                "SHIPMENTSTATUS": 3.0,
+                "SHIPMENTID": "ABC123",
+                "ENTITY": "Company x",
+                "CONTAINERID": "CONT001",
+                "ARRIVALWAREHOUSE": "Warehouse x",
+                "ITEMNAME": "Product A",
+                "QTY": 20.0,
+                "PURCHID": "PURCH001",
+                "CLASSIFICATION": 2.0
+            }
+            )
+                .then((response) => {
+                    setIsLoading(false);
+                    console.log(response.data);
+                    setMessage("Successfully Updated");
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    setError("Failed to Update");
+                });
         } catch (error) {
             setIsLoading(false);
             console.log(error);
@@ -142,9 +153,14 @@ const UpdateData = ({ inputs, title,
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                // defaultValue={rowData[input.name]}
-                                                value={rowData[input.name]}
-                                                disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
+                                                defaultValue={rowdata && rowdata[input.name]}
+                                                onChange={(e) =>
+                                                    setFormData({
+                                                      ...formData,
+                                                      [input.name]: e.target.value,
+                                                    })
+                                                  }
+                                                // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
                                             />
                                         </div>
                                     ))}

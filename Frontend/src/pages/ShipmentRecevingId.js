@@ -49,7 +49,8 @@ const ShipmentRecevingId = () => {
       
       <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}
        backButton={true}
-        UniqueId="SHIPMENTID"
+        uniqueId="SHIPMENTID"
+        addNewNavigation="/addNew"
         ShipmentIdSearchEnable={true}
         ContainerIdSearchEnable={true}
 

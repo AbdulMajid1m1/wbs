@@ -47,10 +47,7 @@ const TblItem = () => {
             <SideBar />
 
 
-            <UserDataTable data={alldata} title="ALL ITEMS" columnsName={AllItems} backButton={true}
-
-                uniqueId="itemTableId"
-            />
+            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId" />
 
 
             {isLoading &&

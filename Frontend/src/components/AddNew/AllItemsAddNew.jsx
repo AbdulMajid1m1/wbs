@@ -4,13 +4,13 @@ import "./AddNew.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { assetCategoryInput } from "../../utils/formSource";
+import { allItemsInput, assetCategoryInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 // import Sidebar from "../../sidebar/Sidebar";
 // import Navbar from "../../navbar/Navbar";
 // import newRequest from "../../../utils/newRequest";
 // import CustomSnakebar from "../../../utils/CustomSnakebar";
-const AddNew = ({ inputs, title,
+const AllItemsAddNew = ({ inputs, title,
     method, apiEndPoint
 }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -125,7 +125,7 @@ const AddNew = ({ inputs, title,
                             <div className="right">
                                 
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {assetCategoryInput.map((input) => (
+                                    {allItemsInput.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
@@ -156,4 +156,4 @@ const AddNew = ({ inputs, title,
     );
 };
 
-export default AddNew;
+export default AllItemsAddNew;

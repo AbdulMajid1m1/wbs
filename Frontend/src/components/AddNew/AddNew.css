@@ -1,0 +1,127 @@
+.assetCategoryForm {
+    width: 100%;
+    display: flex;
+}
+.assetCategoryForm .img-circle-container {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    align-items: center;
+}
+.assetCategoryForm .newContainer {
+    flex: 6;
+}
+.assetCategoryForm .newContainer .top, .assetCategoryForm .newContainer .bottom {
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+    padding: 10px;
+    margin: 20px;
+    display: flex;
+}
+.assetCategoryForm .newContainer .top .topSpan, .assetCategoryForm .newContainer .bottom .topSpan {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+.assetCategoryForm .newContainer .top h1, .assetCategoryForm .newContainer .bottom h1 {
+    color: lightgray;
+    font-size: 20px;
+}
+.assetCategoryForm .newContainer .top button, .assetCategoryForm .newContainer .bottom button {
+    text-decoration: none;
+    color: crimson;
+    font-size: 16px;
+    font-weight: 400;
+    border: 1px solid crimson;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.assetCategoryForm .newContainer .top .left, .assetCategoryForm .newContainer .bottom .left {
+    flex: 1;
+    text-align: center;
+}
+.assetCategoryForm .newContainer .top .left img, .assetCategoryForm .newContainer .bottom .left img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.assetCategoryForm .newContainer .top .right, .assetCategoryForm .newContainer .bottom .right {
+    flex: 2;
+}
+.assetCategoryForm .newContainer .top .right form, .assetCategoryForm .newContainer .bottom .right form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: space-around;
+}
+.assetCategoryForm .newContainer .top .right form .formInput, .assetCategoryForm .newContainer .bottom .right form .formInput {
+    width: 40%;
+}
+.assetCategoryForm .newContainer .top .right form .formInput label, .assetCategoryForm .newContainer .bottom .right form .formInput label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.assetCategoryForm .newContainer .top .right form .formInput label .icon, .assetCategoryForm .newContainer .bottom .right form .formInput label .icon {
+    cursor: pointer;
+}
+.assetCategoryForm .newContainer .top .right form .formInput input, .assetCategoryForm .newContainer .bottom .right form .formInput input {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    color: gray;
+    border-bottom: 1px solid gray;
+}
+.assetCategoryForm .newContainer .top .right form button, .assetCategoryForm .newContainer .bottom .right form button {
+    width: 40%;
+    padding: 10px;
+    border: none;
+    background-color: teal;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.assetCategoryForm .newContainer .top .right .buttonAdd, .assetCategoryForm .newContainer .bottom .right .buttonAdd {
+    display: flex;
+    justify-content: right;
+    margin-right: 5%;
+    width: 100%;
+}
+.assetCategoryForm .statusInput {
+    width: 100%;
+    display: flex;
+    cursor: pointer;
+    gap: 20px;
+    align-items: left;
+    justify-content: left;
+}
+.assetCategoryForm .statusInput .status {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+.assetCategoryForm .statusInput .status .icon {
+    cursor: pointer;
+}
+.assetCategoryForm .statusInput .rodioDiv {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+.loading-spinner-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

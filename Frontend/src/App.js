@@ -6,6 +6,8 @@ import TblShipmentReceiveCl from './pages/TblShipmentReceiveCl'
 import TblItem from './pages/TblItem'
 import NavBar from './components/NavBar/Navbar'
 import ShipmentRecevingId from './pages/ShipmentRecevingId'
+import AddNew from './components/AddNew/AddNew'
+import UpdateData from './components/AddNew/UpdateData'
 
 
 const App = () => {
@@ -19,6 +21,8 @@ const App = () => {
           <Route path='/shipmentid' element={<ShipmentRecevingId />} />
           <Route path='/shipmentcl' element={<TblShipmentReceiveCl />} />
           <Route path='/items' element={<TblItem />} />
+          <Route path='/addnew' element={<AddNew />} />
+          <Route path='/update' element={<UpdateData />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -56,37 +56,14 @@ const UpdateAllItems = ({ inputs, title,
         // console.log(parsedData)
         return parsedData
     })
-    // console.log(rowdata)
+    console.log(rowdata)
 
     // Handle Submit
     const handleSubmit = async event => {
         event.preventDefault();
         setIsLoading(true);
         try {
-            // userRequest.put("/updateShipmentRecievingDataCL", formData)
-            //     .then((response) => {
-            //         setIsLoading(false);
-            //         console.log(response.data);
-            //         setMessage("Successfully Updated");
-            //     })
-            //     .catch((error) => {
-            //         setIsLoading(false);
-            //         console.log(error);
-            //         setError("Failed to Update");
-            //     });
-            userRequest.put("/updateShipmentRecievingDataCL", 
-            {
-                "SHIPMENTSTATUS": 3.0,
-                "SHIPMENTID": "ABC123",
-                "ENTITY": "Company x",
-                "CONTAINERID": "CONT001",
-                "ARRIVALWAREHOUSE": "Warehouse x",
-                "ITEMNAME": "Product A",
-                "QTY": 20.0,
-                "PURCHID": "PURCH001",
-                "CLASSIFICATION": 2.0
-            }
-            )
+            userRequest.put(`/updateTblItemsCLData?ITEMID=ITEM123&ITEMNAME=updated Item Name&ITEMGROUPID=GRP32`, formData)
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);

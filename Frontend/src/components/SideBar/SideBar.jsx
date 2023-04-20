@@ -14,7 +14,7 @@ const SideBar = () => {
         <img src={city}
           className='h-5 w-5' alt='' />
       </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Dashboard</span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] font-bold flex flex-col justify-center text-center md:inline-block tracking-wide">Dashboard</span>
     </li>
     <li
       // onClick={() =>
@@ -23,79 +23,22 @@ const SideBar = () => {
       <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
         <img src={icons} className='h-5 w-5' alt='' />
       </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Warehouse Operation</span>
+    </li>
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={city} className='h-5 w-5' alt='' />
+      </span>
       <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Items</span>
     </li>
     <li
       className='cursor-pointer'>
       <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={city} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Warehouse Locations</span>
-    </li>
-    <li
-      className='cursor-pointer'>
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
         <img src={icons} className='h-5 w-5' alt='' />
       </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Receving Zones</span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Receving</span>
     </li>
-    <li
-      className='cursor-pointer'>
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={city} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">dispatching Zones</span>
-    </li>
-    <li
-      className='cursor-pointer'>
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={icons} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Shipment Receving</span>
-    </li>
-    <li
-      className='cursor-pointer'>
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={city} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Recevied Shipments</span>
-    </li>
-    <li
-    >
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={icons} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Shipment Palletizing</span>
-    </li>
-    <li
-      className='cursor-pointer'
-       >
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={city} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Palletized Shipments</span>
-    </li>
-    <li  className='cursor-pointer'>
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={icons} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Shipment Put-away</span>
-    </li>
-    <li
-    >
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={city} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Picking</span>
-    </li>
-    <li
-      className='cursor-pointer'>
-      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
-        <img src={icons} className='h-5 w-5' alt='' />
-      </span>
-      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Picking Assignemts</span>
-    </li>
-
     <li
       className='cursor-pointer'>
       <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
@@ -103,6 +46,120 @@ const SideBar = () => {
       </span>
       <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Dispatching</span>
     </li>
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={icons} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">PutAway</span>
+    </li>
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={city} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Picking</span>
+    </li>
+    <li
+    >
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={icons} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Pallets</span>
+    </li>
+    <li
+      className='cursor-pointer'
+       >
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={city} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Mapped Items</span>
+    </li>
+    <li  className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={icons} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">RMA</span>
+    </li>
+    <li
+    >
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={city} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Physical Count</span>
+    </li>
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={icons} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] font-bold flex flex-col justify-center text-center md:inline-block tracking-wide">MasterData</span>
+    </li>
+
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={city} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Inventory Items</span>
+    </li>
+
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={icons} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Expected Receipts</span>
+    </li>
+
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={city} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Expexted Shipments</span>
+    </li>
+
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={icons} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Expected Transfer Orders</span>
+    </li>
+
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={city} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Items for Dispatch</span>
+    </li>
+
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={icons} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Internal Transfer</span>
+    </li>
+
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={city} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Pick List</span>
+    </li>
+
+    <li
+      className='cursor-pointer'>
+      <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+        <img src={icons} className='h-5 w-5' alt='' />
+      </span>
+      <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Packing Slip</span>
+    </li>
+
   </ul>
 </div>
 </div>

@@ -62,7 +62,31 @@ const UpdateData = ({ inputs, title,
         event.preventDefault();
         setIsLoading(true);
         try {
-            // userRequest.put("/updateShipmentRecievingDataCL", formData)
+            userRequest.put("/updateShipmentRecievingDataCL", formData)
+                .then((response) => {
+                    setIsLoading(false);
+                    console.log(response.data);
+                    setMessage("Successfully Updated");
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    console.log("Error hai")
+                    setError("Failed to Update");
+                });
+            // userRequest.put("/updateShipmentRecievingDataCL", 
+            // {
+            //     "SHIPMENTSTATUS": 3.0,
+            //     "SHIPMENTID": "ABC123",
+            //     "ENTITY": "Company x",
+            //     "CONTAINERID": "CONT001",
+            //     "ARRIVALWAREHOUSE": "Warehouse x",
+            //     "ITEMNAME": "Product A",
+            //     "QTY": 20.0,
+            //     "PURCHID": "PURCH001",
+            //     "CLASSIFICATION": 2.0
+            // }
+            // )
             //     .then((response) => {
             //         setIsLoading(false);
             //         console.log(response.data);
@@ -73,29 +97,6 @@ const UpdateData = ({ inputs, title,
             //         console.log(error);
             //         setError("Failed to Update");
             //     });
-            userRequest.put("/updateShipmentRecievingDataCL", 
-            {
-                "SHIPMENTSTATUS": 3.0,
-                "SHIPMENTID": "ABC123",
-                "ENTITY": "Company x",
-                "CONTAINERID": "CONT001",
-                "ARRIVALWAREHOUSE": "Warehouse x",
-                "ITEMNAME": "Product A",
-                "QTY": 20.0,
-                "PURCHID": "PURCH001",
-                "CLASSIFICATION": 2.0
-            }
-            )
-                .then((response) => {
-                    setIsLoading(false);
-                    console.log(response.data);
-                    setMessage("Successfully Updated");
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.log(error);
-                    setError("Failed to Update");
-                });
         } catch (error) {
             setIsLoading(false);
             console.log(error);

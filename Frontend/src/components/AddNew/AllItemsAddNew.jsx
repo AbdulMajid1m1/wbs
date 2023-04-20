@@ -1,15 +1,10 @@
 import "./AddNew.css";
-// import Sidebar from "../../components/sidebar/Sidebar";
-// import Navbar from "../../components/navbar/Navbar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import { allItemsInput, assetCategoryInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
-// import Sidebar from "../../sidebar/Sidebar";
-// import Navbar from "../../navbar/Navbar";
-// import newRequest from "../../../utils/newRequest";
-// import CustomSnakebar from "../../../utils/CustomSnakebar";
+
 const AllItemsAddNew = ({ inputs, title,
     method, apiEndPoint
 }) => {
@@ -37,23 +32,12 @@ const AllItemsAddNew = ({ inputs, title,
         try {
             setIsLoading(true);
 
-            const data = {
-                SHIPMENTID: event.target.SHIPMENTID.value,
-                ENTITY: event.target.ENTITY.value,
-                CONTAINERID: event.target.CONTAINERID.value,
-                ITEMID: event.target.ITEMID.value,
-                PURCHID: event.target.PURCHID.value,
-                MainCategoryCode: event.target.CLASSIFICATION.value,
-            };
-            console.log([data]);
-            userRequest.post(
-                "/insertShipmentRecievingDataCL", {
-                data: [data],
-            })
+            userRequest.post("/insertTblItemsCLData?ITEMNAME=Sample Item&ITEMID=ITEM124&ITEMGROUPID=group123")
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);
                     setMessage("Successfully Added");
+                    console.log("Inserted Data")
                     // reset form
                     // document.getElementById("myForm").reset();
 

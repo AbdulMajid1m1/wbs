@@ -2,48 +2,48 @@
 export const assetCategoryInput = [
 
     {
-      id: "assetCategoryInput1",
-      label: "Main Series No*",
-      name: "MainSubSeriesNo",
+      id: "shipmentIdInput1",
+      label: "Shipment ID*",
+      name: "SHIPMENTID",
       type: "text",
-      placeholder: "Main Series No Here",
+      placeholder: "Shipment ID",
     },
     {
-      id: "assetCategoryInput2",
-      label: "Series No*",
-      name: "SeriesNumber",
+      id: "shipmentIdInput2",
+      label: "Entity*",
+      name: "ENTITY",
       type: "text",
-      placeholder: "Series No Here",
-    },
-  
-    {
-      id: "MainCategoryCode3",
-      label: "Main Category Code*",
-      name: "MainCategoryCode",
-      type: "text",
-      placeholder: "Main Category Code Here",
+      placeholder: "Entity",
     },
   
     {
-      id: "assetCategoryInput3",
-      label: "Sub Category Code*",
-      name: "SubCategoryCode",
+      id: "shipmentIdInput3",
+      label: "Continer ID*",
+      name: "CONTAINERID",
       type: "text",
-      placeholder: "Sub Category Code Here",
+      placeholder: "Continer ID",
+    },
+  
+    {
+      id: "shipmentIdInput4",
+      label: "ITEM ID*",
+      name: "ITEMID",
+      type: "text",
+      placeholder: "Item Id",
     },
     {
-      id: "assetCategoryInput4",
-      name: "MainDescription",
-      label: "Main Description*",
+      id: "shipmentIdInput5",
+      name: "PURCHID",
+      label: "Purch ID*",
       type: "text",
-      placeholder: "Main Description",
+      placeholder: "Purch Id",
     },
     {
-      id: "assetCategoryInput5",
-      name: "SubDescription",
-      label: "Sub Description*",
+      id: "shipmentIdInput6",
+      name: "CLASSIFICATION",
+      label: "Classification*",
       type: "text",
-      placeholder: "Sub Description",
+      placeholder: "Classfication",
     },
   
   ];

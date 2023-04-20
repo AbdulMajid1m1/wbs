@@ -9,6 +9,8 @@ import { assetCategoryInput } from "../../utils/formSource";
 // import Navbar from "../../navbar/Navbar";
 // import newRequest from "../../../utils/newRequest";
 // import CustomSnakebar from "../../../utils/CustomSnakebar";
+
+
 const UpdateData = ({ inputs, title,
 }) => {
     const params = useParams();
@@ -35,6 +37,7 @@ const UpdateData = ({ inputs, title,
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
 
+
     const navigate = useNavigate();
 
     const resetSnakeBarMessages = () => {
@@ -42,6 +45,17 @@ const UpdateData = ({ inputs, title,
         setMessage(null);
 
     };
+
+   
+    const [rowdata, setRowData] = useState(() =>{
+        const storedData = sessionStorage.getItem('edit');
+        const parsedData = JSON.parse(storedData);
+        // console.log(parsedData)
+
+        return parsedData
+    })
+
+    console.log(rowdata)
 
     const handleSubmit = async event => {
         // if form is not valid, do not submit
@@ -128,7 +142,8 @@ const UpdateData = ({ inputs, title,
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                defaultValue={rowData && rowData[input.name]}
+                                                // defaultValue={rowData[input.name]}
+                                                value={rowData[input.name]}
                                                 disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
                                             />
                                         </div>

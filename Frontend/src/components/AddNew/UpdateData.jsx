@@ -17,7 +17,7 @@ const UpdateData = ({ inputs, title,
     const params = useParams();
     // get id from url
     const { id } = params;
-    const [rowData, setstateRowData] = useState([]);
+    // const [rowData, setstateRowData] = useState([]);
     // useEffect(() => {
     //     console.log(id)
     //     newRequest.post("/GetMAINSUBSeriesNoById", { TblMAINSUBSeriesNoID: id })
@@ -50,13 +50,12 @@ const UpdateData = ({ inputs, title,
     };
 
    
-    const [rowdata, setRowData] = useState(() =>{
+    const [rowData, setstateRowData] = useState(() =>{
         const storedData = sessionStorage.getItem('edit');
         const parsedData = JSON.parse(storedData);
         // console.log(parsedData)
         return parsedData
     })
-    // console.log(rowdata)
 
     // Handle Submit
     const handleSubmit = async event => {
@@ -153,7 +152,7 @@ const UpdateData = ({ inputs, title,
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                defaultValue={rowdata && rowdata[input.name]}
+                                                defaultValue={rowData && rowData[input.name]}
                                                 onChange={(e) =>
                                                     setFormData({
                                                       ...formData,

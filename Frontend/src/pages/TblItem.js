@@ -24,13 +24,13 @@ const TblItem = () => {
 
                         setAllData(response?.data ?? [])
                         setIsLoading(false)
-      
+
                     })
                     .catch(error => {
                         // handleUserError(error)
                         console.error(error);
                         setIsLoading(false)
-      
+
                     });
 
             }
@@ -46,31 +46,28 @@ const TblItem = () => {
 
             <SideBar />
 
-            
-            <UserDataTable data={alldata} addNewNavigation="/itemsnew" uniqueId="ITEMNAME" title="ALL ITEMS" columnsName={AllItems} backButton={true}
 
-
-            />
+            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId" />
 
 
             {isLoading &&
 
-            <div className='loading-spinner-background'
-            style={{
-                zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+                <div className='loading-spinner-background'
+                    style={{
+                        zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                        display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
 
 
-            }}
-            >
-            <SyncLoader
+                    }}
+                >
+                    <SyncLoader
 
-                size={18}
-                color={"#FFA500"}
-                // height={4}
-                loading={isLoading}
-            />
-            </div>
+                        size={18}
+                        color={"#FFA500"}
+                        // height={4}
+                        loading={isLoading}
+                    />
+                </div>
             }
 
         </div>

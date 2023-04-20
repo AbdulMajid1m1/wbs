@@ -56,7 +56,6 @@ const UpdateData = ({ inputs, title,
         // console.log(parsedData)
         return parsedData
     })
-    // console.log(rowdata)
 
     // Handle Submit
     const handleSubmit = async event => {
@@ -153,7 +152,7 @@ const UpdateData = ({ inputs, title,
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                defaultValue={rowdata && rowdata[input.name]}
+                                                defaultValue={rowData && rowData[input.name]}
                                                 onChange={(e) =>
                                                     setFormData({
                                                       ...formData,

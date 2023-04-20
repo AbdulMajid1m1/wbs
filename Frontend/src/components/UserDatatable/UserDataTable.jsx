@@ -3,6 +3,7 @@ import "./UserDataTable.css"
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import userRequest from "../../utils/userRequest";
 const UserDataTable = ({
   columnsName = [],
   data,
@@ -22,6 +23,7 @@ const UserDataTable = ({
   const [containerIdSearch, setContainerIdSearch] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
+  const [severity, setSeverity] = useState(null);
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -68,6 +70,49 @@ const UserDataTable = ({
   const myValue = localStorage.getItem("userId");
   console.log(myValue)
 
+  // Delete Action
+  const handleDelete = async (id, rowdata) => {
+    switch
+    (UniqueId) {
+      case "assetPrintingId":
+        console.log(rowdata.TagNumber);
+        data = { TagNumber: rowdata.TagNumber };
+        userRequest.delete(deleteBtnEndPoint, { data }).then((response) => {
+          console.log(response);
+          setMessage(response?.data?.message ?? "User deleted successfully");
+          setSeverity("success");
+        }).catch((error) => {
+          setMessage(error?.message ?? "Something went wrong");
+          setSeverity("error");
+        }
+        )
+
+        break;
+      default:
+        // do nothing
+        break;
+    }
+
+    if (true) {
+      setRecord(record.filter((item) => item.id !== id));
+      // alert("User deleted successfully");
+    }
+  }
+
+  //Edit
+  const handleEdit = async (rowData) => {
+
+    // switch (uniqueId) {
+    //   case "assetCategoriesId":
+    //     navigate("/admin/database-config/asset-categories/update-asset-category/" + rowData.TblMAINSUBSeriesNoID)
+    //     break;
+    //   default:
+    //     // do nothing
+    //     break;
+    // }
+  };
+
+
   const CustomCell = (params) => {
     const style = {
       whiteSpace: 'nowrap',
@@ -99,6 +144,41 @@ const UserDataTable = ({
       width: 30,
     },
   ];
+
+  
+  const actionColumn = [
+    {
+      field: "action",
+      headerName: "Action",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <div className="cellAction">
+            <div
+              className="deleteButton"
+              onClick={() => handleDelete(params.row.id, params.row)}
+            >
+              Delete
+            </div>
+            <span
+              onClick={() => handleEdit(params.row)}
+              style={{ textDecoration: "none" }}
+            >
+              <div className="viewButton">Update</div>
+            </span>
+          </div>
+        );
+      },
+    },
+  ];
+
+  // const idColumn = [
+  //   {
+  //     field: "id",
+  //     headerName: "ID",
+  //     width: 30,
+  //   },
+  // ];
 
   return (
     <>
@@ -153,11 +233,16 @@ const UserDataTable = ({
           className="datagrid"
           // rows={record}
           rows={filteredData}
+          // columns={
+          //   // actionColumnVisibility !== false
+          //   //   ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
+          //   //   : 
+          //   idColumn.concat(columnsWithCustomCell)
+          // }
           columns={
-            // actionColumnVisibility !== false
-            //   ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
-            //   : 
-            idColumn.concat(columnsWithCustomCell)
+            actionColumnVisibility !== false
+              ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
+              : idColumn.concat(columnsWithCustomCell)
           }
           pageSize={30}
 

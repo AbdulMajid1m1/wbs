@@ -49,8 +49,9 @@ const FirstTable = () => {
       
       <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}
        backButton={true}
-        UniqueId="SHIPMENTID"
+        uniqueId="SHIPMENTID"
         ShipmentIdSearchEnable={true}
+        addNewNavigation="/addnew"
         // ContainerIdSearchEnable={true}
 
        />

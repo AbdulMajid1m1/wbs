@@ -23,6 +23,7 @@ const App = () => {
           <Route path='/items' element={<TblItem />} />
           <Route path='/addnew' element={<AddNew />} />
           <Route path='/update' element={<UpdateData />} />
+          <Route path='/update/:id' element={<UpdateData />} />
         </Routes>
       </BrowserRouter>
     </div>

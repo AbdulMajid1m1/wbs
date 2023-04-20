@@ -1,7 +1,7 @@
 // import "./UserDataTable.scss";
 import "./UserDataTable.css"
 import { DataGrid } from "@mui/x-data-grid";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import userRequest from "../../utils/userRequest";
 const UserDataTable = ({
@@ -10,11 +10,13 @@ const UserDataTable = ({
   title,
   actionColumnVisibility,
   backButton,
-  UniqueId,
+  uniqueId,
   handleApiCall,
   deleteBtnEndPoint,
   ShipmentIdSearchEnable,
   ContainerIdSearchEnable,
+  buttonVisibility,
+  addNewNavigation
 
 }) => {
   const navigate = useNavigate();
@@ -73,7 +75,7 @@ const UserDataTable = ({
   // Delete Action
   const handleDelete = async (id, rowdata) => {
     switch
-    (UniqueId) {
+    (uniqueId) {
       case "assetPrintingId":
         console.log(rowdata.TagNumber);
         data = { TagNumber: rowdata.TagNumber };
@@ -101,15 +103,18 @@ const UserDataTable = ({
 
   //Edit
   const handleEdit = async (rowData) => {
+    // sessionStorage.setItem("edit", JSON.stringify(rowData));
 
-    // switch (uniqueId) {
-    //   case "assetCategoriesId":
-    //     navigate("/admin/database-config/asset-categories/update-asset-category/" + rowData.TblMAINSUBSeriesNoID)
-    //     break;
-    //   default:
-    //     // do nothing
-    //     break;
-    // }
+    sessionStorage.setItem('edit', JSON.stringify(rowData));
+    console.log(rowData)
+    switch (uniqueId) {
+      case "SHIPMENTID":
+        navigate("/update/" + rowData.SHIPMENTID)
+        break;
+      default:
+        // do nothing
+        break;
+    }
   };
 
 
@@ -189,6 +194,16 @@ const UserDataTable = ({
         <div className="datatableTitle">
           <div className="left-div">
             <span>{title}</span>
+            {buttonVisibility !== false && <span className="leftDatatableTitle">
+            <Link to={addNewNavigation} className="link">
+              Add New
+            </Link>
+            {/* <button onClick={handleExport}>Export to Excel</button> */}
+            {/* <input id="fileInput" className="chooseFileBtn" type="file" onChange={handleFileChange} /> */}
+            {/* <button onClick={handleImport}>Import from Excel File</button> */}
+          </span>
+          }
+
             {ShipmentIdSearchEnable &&
               ShipmentIdSearchEnable === true ? <span>
               <input
@@ -217,7 +232,7 @@ const UserDataTable = ({
           <span className="leftDatatableTitle">
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}
-            {/* {UniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
+            {/* {uniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
           </span>
         </div>
 

@@ -976,10 +976,594 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  }
+  },
 
 
   // ------------------------------ tbl_Shipment_Palletizing_CL END ------------------------------ //
+
+
+
+
+
+
+  // ------------------------------ tbL_Picking_CL START ------------------------------ //
+
+
+  async insertTblPickingDataCL(req, res, next) {
+    try {
+      const {
+        PICKINGROUTEID,
+        CUSTOMER,
+        INVENTLOCATIONID,
+        TRANSREFID,
+        ITEMID,
+        QTY,
+        EXPEDITIONSTATUS,
+        CONFIGID,
+        WMSLOCATIONID,
+        ITEMNAME,
+        inventTransId
+      } = req.body;
+
+      const query = `
+      INSERT INTO dbo.tbL_Picking_CL
+        (PICKINGROUTEID, CUSTOMER, INVENTLOCATIONID, TRANSREFID, ITEMID, QTY, EXPEDITIONSTATUS, CONFIGID, WMSLOCATIONID, ITEMNAME, inventTransId)
+      VALUES
+        (@PICKINGROUTEID, @CUSTOMER, @INVENTLOCATIONID, @TRANSREFID, @ITEMID, @QTY, @EXPEDITIONSTATUS, @CONFIGID, @WMSLOCATIONID, @ITEMNAME, @inventTransId)
+    `;
+
+      let request = pool2.request();
+      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+      request.input('CUSTOMER', sql.NVarChar, CUSTOMER);
+      request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
+      request.input('TRANSREFID', sql.NVarChar, TRANSREFID);
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('QTY', sql.Numeric, QTY);
+      request.input('EXPEDITIONSTATUS', sql.Numeric, EXPEDITIONSTATUS);
+      request.input('CONFIGID', sql.NVarChar, CONFIGID);
+      request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
+      request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+      request.input('inventTransId', sql.NVarChar, inventTransId);
+
+      await request.query(query);
+      res.status(201).send({ message: 'Data inserted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async getAllTblPickingCL(req, res, next) {
+    try {
+      const query = `
+        SELECT *
+        FROM dbo.tbL_Picking_CL
+      `;
+
+      const request = pool2.request();
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send(result.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateTblPickingDataCL(req, res, next) {
+    try {
+      const {
+        PICKINGROUTEID,
+        CUSTOMER,
+        INVENTLOCATIONID,
+        TRANSREFID,
+        ITEMID,
+        QTY,
+        EXPEDITIONSTATUS,
+        CONFIGID,
+        WMSLOCATIONID,
+        ITEMNAME,
+        inventTransId
+      } = req.body;
+
+      if (!PICKINGROUTEID) {
+        return res.status(400).send({ message: 'PICKINGROUTEID is required.' });
+      }
+
+      let query = `
+        UPDATE dbo.tbL_Picking_CL
+        SET `;
+
+      const updateFields = [];
+      const request = pool2.request();
+
+      if (CUSTOMER !== undefined) {
+        updateFields.push('CUSTOMER = @CUSTOMER');
+        request.input('CUSTOMER', sql.NVarChar, CUSTOMER);
+      }
+
+      if (INVENTLOCATIONID !== undefined) {
+        updateFields.push('INVENTLOCATIONID = @INVENTLOCATIONID');
+        request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
+      }
+
+      if (TRANSREFID !== undefined) {
+        updateFields.push('TRANSREFID = @TRANSREFID');
+        request.input('TRANSREFID', sql.NVarChar, TRANSREFID);
+      }
+
+      if (ITEMID !== undefined) {
+        updateFields.push('ITEMID = @ITEMID');
+        request.input('ITEMID', sql.NVarChar, ITEMID);
+      }
+
+      if (QTY !== undefined) {
+        updateFields.push('QTY = @QTY');
+        request.input('QTY', sql.Numeric, QTY);
+      }
+
+      if (EXPEDITIONSTATUS !== undefined) {
+        updateFields.push('EXPEDITIONSTATUS = @EXPEDITIONSTATUS');
+        request.input('EXPEDITIONSTATUS', sql.Numeric, EXPEDITIONSTATUS);
+      }
+
+      if (CONFIGID !== undefined) {
+        updateFields.push('CONFIGID = @CONFIGID');
+        request.input('CONFIGID', sql.NVarChar, CONFIGID);
+      }
+
+      if (WMSLOCATIONID !== undefined) {
+        updateFields.push('WMSLOCATIONID = @WMSLOCATIONID');
+        request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
+      }
+
+      if (ITEMNAME !== undefined) {
+        updateFields.push('ITEMNAME = @ITEMNAME');
+        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+      }
+
+      if (inventTransId !== undefined) {
+        updateFields.push('inventTransId = @inventTransId');
+        request.input('inventTransId', sql.NVarChar, inventTransId);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+        WHERE PICKINGROUTEID = @PICKINGROUTEID
+      `;
+
+      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async deleteTblPickingDataCL(req, res, next) {
+    try {
+      const { PICKINGROUTEID } = req.body;
+
+      if (!PICKINGROUTEID) {
+        return res.status(400).send({ message: 'PICKINGROUTEID is required.' });
+      }
+
+      const query = `
+        DELETE FROM dbo.tbL_Picking_CL
+        WHERE PICKINGROUTEID = @PICKINGROUTEID
+      `;
+
+      const request = pool2.request();
+      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  // ----------------------------- END OF PICKING CL COntrollers ----------------------------- //
+
+
+
+  // ----------------------------- START OF tbl_Dispatching_CL Controllers ----------------------------- //
+
+  async insertTblDispatchingDataCL(req, res, next) {
+    try {
+      const {
+        PACKINGSLIPID,
+        VEHICLESHIPPLATENUMBER,
+        INVENTLOCATIONID,
+        INVENTSITEID,
+        WMSLOCATIONID,
+        ITEMID,
+        QTY,
+        REMAIN,
+        NAME,
+        CONFIGID,
+        PICKINGROUTEID
+      } = req.body;
+
+      const query = `
+        INSERT INTO dbo.tbl_Dispatching_CL
+          (PACKINGSLIPID, VEHICLESHIPPLATENUMBER, INVENTLOCATIONID, INVENTSITEID, WMSLOCATIONID, ITEMID, QTY, REMAIN, NAME, CONFIGID, PICKINGROUTEID)
+        VALUES
+          (@PACKINGSLIPID, @VEHICLESHIPPLATENUMBER, @INVENTLOCATIONID, @INVENTSITEID, @WMSLOCATIONID, @ITEMID, @QTY, @REMAIN, @NAME, @CONFIGID, @PICKINGROUTEID)
+      `;
+
+      let request = pool2.request();
+      request.input('PACKINGSLIPID', sql.NVarChar, PACKINGSLIPID);
+      request.input('VEHICLESHIPPLATENUMBER', sql.NVarChar, VEHICLESHIPPLATENUMBER);
+      request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
+      request.input('INVENTSITEID', sql.NVarChar, INVENTSITEID);
+      request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('QTY', sql.Float, QTY);
+      request.input('REMAIN', sql.Float, REMAIN);
+      request.input('NAME', sql.NVarChar, NAME);
+      request.input('CONFIGID', sql.NVarChar, CONFIGID);
+      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+
+      await request.query(query);
+      res.status(201).send({ message: 'Data inserted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async getAllTblDispatchingCL(req, res, next) {
+    try {
+
+      const query = `
+        SELECT * FROM dbo.tbl_Dispatching_CL
+       
+      `;
+
+      let request = pool2.request();
+
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send(result.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateTblDispatchingDataCL(req, res, next) {
+    try {
+      const {
+        PACKINGSLIPID,
+        VEHICLESHIPPLATENUMBER,
+        INVENTLOCATIONID,
+        INVENTSITEID,
+        WMSLOCATIONID,
+        ITEMID,
+        QTY,
+        REMAIN,
+        NAME,
+        CONFIGID,
+        PICKINGROUTEID
+      } = req.body;
+
+      if (!PACKINGSLIPID) {
+        return res.status(400).send({ message: 'PACKINGSLIPID is required.' });
+      }
+
+      let query = `
+        UPDATE dbo.tbl_Dispatching_CL
+        SET `;
+
+      const updateFields = [];
+      const request = pool2.request();
+
+      if (VEHICLESHIPPLATENUMBER !== undefined) {
+        updateFields.push('VEHICLESHIPPLATENUMBER = @VEHICLESHIPPLATENUMBER');
+        request.input('VEHICLESHIPPLATENUMBER', sql.NVarChar, VEHICLESHIPPLATENUMBER);
+      }
+
+      if (INVENTLOCATIONID !== undefined) {
+        updateFields.push('INVENTLOCATIONID = @INVENTLOCATIONID');
+        request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
+      }
+
+      if (INVENTSITEID !== undefined) {
+        updateFields.push('INVENTSITEID = @INVENTSITEID');
+        request.input('INVENTSITEID', sql.NVarChar, INVENTSITEID);
+      }
+
+      if (WMSLOCATIONID !== undefined) {
+        updateFields.push('WMSLOCATIONID = @WMSLOCATIONID');
+        request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
+      }
+
+      if (ITEMID !== undefined) {
+        updateFields.push('ITEMID = @ITEMID');
+        request.input('ITEMID', sql.NVarChar, ITEMID);
+      }
+
+      if (QTY !== undefined) {
+        updateFields.push('QTY = @QTY');
+        request.input('QTY', sql.Float, QTY);
+      }
+
+      if (REMAIN !== undefined) {
+        updateFields.push('REMAIN = @REMAIN');
+        request.input('REMAIN', sql.Float, REMAIN);
+      }
+
+      if (NAME !== undefined) {
+        updateFields.push('NAME = @NAME');
+        request.input('NAME', sql.NVarChar, NAME);
+      }
+
+      if (CONFIGID !== undefined) {
+        updateFields.push('CONFIGID = @CONFIGID');
+        request.input('CONFIGID', sql.NVarChar, CONFIGID);
+      }
+
+      if (PICKINGROUTEID !== undefined) {
+        updateFields.push('PICKINGROUTEID = @PICKINGROUTEID');
+        request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+        WHERE PACKINGSLIPID = @PACKINGSLIPID
+      `;
+
+      request.input('PACKINGSLIPID', sql.NVarChar, PACKINGSLIPID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async deleteTblDispatchingDataCL(req, res, next) {
+    try {
+      const { PACKINGSLIPID } = req.body;
+
+      if (!PACKINGSLIPID) {
+        return res.status(400).send({ message: 'PACKINGSLIPID is required.' });
+      }
+
+      const query = `
+        DELETE FROM dbo.tbl_Dispatching_CL
+        WHERE PACKINGSLIPID = @PACKINGSLIPID
+      `;
+
+      let request = pool2.request();
+      request.input('PACKINGSLIPID', sql.NVarChar, PACKINGSLIPID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  // ------------------------ tbl_Dispatching_CL Controllers END ------------------------ //
+
+
+  // ------------------------ tbl_locations_CL Controllers START ------------------------ //
+
+
+
+  async insertTblLocationsDataCL(req, res, next) {
+    try {
+      const {
+        MAIN,
+        WAREHOUSE,
+        ZONE,
+        BIN,
+        ZONE_CODE,
+        ZONE_NAME,
+      } = req.body;
+
+      const query = `
+        INSERT INTO dbo.tbl_locations_CL
+          ( MAIN, WAREHOUSE, ZONE, BIN, ZONE_CODE, ZONE_NAME)
+        VALUES
+          (@MAIN, @WAREHOUSE, @ZONE, @BIN, @ZONE_CODE, @ZONE_NAME)
+      `;
+
+      let request = pool2.request();
+      request.input('MAIN', sql.VarChar, MAIN);
+      request.input('WAREHOUSE', sql.VarChar, WAREHOUSE);
+      request.input('ZONE', sql.VarChar, ZONE);
+      request.input('BIN', sql.VarChar, BIN);
+      request.input('ZONE_CODE', sql.VarChar, ZONE_CODE);
+      request.input('ZONE_NAME', sql.VarChar, ZONE_NAME);
+
+      await request.query(query);
+      res.status(201).send({ message: 'Location data inserted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async getAllTblLocationsCL(req, res, next) {
+    try {
+      const query = `
+        SELECT * FROM dbo.tbl_locations_CL
+      `;
+
+      let request = pool2.request();
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'no Data found.' });
+      }
+
+      res.status(200).send(result.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async updateTblLocationsDataCL(req, res, next) {
+    try {
+      const {
+        LOCATIONS_HFID,
+        MAIN,
+        WAREHOUSE,
+        ZONE,
+        BIN,
+        ZONE_CODE,
+        ZONE_NAME,
+      } = req.body;
+
+      if (!LOCATIONS_HFID) {
+        return res.status(400).send({ message: 'LOCATIONS_HFID is required.' });
+      }
+
+      let query = `
+        UPDATE dbo.tbl_locations_CL
+        SET `;
+
+      const updateFields = [];
+      const request = pool2.request();
+
+      if (MAIN !== undefined) {
+        updateFields.push('MAIN = @MAIN');
+        request.input('MAIN', sql.VarChar, MAIN);
+      }
+
+      if (WAREHOUSE !== undefined) {
+        updateFields.push('WAREHOUSE = @WAREHOUSE');
+        request.input('WAREHOUSE', sql.VarChar, WAREHOUSE);
+      }
+
+      if (ZONE !== undefined) {
+        updateFields.push('ZONE = @ZONE');
+        request.input('ZONE', sql.VarChar, ZONE);
+      }
+
+      if (BIN !== undefined) {
+        updateFields.push('BIN = @BIN');
+        request.input('BIN', sql.VarChar, BIN);
+      }
+
+      if (ZONE_CODE !== undefined) {
+        updateFields.push('ZONE_CODE = @ZONE_CODE');
+        request.input('ZONE_CODE', sql.VarChar, ZONE_CODE);
+      }
+
+      if (ZONE_NAME !== undefined) {
+        updateFields.push('ZONE_NAME = @ZONE_NAME');
+        request.input('ZONE_NAME', sql.VarChar, ZONE_NAME);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+  WHERE LOCATIONS_HFID = @LOCATIONS_HFID
+`;
+
+      request.input('LOCATIONS_HFID', sql.Numeric, LOCATIONS_HFID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Location record not found.' });
+      }
+
+      res.status(200).send({ message: 'Location data updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+  async deleteTblLocationsDataCL(req, res, next) {
+    try {
+      const { LOCATIONS_HFID } = req.body;
+
+      const query = `
+      DELETE FROM dbo.tbl_locations_CL
+      WHERE LOCATIONS_HFID = @LOCATIONS_HFID
+    `;
+
+      let request = pool2.request();
+      request.input('LOCATIONS_HFID', sql.Numeric, LOCATIONS_HFID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Location record not found.' });
+      }
+
+      res.status(200).send({ message: 'Location data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  // ------------------------ tbl_locations_CL Controllers END ------------------------ //
+
 
 
 

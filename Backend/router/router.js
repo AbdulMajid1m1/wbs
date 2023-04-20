@@ -71,6 +71,8 @@ router.put("/updateShipmentRecievedDataCL", WBSDB.updateShipmentRecievedDataCL);
 // ----------- tbl_Shipment_Received_CL APIS End -----------------
 
 
+// ----------- tbl_Shipment_Palletizing_CL APIS Start -----------------
+
 // to get all the palletizing data from the tbl_Shipment_Palletizing_CL
 router.get("/getAllTblShipmentPalletizingCL", WBSDB.getAllTblShipmentPalletizingCL);
 
@@ -81,7 +83,48 @@ router.delete("/deleteShipmentPalletizingDataCL", WBSDB.deleteShipmentPalletizin
 router.put("/updateShipmentPalletizingDataCL", WBSDB.updateShipmentPalletizingDataCL);
 
 
+// ----------- tbl_Shipment_Palletizing_CL APIS End -----------------
 
-// ----------- tbl_Shipment_Palletizing_CL APIS Start -----------------
+
+// ----------- tbL_Picking_CL APIS Start -----------------
+
+router.get("/getAllTblPickingCL", WBSDB.getAllTblPickingCL);
+
+router.post("/insertTblPickingDataCL", WBSDB.insertTblPickingDataCL);
+
+router.delete("/deleteTblPickingDataCL", WBSDB.deleteTblPickingDataCL);
+router.put("/updateTblPickingDataCL", WBSDB.updateTblPickingDataCL);
+
+
+// ----------- tbL_Picking_CL APIS End -----------------
+
+// ----------- tbl_Dispatching_CL APIS Start -----------------
+
+router.get("/getAllTblDispatchingCL", WBSDB.getAllTblDispatchingCL);
+
+router.post("/insertTblDispatchingDataCL", WBSDB.insertTblDispatchingDataCL);
+
+router.delete("/deleteTblDispatchingDataCL", WBSDB.deleteTblDispatchingDataCL);
+
+router.put("/updateTblDispatchingDataCL", WBSDB.updateTblDispatchingDataCL);
+
+
+
+// ----------- tbl_Dispatching_CL APIS End -----------------
+
+
+// ----------- tbl_locations_CL  APIS Start -----------------
+
+router.get("/getAllTblLocationsCL", WBSDB.getAllTblLocationsCL);
+
+router.post("/insertTblLocationsDataCL", WBSDB.insertTblLocationsDataCL);
+
+router.delete("/deleteTblLocationsDataCL", WBSDB.deleteTblLocationsDataCL);
+
+router.put("/updateTblLocationsDataCL", WBSDB.updateTblLocationsDataCL);
+
+// ----------- tbl_locations_CL  APIS End -----------------
+
+
 export default router;
 

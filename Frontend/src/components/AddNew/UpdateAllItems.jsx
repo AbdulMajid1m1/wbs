@@ -4,7 +4,7 @@ import "./AddNew.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { assetCategoryInput } from "../../utils/formSource";
+import { assetCategoryInput, updateAllItemsInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 // import Sidebar from "../../sidebar/Sidebar";
 // import Navbar from "../../navbar/Navbar";
@@ -12,7 +12,7 @@ import userRequest from "../../utils/userRequest";
 // import CustomSnakebar from "../../../utils/CustomSnakebar";
 
 
-const UpdateData = ({ inputs, title,
+const UpdateAllItems = ({ inputs, title,
 }) => {
     const params = useParams();
     // get id from url
@@ -148,7 +148,7 @@ const UpdateData = ({ inputs, title,
 
                             <div className="right">
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {assetCategoryInput.map((input) => (
+                                    {updateAllItemsInput.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
@@ -183,4 +183,4 @@ const UpdateData = ({ inputs, title,
     );
 };
 
-export default UpdateData;
+export default UpdateAllItems;

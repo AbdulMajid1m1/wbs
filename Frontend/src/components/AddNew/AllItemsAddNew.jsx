@@ -1,45 +1,25 @@
 import "./AddNew.css";
 // import Sidebar from "../../components/sidebar/Sidebar";
 // import Navbar from "../../components/navbar/Navbar";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { assetCategoryInput } from "../../utils/formSource";
+import { allItemsInput, assetCategoryInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 // import Sidebar from "../../sidebar/Sidebar";
 // import Navbar from "../../navbar/Navbar";
 // import newRequest from "../../../utils/newRequest";
 // import CustomSnakebar from "../../../utils/CustomSnakebar";
-
-
-const UpdateData = ({ inputs, title,
+const AllItemsAddNew = ({ inputs, title,
+    method, apiEndPoint
 }) => {
-    const params = useParams();
-    // get id from url
-    const { id } = params;
-    const [rowData, setstateRowData] = useState([]);
-    // useEffect(() => {
-    //     console.log(id)
-    //     newRequest.post("/GetMAINSUBSeriesNoById", { TblMAINSUBSeriesNoID: id })
-    //         .then((response) => {
-    //             console.log(response.data);
-    //             setstateRowData(response?.data?.recordset[0] ?? []);
-    //             console.log("rowData");
-    //             console.log(response?.data?.recordset[0] ?? []);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // }, []);
-
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({});
-
-    // get state data from navigation 
-
+    // get selectedRow from session storage
+    const selectedRow = JSON.parse(sessionStorage.getItem("selectedRow"));
+    console.log(selectedRow);
+    const [formValues, setFormValues] = useState(selectedRow);
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
-
 
     const navigate = useNavigate();
 
@@ -48,60 +28,56 @@ const UpdateData = ({ inputs, title,
         setMessage(null);
 
     };
-
-   
-    const [rowdata, setRowData] = useState(() =>{
-        const storedData = sessionStorage.getItem('edit');
-        const parsedData = JSON.parse(storedData);
-        // console.log(parsedData)
-        return parsedData
-    })
-    // console.log(rowdata)
-
-    // Handle Submit
     const handleSubmit = async event => {
+        // if form is not valid, do not submit
+        if (!event.target.checkValidity()) {
+            return;
+        }
         event.preventDefault();
-        setIsLoading(true);
         try {
-            // userRequest.put("/updateShipmentRecievingDataCL", formData)
-            //     .then((response) => {
-            //         setIsLoading(false);
-            //         console.log(response.data);
-            //         setMessage("Successfully Updated");
-            //     })
-            //     .catch((error) => {
-            //         setIsLoading(false);
-            //         console.log(error);
-            //         setError("Failed to Update");
-            //     });
-            userRequest.put("/updateShipmentRecievingDataCL", 
-            {
-                "SHIPMENTSTATUS": 3.0,
-                "SHIPMENTID": "ABC123",
-                "ENTITY": "Company x",
-                "CONTAINERID": "CONT001",
-                "ARRIVALWAREHOUSE": "Warehouse x",
-                "ITEMNAME": "Product A",
-                "QTY": 20.0,
-                "PURCHID": "PURCH001",
-                "CLASSIFICATION": 2.0
-            }
-            )
+            setIsLoading(true);
+
+            const data = {
+                SHIPMENTID: event.target.SHIPMENTID.value,
+                ENTITY: event.target.ENTITY.value,
+                CONTAINERID: event.target.CONTAINERID.value,
+                ITEMID: event.target.ITEMID.value,
+                PURCHID: event.target.PURCHID.value,
+                MainCategoryCode: event.target.CLASSIFICATION.value,
+            };
+            console.log([data]);
+            userRequest.post(
+                "/insertShipmentRecievingDataCL", {
+                data: [data],
+            })
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);
-                    setMessage("Successfully Updated");
-                })
+                    setMessage("Successfully Added");
+                    // reset form
+                    // document.getElementById("myForm").reset();
+
+                }
+                )
                 .catch((error) => {
                     setIsLoading(false);
                     console.log(error);
-                    setError("Failed to Update");
-                });
+                    setError(error?.response?.data?.message ?? "Failed to Add")
+                }
+                );
         } catch (error) {
             setIsLoading(false);
             console.log(error);
-            setError("Failed to Update");
+            setError("Failed to Add");
         }
+
+    };
+    const handleInputChange = (event, inputName) => {
+        const value = event.target.value;
+        setFormValues({
+            ...formValues,
+            [inputName]: value,
+        });
     };
     return (
         <>
@@ -147,20 +123,17 @@ const UpdateData = ({ inputs, title,
 
 
                             <div className="right">
+                                
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {assetCategoryInput.map((input) => (
+                                    {allItemsInput.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                defaultValue={rowdata && rowdata[input.name]}
-                                                onChange={(e) =>
-                                                    setFormData({
-                                                      ...formData,
-                                                      [input.name]: e.target.value,
-                                                    })
-                                                  }
-                                                // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
+                                                // defaultValue={selectedRow && selectedRow[input.name]}
+                                                value={formValues ? formValues[input.name] : ''}
+                                                onChange={(event) => handleInputChange(event, input.name)}
+
                                             />
                                         </div>
                                     ))}
@@ -168,7 +141,7 @@ const UpdateData = ({ inputs, title,
                                     <div className="buttonAdd" >
                                         <button
                                             type="submit"
-                                        >Update</button>
+                                        >Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -183,4 +156,4 @@ const UpdateData = ({ inputs, title,
     );
 };
 
-export default UpdateData;
+export default AllItemsAddNew;

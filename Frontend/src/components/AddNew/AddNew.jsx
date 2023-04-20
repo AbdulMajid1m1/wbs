@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import { assetCategoryInput } from "../../utils/formSource";
+import userRequest from "../../utils/userRequest";
 // import Sidebar from "../../sidebar/Sidebar";
 // import Navbar from "../../navbar/Navbar";
 // import newRequest from "../../../utils/newRequest";
@@ -27,51 +28,50 @@ const AddNew = ({ inputs, title,
         setMessage(null);
 
     };
-    // const handleSubmit = async event => {
-    //     // if form is not valid, do not submit
-    //     if (!event.target.checkValidity()) {
+    const handleSubmit = async event => {
+        // if form is not valid, do not submit
+        if (!event.target.checkValidity()) {
+            return;
+        }
+        event.preventDefault();
+        try {
+            setIsLoading(true);
 
-    //         return;
-    //     }
-    //     event.preventDefault();
-    //     try {
-    //         setIsLoading(true);
+            const data = {
+                SHIPMENTID: event.target.SHIPMENTID.value,
+                ENTITY: event.target.ENTITY.value,
+                CONTAINERID: event.target.CONTAINERID.value,
+                ITEMID: event.target.ITEMID.value,
+                PURCHID: event.target.PURCHID.value,
+                MainCategoryCode: event.target.CLASSIFICATION.value,
+            };
+            console.log([data]);
+            userRequest.post(
+                "/insertShipmentRecievingDataCL", {
+                data: [data],
+            })
+                .then((response) => {
+                    setIsLoading(false);
+                    console.log(response.data);
+                    setMessage("Successfully Added");
+                    // reset form
+                    // document.getElementById("myForm").reset();
 
-    //         const data = {
-    //             MainSubSeriesNo: event.target.MainSubSeriesNo.value,
-    //             SeriesNumber: event.target.SeriesNumber.value,
-    //             SubCategoryCode: event.target.SubCategoryCode.value,
-    //             MainDescription: event.target.MainDescription.value,
-    //             SubDescription: event.target.SubDescription.value,
-    //             MainCategoryCode: event.target.MainCategoryCode.value,
-    //         };
-    //         console.log([data]);
-    //         newRequest.post(
-    //             "/PostMAINSUBSeriesNo", {
-    //             data: [data],
-    //         })
-    //             .then((response) => {
-    //                 setIsLoading(false);
-    //                 console.log(response.data);
-    //                 setMessage("Successfully Added");
-    //                 // reset form
-    //                 // document.getElementById("myForm").reset();
+                }
+                )
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    setError(error?.response?.data?.message ?? "Failed to Add")
+                }
+                );
+        } catch (error) {
+            setIsLoading(false);
+            console.log(error);
+            setError("Failed to Add");
+        }
 
-    //             }
-    //             )
-    //             .catch((error) => {
-    //                 setIsLoading(false);
-    //                 console.log(error);
-    //                 setError(error?.response?.data?.message ?? "Failed to Add")
-    //             }
-    //             );
-    //     } catch (error) {
-    //         setIsLoading(false);
-    //         console.log(error);
-    //         setError("Failed to Add");
-    //     }
-
-    // };
+    };
     const handleInputChange = (event, inputName) => {
         const value = event.target.value;
         setFormValues({
@@ -123,8 +123,8 @@ const AddNew = ({ inputs, title,
 
 
                             <div className="right">
-                                {/* onSubmit={handleSubmit} */}
-                                <form  id="myForm" >
+                                
+                                <form onSubmit={handleSubmit} id="myForm" >
                                     {assetCategoryInput.map((input) => (
 
                                         <div className="formInput" key={input.id}>

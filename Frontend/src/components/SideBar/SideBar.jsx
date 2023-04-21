@@ -2,18 +2,20 @@ import React, { useState } from 'react'
 import icons from "../../images/icons.png"
 import city from "../../images/city.png"
 import {IoMdArrowDropdownCircle, IoMdArrowDropupCircle} from "react-icons/io"
+import { useNavigate } from 'react-router-dom'
 
 const SideBar = () => {
   const [showWarehouseDropdown, setShowWarehouseDropdown] = useState(false);
   const [showMasterDataDropdown, setShowMasterDataDropdown] = useState(false);
 
+  const navigate = useNavigate();
   return (
     <div>
      {/* <!-- Sidebar --> */}
  <div className="fixed left-0 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-0 w-14 md:w-56 xl:w-64 2xl:w-64 3xl:w-80 pt-5 bg-gray-500 dark:bg-gray-600 h-full text-white border-none overflow-scroll">
   <div className="flex flex-col justify-between">
     <ul className="flex flex-col py-4 space-y-5">
-      <li className='cursor-pointer hover:transform hover:scale-110 transition-all'>
+      <li onClick={() => navigate('/dashboard')} className='cursor-pointer hover:transform hover:scale-110 transition-all'>
         <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
         <img src={city}
           className='h-5 w-5' alt='' />

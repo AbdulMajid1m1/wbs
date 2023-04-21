@@ -28,7 +28,7 @@ const NavBar = () => {
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'black' }}>
                         {/* WBS */}
-                        <img src={alessa} className='h-14 w-32' alt='' />
+                        <img src={alessa} className='h-14 w-40' alt='' />
                     </Typography>  
                     {isMobile ? (
                         <>

@@ -49,8 +49,8 @@ const UpdateAllItems = ({ inputs, title,
 
     };
 
-   
-    const [rowdata, setRowData] = useState(() =>{
+
+    const [rowdata, setRowData] = useState(() => {
         const storedData = sessionStorage.getItem('edit');
         const parsedData = JSON.parse(storedData);
         // console.log(parsedData)
@@ -62,23 +62,40 @@ const UpdateAllItems = ({ inputs, title,
     const handleSubmit = async event => {
         event.preventDefault();
         setIsLoading(true);
-        try {
-            userRequest.put(`/updateTblItemsCLData?ITEMID=ITEM123&ITEMNAME=updated Item Name&ITEMGROUPID=GRP32`, formData)
-                .then((response) => {
-                    setIsLoading(false);
-                    console.log(response.data);
-                    setMessage("Successfully Updated");
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.log(error);
-                    setError("Failed to Update");
-                });
-        } catch (error) {
-            setIsLoading(false);
-            console.log(error);
-            setError("Failed to Update");
-        }
+
+        // Convert the data object to a query string and append it to the URL
+        // Convert the data object to a query string and append it to the URL
+        // Convert the data object to a query string and append it to the URL
+        const data = {
+            SHIPMENTSTATUS: "3.0",
+            SHIPMENTID: "ABC123",
+            ENTITY: "Company A",
+            CONTAINERID: "CONT001",
+            ARRIVALWAREHOUSE: "Warehouse A",
+            ITEMNAME: "Product A",
+            QTY: "10.0",
+            ITEMID: "ITEM001",
+            PURCHID: "PURCH00",
+            CLASSIFICATION: "2.0",
+        };
+
+        const queryString = new URLSearchParams(data).toString();
+        const url = `/updateShipmentRecievingDataCL?${queryString}`;
+
+        // Make the request with the updated URL
+        userRequest
+            .put(url)
+            .then((response) => {
+                setIsLoading(false);
+                console.log(response.data);
+                setMessage("Successfully Updated");
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.log(error);
+                setError("Failed to Update");
+            });
+
     };
     return (
         <>
@@ -133,11 +150,11 @@ const UpdateAllItems = ({ inputs, title,
                                                 defaultValue={rowdata && rowdata[input.name]}
                                                 onChange={(e) =>
                                                     setFormData({
-                                                      ...formData,
-                                                      [input.name]: e.target.value,
+                                                        ...formData,
+                                                        [input.name]: e.target.value,
                                                     })
-                                                  }
-                                                // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
+                                                }
+                                            // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
                                             />
                                         </div>
                                     ))}

@@ -470,6 +470,7 @@ const WBSDB = {
         PURCHID,
         CLASSIFICATION,
       } = req.query;
+      console.log(req.query);
 
       if (!SHIPMENTID) {
         return res.status(400).send({ message: 'SHIPMENTID is required.' });

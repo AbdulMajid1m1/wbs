@@ -12,7 +12,7 @@ const MainComponent = () => {
 
         {/* <!-- Sidebar --> */}
 
-        <SideBar2 />
+        {/* <SideBar2 /> */}
 
         {/* <!-- /Sidebar --> */}
 

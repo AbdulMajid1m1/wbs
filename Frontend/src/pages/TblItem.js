@@ -46,7 +46,7 @@ const TblItem = () => {
         <div>
 
             {/* <SideBar /> */}
-            <SideBar2 />
+            {/* <SideBar2 /> */}
 
             <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId" />
 

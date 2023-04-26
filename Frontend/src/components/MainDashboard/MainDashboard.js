@@ -421,6 +421,7 @@ const MainComponent = () => {
                             <p className="text-xs text-gray-600 dark:text-gray-400">Actress</p>
                           </div>
                         </div>
+                     
                       </td>
                       <td className="px-4 py-3 text-sm">$1276.75</td>
                       <td className="px-4 py-3 text-xs">

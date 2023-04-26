@@ -99,7 +99,7 @@ export const TblAllLocationsInput = [
 
   {
     id: "locationIdInput1",
-    label: "MAIN*",
+    label: "MAIN LOCATION*",
     name: "MAIN",
     type: "text",
     placeholder: "MAIN",

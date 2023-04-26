@@ -69,6 +69,7 @@ const App = () => {
             <Route path='/tbl-new-location' element={<AddNewTblLocations title="Add Tbl Locations"/>} />
             <Route path='/tbldispatching' element={<TblDispatchingCL />} />
             <Route path='/tbldispatchingupdates/:id' element={<TblDispatchingUpdates title="All Dispatching Updates"/>} />
+            <Route path='/tbl-new-dispatch' element={<AddNewTblLocations title="Add Tbl New Dispatch"/>} />
 
           </Routes>
         </span>

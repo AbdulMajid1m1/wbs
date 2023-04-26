@@ -5,7 +5,7 @@ import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 // import SideBar from '../../components/SideBar/SideBar'
-import SideBar2 from '../../components/SideBar/SideBar2'
+// import SideBar2 from '../../components/SideBar/SideBar2'
 
 const TblAllLocations = () => {
     const [alldata, setAllData] = useState([]);
@@ -46,7 +46,7 @@ const TblAllLocations = () => {
         <div>
 
             {/* <SideBar /> */}
-            <SideBar2 />
+            {/* <SideBar2 /> */}
 
             <UserDataTable data={alldata} addNewNavigation="/tbl-new-location" title="TBL ALL LOCATIONS " columnsName={TblAllLocationColumn} backButton={true} uniqueId="LOCATIONS_HFID"/>
 

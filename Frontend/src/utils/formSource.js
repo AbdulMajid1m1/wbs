@@ -183,7 +183,7 @@ export const TblDispatchingUpdatesColumn = [
     label: "ITEM ID*",
     type: "text",
     placeholder: "ITEM ID",
-  },
+  },  
   {
     id: "dispatchingIdInput7",
     name: "NAME",

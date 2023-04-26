@@ -2,20 +2,21 @@ import HttpStatus from 'http-status';
 import jwtHelper from '../helpers/jwt_Token.js';
 
 const checkAuthentication = async (req, res, next) => {
-  try {
-    const token = getToken(req) // function to retrieve the token from header|query|body
+  // try {
+  //   const token = getToken(req) // function to retrieve the token from header|query|body
 
-    let verifiedToken = await jwtHelper.verifyToken(token); // Check whether JWT token is valid or not 
-    // if verify token is valid then save the token in req object
-    req.token = verifiedToken;
-    return next();
+  //   let verifiedToken = await jwtHelper.verifyToken(token); // Check whether JWT token is valid or not 
+  //   // if verify token is valid then save the token in req object
+  //   req.token = verifiedToken;
+  //   return next();
 
-  } catch (error) {
-    return res.status(401).json({ // If JWT token is not valid, return error message
-      message: 'Invalid Token.',
-      https: HttpStatus.UNAUTHORIZED,
-    });
-  }
+  // } catch (error) {
+  //   return res.status(401).json({ // If JWT token is not valid, return error message
+  //     message: 'Invalid Token.',
+  //     https: HttpStatus.UNAUTHORIZED,
+  //   });
+  // }
+  return next(); // remove this line after uncommenting above code
 };
 
 

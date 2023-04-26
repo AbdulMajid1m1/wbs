@@ -4,7 +4,8 @@ import { allUserAssetsColumns } from '../utils/datatablesource'
 // import userRequest from "../utils/userRequest";
 import userRequest from "../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
-import SideBar from '../components/SideBar/SideBar';
+// import SideBar from '../components/SideBar/SideBar';
+import SideBar2 from '../components/SideBar/SideBar2';
 
 
 const FirstTable = () => {
@@ -44,7 +45,7 @@ const FirstTable = () => {
   return (
     <div>
 
-      <SideBar />
+      <SideBar2 />
 
       
       <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}

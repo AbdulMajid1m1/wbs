@@ -5,6 +5,7 @@ import userRequest from "../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 import SideBar from '../components/SideBar/SideBar'
+import SideBar2 from '../components/SideBar/SideBar2'
 
 const TblItem = () => {
     const [alldata, setAllData] = useState([]);
@@ -44,8 +45,8 @@ const TblItem = () => {
     return (
         <div>
 
-            <SideBar />
-
+            {/* <SideBar /> */}
+            <SideBar2 />
 
             <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId" />
 

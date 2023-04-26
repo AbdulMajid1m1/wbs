@@ -1,6 +1,8 @@
 import React from 'react'
 import "./MainComponent.css"
 import alessa from "../../images/alessalogo.png"
+import SideBar2 from '../SideBar/SideBar2'
+// import SideBar from '../SideBar/SideBar'
 
 const MainComponent = () => {
     
@@ -9,10 +11,9 @@ const MainComponent = () => {
        <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
 
 {/* <!-- Header --> */}
-<div className="fixed w-full flex items-center justify-between h-14 text-white z-10">
+{/* <div className="fixed w-full flex items-center justify-between h-14 text-white z-10">
   <div className="flex items-center justify-start md:justify-center pl-3 w-14 md:w-64 h-14 bg-blue-800 dark:bg-gray-800 border-none">
     <img className="w-7 h-7 md:w-36 md:h-10 mr-2 rounded-sm overflow-hidden" src={alessa} />
-    {/* <span className="hidden md:block">ADMIN</span> */}
   </div>
   <div className="flex justify-between items-center h-14 bg-blue-800 dark:bg-gray-800 header-right">
     <div className="bg-white rounded flex items-center w-full max-w-xl mr-4 p-2 shadow-sm border border-gray-200">
@@ -77,11 +78,16 @@ const MainComponent = () => {
       </li>
     </ul>
   </div>
-</div>
+</div> */}
 {/* <!-- ./Header --> */}
 
 {/* <!-- Sidebar --> */}
-<div className="fixed flex flex-col top-14 left-0 w-14 hover:w-64 md:w-64 bg-blue-900 dark:bg-gray-900 h-full text-white transition-all duration-300 border-none z-10 sidebar">
+
+
+  <SideBar2 />
+
+  
+{/* <div className="fixed flex flex-col top-14 left-0 w-14 hover:w-64 md:w-64 bg-blue-900 dark:bg-gray-900 h-full text-white transition-all duration-300 border-none z-10 sidebar">
   <div className="overflow-y-auto overflow-x-hidden flex flex-col justify-between flex-grow">
     <ul className="flex flex-col py-4 space-y-1">
       <li className="px-5 hidden md:block">
@@ -150,10 +156,10 @@ const MainComponent = () => {
     </ul>
     <p className="mb-14 px-5 py-3 hidden md:block text-center text-xs">Copyright @2021</p>
   </div>
-</div>
+</div> */}
 {/* <!-- ./Sidebar --> */}
 
-<div className="h-full ml-14 mt-14 mb-10 md:ml-64">
+<div className="h-full ml-14 mb-10 md:ml-64">
 
   {/* <!-- Statistics Cards --> */}
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-4 gap-4">

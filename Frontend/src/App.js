@@ -1,23 +1,23 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Login from './pages/Login'
-import TblShipmentReceving from './pages/TblShipmentReceving'
-import TblShipmentReceiveCl from './pages/TblShipmentReceiveCl'
-import TblItem from './pages/TblItem'
-import NavBar from './components/NavBar/Navbar'
-import ShipmentRecevingId from './pages/ShipmentRecevingId'
+import Login from './pages/Login/Login'
+import TblShipmentReceving from './pages/TblShipmentReceving/TblShipmentReceving'
+import TblShipmentReceiveCl from './pages/TblShipmentReceiveCl/TblShipmentReceiveCl'
+import TblItem from './pages/TblItem/TblItem'
+// import NavBar from './components/NavBar/Navbar'
+import ShipmentRecevingId from './pages/ShipmentRecevingId/ShipmentRecevingId'
 import AddNew from './components/AddNew/AddNew'
-import UpdateData from './components/AddNew/UpdateData'
+import UpdateData from './components/UpdatesItem/UpdateData'
 import AllItemsAddNew from './components/AddNew/AllItemsAddNew'
-import UpdateAllItems from './components/AddNew/UpdateAllItems'
+import UpdateAllItems from './components/UpdatesItem/UpdateAllItems'
 import MainDashboard from './components/MainDashboard/MainDashboard'
+import TblAllLocations from './pages/TblAllLocations/TblAllLocations'
+import TblLocationsUpdates from './components/UpdatesItem/TblLocationsUpdates'
+import AddNewTblLocations from './components/AddNew/AddNewTblLocations'
 import SideBar2 from './components/SideBar/SideBar2'
-import './App.css'
-
 
 const App = () => {
   return (
-    // <div>
     <BrowserRouter>
       {/* <NavBar /> */}
       <div
@@ -48,7 +48,6 @@ const App = () => {
         </span>
       </div>
     </BrowserRouter>
-    // </div>
   )
 }
 

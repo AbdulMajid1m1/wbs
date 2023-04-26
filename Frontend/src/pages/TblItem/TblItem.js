@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import UserDataTable from '../components/UserDatatable/UserDataTable'
-import { AllItems } from '../utils/datatablesource'
-import userRequest from "../utils/userRequest"
+import UserDataTable from '../../components/UserDatatable/UserDataTable'
+import { AllItems } from '../../utils/datatablesource'
+import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
-import SideBar from '../components/SideBar/SideBar'
-import SideBar2 from '../components/SideBar/SideBar2'
+// import SideBar from '../../components/SideBar/SideBar'
+import SideBar2 from '../../components/SideBar/SideBar2'
 
 const TblItem = () => {
     const [alldata, setAllData] = useState([]);

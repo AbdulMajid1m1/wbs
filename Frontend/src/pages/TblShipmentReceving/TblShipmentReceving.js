@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import UserDataTable from '../components/UserDatatable/UserDataTable'
-import { allUserAssetsColumns } from '../utils/datatablesource'
+import React, { useEffect, useState } from 'react'
+import UserDataTable from '../../components/UserDatatable/UserDataTable'
+import { allUserAssetsColumns } from '../../utils/datatablesource'
 // import userRequest from "../utils/userRequest";
-import userRequest from "../utils/userRequest"
+import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
 // import SideBar from '../components/SideBar/SideBar';
-import SideBar2 from '../components/SideBar/SideBar2';
+import SideBar2 from '../../components/SideBar/SideBar2';
 
 
 const FirstTable = () => {

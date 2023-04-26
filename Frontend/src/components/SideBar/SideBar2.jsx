@@ -14,7 +14,11 @@ const SideBar2 = () => {
     return (
         <div>
             {/* <SideBar /> */}
-            <div className="fixed flex flex-col left-0 w-14 md:w-64 bg-blue-900 dark:bg-gray-900 h-full text-white border-none z-10">
+            <div className="fixed flex flex-col left-0 w-14 md:w-64 bg-blue-900 dark:bg-gray-900 h-full text-white border-none z-10"
+                 // apply position inherited to the parent element
+                // to make the sidebar fixed
+                style={{ position: 'inherit', height: '100vh', width: "100%" }}
+            >
                 <div className="overflow-y-auto overflow-x-hidden flex flex-col justify-between flex-grow">
                     <ul className="flex flex-col py-4 space-y-4">
                         <li className="px-5 hidden md:block">

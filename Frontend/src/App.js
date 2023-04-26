@@ -17,7 +17,6 @@ import './App.css'
 
 const App = () => {
   return (
-    // <div>
     <BrowserRouter>
       {/* <NavBar /> */}
       <div
@@ -48,7 +47,6 @@ const App = () => {
         </span>
       </div>
     </BrowserRouter>
-    // </div>
   )
 }
 

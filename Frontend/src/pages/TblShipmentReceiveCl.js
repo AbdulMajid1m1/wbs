@@ -40,7 +40,7 @@ const TableShipmentReceiveCl = () => {
 
   return (
     <div>
-        <SideBar />
+        {/* <SideBar /> */}
         
         <UserDataTable 
         

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import UserDataTable from '../components/UserDatatable/UserDataTable'
 import { allUserAssetsColumns } from '../utils/datatablesource'
 // import userRequest from "../utils/userRequest";
@@ -15,6 +15,7 @@ const FirstTable = () => {
   useEffect(() => {
     const getAllAssetsList = async () => {
       try {
+
 
         userRequest.get("/getAllShipmentDataFromtShipmentReceiving")
           // userRequest.post("/getShipmentDataFromtShipmentReceiving", {

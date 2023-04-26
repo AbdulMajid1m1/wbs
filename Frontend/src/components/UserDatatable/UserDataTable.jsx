@@ -120,7 +120,7 @@ const UserDataTable = ({
             setSeverity("error");
           }
           )
-        
+
           break;
         default:
           // do nothing
@@ -169,13 +169,13 @@ const UserDataTable = ({
       case "SHIPMENTID":
         navigate("/update/" + rowData.SHIPMENTID)
         break;
-        case "ITEMNAME":
+      case "ITEMNAME":
         navigate("/allitems/" + rowData.ITEMNAME)
         break;
-        // case "ITEMNAME":
-        //   navigate("/allitems/" + rowData.ITEMNAME)
-        //   break;
-        
+      // case "ITEMNAME":
+      //   navigate("/allitems/" + rowData.ITEMNAME)
+      //   break;
+
       default:
         // do nothing
         break;
@@ -215,7 +215,7 @@ const UserDataTable = ({
     },
   ];
 
-  
+
   const actionColumn = [
     {
       field: "action",
@@ -280,12 +280,6 @@ const UserDataTable = ({
         <div className="datatableTitle">
           <div className="left-div">
             <span>{title}</span>
-            {buttonVisibility !== false && <span className="leftDatatableTitle">
-            <Link to={addNewNavigation} className="link">
-              Add New
-            </Link>
-          </span>
-          }
 
             {ShipmentIdSearchEnable &&
               ShipmentIdSearchEnable === true ? <span>
@@ -313,6 +307,13 @@ const UserDataTable = ({
           </div>
 
           <span className="leftDatatableTitle">
+            {buttonVisibility !== false && <span className="leftDatatableTitle">
+              <Link to={addNewNavigation} className="link">
+                Add New
+              </Link>
+            </span>
+            }
+
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
             {/* <button onClick={handlePrint}>Print Asset</button> */}
             {/* {uniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}

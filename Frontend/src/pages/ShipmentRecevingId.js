@@ -44,7 +44,7 @@ const ShipmentRecevingId = () => {
   return (
     <div>
 
-      <SideBar />
+      {/* <SideBar /> */}
 
       
       <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}

@@ -17,9 +17,7 @@ const MainComponent = () => {
         {/* <!-- /Sidebar --> */}
 
 
-        <div className="h-full ml-14 mb-10"
-        
-        >
+        <div className="h-full ml-14 mb-10 md:ml-64">
 
           {/* <!-- Statistics Cards --> */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-4 gap-4">
@@ -423,6 +421,7 @@ const MainComponent = () => {
                             <p className="text-xs text-gray-600 dark:text-gray-400">Actress</p>
                           </div>
                         </div>
+                     
                       </td>
                       <td className="px-4 py-3 text-sm">$1276.75</td>
                       <td className="px-4 py-3 text-xs">

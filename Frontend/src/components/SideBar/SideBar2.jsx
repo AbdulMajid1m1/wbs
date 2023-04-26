@@ -29,7 +29,7 @@ const SideBar2 = () => {
                         </li>
                         <li onClick={() => navigate('/dashboard')} className='cursor-pointer lg:flex lg:items-center h-11 focus:outline-none hover:bg-blue-800 dark:hover:bg-gray-600 text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500 dark:hover:border-gray-800'>
                             {/* <a href="#" className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-blue-800 dark:hover:bg-gray-600 text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500 dark:hover:border-gray-800 pr-6"> */}
-                            <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-3">
+                            <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-2">
                                 <img src={city}
                                     className='h-5 w-5' alt='' />
                             </span>
@@ -40,7 +40,7 @@ const SideBar2 = () => {
 
                         {/* Warehouse Data Icons */}
                         <li className='cursor-pointer lg:flex lg:items-center h-11 focus:outline-none hover:bg-blue-800 dark:hover:bg-gray-600 text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500 dark:hover:border-gray-800' onClick={() => setShowWarehouseDropdown(!showWarehouseDropdown)}>
-                            <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-3">
+                            <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-2">
                                 <img src={icons}
                                     className='h-5 w-5' alt='' />
                             </span>
@@ -65,11 +65,18 @@ const SideBar2 = () => {
                                     <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Receving</span>
                                 </li>
                                 <li
-                                    className='cursor-pointer'>
+                                    className='cursor-pointer' onClick={() => navigate('/tbldispatching')}>
                                     <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
                                         <img src={city} className='h-5 w-5' alt='' />
                                     </span>
                                     <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Dispatching</span>
+                                </li>
+                                <li
+                                    className='cursor-pointer' onClick={() => navigate('/tblLocation')}>
+                                    <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+                                        <img src={icons} className='h-5 w-5' alt='' />
+                                    </span>
+                                    <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Warehouse Locations</span>
                                 </li>
                                 <li
                                     className='cursor-pointer'>
@@ -216,7 +223,7 @@ const SideBar2 = () => {
             </div>
             {/* <!-- ./Sidebar --> */}
 
-        </div >
+        </div>
     )
 }
 

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import UserDataTable from '../components/UserDatatable/UserDataTable'
-import { AllItems } from '../utils/datatablesource'
-import userRequest from "../utils/userRequest"
+import UserDataTable from '../../components/UserDatatable/UserDataTable'
+import { AllItems, TblAllLocationColumn, TblDispatchingCLColumn } from '../../utils/datatablesource'
+import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
-import SideBar from '../components/SideBar/SideBar'
-import SideBar2 from '../components/SideBar/SideBar2'
+// import SideBar from '../../components/SideBar/SideBar'
+// import SideBar2 from '../../components/SideBar/SideBar2'
 
-const TblItem = () => {
+const TblDispatchingCL = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -16,7 +16,7 @@ const TblItem = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllTblItems")
+                userRequest.get("/getAllTblDispatchingCL")
                     // axios.get("http://localhost:7008/api/getAllTblItems")
                     // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
@@ -48,7 +48,7 @@ const TblItem = () => {
             {/* <SideBar /> */}
             {/* <SideBar2 /> */}
 
-            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId" />
+            <UserDataTable data={alldata} addNewNavigation="/tbl-new-dispatch" title="TBL DISPATCHING CL " columnsName={TblDispatchingCLColumn} backButton={true} uniqueId="PACKINGSLIPID"/>
 
 
             {isLoading &&
@@ -75,4 +75,4 @@ const TblItem = () => {
     )
 }
 
-export default TblItem
+export default TblDispatchingCL

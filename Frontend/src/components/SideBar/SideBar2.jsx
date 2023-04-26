@@ -14,7 +14,6 @@ const SideBar2 = () => {
   return (
     <div>
       {/* <SideBar /> */}
-
         <div className="fixed flex flex-col left-0 w-14 md:w-64 bg-blue-900 dark:bg-gray-900 h-full text-white border-none z-10">
         <div className="overflow-y-auto overflow-x-hidden flex flex-col justify-between flex-grow">
             <ul className="flex flex-col py-4 space-y-4">
@@ -66,6 +65,13 @@ const SideBar2 = () => {
                     <img src={city} className='h-5 w-5' alt='' />
                 </span>
                 <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Dispatching</span>
+                </li>
+                <li
+                className='cursor-pointer'>
+                <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+                    <img src={icons} className='h-5 w-5' alt='' />
+                </span>
+                <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Warehouse Locations</span>
                 </li>
                 <li
                 className='cursor-pointer'>

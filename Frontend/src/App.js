@@ -10,7 +10,7 @@ import AddNew from './components/AddNew/AddNew'
 import UpdateData from './components/AddNew/UpdateData'
 import AllItemsAddNew from './components/AddNew/AllItemsAddNew'
 import UpdateAllItems from './components/AddNew/UpdateAllItems'
-import MainComponent from './components/MainComponent/MainComponent'
+import MainDashboard from './components/MainDashboard/MainDashboard'
 
 
 const App = () => {
@@ -29,7 +29,7 @@ const App = () => {
           <Route path='/update/:id' element={<UpdateData title="Update Row Data"/>} />
           <Route path='/itemsnew' element={<AllItemsAddNew title="Add New Items"/>} />
           <Route path='/allitems/:id' element={<UpdateAllItems title="Update All Items"/>} />
-          <Route path='/dashboard' element={<MainComponent />} />
+          <Route path='/dashboard' element={<MainDashboard />} />
           
         </Routes>
       </BrowserRouter>

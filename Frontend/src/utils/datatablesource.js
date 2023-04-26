@@ -135,3 +135,73 @@ export const TblAllLocationColumn = [
 ]
 
 
+
+export const TblDispatchingCLColumn = [
+  {
+    field: "PACKINGSLIPID",
+    headerName: "PACKING SLIP ID",
+    width: 150,
+
+  },
+  {
+    field: "VEHICLESHIPPLATENUMBER",
+    headerName: "VEHICLE SHIP LATE NUMBER",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 220,
+
+  },
+  {
+    field: "INVENTSITEID",
+    headerName: "INVENT SITE ID",
+    width: 180,
+
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 150,
+
+  },
+  {
+    field: "REMAIN",
+    headerName: "REMAIN",
+    width: 150,
+
+  },
+  {
+    field: "NAME",
+    headerName: "NAME",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+  },
+  {
+    field: "PICKINGROUTEID",
+    headerName: "PICKING ROUTE ID",
+    width: 180,
+  },
+
+]
+
+

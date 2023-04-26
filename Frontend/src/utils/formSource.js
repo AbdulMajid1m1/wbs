@@ -143,3 +143,67 @@ export const TblAllLocationsInput = [
   },
 
 ];
+
+
+
+export const TblDispatchingUpdatesColumn = [
+
+  {
+    id: "dispatchingIdInput1",
+    label: "VEHICLE SHIP PLATE NUMBER*",
+    name: "VEHICLESHIPPLATENUMBER",
+    type: "text",
+    placeholder: "VEHICLE SHIP PLATE NUMBER",
+  },
+  {
+    id: "dispatchingIdInput2",
+    label: "INVENT LOCATION ID*",
+    name: "INVENTLOCATIONID",
+    type: "text",
+    placeholder: "INVENT LOCATION ID",
+  },
+
+  {
+    id: "dispatchingIdInput3",
+    label: "INVENT SITE ID*",
+    name: "INVENTSITEID",
+    type: "text",
+    placeholder: "INVENT SITE ID",
+  },
+  {
+    id: "dispatchingIdInput4",
+    name: "WMSLOCATIONID",
+    label: "WMS LOCATION ID*",
+    type: "text",
+    placeholder: "WMS LOCATION ID",
+  },
+  {
+    id: "dispatchingIdInput5",
+    name: "ITEMID",
+    label: "ITEM ID*",
+    type: "text",
+    placeholder: "ITEM ID",
+  },
+  {
+    id: "dispatchingIdInput7",
+    name: "NAME",
+    label: "NAME*",
+    type: "text",
+    placeholder: "NAME",
+  },
+  {
+    id: "dispatchingIdInput8",
+    name: "CONFIGID",
+    label: "CONFIG ID*",
+    type: "text",
+    placeholder: "CONFIG ID",
+  },
+  {
+    id: "dispatchingIdInput9",
+    name: "PICKINGROUTEID",
+    label: "PICKING ROUTE ID*",
+    type: "text",
+    placeholder: "PICKING ROUTE ID",
+  },
+
+];

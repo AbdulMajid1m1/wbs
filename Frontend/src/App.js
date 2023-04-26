@@ -14,6 +14,8 @@ import MainDashboard from './components/MainDashboard/MainDashboard'
 import TblAllLocations from './pages/TblAllLocations/TblAllLocations'
 import TblLocationsUpdates from './components/UpdatesItem/TblLocationsUpdates'
 import AddNewTblLocations from './components/AddNew/AddNewTblLocations'
+import TblDispatchingCL from './pages/TblDispatching/TblDispatchingCL'
+import TblDispatchingUpdates from './components/UpdatesItem/TblDispatchingUpdates'
 
 const App = () => {
   return (
@@ -35,6 +37,10 @@ const App = () => {
           <Route path='/tblLocation' element={<TblAllLocations />} />
           <Route path='/tblLocationupdate/:id' element={<TblLocationsUpdates title="Updates All Tbl Locations"/>} />
           <Route path='/tbl-new-location' element={<AddNewTblLocations title="Add Tbl Locations"/>} />
+          <Route path='/tbldispatching' element={<TblDispatchingCL />} />
+          <Route path='/tbldispatchingupdates/:id' element={<TblDispatchingUpdates title="All Dispatching Updates"/>} />
+
+
           
         </Routes>
       </BrowserRouter>

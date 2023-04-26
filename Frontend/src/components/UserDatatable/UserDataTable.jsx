@@ -182,10 +182,6 @@ const UserDataTable = ({
         //   navigate("/allitems/" + rowData.ITEMNAME)
         //   break;
         
-      // case "ITEMNAME":
-      //   navigate("/allitems/" + rowData.ITEMNAME)
-      //   break;
-
       default:
         // do nothing
         break;

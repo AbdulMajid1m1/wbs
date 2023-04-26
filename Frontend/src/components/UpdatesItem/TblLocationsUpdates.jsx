@@ -97,6 +97,7 @@ const TblAllLocationsUpdates = ({ inputs, title,
 
                     }}
                 >
+                    {/* Spinners */}
                     <BeatLoader
                         size={18}
                         color={"#6439ff"}

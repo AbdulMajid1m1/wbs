@@ -172,6 +172,9 @@ const UserDataTable = ({
         case "ITEMNAME":
         navigate("/allitems/" + rowData.ITEMNAME)
         break;
+        case "LOCATIONS_HFID":
+          navigate("/tblLocationupdate/" + rowData.LOCATIONS_HFID)
+          break;
         // case "ITEMNAME":
         //   navigate("/allitems/" + rowData.ITEMNAME)
         //   break;

@@ -88,3 +88,50 @@ export const AllItems = [
 ]
 
 
+export const TblAllLocationColumn = [
+  {
+    field: "LOCATIONS_HFID",
+    headerName: "LOCATION ID",
+    width: 150,
+
+  },
+  {
+    field: "MAIN",
+    headerName: "MAIN LOCATION",
+    width: 180,
+
+  },
+  {
+    field: "WAREHOUSE",
+    headerName: "LOCATION WAREHOUSE",
+    width: 220,
+
+  },
+  {
+    field: "ZONE",
+    headerName: "LOCATION ZONE",
+    width: 220,
+
+  },
+  {
+    field: "BIN",
+    headerName: "BIN",
+    width: 180,
+
+  },
+  {
+    field: "ZONE_CODE",
+    headerName: "ZONE CODE",
+    width: 180,
+
+  },
+  {
+    field: "ZONE_NAME",
+    headerName: "ZONE NAME",
+    width: 180,
+
+  },
+
+]
+
+

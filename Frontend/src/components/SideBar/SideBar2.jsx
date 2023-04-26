@@ -67,7 +67,7 @@ const SideBar2 = () => {
                 <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Dispatching</span>
                 </li>
                 <li
-                className='cursor-pointer'>
+                className='cursor-pointer' onClick={() => navigate('/tblLocation')}>
                 <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
                     <img src={icons} className='h-5 w-5' alt='' />
                 </span>

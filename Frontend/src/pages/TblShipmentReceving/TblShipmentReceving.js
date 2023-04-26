@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import UserDataTable from '../components/UserDatatable/UserDataTable'
-import { allUserAssetsColumns } from '../utils/datatablesource'
+import UserDataTable from '../../components/UserDatatable/UserDataTable'
+import { allUserAssetsColumns } from '../../utils/datatablesource'
 // import userRequest from "../utils/userRequest";
-import userRequest from "../utils/userRequest"
+import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
-import SideBar from '../components/SideBar/SideBar';
+// import SideBar from '../components/SideBar/SideBar';
+import SideBar2 from '../../components/SideBar/SideBar2';
 
 
-const ShipmentRecevingId = () => {
+const FirstTable = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,15 +45,15 @@ const ShipmentRecevingId = () => {
   return (
     <div>
 
-      <SideBar />
+      <SideBar2 />
 
       
       <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}
        backButton={true}
         uniqueId="SHIPMENTID"
-        addNewNavigation="/addNew"
         ShipmentIdSearchEnable={true}
-        ContainerIdSearchEnable={true}
+        addNewNavigation="/addnew"
+        // ContainerIdSearchEnable={true}
 
        />
 
@@ -82,4 +83,4 @@ const ShipmentRecevingId = () => {
   )
 }
 
-export default ShipmentRecevingId
+export default FirstTable

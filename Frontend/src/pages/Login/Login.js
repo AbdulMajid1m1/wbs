@@ -1,8 +1,8 @@
 import React from 'react'
-import "./Login.css"
-import alessa from "../images/alessalogo2.png"
+import "../Login/Login.css"
+import alessa from "../../images/alessalogo2.png"
 import axios from 'axios'
-import baseUrl from '../utils/config'
+import baseUrl from '../../utils/config'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 

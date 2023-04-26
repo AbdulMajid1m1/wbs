@@ -1,4 +1,4 @@
-import "./AddNew.css";
+import "../AddNew/AddNew.css";
 // import Sidebar from "../../components/sidebar/Sidebar";
 // import Navbar from "../../components/navbar/Navbar";
 import { useEffect, useState } from "react";

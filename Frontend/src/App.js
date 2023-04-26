@@ -22,19 +22,15 @@ const App = () => {
       {/* <NavBar /> */}
       <div
         className='main-layout-container'
-
       >
         <span className='left-layout'
         >
-
-
           <SideBar2 />
         </span>
         <span
           className='right-layout'
 
         >
-
           <Routes>
             <Route path='/' element={<Login />} />
             <Route path='/shipment' element={<TblShipmentReceving />} />

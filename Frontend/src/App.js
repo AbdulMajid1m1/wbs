@@ -40,7 +40,7 @@ const App = () => {
           <Route path='/tbldispatching' element={<TblDispatchingCL />} />
           <Route path='/tbldispatchingupdates/:id' element={<TblDispatchingUpdates title="All Dispatching Updates"/>} />
 
-
+          {/* New Routes */}
           
         </Routes>
       </BrowserRouter>

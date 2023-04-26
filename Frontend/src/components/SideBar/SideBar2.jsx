@@ -23,14 +23,14 @@ const SideBar2 = () => {
                 <div className="text-sm font-light tracking-wide text-gray-400 uppercase">Main</div>
                 </div>
             </li>
-            <li  onClick={() => navigate('/dashboard')} className='cursor-pointer'>
-                <a href="#" className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-blue-800 dark:hover:bg-gray-600 text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500 dark:hover:border-gray-800 pr-6">
-                    <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
+            <li  onClick={() => navigate('/dashboard')} className='cursor-pointer lg:flex lg:items-center h-11 focus:outline-none hover:bg-blue-800 dark:hover:bg-gray-600 text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500 dark:hover:border-gray-800'>
+                {/* <a href="#" className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-blue-800 dark:hover:bg-gray-600 text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500 dark:hover:border-gray-800 pr-6"> */}
+                    <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-3">
                 <img src={city}
                     className='h-5 w-5' alt='' />
                 </span>
-                    <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] font-bold flex flex-col justify-center text-center md:inline-block tracking-wide">Dashboard</span>
-                </a>
+                    <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Dashboard</span>
+                {/* </a> */}
             </li>
 
 

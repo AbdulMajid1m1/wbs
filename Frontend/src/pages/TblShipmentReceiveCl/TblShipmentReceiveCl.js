@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import UserDataTable from '../components/UserDatatable/UserDataTable'
-import { allUserAssetsColumns } from '../utils/datatablesource'
-import userRequest from "../utils/userRequest"
-import SideBar from "../components/SideBar/SideBar"
+import UserDataTable from '../../components/UserDatatable/UserDataTable'
+import { allUserAssetsColumns } from '../../utils/datatablesource'
+import userRequest from "../../utils/userRequest"
+import SideBar from "../../components/SideBar/SideBar"
 import { SyncLoader } from 'react-spinners';
 
 const TableShipmentReceiveCl = () => {

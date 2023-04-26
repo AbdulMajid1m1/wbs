@@ -93,3 +93,53 @@ export const updateAllItemsInput = [
   },
 
 ];
+
+
+export const TblAllLocationsInput = [
+
+  {
+    id: "locationIdInput1",
+    label: "MAIN*",
+    name: "MAIN",
+    type: "text",
+    placeholder: "MAIN",
+  },
+  {
+    id: "locationIdInput2",
+    label: "WAREHOUSE LOCATION*",
+    name: "WAREHOUSE",
+    type: "text",
+    placeholder: "WAREHOUSE LOCATION",
+  },
+
+  {
+    id: "locationIdInput3",
+    label: "LOCATION ZONE*",
+    name: "ZONE",
+    type: "text",
+    placeholder: "ZONE",
+  },
+  {
+    id: "locationIdInput5",
+    name: "BIN",
+    label: "BIN*",
+    type: "text",
+    placeholder: "BIN",
+  },
+  {
+    id: "locationIdInput6",
+    name: "ZONE_CODE",
+    label: "ZONE CODE*",
+    type: "text",
+    placeholder: "ZONE_CODE",
+  },
+
+  {
+    id: "locationIdInput6",
+    name: "ZONE_NAME",
+    label: "ZONE NAME*",
+    type: "text",
+    placeholder: "ZONE NAME",
+  },
+
+];

@@ -43,11 +43,7 @@ const FirstTable = () => {
   }, []);
 
   return (
-    <div>
-
-      <SideBar2 />
-
-      
+    <div>    
       <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}
        backButton={true}
         uniqueId="SHIPMENTID"

@@ -43,10 +43,7 @@ const ShipmentRecevingId = () => {
 
   return (
     <div>
-
-      <SideBar />
-
-      
+  
       <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}
        backButton={true}
         uniqueId="SHIPMENTID"

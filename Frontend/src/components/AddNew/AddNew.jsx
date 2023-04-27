@@ -51,7 +51,7 @@ const AddNew = ({ inputs, title,
             const queryParameters = new URLSearchParams(data).toString();
 
             userRequest.post(
-                `/insertShipmentRecievingData?${queryParameters}`)
+                `/insertShipmentRecievingDataCL?${queryParameters}`)
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);

@@ -68,8 +68,8 @@ const App = () => {
                 <Route path='/items' element={<TblItem />} />
                 <Route path='/itemscl' element={<TblItemCl />} />
                 <Route path='/addnew' element={<AddNew title="Add New Shipment Receving Details" />} />
-                <Route path='/update' element={<UpdateData title="Update Row Data" />} />
-                <Route path='/update/:id' element={<UpdateData title="Update Row Data" />} />
+                {/* <Route path='/update' element={<UpdateData title="Update Shipment Receiving Data" />} /> */}
+                <Route path='/update/:id' element={<UpdateData title="Update Row Shipment Receiving Data" />} />
                 <Route path='/itemsnew' element={<AllItemsAddNew title="Add New Items" />} />
                 <Route path='/allitems/:id' element={<UpdateAllItems title="Update All Items" />} />
                 <Route path='/dashboard' element={<MainDashboard />} />

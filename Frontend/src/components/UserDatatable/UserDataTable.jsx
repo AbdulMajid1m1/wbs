@@ -82,7 +82,7 @@ const UserDataTable = ({
           // call the api to delete the data from the shipment table
           try {
             const response = await userRequest.delete(
-              "deleteShipmentRecievingData?SHIPMENTID=" + rowdata.SHIPMENTID
+              "deleteShipmentRecievingDataCL?SHIPMENTID=" + rowdata.SHIPMENTID
             );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");
@@ -91,8 +91,8 @@ const UserDataTable = ({
             setError(error?.message ?? "Something went wrong");
             success = false;
           }
-
           break;
+
         case "locationTableId":
           try {
             const response = await userRequest.delete(

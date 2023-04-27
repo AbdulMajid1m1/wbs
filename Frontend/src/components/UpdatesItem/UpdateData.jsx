@@ -63,7 +63,7 @@ const UpdateData = ({ inputs, title,
         const queryParameters = new URLSearchParams(updatedData).toString();
 
         userRequest
-            .put(`/updateShipmentRecievingData?${queryParameters}`)
+            .put(`/updateShipmentRecievingDataCL?${queryParameters}`)
             .then((response) => {
                 setIsLoading(false);
                 console.log(response.data);

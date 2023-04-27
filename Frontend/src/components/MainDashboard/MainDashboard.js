@@ -10,7 +10,7 @@ const MainComponent = () => {
     <div>
       <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white dark:bg-gray-700 text-black dark:text-white">
 
-        <div className="h-full ml-14 mb-10">
+        <div className="h-full mb-10">
 
           {/* <!-- Statistics Cards --> */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-4 gap-4">

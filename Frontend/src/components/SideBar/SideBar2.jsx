@@ -138,7 +138,7 @@ const SideBar2 = () => {
                         {showMasterDataDropdown && (
                             <ul className="flex flex-col space-y-5 pt-2 pl-0 md:pl-5 lg:pl-5 xl:pl-5 2xl:pl-5 3xl:pl-5">
                                 <li
-                                    className='cursor-pointer'>
+                                    className='cursor-pointer' onClick={() => navigate('/items')}>
                                     <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
                                         <img src={city} className='h-5 w-5' alt='' />
                                     </span>
@@ -154,11 +154,11 @@ const SideBar2 = () => {
                                 </li>
 
                                 <li
-                                    className='cursor-pointer'>
+                                    className='cursor-pointer' onClick={() => navigate('/shipment')}>
                                     <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
                                         <img src={city} className='h-5 w-5' alt='' />
                                     </span>
-                                    <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Expexted Shipments</span>
+                                    <span className="xl:ml-2 2xl:ml-2 md:ml-2 ml-0 xl:text-sm 2xl:text-sm md:text-sm text-[7px] flex flex-col justify-center text-center md:inline-block tracking-wide">Expected Shipments</span>
                                 </li>
 
                                 <li
@@ -170,7 +170,7 @@ const SideBar2 = () => {
                                 </li>
 
                                 <li
-                                    className='cursor-pointer'>
+                                    className='cursor-pointer' onClick={() => navigate('/alldispatch')}>
                                     <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
                                         <img src={city} className='h-5 w-5' alt='' />
                                     </span>
@@ -194,7 +194,7 @@ const SideBar2 = () => {
                                 </li>
 
                                 <li
-                                    className='cursor-pointer'>
+                                    className='cursor-pointer' onClick={() => navigate('/packingslip')}>
                                     <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
                                         <img src={icons} className='h-5 w-5' alt='' />
                                     </span>

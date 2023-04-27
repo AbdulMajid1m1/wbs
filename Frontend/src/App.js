@@ -27,6 +27,7 @@ import ExpectedReceipts from './pages/ExpectedReceipts/ExpectedReceipts'
 import ExpectedTranferOrder from './pages/ExtectedTransferOrder/ExpectedTranferOrder'
 import PickList from './pages/PickList/PickList'
 import TblItemCl from './pages/TblItemCl/TblItemCl'
+import AddDispatchingCl from './components/AddNew/AddDispatchingCl'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -77,7 +78,7 @@ const App = () => {
                 <Route path='/tbl-new-location' element={<AddNewTblLocations title="Add Tbl Locations" />} />
                 <Route path='/tbldispatching' element={<TblDispatchingCL />} />
                 <Route path='/tbldispatchingupdates/:id' element={<TblDispatchingUpdates title="All Dispatching Updates" />} />
-                <Route path='/tbl-new-dispatch' element={<AddNewTblLocations title="Add Tbl New Dispatch" />} />
+                <Route path='/tbl-new-dispatch' element={<AddDispatchingCl title="Add Tbl New Dispatch" />} />
                 <Route path='/packingslip' element={<PackingSlip />} />
                 <Route path='/alldispatch' element={<AllItemsDispatch />} />
                 <Route path='/internal' element={<InternalTransfer />} />

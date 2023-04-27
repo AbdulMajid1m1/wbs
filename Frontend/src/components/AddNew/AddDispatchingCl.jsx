@@ -4,13 +4,11 @@ import "./AddNew.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { TblDispatchingUpdatesColumn, assetCategoryInput } from "../../utils/formSource";
+import { TblDispatchingInsertColumn } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
-// import Sidebar from "../../sidebar/Sidebar";
-// import Navbar from "../../navbar/Navbar";
-// import newRequest from "../../../utils/newRequest";
-// import CustomSnakebar from "../../../utils/CustomSnakebar";
-const AddNew = ({ inputs, title,
+import CustomSnakebar from "../../utils/CustomSnakebar";
+
+const AddDispatchingCl = ({ inputs, title,
     method, apiEndPoint
 }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -38,40 +36,45 @@ const AddNew = ({ inputs, title,
             setIsLoading(true);
 
             const data = {
-                SHIPMENTID: event.target.SHIPMENTID.value,
-                ENTITY: event.target.ENTITY.value,
-                CONTAINERID: event.target.CONTAINERID.value,
+                PACKINGSLIPID: event.target.PACKINGSLIPID.value,
+                VEHICLESHIPPLATENUMBER: event.target.VEHICLESHIPPLATENUMBER.value,
+                INVENTLOCATIONID: event.target.INVENTLOCATIONID.value,
+                INVENTSITEID: event.target.INVENTSITEID.value,
+                WMSLOCATIONID: event.target.WMSLOCATIONID.value,
                 ITEMID: event.target.ITEMID.value,
-                PURCHID: event.target.PURCHID.value,
-                MainCategoryCode: event.target.CLASSIFICATION.value,
+                // QTY: event.target.QTY.value,
+                // REMAIN: event.target.REMAIN.value,
+                NAME: event.target.NAME.value,
+                CONFIGID: event.target.CONFIGID.value,
+                PICKINGROUTEID: event.target.PICKINGROUTEID.value,
             };
-            console.log([data]);
+            
+            console.log(data);
+
+            const queryParameters = new URLSearchParams(data).toString();
+
             userRequest.post(
-                "/insertShipmentRecievingDataCL", {
-                data: [data],
-            })
+                `/insertTblDispatchingDataCL?${queryParameters}`)
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);
                     setMessage("Successfully Added");
-                    // reset form
-                    // document.getElementById("myForm").reset();
-
-                }
-                )
+                    setTimeout(() => {
+                        navigate(-1)
+                    }, 1000)
+                })
                 .catch((error) => {
                     setIsLoading(false);
                     console.log(error);
                     setError(error?.response?.data?.message ?? "Failed to Add")
-                }
-                );
+                });
         } catch (error) {
             setIsLoading(false);
             console.log(error);
             setError("Failed to Add");
         }
-
     };
+
     const handleInputChange = (event, inputName) => {
         const value = event.target.value;
         setFormValues({
@@ -103,8 +106,8 @@ const AddNew = ({ inputs, title,
 
             <span
             >
-                {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-                {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+                {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+                {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
                 <div className="assetCategoryForm">
                     {/* <Sidebar /> */}
@@ -125,7 +128,7 @@ const AddNew = ({ inputs, title,
                             <div className="right">
                                 
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {TblDispatchingUpdatesColumn.map((input) => (
+                                    {TblDispatchingInsertColumn.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
@@ -156,4 +159,4 @@ const AddNew = ({ inputs, title,
     );
 };
 
-export default AddNew;
+export default AddDispatchingCl;

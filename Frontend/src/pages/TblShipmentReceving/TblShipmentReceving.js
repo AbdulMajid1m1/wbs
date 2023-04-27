@@ -16,6 +16,7 @@ const FirstTable = () => {
     const getAllAssetsList = async () => {
       try {
 
+
         userRequest.get("/getAllShipmentDataFromtShipmentReceiving")
           // userRequest.post("/getShipmentDataFromtShipmentReceiving", {
           //   SHIPMENTID: "BSP-0001008",
@@ -43,38 +44,34 @@ const FirstTable = () => {
   }, []);
 
   return (
-    <div>    
+    <div>
+
+      {/* <SideBar2 /> */}
       <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}
-       backButton={true}
+        backButton={true}
         uniqueId="SHIPMENTID"
         ShipmentIdSearchEnable={true}
         addNewNavigation="/addnew"
-        // ContainerIdSearchEnable={true}
+      // ContainerIdSearchEnable={true}
 
-       />
+      />
 
-
-       
       {isLoading &&
 
-      <div className='loading-spinner-background'
-      style={{
-          zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
-          display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
-
-
-      }}
-      >
-      <SyncLoader
-
-          size={18}
-          color={"#FFA500"}
-          // height={4}
-          loading={isLoading}
-      />
-      </div>
+        <div className='loading-spinner-background'
+          style={{
+            zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+          }}
+        >
+          <SyncLoader
+            size={18}
+            color={"#FFA500"}
+            // height={4}
+            loading={isLoading}
+          />
+        </div>
       }
-
     </div>
   )
 }

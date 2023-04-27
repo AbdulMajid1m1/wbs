@@ -36,3 +36,68 @@
     transform: rotate(360deg);
   }
 }
+
+.main-layout-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 100vh;
+  width: 100%;
+}
+
+.left-layout {
+  width: 20% !important;
+}
+
+.right-layout {
+  width: 80%;
+  height: 100vh;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+/* Media query for screens smaller than 1200px */
+@media (max-width: 1200px) {
+  .left-layout {
+    width: 20%;
+  }
+
+  .right-layout {
+    width: 80%;
+  }
+}
+
+/* Media query for screens smaller than 992px */
+@media (max-width: 992px) {
+  .left-layout {
+    width: 25%;
+  }
+
+  .right-layout {
+    width: 75%;
+  }
+}
+
+/* Media query for screens smaller than 768px */
+@media (max-width: 768px) {
+  .left-layout {
+    width: 30%;
+  }
+
+  .right-layout {
+    width: 70%;
+  }
+}
+
+/* Media query for screens smaller than 576px */
+@media (max-width: 576px) {
+  .left-layout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .right-layout {
+    width: 100%;
+  }
+}

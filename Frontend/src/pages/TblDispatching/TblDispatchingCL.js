@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { AllItems, TblAllLocationColumn } from '../../utils/datatablesource'
+import { AllItems, TblAllLocationColumn, TblDispatchingCLColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 // import SideBar from '../../components/SideBar/SideBar'
 // import SideBar2 from '../../components/SideBar/SideBar2'
 
-const TblAllLocations = () => {
+const TblDispatchingCL = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -16,7 +16,7 @@ const TblAllLocations = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllTblLocationsCL")
+                userRequest.get("/getAllTblDispatchingCL")
                     // axios.get("http://localhost:7008/api/getAllTblItems")
                     // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
@@ -45,7 +45,10 @@ const TblAllLocations = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="/tbl-new-location" title="TBL ALL LOCATIONS " columnsName={TblAllLocationColumn} backButton={true} uniqueId="LOCATIONS_HFID" />
+            {/* <SideBar /> */}
+            {/* <SideBar2 /> */}
+
+            <UserDataTable data={alldata} addNewNavigation="/tbl-new-dispatch" title="TBL DISPATCHING CL " columnsName={TblDispatchingCLColumn} backButton={true} uniqueId="PACKINGSLIPID"/>
 
 
             {isLoading &&
@@ -72,4 +75,4 @@ const TblAllLocations = () => {
     )
 }
 
-export default TblAllLocations
+export default TblDispatchingCL

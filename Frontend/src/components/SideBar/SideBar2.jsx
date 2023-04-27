@@ -49,7 +49,7 @@ const SideBar2 = () => {
                         {showWarehouseDropdown && (
                             <ul className="flex flex-col space-y-5 pt-2 pl-0 md:pl-5 lg:pl-5 xl:pl-5 2xl:pl-5 3xl:pl-5">
 
-                                <li className='cursor-pointer' onClick={() => navigate('/items')}>
+                                <li className='cursor-pointer' onClick={() => navigate('/itemscl')}>
                                     <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
                                         <img src={city} className='h-5 w-5' alt='' />
                                     </span>

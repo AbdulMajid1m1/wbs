@@ -26,6 +26,7 @@ import InternalTransfer from './pages/InternalTransfer/InternalTransfer'
 import ExpectedReceipts from './pages/ExpectedReceipts/ExpectedReceipts'
 import ExpectedTranferOrder from './pages/ExtectedTransferOrder/ExpectedTranferOrder'
 import PickList from './pages/PickList/PickList'
+import TblItemCl from './pages/TblItemCl/TblItemCl'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -64,6 +65,7 @@ const App = () => {
                 <Route path='/shipmentid' element={<ShipmentRecevingId />} />
                 <Route path='/shipmentcl' element={<TblShipmentReceiveCl />} />
                 <Route path='/items' element={<TblItem />} />
+                <Route path='/itemscl' element={<TblItemCl />} />
                 <Route path='/addnew' element={<AddNew title="Add New Shipment Receving Details" />} />
                 <Route path='/update' element={<UpdateData title="Update Row Data" />} />
                 <Route path='/update/:id' element={<UpdateData title="Update Row Data" />} />

@@ -95,6 +95,8 @@ const UserDataTable = ({
             success = false;
           }
           break;
+
+
         default:
           // do nothing
           break;
@@ -120,7 +122,7 @@ const UserDataTable = ({
       case "ITEMNAME":
         navigate("/allitems/" + rowData.ITEMNAME)
         break;
-      case "LOCATIONS_HFID":
+      case "locationTableId":
         navigate("/tblLocationupdate/" + rowData.LOCATIONS_HFID)
         break;
       case "PACKINGSLIPID":

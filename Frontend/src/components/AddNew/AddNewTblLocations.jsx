@@ -50,6 +50,9 @@ const AddNewTblLocations = ({ inputs, title,
                     setIsLoading(false);
                     console.log(response.data);
                     setMessage("Successfully Added");
+                    setTimeout(() => {
+                        navigate(-1)
+                    }, 1000)
                 })
                 .catch((error) => {
                     setIsLoading(false);

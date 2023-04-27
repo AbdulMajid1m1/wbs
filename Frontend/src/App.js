@@ -20,6 +20,8 @@ import AddNewTblLocations from './components/AddNew/AddNewTblLocations'
 import TblDispatchingCL from './pages/TblDispatching/TblDispatchingCL'
 import TblDispatchingUpdates from './components/UpdatesItem/TblDispatchingUpdates'
 import "./App.css"
+import PackingSlip from './pages/PackingSlip/PackingSlip'
+import AllItemsDispatch from './pages/AllItemsDispatch/AllItemsDispatch'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -70,6 +72,8 @@ const App = () => {
                 <Route path='/tbldispatching' element={<TblDispatchingCL />} />
                 <Route path='/tbldispatchingupdates/:id' element={<TblDispatchingUpdates title="All Dispatching Updates" />} />
                 <Route path='/tbl-new-dispatch' element={<AddNewTblLocations title="Add Tbl New Dispatch" />} />
+                <Route path='/packingslip' element={<PackingSlip />} />
+                <Route path='/alldispatch' element={<AllItemsDispatch />} />
               </Routes>
             </MainLayout>
           } />

@@ -20,7 +20,7 @@ const MainComponent = () => {
               </div>
               <div className="text-right">
                 <p className="text-2xl">1,257</p>
-                <p>Visitors</p>
+                <p>Expected Receipts</p>
               </div>
             </div>
             <div className="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
@@ -29,7 +29,7 @@ const MainComponent = () => {
               </div>
               <div className="text-right">
                 <p className="text-2xl">557</p>
-                <p>Orders</p>
+                <p>Expected Shipments</p>
               </div>
             </div>
             <div className="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
@@ -38,7 +38,7 @@ const MainComponent = () => {
               </div>
               <div className="text-right">
                 <p className="text-2xl">$11,257</p>
-                <p>Sales</p>
+                <p>Items For Dispatch</p>
               </div>
             </div>
             <div className="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
@@ -47,7 +47,7 @@ const MainComponent = () => {
               </div>
               <div className="text-right">
                 <p className="text-2xl">$75,257</p>
-                <p>Balances</p>
+                <p>Transfer Orders</p>
               </div>
             </div>
           </div>

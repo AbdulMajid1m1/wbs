@@ -4,6 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import userRequest from "../../utils/userRequest";
+import CustomSnakebar from "../../utils/CustomSnakebar";
 const UserDataTable = ({
   columnsName = [],
   data,
@@ -26,7 +27,6 @@ const UserDataTable = ({
   const [containerIdSearch, setContainerIdSearch] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
-  const [severity, setSeverity] = useState(null);
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -73,89 +73,37 @@ const UserDataTable = ({
   const myValue = localStorage.getItem("userId");
   console.log(myValue)
 
-  // Delete Action
-  // const handleDelete = async (id, rowdata) => {
-  //   switch
-  //   (uniqueId) {
-  //     case "assetPrintingId":
-  //       console.log(rowdata.TagNumber);
-  //       data = { TagNumber: rowdata.TagNumber };
-  //       userRequest.delete(deleteBtnEndPoint, { data }).then((response) => {
-  //         console.log(response);
-  //         setMessage(response?.data?.message ?? "User deleted successfully");
-  //         setSeverity("success");
-  //       }).catch((error) => {
-  //         setMessage(error?.message ?? "Something went wrong");
-  //         setSeverity("error");
-  //       }
-  //       )
-
-  //       break;
-  //     default:
-  //       // do nothing
-  //       break;
-  //   }
-
-  //   if (true) {
-  //     setRecord(record.filter((item) => item.id !== id));
-  //     // alert("User deleted successfully");
-  //   }
-  // }
-
   const handleDelete = async (id, rowdata) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
-      // if(title === "ASSET CATEGORIES")
-      let data;
-      switch
-      (uniqueId) {
-        case "SHIPMENTID":
+      let success = false;
 
-          data = { SHIPMENTID: rowdata.SHIPMENTID && rowdata.SHIPMENTID.toString() };
-          userRequest.delete(deleteBtnEndPoint, { data }).then((response) => {
+      switch (uniqueId) {
+        case "SHIPMENTID":
+          // call the api to delete the data from the shipment table
+
+          break;
+        case "locationTableId":
+          try {
+            const response = await userRequest.delete(
+              "deleteTblLocationsDataCL?LOCATIONS_HFID=" + rowdata.LOCATIONS_HFID
+            );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");
-            setSeverity("success");
-          }).catch((error) => {
-            setMessage(error?.message ?? "Something went wrong");
-            setSeverity("error");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
           }
-          )
-
           break;
         default:
           // do nothing
           break;
       }
 
-      if (true) {
+      if (success) {
         setRecord(record.filter((item) => item.id !== id));
-        // alert("User deleted successfully");
       }
     }
-  };
-
-  const handleRemoveRole = async (rowdata) => {
-    console.log(rowdata.RoleID);
-    let data = {
-      RoleID: rowdata.RoleID && rowdata.RoleID.toString(),
-
-      UserLoginID: rowdata.UserLoginID && rowdata.UserLoginID.toString()
-    };
-    userRequest.delete("/DeleteUsersRolesAssignedById",
-      { data }).then((response) => {
-        console.log(response);
-        setMessage(response?.data?.message ?? "Role removed successfully");
-
-        // refresh the data table after adding the role
-        setSeverity("success");
-        detectAddRole();
-      }).catch((error) => {
-
-        setMessage(error?.message ?? "Something went wrong");
-        setSeverity("error");
-      }
-      )
-
   };
 
 
@@ -172,16 +120,16 @@ const UserDataTable = ({
       case "ITEMNAME":
         navigate("/allitems/" + rowData.ITEMNAME)
         break;
-        case "LOCATIONS_HFID":
-          navigate("/tblLocationupdate/" + rowData.LOCATIONS_HFID)
-          break;
-          case "PACKINGSLIPID":
-            navigate("/tbldispatchingupdates/" + rowData.PACKINGSLIPID)
-            break;
-        // case "ITEMNAME":
-        //   navigate("/allitems/" + rowData.ITEMNAME)
-        //   break;
-        
+      case "LOCATIONS_HFID":
+        navigate("/tblLocationupdate/" + rowData.LOCATIONS_HFID)
+        break;
+      case "PACKINGSLIPID":
+        navigate("/tbldispatchingupdates/" + rowData.PACKINGSLIPID)
+        break;
+      // case "ITEMNAME":
+      //   navigate("/allitems/" + rowData.ITEMNAME)
+      //   break;
+
       default:
         // do nothing
         break;
@@ -248,26 +196,26 @@ const UserDataTable = ({
     },
   ];
 
-  const RemoveBtn = [
-    {
-      field: "action",
-      headerName: "Action",
-      width: 130,
-      renderCell: (params) => {
-        return (
-          <div className="cellAction">
-            <div
-              className="deleteButton"
-              onClick={() => handleRemoveRole(params.row)}
-            >
-              REMOVE ROLE
-            </div>
+  // const RemoveBtn = [
+  //   {
+  //     field: "action",
+  //     headerName: "Action",
+  //     width: 130,
+  //     renderCell: (params) => {
+  //       return (
+  //         <div className="cellAction">
+  //           <div
+  //             className="deleteButton"
+  //             onClick={() => handleRemoveRole(params.row)}
+  //           >
+  //             REMOVE ROLE
+  //           </div>
 
-          </div>
-        );
-      },
-    },
-  ];
+  //         </div>
+  //       );
+  //     },
+  //   },
+  // ];
 
   // const idColumn = [
   //   {
@@ -279,8 +227,8 @@ const UserDataTable = ({
 
   return (
     <>
-      {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-      {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+      {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
       <div className="datatable">
         <div className="datatableTitle">

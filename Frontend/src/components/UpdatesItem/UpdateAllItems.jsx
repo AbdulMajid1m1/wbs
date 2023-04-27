@@ -6,10 +6,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import { assetCategoryInput, updateAllItemsInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
-// import Sidebar from "../../sidebar/Sidebar";
-// import Navbar from "../../navbar/Navbar";
-// import newRequest from "../../../utils/newRequest";
-// import CustomSnakebar from "../../../utils/CustomSnakebar";
+import CustomSnakebar from "../../utils/CustomSnakebar";
 
 
 const UpdateAllItems = ({ inputs, title,
@@ -37,8 +34,8 @@ const UpdateAllItems = ({ inputs, title,
 
     // get state data from navigation 
 
-    const [error, setError] = useState(false);
-    const [message, setMessage] = useState("");
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
 
 
     const navigate = useNavigate();
@@ -121,8 +118,8 @@ const UpdateAllItems = ({ inputs, title,
 
             <span
             >
-                {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-                {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+                {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+                {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
                 <div className="assetCategoryForm">
                     {/* <Sidebar /> */}

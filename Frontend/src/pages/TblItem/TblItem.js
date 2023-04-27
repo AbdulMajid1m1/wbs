@@ -48,7 +48,10 @@ const TblItem = () => {
             {/* <SideBar /> */}
             {/* <SideBar2 /> */}
 
-            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId" />
+            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId"
+                actionColumnVisibility={false}
+
+            />
 
 
             {isLoading &&

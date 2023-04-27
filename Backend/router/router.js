@@ -8,11 +8,30 @@ import { checkAuthentication } from "../helpers/apiAuth.js";
 // import logoUpload from "../config/multerLogoConfig.js";
 
 
+// not using this api
 router.post("/getShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceiving);
 router.post("/getShipmentDataFromtShipmentReceivingCL", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceivingCL);
+// not using this api
+
+
 router.get("/getAllShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceiving);
 router.get("/getAllShipmentDataFromtShipmentReceived", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceived);
 router.get("/getAllTblItems", checkAuthentication, WBSDB.getAllTblItems);
+
+// dbo.expectedShipments APIS Start
+router.get("/getAllExpectedShipments", checkAuthentication, WBSDB.getAllExpectedShipments);
+
+
+// dbo.expectedShipments APIS End
+
+// expectedTransferOrder APIS Start
+router.get("/getAllExpectedTransferOrder", checkAuthentication, WBSDB.getAllExpectedTransferOrder);
+// expectedTransferOrder APIS End
+
+// dbo.pickinglist APIS Start
+router.get("/getAllPickingList", checkAuthentication, WBSDB.getAllPickingList);
+// dbo.pickinglist APIS End
+
 
 
 // to get all the packing slips from the PackingSlipTable  

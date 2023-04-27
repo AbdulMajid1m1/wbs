@@ -6,10 +6,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import { TblAllLocationsInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
-// import Sidebar from "../../sidebar/Sidebar";
-// import Navbar from "../../navbar/Navbar";
-// import newRequest from "../../../utils/newRequest";
-// import CustomSnakebar from "../../../utils/CustomSnakebar";
+import CustomSnakebar from "../../utils/CustomSnakebar";
 
 
 const TblAllLocationsUpdates = ({ inputs, title,
@@ -24,12 +21,10 @@ const TblAllLocationsUpdates = ({ inputs, title,
 
     // get state data from navigation 
 
-    const [error, setError] = useState(false);
-    const [message, setMessage] = useState("");
-
-
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
     const navigate = useNavigate();
-
+    // to reset snakebar messages
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
@@ -50,40 +45,48 @@ const TblAllLocationsUpdates = ({ inputs, title,
         event.preventDefault();
         setIsLoading(true);
 
-        // Convert the data object to a query string and append it to the URL
-        // Convert the data object to a query string and append it to the URL
-        // Convert the data object to a query string and append it to the URL
-        // const data = {
-        //     SHIPMENTSTATUS: "3.0",
-        //     SHIPMENTID: "ABC123",
-        //     ENTITY: "Company A",
-        //     CONTAINERID: "CONT001",
-        //     ARRIVALWAREHOUSE: "Warehouse A",
-        //     ITEMNAME: "Product A",
-        //     QTY: "10.0",
-        //     ITEMID: "ITEM001",
-        //     PURCHID: "PURCH00",
-        //     CLASSIFICATION: "2.0",
-        // };
+        try {
+            const updatedData = {};
 
-        // const queryString = new URLSearchParams(data).toString();
-        // const url = `/updateShipmentRecievingDataCL?${queryString}`;
+            for (const input of TblAllLocationsInput) {
+                const inputName = input.name;
+                if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
+                    updatedData[inputName] = formData[inputName];
+                }
+            }
 
-        // Make the request with the updated URL
-        // userRequest
-        //     .put(url)
-        //     .then((response) => {
-        //         setIsLoading(false);
-        //         console.log(response.data);
-        //         setMessage("Successfully Updated");
-        //     })
-        //     .catch((error) => {
-        //         setIsLoading(false);
-        //         console.log(error);
-        //         setError("Failed to Update");
-        //     });
+            updatedData["LOCATIONS_HFID"] = id;
 
+            if (Object.keys(updatedData).length <= 1) {
+                setError("No changes detected.");
+                setIsLoading(false);
+                return;
+            }
+
+            const queryParameters = new URLSearchParams(updatedData).toString();
+
+            userRequest
+                .put(`/updateTblLocationsDataCL?${queryParameters}`)
+                .then((response) => {
+                    setIsLoading(false);
+                    console.log(response.data);
+                    setMessage("Successfully Updated");
+                    setTimeout(() => {
+                        navigate(-1);
+                    }, 1000);
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    setError(error?.response?.data?.message ?? "Failed to Update");
+                });
+        } catch (error) {
+            setIsLoading(false);
+            console.log(error);
+            setError("Failed to Update");
+        }
     };
+
     return (
         <>
 
@@ -109,13 +112,11 @@ const TblAllLocationsUpdates = ({ inputs, title,
 
             <span
             >
-                {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-                {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+                {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+                {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
                 <div className="assetCategoryForm">
-                    {/* <Sidebar /> */}
                     <div className="newContainer">
-                        {/* <Navbar /> */}
                         <div className="top">
                             <span className="topSpan">
 

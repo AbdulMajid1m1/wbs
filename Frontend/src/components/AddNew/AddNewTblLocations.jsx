@@ -1,15 +1,10 @@
 import "./AddNew.css";
-// import Sidebar from "../../components/sidebar/Sidebar";
-// import Navbar from "../../components/navbar/Navbar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import { TblAllLocationsInput, assetCategoryInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
-// import Sidebar from "../../sidebar/Sidebar";
-// import Navbar from "../../navbar/Navbar";
-// import newRequest from "../../../utils/newRequest";
-// import CustomSnakebar from "../../../utils/CustomSnakebar";
+import CustomSnakebar from "../../utils/CustomSnakebar";
 const AddNewTblLocations = ({ inputs, title,
     method, apiEndPoint
 }) => {
@@ -18,8 +13,8 @@ const AddNewTblLocations = ({ inputs, title,
     const selectedRow = JSON.parse(sessionStorage.getItem("selectedRow"));
     console.log(selectedRow);
     const [formValues, setFormValues] = useState(selectedRow);
-    const [error, setError] = useState(false);
-    const [message, setMessage] = useState("");
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
 
     const navigate = useNavigate();
 
@@ -38,40 +33,36 @@ const AddNewTblLocations = ({ inputs, title,
             setIsLoading(true);
 
             const data = {
-                SHIPMENTID: event.target.SHIPMENTID.value,
-                ENTITY: event.target.ENTITY.value,
-                CONTAINERID: event.target.CONTAINERID.value,
-                ITEMID: event.target.ITEMID.value,
-                PURCHID: event.target.PURCHID.value,
-                MainCategoryCode: event.target.CLASSIFICATION.value,
+                MAIN: event.target.MAIN.value,
+                WAREHOUSE: event.target.WAREHOUSE.value,
+                ZONE: event.target.ZONE.value,
+                BIN: event.target.BIN.value,
+                ZONE_CODE: event.target.ZONE_CODE.value,
+                ZONE_NAME: event.target.ZONE_NAME.value,
             };
-            console.log([data]);
+            console.log(data);
+
+            const queryParameters = new URLSearchParams(data).toString();
+
             userRequest.post(
-                "/insertShipmentRecievingDataCL", {
-                data: [data],
-            })
+                `/insertTblLocationsDataCL?${queryParameters}`)
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);
                     setMessage("Successfully Added");
-                    // reset form
-                    // document.getElementById("myForm").reset();
-
-                }
-                )
+                })
                 .catch((error) => {
                     setIsLoading(false);
                     console.log(error);
                     setError(error?.response?.data?.message ?? "Failed to Add")
-                }
-                );
+                });
         } catch (error) {
             setIsLoading(false);
             console.log(error);
             setError("Failed to Add");
         }
-
     };
+
     const handleInputChange = (event, inputName) => {
         const value = event.target.value;
         setFormValues({
@@ -103,8 +94,8 @@ const AddNewTblLocations = ({ inputs, title,
 
             <span
             >
-                {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-                {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+                {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+                {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
                 <div className="assetCategoryForm">
                     {/* <Sidebar /> */}
@@ -123,7 +114,7 @@ const AddNewTblLocations = ({ inputs, title,
 
 
                             <div className="right">
-                                
+
                                 <form onSubmit={handleSubmit} id="myForm" >
                                     {TblAllLocationsInput.map((input) => (
 

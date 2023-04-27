@@ -135,7 +135,7 @@ export const TblAllLocationsInput = [
   },
 
   {
-    id: "locationIdInput6",
+    id: "locationIdInput7",
     name: "ZONE_NAME",
     label: "ZONE NAME*",
     type: "text",

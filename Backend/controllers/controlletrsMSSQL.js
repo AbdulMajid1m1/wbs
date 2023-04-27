@@ -175,6 +175,66 @@ const WBSDB = {
     }
   },
 
+  async getAllExpectedShipments(req, res, next) {
+    try {
+      let query = `
+    SELECT * FROM dbo.expectedShipments
+    
+    `;
+      let request = pool1.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+  async getAllExpectedTransferOrder(req, res, next) {
+    try {
+      let query = `
+    SELECT * FROM dbo.expectedTransferOrder
+    
+    `;
+      let request = pool1.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+  async getAllPickingList(req, res, next) {
+    try {
+      let query = `
+    SELECT * FROM dbo.pickinglist
+    
+    `;
+      let request = pool1.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+
+
+
   // -----  all controller for tbl_Items_CL starts here ------------------------------
 
 
@@ -1664,7 +1724,7 @@ const WBSDB = {
 
 
 
-        delete user.UserPassword;
+      delete user.UserPassword;
       res.status(200).send({ message: 'Login successful.', user, token });
     } catch (error) {
       console.log(error);

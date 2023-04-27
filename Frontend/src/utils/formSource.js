@@ -1,15 +1,21 @@
 
 export const assetCategoryInput = [
-
+  {
+    id: "shipmentIdInput1",
+    label: "Shipment Status*",
+    name: "SHIPMENTSTATUS",
+    type: "text",
+    placeholder: "Shipment Status",
+  },
     {
-      id: "shipmentIdInput1",
+      id: "shipmentIdInput2",
       label: "Shipment ID*",
       name: "SHIPMENTID",
       type: "text",
       placeholder: "Shipment ID",
     },
     {
-      id: "shipmentIdInput2",
+      id: "shipmentIdInput3",
       label: "Entity*",
       name: "ENTITY",
       type: "text",
@@ -17,22 +23,42 @@ export const assetCategoryInput = [
     },
   
     {
-      id: "shipmentIdInput3",
+      id: "shipmentIdInput4",
       label: "Continer ID*",
       name: "CONTAINERID",
       type: "text",
       placeholder: "Continer ID",
     },
-  
     {
-      id: "shipmentIdInput4",
+      id: "shipmentIdInput5",
+      label: "Arrival Warehouse*",
+      name: "ARRIVALWAREHOUSE",
+      type: "text",
+      placeholder: "Arrival Warehouse",
+    },
+    {
+      id: "shipmentIdInput6",
+      label: "Item Name*",
+      name: "ITEMNAME",
+      type: "text",
+      placeholder: "Item Name",
+    },
+    {
+      id: "shipmentIdInput7",
+      label: "QTY*",
+      name: "QTY",
+      type: "text",
+      placeholder: "QTY",
+    },
+    {
+      id: "shipmentIdInput8",
       label: "ITEM ID*",
       name: "ITEMID",
       type: "text",
       placeholder: "Item Id",
     },
     {
-      id: "shipmentIdInput5",
+      id: "shipmentIdInput6",
       name: "PURCHID",
       label: "Purch ID*",
       type: "text",
@@ -153,16 +179,22 @@ export const TblAllLocationsInput = [
 
 
 export const TblDispatchingUpdatesColumn = [
-
   {
     id: "dispatchingIdInput1",
+    label: "PACKING SLIP ID*",
+    name: "PACKINGSLIPID",
+    type: "text",
+    placeholder: "PACKING SLIP ID",
+  },
+  {
+    id: "dispatchingIdInput2",
     label: "VEHICLE SHIP PLATE NUMBER*",
     name: "VEHICLESHIPPLATENUMBER",
     type: "text",
     placeholder: "VEHICLE SHIP PLATE NUMBER",
   },
   {
-    id: "dispatchingIdInput2",
+    id: "dispatchingIdInput3",
     label: "INVENT LOCATION ID*",
     name: "INVENTLOCATIONID",
     type: "text",
@@ -170,21 +202,21 @@ export const TblDispatchingUpdatesColumn = [
   },
 
   {
-    id: "dispatchingIdInput3",
+    id: "dispatchingIdInput4",
     label: "INVENT SITE ID*",
     name: "INVENTSITEID",
     type: "text",
     placeholder: "INVENT SITE ID",
   },
   {
-    id: "dispatchingIdInput4",
+    id: "dispatchingIdInput5",
     name: "WMSLOCATIONID",
     label: "WMS LOCATION ID*",
     type: "text",
     placeholder: "WMS LOCATION ID",
   },
   {
-    id: "dispatchingIdInput5",
+    id: "dispatchingIdInput6",
     name: "ITEMID",
     label: "ITEM ID*",
     type: "text",
@@ -192,20 +224,34 @@ export const TblDispatchingUpdatesColumn = [
   },  
   {
     id: "dispatchingIdInput7",
+    name: "QTY",
+    label: "QTY*",
+    type: "text",
+    placeholder: "QTY",
+  },  
+  {
+    id: "dispatchingIdInput8",
+    name: "REMAIN",
+    label: "REMAIN*",
+    type: "text",
+    placeholder: "REMAIN",
+  },  
+  {
+    id: "dispatchingIdInput9",
     name: "NAME",
     label: "NAME*",
     type: "text",
     placeholder: "NAME",
   },
   {
-    id: "dispatchingIdInput8",
+    id: "dispatchingIdInput10",
     name: "CONFIGID",
     label: "CONFIG ID*",
     type: "text",
     placeholder: "CONFIG ID",
   },
   {
-    id: "dispatchingIdInput9",
+    id: "dispatchingIdInput11",
     name: "PICKINGROUTEID",
     label: "PICKING ROUTE ID*",
     type: "text",
@@ -217,7 +263,6 @@ export const TblDispatchingUpdatesColumn = [
 
 
 export const TblDispatchingInsertColumn = [
-
   {
     id: "dispatchingIdInput1",
     name: "PACKINGSLIPID",
@@ -260,23 +305,37 @@ export const TblDispatchingInsertColumn = [
     label: "ITEM ID*",
     type: "text",
     placeholder: "ITEM ID",
-  },  
+  }, 
   {
     id: "dispatchingIdInput7",
+    name: "QTY",
+    label: "QTY*",
+    type: "text",
+    placeholder: "QTY",
+  },  
+  {
+    id: "dispatchingIdInput8",
+    name: "REMAIN",
+    label: "REMAIN*",
+    type: "text",
+    placeholder: "REMAIN",
+  },   
+  {
+    id: "dispatchingIdInput9",
     name: "NAME",
     label: "NAME*",
     type: "text",
     placeholder: "NAME",
   },
   {
-    id: "dispatchingIdInput8",
+    id: "dispatchingIdInput10",
     name: "CONFIGID",
     label: "CONFIG ID*",
     type: "text",
     placeholder: "CONFIG ID",
   },
   {
-    id: "dispatchingIdInput9",
+    id: "dispatchingIdInput11",
     name: "PICKINGROUTEID",
     label: "PICKING ROUTE ID*",
     type: "text",

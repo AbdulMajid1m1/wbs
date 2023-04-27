@@ -1,15 +1,11 @@
 import "./AddNew.css";
-// import Sidebar from "../../components/sidebar/Sidebar";
-// import Navbar from "../../components/navbar/Navbar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import { assetCategoryInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
-// import Sidebar from "../../sidebar/Sidebar";
-// import Navbar from "../../navbar/Navbar";
-// import newRequest from "../../../utils/newRequest";
-// import CustomSnakebar from "../../../utils/CustomSnakebar";
+import CustomSnakebar from "../../utils/CustomSnakebar";
+
 const AddNew = ({ inputs, title,
     method, apiEndPoint
 }) => {
@@ -38,40 +34,44 @@ const AddNew = ({ inputs, title,
             setIsLoading(true);
 
             const data = {
+                SHIPMENTSTATUS: event.target.SHIPMENTSTATUS.value,
                 SHIPMENTID: event.target.SHIPMENTID.value,
                 ENTITY: event.target.ENTITY.value,
                 CONTAINERID: event.target.CONTAINERID.value,
+                ARRIVALWAREHOUSE: event.target.ARRIVALWAREHOUSE.value,
+                ITEMNAME: event.target.ITEMNAME.value,
+                QTY: event.target.QTY.value,
                 ITEMID: event.target.ITEMID.value,
                 PURCHID: event.target.PURCHID.value,
-                MainCategoryCode: event.target.CLASSIFICATION.value,
+                CLASSIFICATION: event.target.CLASSIFICATION.value,
             };
-            console.log([data]);
+            
+            console.log(data);
+
+            const queryParameters = new URLSearchParams(data).toString();
+
             userRequest.post(
-                "/insertShipmentRecievingDataCL", {
-                data: [data],
-            })
+                `/insertShipmentRecievingData?${queryParameters}`)
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);
                     setMessage("Successfully Added");
-                    // reset form
-                    // document.getElementById("myForm").reset();
-
-                }
-                )
+                    setTimeout(() => {
+                        navigate(-1)
+                    }, 1000)
+                })
                 .catch((error) => {
                     setIsLoading(false);
                     console.log(error);
                     setError(error?.response?.data?.message ?? "Failed to Add")
-                }
-                );
+                });
         } catch (error) {
             setIsLoading(false);
             console.log(error);
             setError("Failed to Add");
         }
-
     };
+
     const handleInputChange = (event, inputName) => {
         const value = event.target.value;
         setFormValues({
@@ -79,6 +79,7 @@ const AddNew = ({ inputs, title,
             [inputName]: value,
         });
     };
+
     return (
         <>
 
@@ -103,8 +104,8 @@ const AddNew = ({ inputs, title,
 
             <span
             >
-                {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-                {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+                {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+                {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
                 <div className="assetCategoryForm">
                     {/* <Sidebar /> */}

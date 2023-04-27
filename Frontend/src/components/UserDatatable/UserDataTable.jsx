@@ -80,6 +80,17 @@ const UserDataTable = ({
       switch (uniqueId) {
         case "SHIPMENTID":
           // call the api to delete the data from the shipment table
+          try {
+            const response = await userRequest.delete(
+              "deleteShipmentRecievingData?SHIPMENTID=" + rowdata.SHIPMENTID
+            );
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
+          }
 
           break;
         case "locationTableId":

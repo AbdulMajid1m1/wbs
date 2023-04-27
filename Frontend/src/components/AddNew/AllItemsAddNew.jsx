@@ -2,8 +2,9 @@ import "./AddNew.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { allItemsInput, assetCategoryInput } from "../../utils/formSource";
+import { allItemsInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
+import CustomSnakebar from "../../utils/CustomSnakebar";
 
 const AllItemsAddNew = ({ inputs, title,
     method, apiEndPoint
@@ -32,30 +33,38 @@ const AllItemsAddNew = ({ inputs, title,
         try {
             setIsLoading(true);
 
-            userRequest.post("/insertTblItemsCLData?ITEMNAME=Sample Item&ITEMID=ITEM124&ITEMGROUPID=group123")
+            const data = {
+                ITEMNAME: event.target.ITEMNAME.value,
+                ITEMID: event.target.ITEMID.value,
+                ITEMGROUPID: event.target.ITEMGROUPID.value,
+            };
+            
+            console.log(data);
+
+            const queryParameters = new URLSearchParams(data).toString();
+
+            userRequest.post(
+                `/insertTblItemsCLData?${queryParameters}`)
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);
                     setMessage("Successfully Added");
-                    console.log("Inserted Data")
-                    // reset form
-                    // document.getElementById("myForm").reset();
-
-                }
-                )
+                    setTimeout(() => {
+                        navigate(-1)
+                    }, 1000)
+                })
                 .catch((error) => {
                     setIsLoading(false);
                     console.log(error);
                     setError(error?.response?.data?.message ?? "Failed to Add")
-                }
-                );
+                });
         } catch (error) {
             setIsLoading(false);
             console.log(error);
             setError("Failed to Add");
         }
-
     };
+
     const handleInputChange = (event, inputName) => {
         const value = event.target.value;
         setFormValues({
@@ -87,8 +96,8 @@ const AllItemsAddNew = ({ inputs, title,
 
             <span
             >
-                {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-                {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+                {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+                {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
                 <div className="assetCategoryForm">
                     {/* <Sidebar /> */}

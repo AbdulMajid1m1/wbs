@@ -57,7 +57,13 @@ export const allItemsInput = [
   //   type: "text",
   //   placeholder: "ITEM ID",
   // },
-
+  {
+    id: "allItemsInput1",
+    label: "ITEM ID*",
+    name: "ITEMID",
+    type: "text",
+    placeholder: "ITEM ID",
+  },
   {
     id: "allItemsInput2",
     label: "ITEM NAME*",
@@ -76,7 +82,7 @@ export const allItemsInput = [
 ];
 
 export const updateAllItemsInput = [
-
+  
   {
     id: "allItemsInput1",
     label: "ITEM NAME*",

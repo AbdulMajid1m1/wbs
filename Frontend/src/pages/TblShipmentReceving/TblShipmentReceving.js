@@ -52,7 +52,6 @@ const FirstTable = () => {
         uniqueId="SHIPMENTID"
         ShipmentIdSearchEnable={true}
         addNewNavigation="/addnew"
-      // ContainerIdSearchEnable={true}
 
       />
 

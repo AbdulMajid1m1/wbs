@@ -80,8 +80,19 @@ const UserDataTable = ({
       switch (uniqueId) {
         case "SHIPMENTID":
           // call the api to delete the data from the shipment table
-
+          try {
+            const response = await userRequest.delete(
+              "deleteShipmentRecievingDataCL?SHIPMENTID=" + rowdata.SHIPMENTID
+            );
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
+          }
           break;
+
         case "locationTableId":
           try {
             const response = await userRequest.delete(
@@ -95,6 +106,36 @@ const UserDataTable = ({
             success = false;
           }
           break;
+
+          // call the api to delete the data from the itemsCL table
+          case "itemTableId":
+            try {
+              const response = await userRequest.delete(
+                "deleteTblItemsCLData?ITEMID=" + rowdata.ITEMID
+              );
+              console.log(response);
+              setMessage(response?.data?.message ?? "User deleted successfully");
+              success = true; // to update the state of the table
+            } catch (error) {
+              setError(error?.message ?? "Something went wrong");
+              success = false;
+            }
+            break;
+
+          // call the api to delete the data from the itemsCL table
+          case "PACKINGSLIPID":
+            try {
+              const response = await userRequest.delete(
+                "deleteTblDispatchingDataCL?PACKINGSLIPID=" + rowdata.PACKINGSLIPID
+              );
+              console.log(response);
+              setMessage(response?.data?.message ?? "User deleted successfully");
+              success = true; // to update the state of the table
+            } catch (error) {
+              setError(error?.message ?? "Something went wrong");
+              success = false;
+            }
+            break;
 
 
         default:
@@ -121,6 +162,9 @@ const UserDataTable = ({
         break;
       case "ITEMNAME":
         navigate("/allitems/" + rowData.ITEMNAME)
+        break;
+      case "itemTableId":
+        navigate("/allitems/" + rowData.ITEMID)
         break;
       case "locationTableId":
         navigate("/tblLocationupdate/" + rowData.LOCATIONS_HFID)

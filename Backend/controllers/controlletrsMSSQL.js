@@ -489,7 +489,7 @@ const WBSDB = {
     // delete data from tbl_Shipment_Receiving_CL based on SHIPMENTID
     try {
       const { SHIPMENTID } = req.query;
-
+      console.log(SHIPMENTID)
       if (!SHIPMENTID) {
         return res.status(400).send({ message: 'shipment ID is required' });
       }
@@ -499,7 +499,7 @@ const WBSDB = {
       WHERE SHIPMENTID = @SHIPMENTID
     `;
 
-      let request = pool1.request();
+      let request = pool2.request();
       request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
       const result = await request.query(query);
 

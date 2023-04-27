@@ -4,12 +4,9 @@ import "../AddNew/AddNew.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { TblAllLocationsInput, TblDispatchingUpdatesColumn } from "../../utils/formSource";
+import { TblDispatchingUpdatesColumn } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
-// import Sidebar from "../../sidebar/Sidebar";
-// import Navbar from "../../navbar/Navbar";
-// import newRequest from "../../../utils/newRequest";
-// import CustomSnakebar from "../../../utils/CustomSnakebar";
+import CustomSnakebar from "../../utils/CustomSnakebar";
 
 
 const TblDispatchingUpdates = ({ inputs, title,
@@ -26,15 +23,14 @@ const TblDispatchingUpdates = ({ inputs, title,
 
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
-
-
     const navigate = useNavigate();
-
+    // to reset snakebar messages
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
 
     };
+
 
 
     const [rowdata, setRowData] = useState(() => {
@@ -45,14 +41,52 @@ const TblDispatchingUpdates = ({ inputs, title,
     })
     console.log(rowdata)
 
-    // Handle Submit
-    const handleSubmit = async event => {
-        event.preventDefault();
-        setIsLoading(true);
+ // Handle Submit
+ const handleSubmit = async event => {
+    event.preventDefault();
+    setIsLoading(true);
 
-   
+    try {
+        const updatedData = {};
 
-    };
+        for (const input of TblDispatchingUpdatesColumn) {
+            const inputName = input.name;
+            if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
+                updatedData[inputName] = formData[inputName];
+            }
+        }
+
+        updatedData["PACKINGSLIPID"] = id;
+
+        if (Object.keys(updatedData).length <= 1) {
+            setError("No changes detected.");
+            setIsLoading(false);
+            return;
+        }
+
+        const queryParameters = new URLSearchParams(updatedData).toString();
+
+        userRequest
+            .put(`/updateTblDispatchingDataCL?${queryParameters}`)
+            .then((response) => {
+                setIsLoading(false);
+                console.log(response.data);
+                setMessage("Successfully Updated");
+                setTimeout(() => {
+                    navigate(-1);
+                }, 1000);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.log(error);
+                setError(error?.response?.data?.message ?? "Failed to Update");
+            });
+    } catch (error) {
+        setIsLoading(false);
+        console.log(error);
+        setError("Failed to Update");
+    }
+};
     return (
         <>
 
@@ -78,8 +112,8 @@ const TblDispatchingUpdates = ({ inputs, title,
 
             <span
             >
-                {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-                {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+                {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+                {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
                 <div className="assetCategoryForm">
                     {/* <Sidebar /> */}

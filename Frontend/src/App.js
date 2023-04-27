@@ -26,6 +26,8 @@ import InternalTransfer from './pages/InternalTransfer/InternalTransfer'
 import ExpectedReceipts from './pages/ExpectedReceipts/ExpectedReceipts'
 import ExpectedTranferOrder from './pages/ExtectedTransferOrder/ExpectedTranferOrder'
 import PickList from './pages/PickList/PickList'
+import TblItemCl from './pages/TblItemCl/TblItemCl'
+import AddDispatchingCl from './components/AddNew/AddDispatchingCl'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -64,9 +66,10 @@ const App = () => {
                 <Route path='/shipmentid' element={<ShipmentRecevingId />} />
                 <Route path='/shipmentcl' element={<TblShipmentReceiveCl />} />
                 <Route path='/items' element={<TblItem />} />
+                <Route path='/itemscl' element={<TblItemCl />} />
                 <Route path='/addnew' element={<AddNew title="Add New Shipment Receving Details" />} />
-                <Route path='/update' element={<UpdateData title="Update Row Data" />} />
-                <Route path='/update/:id' element={<UpdateData title="Update Row Data" />} />
+                {/* <Route path='/update' element={<UpdateData title="Update Shipment Receiving Data" />} /> */}
+                <Route path='/update/:id' element={<UpdateData title="Update Row Shipment Receiving Data" />} />
                 <Route path='/itemsnew' element={<AllItemsAddNew title="Add New Items" />} />
                 <Route path='/allitems/:id' element={<UpdateAllItems title="Update All Items" />} />
                 <Route path='/dashboard' element={<MainDashboard />} />
@@ -75,7 +78,7 @@ const App = () => {
                 <Route path='/tbl-new-location' element={<AddNewTblLocations title="Add Tbl Locations" />} />
                 <Route path='/tbldispatching' element={<TblDispatchingCL />} />
                 <Route path='/tbldispatchingupdates/:id' element={<TblDispatchingUpdates title="All Dispatching Updates" />} />
-                <Route path='/tbl-new-dispatch' element={<AddNewTblLocations title="Add Tbl New Dispatch" />} />
+                <Route path='/tbl-new-dispatch' element={<AddDispatchingCl title="Add Tbl New Dispatch" />} />
                 <Route path='/packingslip' element={<PackingSlip />} />
                 <Route path='/alldispatch' element={<AllItemsDispatch />} />
                 <Route path='/internal' element={<InternalTransfer />} />

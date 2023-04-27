@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import { assetCategoryInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
+import CustomSnakebar from "../../utils/CustomSnakebar";
 
 
 const UpdateData = ({ inputs, title,
@@ -19,10 +20,8 @@ const UpdateData = ({ inputs, title,
 
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
-
-
     const navigate = useNavigate();
-
+    // to reset snakebar messages
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
@@ -30,38 +29,60 @@ const UpdateData = ({ inputs, title,
     };
 
 
-    const [rowData, setstateRowData] = useState(() => {
+    const [rowdata, setRowData] = useState(() => {
         const storedData = sessionStorage.getItem('edit');
         const parsedData = JSON.parse(storedData);
         // console.log(parsedData)
         return parsedData
     })
+    console.log(rowdata)
 
-    // Handle Submit
-    // Handle Submit
-    const handleSubmit = async event => {
-        event.preventDefault();
-        setIsLoading(true);
-        try {
-            // Use the PUT method and pass formData as query parameters
-            userRequest.put("/updateShipmentRecievingDataCL", null, { params: formData })
-                .then((response) => {
-                    setIsLoading(false);
-                    console.log(response.data);
-                    setMessage("Successfully Updated");
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.log(error);
-                    console.log("Error hai")
-                    setError("Failed to Update");
-                });
-        } catch (error) {
-            setIsLoading(false);
-            console.log(error);
-            setError("Failed to Update");
+  // Handle Submit
+  const handleSubmit = async event => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    try {
+        const updatedData = {};
+
+        for (const input of assetCategoryInput) {
+            const inputName = input.name;
+            if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
+                updatedData[inputName] = formData[inputName];
+            }
         }
-    };
+
+        updatedData["SHIPMENTID"] = id;
+
+        if (Object.keys(updatedData).length <= 1) {
+            setError("No changes detected.");
+            setIsLoading(false);
+            return;
+        }
+
+        const queryParameters = new URLSearchParams(updatedData).toString();
+
+        userRequest
+            .put(`/updateShipmentRecievingDataCL?${queryParameters}`)
+            .then((response) => {
+                setIsLoading(false);
+                console.log(response.data);
+                setMessage("Successfully Updated");
+                setTimeout(() => {
+                    navigate(-1);
+                }, 1000);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.log(error);
+                setError(error?.response?.data?.message ?? "Failed to Update");
+            });
+    } catch (error) {
+        setIsLoading(false);
+        console.log(error);
+        setError("Failed to Update");
+    }
+};
 
     return (
         <>
@@ -87,8 +108,8 @@ const UpdateData = ({ inputs, title,
 
             <span
             >
-                {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-                {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+                {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+                {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
                 <div className="assetCategoryForm">
                     {/* <Sidebar /> */}
@@ -113,7 +134,7 @@ const UpdateData = ({ inputs, title,
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                defaultValue={rowData && rowData[input.name]}
+                                                defaultValue={rowdata && rowdata[input.name]}
                                                 onChange={(e) =>
                                                     setFormData({
                                                         ...formData,

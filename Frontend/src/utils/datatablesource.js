@@ -449,3 +449,52 @@ export const ExpectedReceiptsColumn = [
 ]
 
 
+
+export const ExpectedTranferOrderColumn = [
+  {
+    field: "PURCHID",
+    headerName: "PURCH ID",
+    width: 180,
+
+  },
+  {
+    field: "CREATEDDATETIME",
+    headerName: "CREATED DATE TIME",
+    width: 180,
+
+  },
+  {
+    field: "SHIPMENTID",
+    headerName: "SHIPMENT ID",
+    width: 180,
+
+  },
+  {
+    field: "SHIPMENTSTATUS",
+    headerName: "SHIPMENT STATUS",
+    width: 180,
+
+  },
+  {
+    field: "CONTAINERID",
+    headerName: "CONTAINER ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 180,
+
+  },
+  
+
+]
+
+

@@ -24,6 +24,7 @@ import PackingSlip from './pages/PackingSlip/PackingSlip'
 import AllItemsDispatch from './pages/AllItemsDispatch/AllItemsDispatch'
 import InternalTransfer from './pages/InternalTransfer/InternalTransfer'
 import ExpectedReceipts from './pages/ExpectedReceipts/ExpectedReceipts'
+import ExpectedTranferOrder from './pages/ExtectedTransferOrder/ExpectedTranferOrder'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -78,6 +79,7 @@ const App = () => {
                 <Route path='/alldispatch' element={<AllItemsDispatch />} />
                 <Route path='/internal' element={<InternalTransfer />} />
                 <Route path='/expectedreceipts' element={<ExpectedReceipts />} />
+                <Route path='/expectedorder' element={<ExpectedTranferOrder />} />
               </Routes>
             </MainLayout>
           } />

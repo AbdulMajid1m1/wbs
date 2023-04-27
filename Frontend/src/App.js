@@ -25,6 +25,7 @@ import AllItemsDispatch from './pages/AllItemsDispatch/AllItemsDispatch'
 import InternalTransfer from './pages/InternalTransfer/InternalTransfer'
 import ExpectedReceipts from './pages/ExpectedReceipts/ExpectedReceipts'
 import ExpectedTranferOrder from './pages/ExtectedTransferOrder/ExpectedTranferOrder'
+import PickList from './pages/PickList/PickList'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -80,6 +81,7 @@ const App = () => {
                 <Route path='/internal' element={<InternalTransfer />} />
                 <Route path='/expectedreceipts' element={<ExpectedReceipts />} />
                 <Route path='/expectedorder' element={<ExpectedTranferOrder />} />
+                <Route path='/picklist' element={<PickList />} />
               </Routes>
             </MainLayout>
           } />

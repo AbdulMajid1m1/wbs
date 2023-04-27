@@ -186,7 +186,7 @@ const SideBar2 = () => {
                                 </li>
 
                                 <li
-                                    className='cursor-pointer'>
+                                    className='cursor-pointer' onClick={() => navigate('/picklist')}>
                                     <span className="inline-flex bg-white w-7 h-7 rounded-full justify-center items-center ml-4">
                                         <img src={city} className='h-5 w-5' alt='' />
                                     </span>

@@ -76,7 +76,7 @@ export const AllItems = [
   {
     field: "ITEMNAME",
     headerName: "ITEM NAME",
-    width: 180,
+    width: 300,
 
   },
   {

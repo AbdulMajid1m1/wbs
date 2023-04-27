@@ -50,38 +50,7 @@ const TblDispatchingUpdates = ({ inputs, title,
         event.preventDefault();
         setIsLoading(true);
 
-        // Convert the data object to a query string and append it to the URL
-        // Convert the data object to a query string and append it to the URL
-        // Convert the data object to a query string and append it to the URL
-        // const data = {
-        //     SHIPMENTSTATUS: "3.0",
-        //     SHIPMENTID: "ABC123",
-        //     ENTITY: "Company A",
-        //     CONTAINERID: "CONT001",
-        //     ARRIVALWAREHOUSE: "Warehouse A",
-        //     ITEMNAME: "Product A",
-        //     QTY: "10.0",
-        //     ITEMID: "ITEM001",
-        //     PURCHID: "PURCH00",
-        //     CLASSIFICATION: "2.0",
-        // };
-
-        // const queryString = new URLSearchParams(data).toString();
-        // const url = `/updateShipmentRecievingDataCL?${queryString}`;
-
-        // Make the request with the updated URL
-        // userRequest
-        //     .put(url)
-        //     .then((response) => {
-        //         setIsLoading(false);
-        //         console.log(response.data);
-        //         setMessage("Successfully Updated");
-        //     })
-        //     .catch((error) => {
-        //         setIsLoading(false);
-        //         console.log(error);
-        //         setError("Failed to Update");
-        //     });
+   
 
     };
     return (

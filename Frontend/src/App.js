@@ -38,8 +38,8 @@ const MainLayout = ({ children }) => {
   return (
     <div className="main-layout-container">
       <span className="left-layout">
-        <SideBar2 />
-        {/* <FigmaSidebar /> */}
+        {/* <SideBar2 /> */}
+        <FigmaSidebar />
       </span>
       <span className="right-layout">{children}</span>
     </div>

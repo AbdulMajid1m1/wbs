@@ -1,0 +1,116 @@
+/* .main-sidebar{
+    width: 336px;
+    height: auto;
+    background: #1E3B8B;
+    border: 2px solid #0E0E71;
+    box-shadow: 5px 5px 10px 5px #ABACAE;
+    border-radius: 10px;
+}
+
+.main-images-container {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+    margin-top: 3%;
+    margin-left: 3%;
+    width: 100%;
+    height: 60px;
+}
+
+.main-inside-image {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.sidebar-text {
+    font-family: 'Inter';
+font-style: normal;
+font-weight: 800;
+font-size: 16px;
+line-height: 19px;
+
+color: #FFFFFF;
+cursor: pointer;
+} */
+
+
+.main-sidebar{
+    width: 100%;
+    max-width: 365px;
+    height: 100vh;
+    background: #1E3B8B;
+    border: 2px solid #0E0E71;
+    box-shadow: 5px 5px 10px 5px #ABACAE;
+    border-radius: 10px;
+}
+
+.main-images-container {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 15px;
+    margin-top: 3%;
+    margin-left: 3%;
+    width: 100%;
+    height: 60px;
+}
+
+.main-inside-image {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.sidebar-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 15px;
+    line-height: 19px;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+/* New class for small screens */
+.main-sidebar.compact {
+  height: 50px;
+}
+
+/* adjust styles for screens with a maximum width of 767px */
+@media screen and (max-width: 767px) {
+    .main-sidebar {
+      /* position: relative; */
+      width: 50px;
+      height: auto;
+      /* max-width: none; */
+      background: #1E3B8B;
+    }
+    .main-images-container {
+      margin: 0;
+      height: 50px;
+    }
+  
+    .main-inside-image {
+      width: 40px;
+      height: 40px;
+    }
+    .sidebar-text {
+      display: none;
+    }
+    
+    /* Show text below icon */
+    .main-images-container {
+      flex-direction: column;
+      align-items: center;
+      height: auto;
+    }
+
+    .sidebar-text {
+      display: block;
+      font-size: 9px;
+      text-align: center;
+      margin-top: -10px;
+    }
+  }

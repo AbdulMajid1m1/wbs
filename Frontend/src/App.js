@@ -28,6 +28,7 @@ import ExpectedTranferOrder from './pages/ExtectedTransferOrder/ExpectedTranferO
 import PickList from './pages/PickList/PickList'
 import TblItemCl from './pages/TblItemCl/TblItemCl'
 import AddDispatchingCl from './components/AddNew/AddDispatchingCl'
+import FigmaSidebar from './components/SideBar/FigmaSidebar'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -37,7 +38,8 @@ const MainLayout = ({ children }) => {
   return (
     <div className="main-layout-container">
       <span className="left-layout">
-        <SideBar2 />
+        {/* <SideBar2 /> */}
+        <FigmaSidebar />
       </span>
       <span className="right-layout">{children}</span>
     </div>

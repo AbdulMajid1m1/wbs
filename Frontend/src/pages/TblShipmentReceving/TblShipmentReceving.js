@@ -17,7 +17,7 @@ const FirstTable = () => {
       try {
 
 
-        userRequest.get("/getAllShipmentDataFromtShipmentReceiving")
+        userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
           // userRequest.post("/getShipmentDataFromtShipmentReceiving", {
           //   SHIPMENTID: "BSP-0001008",
           //   CONTAINERID: "1"
@@ -47,12 +47,13 @@ const FirstTable = () => {
     <div>
 
       {/* <SideBar2 /> */}
-      <UserDataTable data={data} title="SHIPMENT RECEIVING" columnsName={allUserAssetsColumns}
+      <UserDataTable data={data} title="EXPECTED SHIPMENT" columnsName={allUserAssetsColumns}
         backButton={true}
         uniqueId="SHIPMENTID"
-        ShipmentIdSearchEnable={true}
         addNewNavigation="/addnew"
-
+        ShipmentIdSearchEnable={true}
+        actionColumnVisibility={true}
+        
       />
 
       {isLoading &&

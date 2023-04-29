@@ -173,16 +173,19 @@ router.post("/getInventTableWMSDataByItemId", checkAuthentication, WBSDB.getInve
 
 // tblMappedBarcodes APIS Start
 
-router.post("/getmapBarcodeDataByItemId", checkAuthentication, WBSDB.getmapBarcodeDataByItemId); // tblMappedBarcodes
+
+router.post("/getmapBarcodeDataByItemCode", checkAuthentication, WBSDB.getmapBarcodeDataByItemCode); // tblMappedBarcodes
 
 router.post("/insertIntoMappedBarcode", checkAuthentication, WBSDB.insertIntoMappedBarcode);
 
-router.put("/updateTblMappedBarcodeByItemId", checkAuthentication, WBSDB.updateTblMappedBarcodeByItemId);
+router.put("/updateTblMappedBarcodeByItemCode", checkAuthentication, WBSDB.updateTblMappedBarcodeByItemCode);
 router.put("/updateTblMappedBarcodeByGtin", checkAuthentication, WBSDB.updateTblMappedBarcodeByGtin);
 
-router.post("/checkBarcodeValidityBySerialNo", checkAuthentication, WBSDB.checkBarcodeValidityBySerialNo);
+router.post("/checkBarcodeValidityByItemSerialNo", checkAuthentication, WBSDB.checkBarcodeValidityByItemSerialNo);
 
-router.post("/getItemInfoBySerialNo", checkAuthentication, WBSDB.getItemInfoBySerialNo);
+router.post("/getItemInfoByItemSerialNo", checkAuthentication, WBSDB.getItemInfoByItemSerialNo);
+
+router.post("/getItemInfoByPalletCode", checkAuthentication, WBSDB.getItemInfoByPalletCode);
 
 
 

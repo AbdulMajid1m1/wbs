@@ -1940,16 +1940,16 @@ const WBSDB = {
   },
 
 
-  async getmapBarcodeDataByItemId(req, res, next) {
+  async getmapBarcodeDataByItemCode(req, res, next) {
     try {
-      const itemId = req.headers['itemid']; // Get ITEMID from headers
-      console.log(itemId);
+      const ItemCode = req.headers['itemcode']; // Get ITEMID from headers
+      console.log(ItemCode);
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes
-        WHERE ITEMID = @itemId
+        WHERE ItemCode  = @ItemCode
       `;
-      let request = pool1.request();
-      request.input('itemId', sql.NVarChar(255), itemId); // Assuming ITEMID is of type nvarchar(255)
+      let request = pool2.request();
+      request.input('ItemCode', sql.NVarChar(100), ItemCode); // Assuming ITEMID is of type nvarchar(255)
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
@@ -1964,41 +1964,51 @@ const WBSDB = {
   async insertIntoMappedBarcode(req, res, next) {
     try {
       const {
-        itemid,
-        itemname,
-        itemgroupid,
+        itemcode,
+        itemdesc,
         gtin,
-        serialnumber,
-        batchno,
-        manufacturingdate,
-        expirydate,
-        qrcode,
+        remarks,
+        user,
+        classification,
+        mainlocation,
         binlocation,
-        whlocation,
-        qty
-      } = req.headers; // Assuming all columns are provided in the headers or null is allowed
+        intcode,
+        itemserialno,
+        mapdate,
+        palletcode,
+        reference,
+        sid,
+        cid,
+        po,
+        trans
+      } = req.headers;
 
-      let query = `
-        INSERT INTO dbo.tblMappedBarcodes (ITEMID, ITEMNAME, ITEMGROUPID, GTIN, SerialNumber, BatchNo, ManufacturingDate, ExpiryDate, QRCode, BINLocation, WHLocation, Qty)
-        VALUES (@itemId, @itemName, @itemGroupId, @gtin, @serialNumber, @batchNo, @manufacturingDate, @expiryDate, @qrCode, @binLocation, @whLocation, @qty)
+      let query = ` 
+        INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+        VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
       `;
-      let request = pool1.request();
-      request.input('itemId', sql.NVarChar(255), itemid);
-      request.input('itemName', sql.NVarChar(255), itemname);
-      request.input('itemGroupId', sql.NVarChar(255), itemgroupid);
-      request.input('gtin', sql.NVarChar(50), gtin);
-      request.input('serialNumber', sql.NVarChar(100), serialnumber);
-      request.input('batchNo', sql.NVarChar(100), batchno);
-      request.input('manufacturingDate', sql.NVarChar(100), manufacturingdate);
-      request.input('expiryDate', sql.NVarChar(100), expirydate);
-      request.input('qrCode', sql.NVarChar(255), qrcode);
-      request.input('binLocation', sql.NVarChar(100), binlocation);
-      request.input('whLocation', sql.NVarChar(100), whlocation);
-      request.input('qty', sql.NVarChar(100), qty);
+      let request = pool2.request();
+      request.input('itemCode', sql.VarChar(100), itemcode);
+      request.input('itemDesc', sql.NVarChar(255), itemdesc);
+      request.input('gtin', sql.VarChar(150), gtin);
+      request.input('remarks', sql.VarChar(100), remarks);
+      request.input('user', sql.VarChar(50), user);
+      request.input('classification', sql.VarChar(150), classification);
+      request.input('mainLocation', sql.VarChar(200), mainlocation);
+      request.input('binLocation', sql.VarChar(200), binlocation);
+      request.input('intCode', sql.VarChar(150), intcode);
+      request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+      request.input('mapDate', sql.Date, mapdate);
+      request.input('palletCode', sql.VarChar(255), palletcode);
+      request.input('reference', sql.VarChar(100), reference);
+      request.input('sid', sql.VarChar(50), sid);
+      request.input('cid', sql.VarChar(50), cid);
+      request.input('po', sql.VarChar(50), po);
+      request.input('trans', sql.Numeric(10, 0), trans);
 
       await request.query(query);
 
-      return res.status(201).send({ message: "Data successfully added.", });
+      return res.status(201).send({ message: "Data successfully added." });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
@@ -2006,25 +2016,85 @@ const WBSDB = {
   },
 
 
-  async updateTblMappedBarcodeByItemId(req, res, next) {
+
+  async insertIntoMappedBarcode(req, res, next) {
     try {
       const {
-        itemid,
-        itemname,
-        itemgroupid,
+        itemcode,
+        itemdesc,
         gtin,
-        serialnumber,
-        batchno,
-        manufacturingdate,
-        expirydate,
-        qrcode,
+        remarks,
+        user,
+        classification,
+        mainlocation,
         binlocation,
-        whlocation,
-        qty
+        intcode,
+        itemserialno,
+        mapdate,
+        palletcode,
+        reference,
+        sid,
+        cid,
+        po,
+        trans
       } = req.headers;
 
-      if (!itemid) {
-        return res.status(400).send({ message: 'ITEMID is required.' });
+      let query = `
+        INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+        VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+      `;
+      let request = pool1.request();
+      request.input('itemCode', sql.VarChar(100), itemcode);
+      request.input('itemDesc', sql.NVarChar(255), itemdesc);
+      request.input('gtin', sql.VarChar(150), gtin);
+      request.input('remarks', sql.VarChar(100), remarks);
+      request.input('user', sql.VarChar(50), user);
+      request.input('classification', sql.VarChar(150), classification);
+      request.input('mainLocation', sql.VarChar(200), mainlocation);
+      request.input('binLocation', sql.VarChar(200), binlocation);
+      request.input('intCode', sql.VarChar(150), intcode);
+      request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+      request.input('mapDate', sql.Date, mapdate);
+      request.input('palletCode', sql.VarChar(255), palletcode);
+      request.input('reference', sql.VarChar(100), reference);
+      request.input('sid', sql.VarChar(50), sid);
+      request.input('cid', sql.VarChar(50), cid);
+      request.input('po', sql.VarChar(50), po);
+      request.input('trans', sql.Numeric(10, 0), trans);
+
+      await request.query(query);
+
+      return res.status(201).send({ message: "Data successfully added." });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateTblMappedBarcodeByItemCode(req, res, next) {
+    try {
+      const {
+        itemcode,
+        itemdesc,
+        gtin,
+        remarks,
+        user,
+        classification,
+        mainlocation,
+        binlocation,
+        intcode,
+        itemserialno,
+        mapdate,
+        palletcode,
+        reference,
+        sid,
+        cid,
+        po,
+        trans
+      } = req.headers;
+
+      if (!itemcode) {
+        return res.status(400).send({ message: 'ItemCode is required.' });
       }
 
       let query = `
@@ -2032,61 +2102,86 @@ const WBSDB = {
         SET `;
 
       const updateFields = [];
-      const request = pool1.request();
+      const request = pool2.request();
 
-      if (itemname !== undefined) {
-        updateFields.push('ITEMNAME = @itemName');
-        request.input('itemName', sql.NVarChar(255), itemname);
-      }
-
-      if (itemgroupid !== undefined) {
-        updateFields.push('ITEMGROUPID = @itemGroupId');
-        request.input('itemGroupId', sql.NVarChar(255), itemgroupid);
+      if (itemdesc !== undefined) {
+        updateFields.push('ItemDesc = @itemDesc');
+        request.input('itemDesc', sql.NVarChar(255), itemdesc);
       }
 
       if (gtin !== undefined) {
         updateFields.push('GTIN = @gtin');
-        request.input('gtin', sql.NVarChar(50), gtin);
+        request.input('gtin', sql.VarChar(150), gtin);
       }
 
-      if (serialnumber !== undefined) {
-        updateFields.push('SerialNumber = @serialNumber');
-        request.input('serialNumber', sql.NVarChar(100), serialnumber);
+      if (remarks !== undefined) {
+        updateFields.push('Remarks = @remarks');
+        request.input('remarks', sql.VarChar(100), remarks);
       }
 
-      if (batchno !== undefined) {
-        updateFields.push('BatchNo = @batchNo');
-        request.input('batchNo', sql.NVarChar(100), batchno);
+      if (user !== undefined) {
+        updateFields.push('[User] = @user');
+        request.input('user', sql.VarChar(50), user);
       }
 
-      if (manufacturingdate !== undefined) {
-        updateFields.push('ManufacturingDate = @manufacturingDate');
-        request.input('manufacturingDate', sql.NVarChar(100), manufacturingdate);
+      if (classification !== undefined) {
+        updateFields.push('Classification = @classification');
+        request.input('classification', sql.VarChar(150), classification);
       }
 
-      if (expirydate !== undefined) {
-        updateFields.push('ExpiryDate = @expiryDate');
-        request.input('expiryDate', sql.NVarChar(100), expirydate);
-      }
-
-      if (qrcode !== undefined) {
-        updateFields.push('QRCode = @qrCode');
-        request.input('qrCode', sql.NVarChar(255), qrcode);
+      if (mainlocation !== undefined) {
+        updateFields.push('MainLocation = @mainLocation');
+        request.input('mainLocation', sql.VarChar(200), mainlocation);
       }
 
       if (binlocation !== undefined) {
-        updateFields.push('BINLocation = @binLocation');
-        request.input('binLocation', sql.NVarChar(100), binlocation);
+        updateFields.push('BinLocation = @binLocation');
+        request.input('binLocation', sql.VarChar(200), binlocation);
       }
 
-      if (whlocation !== undefined) {
-        updateFields.push('WHLocation = @whLocation');
-        request.input('whLocation', sql.NVarChar(100), whlocation);
+      if (intcode !== undefined) {
+        updateFields.push('IntCode = @intCode');
+        request.input('intCode', sql.VarChar(150), intcode);
       }
 
-      if (qty !== undefined) {
-        updateFields.push('Qty = @qty');
-        request.input('qty', sql.NVarChar(100), qty);
+      if (itemserialno !== undefined) {
+        updateFields.push('ItemSerialNo = @itemSerialNo');
+        request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+      }
+
+      if (mapdate !== undefined) {
+        updateFields.push('MapDate = @mapDate');
+        request.input('mapDate', sql.Date, mapdate);
+      }
+
+      if (palletcode !== undefined) {
+        updateFields.push('PalletCode = @palletCode');
+        request.input('palletCode', sql.VarChar(255), palletcode);
+      }
+
+      if (reference !== undefined) {
+        updateFields.push('Reference = @reference');
+        request.input('reference', sql.VarChar(100), reference);
+      }
+
+      if (sid !== undefined) {
+        updateFields.push('SID = @sid');
+        request.input('sid', sql.VarChar(50), sid);
+      }
+
+      if (cid !== undefined) {
+        updateFields.push('CID = @cid');
+        request.input('cid', sql.VarChar(50), cid);
+      }
+
+      if (po !== undefined) {
+        updateFields.push('PO = @po');
+        request.input('po', sql.VarChar(50), po);
+      }
+
+      if (trans !== undefined) {
+        updateFields.push('Trans = @trans');
+        request.input('trans', sql.Numeric(10, 0), trans);
       }
 
       if (updateFields.length === 0) {
@@ -2097,10 +2192,10 @@ const WBSDB = {
 
       query += `
         OUTPUT INSERTED.*
-        WHERE ITEMID = @itemId
+        WHERE ItemCode = @itemCode
       `;
 
-      request.input('itemId', sql.NVarChar(255), itemid);
+      request.input('itemCode', sql.VarChar(100), itemcode);
 
       const result = await request.query(query);
 
@@ -2118,18 +2213,23 @@ const WBSDB = {
   async updateTblMappedBarcodeByGtin(req, res, next) {
     try {
       const {
-        itemid,
-        itemname,
-        itemgroupid,
+        itemcode,
+        itemdesc,
         gtin,
-        serialnumber,
-        batchno,
-        manufacturingdate,
-        expirydate,
-        qrcode,
+        remarks,
+        user,
+        classification,
+        mainlocation,
         binlocation,
-        whlocation,
-        qty
+        intcode,
+        itemserialno,
+        mapdate,
+        palletcode,
+        reference,
+        sid,
+        cid,
+        po,
+        trans
       } = req.headers;
 
       if (!gtin) {
@@ -2141,63 +2241,87 @@ const WBSDB = {
         SET `;
 
       const updateFields = [];
-      const request = pool1.request();
+      const request = pool2.request();
 
-      if (itemname !== undefined) {
-        updateFields.push('ITEMNAME = @itemName');
-        request.input('itemName', sql.NVarChar(255), itemname);
+      if (itemcode !== undefined) {
+        updateFields.push('ItemCode = @itemCode');
+        request.input('itemCode', sql.VarChar(100), itemcode);
       }
 
-      if (itemgroupid !== undefined) {
-        updateFields.push('ITEMGROUPID = @itemGroupId');
-        request.input('itemGroupId', sql.NVarChar(255), itemgroupid);
+      if (itemdesc !== undefined) {
+        updateFields.push('ItemDesc = @itemDesc');
+        request.input('itemDesc', sql.NVarChar(255), itemdesc);
       }
 
-      if (itemid !== undefined) {
-        updateFields.push('ITEMID = @itemid');
-        request.input('itemid', sql.NVarChar(255), itemid);
+      if (remarks !== undefined) {
+        updateFields.push('Remarks = @remarks');
+        request.input('remarks', sql.VarChar(100), remarks);
       }
 
-      if (serialnumber !== undefined) {
-        updateFields.push('SerialNumber = @serialNumber');
-        request.input('serialNumber', sql.NVarChar(100), serialnumber);
+      if (user !== undefined) {
+        updateFields.push('[User] = @user');
+        request.input('user', sql.VarChar(50), user);
       }
 
-      if (batchno !== undefined) {
-        updateFields.push('BatchNo = @batchNo');
-        request.input('batchNo', sql.NVarChar(100), batchno);
+      if (classification !== undefined) {
+        updateFields.push('Classification = @classification');
+        request.input('classification', sql.VarChar(150), classification);
       }
 
-      if (manufacturingdate !== undefined) {
-        updateFields.push('ManufacturingDate = @manufacturingDate');
-        request.input('manufacturingDate', sql.NVarChar(100), manufacturingdate);
-      }
-
-      if (expirydate !== undefined) {
-        updateFields.push('ExpiryDate = @expiryDate');
-        request.input('expiryDate', sql.NVarChar(100), expirydate);
-      }
-
-      if (qrcode !== undefined) {
-        updateFields.push('QRCode = @qrCode');
-        request.input('qrCode', sql.NVarChar(255), qrcode);
+      if (mainlocation !== undefined) {
+        updateFields.push('MainLocation = @mainLocation');
+        request.input('mainLocation', sql.VarChar(200), mainlocation);
       }
 
       if (binlocation !== undefined) {
-        updateFields.push('BINLocation = @binLocation');
-        request.input('binLocation', sql.NVarChar(100), binlocation);
+        updateFields.push('BinLocation = @binLocation');
+        request.input('binLocation', sql.VarChar(200), binlocation);
       }
 
-      if (whlocation !== undefined) {
-        updateFields.push('WHLocation = @whLocation');
-        request.input('whLocation', sql.NVarChar(100), whlocation);
+      if (intcode !== undefined) {
+        updateFields.push('IntCode = @intCode');
+        request.input('intCode', sql.VarChar(150), intcode);
       }
 
-      if (qty !== undefined) {
-        updateFields.push('Qty = @qty');
-        request.input('qty', sql.NVarChar(100), qty);
+      if (itemserialno !== undefined) {
+        updateFields.push('ItemSerialNo = @itemSerialNo');
+        request.input('itemSerialNo', sql.VarChar(200), itemserialno);
       }
 
+      if (mapdate !== undefined) {
+        updateFields.push('MapDate = @mapDate');
+        request.input('mapDate', sql.Date, mapdate);
+      }
+
+      if (palletcode !== undefined) {
+        updateFields.push('PalletCode = @palletCode');
+        request.input('palletCode', sql.VarChar(255), palletcode);
+      }
+
+      if (reference !== undefined) {
+        updateFields.push('Reference = @reference');
+        request.input('reference', sql.VarChar(100), reference);
+      }
+
+      if (sid !== undefined) {
+        updateFields.push('SID = @sid');
+        request.input('sid', sql.VarChar(50), sid);
+      }
+
+      if (cid !== undefined) {
+        updateFields.push('CID = @cid');
+        request.input('cid', sql.VarChar(50), cid);
+      }
+
+      if (po !== undefined) {
+        updateFields.push('PO = @po');
+        request.input('po', sql.VarChar(50), po);
+      }
+
+      if (trans !== undefined) {
+        updateFields.push('Trans = @trans');
+        request.input('trans', sql.Numeric(10, 0), trans);
+      }
       if (updateFields.length === 0) {
         return res.status(400).send({ message: 'At least one field is required to update.' });
       }
@@ -2209,7 +2333,7 @@ const WBSDB = {
         WHERE GTIN = @gtin
       `;
 
-      request.input('gtin', sql.NVarChar(50), gtin);
+      request.input('gtin', sql.VarChar(150), gtin);
 
       const result = await request.query(query);
 
@@ -2225,16 +2349,16 @@ const WBSDB = {
   },
 
 
-  async checkBarcodeValidityBySerialNo(req, res, next) {
+  async checkBarcodeValidityByItemSerialNo(req, res, next) {
     try {
-      const serialNumber = req.headers['serialnumber']; // Get ItemSerialNo from headers
-      console.log(serialNumber);
+      const ItemSerialNo = req.headers['itemserialno']; // Get ItemSerialNo from headers
+      console.log(ItemSerialNo);
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes
-        WHERE SerialNumber = @serialNumber
+        WHERE ItemSerialNo = @ItemSerialNo
       `;
-      let request = pool1.request();
-      request.input('serialNumber', sql.NVarChar(100), serialNumber);
+      let request = pool2.request();
+      request.input('ItemSerialNo', sql.NVarChar(100), ItemSerialNo);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(200).send(false);
@@ -2246,16 +2370,37 @@ const WBSDB = {
     }
   },
 
-  async getItemInfoBySerialNo(req, res, next) {
+  async getItemInfoByItemSerialNo(req, res, next) {
     try {
-      const serialNumber = req.headers['serialnumber']; // Get ItemSerialNo from headers
-      console.log(serialNumber);
+      const ItemSerialNo = req.headers['itemserialno']; // Get ItemSerialNo from headers
+      console.log(ItemSerialNo);
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes
-        WHERE SerialNumber = @serialNumber
+        WHERE ItemSerialNo = @ItemSerialNo
       `;
-      let request = pool1.request();
-      request.input('serialNumber', sql.NVarChar(100), serialNumber);
+      let request = pool2.request();
+      request.input('ItemSerialNo', sql.NVarChar(100), ItemSerialNo);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async getItemInfoByPalletCode(req, res, next) {
+    try {
+      const PalletCode = req.headers['palletcode']; // Get ItemSerialNo from headers
+      console.log(PalletCode);
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE PalletCode = @PalletCode
+      `;
+      let request = pool2.request();
+      request.input('PalletCode', sql.NVarChar(100), PalletCode);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });

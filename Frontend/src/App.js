@@ -33,6 +33,7 @@ import ExpectedShipments from './pages/ExpectedShipments/ExpectedShipments'
 import TblPickingCl from './pages/TblPickingCl/TblPickingCl'
 import AddPickingList from './components/AddNew/AddPickingList'
 import TblPickingListUpdates from './components/UpdatesItem/TblPickingListUpdates'
+import MappedItems from './pages/MappedItems/MappedItems'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -95,6 +96,7 @@ const App = () => {
                 <Route path='/pickingcl' element={<TblPickingCl />} />
                 <Route path='/tbl-new-picking' element={<AddPickingList title="New Picking List" />} />
                 <Route path='/tblpickingupdates/:id' element={<TblPickingListUpdates title="New Picking List Updates" />} />
+                <Route path='/mappeditems' element={<MappedItems />} />
               </Routes>
             </MainLayout>
           } />

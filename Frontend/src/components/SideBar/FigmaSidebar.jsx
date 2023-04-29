@@ -87,7 +87,7 @@ const FigmaSidebar = () => {
         )}
         <div className='main-images-container' onClick={() => setShowMasterData(!showMasterData)}>
             <img src={image} className='main-inside-image' alt='' />
-            <p className='sidebar-text'>Master Data</p>
+            <p className='sidebar-text'>Master Data (Axapta)</p>
         </div>
 
         {showMasterData && (

@@ -1978,59 +1978,59 @@ const WBSDB = {
     }
   },
 
-  async insertIntoMappedBarcode(req, res, next) {
-    try {
-      const {
-        itemcode,
-        itemdesc,
-        gtin,
-        remarks,
-        user,
-        classification,
-        mainlocation,
-        binlocation,
-        intcode,
-        itemserialno,
-        mapdate,
-        palletcode,
-        reference,
-        sid,
-        cid,
-        po,
-        trans
-      } = req.headers;
+  // async insertIntoMappedBarcode(req, res, next) {
+  //   try {
+  //     const {
+  //       itemcode,
+  //       itemdesc,
+  //       gtin,
+  //       remarks,
+  //       user,
+  //       classification,
+  //       mainlocation,
+  //       binlocation,
+  //       intcode,
+  //       itemserialno,
+  //       mapdate,
+  //       palletcode,
+  //       reference,
+  //       sid,
+  //       cid,
+  //       po,
+  //       trans
+  //     } = req.headers;
 
-      let query = ` 
-        INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
-        VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
-      `;
-      let request = pool2.request();
-      request.input('itemCode', sql.VarChar(100), itemcode);
-      request.input('itemDesc', sql.NVarChar(255), itemdesc);
-      request.input('gtin', sql.VarChar(150), gtin);
-      request.input('remarks', sql.VarChar(100), remarks);
-      request.input('user', sql.VarChar(50), user);
-      request.input('classification', sql.VarChar(150), classification);
-      request.input('mainLocation', sql.VarChar(200), mainlocation);
-      request.input('binLocation', sql.VarChar(200), binlocation);
-      request.input('intCode', sql.VarChar(150), intcode);
-      request.input('itemSerialNo', sql.VarChar(200), itemserialno);
-      request.input('mapDate', sql.Date, mapdate);
-      request.input('palletCode', sql.VarChar(255), palletcode);
-      request.input('reference', sql.VarChar(100), reference);
-      request.input('sid', sql.VarChar(50), sid);
-      request.input('cid', sql.VarChar(50), cid);
-      request.input('po', sql.VarChar(50), po);
-      request.input('trans', sql.Numeric(10, 0), trans);
+  //     let query = ` 
+  //       INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+  //       VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+  //     `;
+  //     let request = pool2.request();
+  //     request.input('itemCode', sql.VarChar(100), itemcode);
+  //     request.input('itemDesc', sql.NVarChar(255), itemdesc);
+  //     request.input('gtin', sql.VarChar(150), gtin);
+  //     request.input('remarks', sql.VarChar(100), remarks);
+  //     request.input('user', sql.VarChar(50), user);
+  //     request.input('classification', sql.VarChar(150), classification);
+  //     request.input('mainLocation', sql.VarChar(200), mainlocation);
+  //     request.input('binLocation', sql.VarChar(200), binlocation);
+  //     request.input('intCode', sql.VarChar(150), intcode);
+  //     request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+  //     request.input('mapDate', sql.Date, mapdate);
+  //     request.input('palletCode', sql.VarChar(255), palletcode);
+  //     request.input('reference', sql.VarChar(100), reference);
+  //     request.input('sid', sql.VarChar(50), sid);
+  //     request.input('cid', sql.VarChar(50), cid);
+  //     request.input('po', sql.VarChar(50), po);
+  //     request.input('trans', sql.Numeric(10, 0), trans);
 
-      await request.query(query);
+  //     await request.query(query);
 
-      return res.status(201).send({ message: "Data successfully added." });
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
-    }
-  },
+  //     return res.status(201).send({ message: "Data successfully added." });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // },
 
 
 

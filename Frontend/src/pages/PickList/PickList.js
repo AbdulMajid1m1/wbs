@@ -45,7 +45,7 @@ const PickList = () => {
 
             <UserDataTable data={alldata} title="Pick List" columnsName={PickListColumn} backButton={true}
                 actionColumnVisibility={false}
-
+                buttonVisibility={false}
             />
 
             {isLoading &&

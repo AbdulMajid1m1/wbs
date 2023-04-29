@@ -47,7 +47,7 @@ const TblItem = () => {
 
             <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId"
                 actionColumnVisibility={false}
-
+                buttonVisibility={false}
             />
 
             {isLoading &&

@@ -47,7 +47,7 @@ const Login = () => {
           </div>
           <div className="w-full mx-auto px-20 flex-col items-center space-y-6">
             <h1 className="text-white font-bold text-4xl font-sans">Alessa User Login</h1>
-            <p className="text-white mt-1">Nartec Software Company</p>
+            <p className="text-white mt-1">Warehouse Management System v.2.0</p>
           </div>
         </div>
 

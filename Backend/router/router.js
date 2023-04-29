@@ -171,7 +171,7 @@ router.post("/getDispatchingDataByPackingSlipId", checkAuthentication, WBSDB.get
 
 router.post("/getInventTableWMSDataByItemId", checkAuthentication, WBSDB.getInventTableWMSDataByItemId); // InventTableWMS 
 
-// tblMappedBarcodes APIS Start
+// --------------- tblMappedBarcodes APIS Start ------
 
 router.get("/getAllTblMappedBarcodes", checkAuthentication, WBSDB.getAllTblMappedBarcodes);
 
@@ -187,6 +187,11 @@ router.post("/checkBarcodeValidityByItemSerialNo", checkAuthentication, WBSDB.ch
 router.post("/getItemInfoByItemSerialNo", checkAuthentication, WBSDB.getItemInfoByItemSerialNo);
 
 router.post("/getItemInfoByPalletCode", checkAuthentication, WBSDB.getItemInfoByPalletCode);
+
+router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, WBSDB.deleteTblMappedBarcodesDataByItemCode);
+
+
+// ------------- tblMappedBarcodes APIS End -------- 
 
 
 

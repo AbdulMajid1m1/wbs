@@ -2432,6 +2432,33 @@ const WBSDB = {
 
 
 
+  async deleteTblMappedBarcodesDataByItemCode(req, res, next) {
+    try {
+      const itemCode = req.headers['itemcode'];
+      if (!itemCode) {
+        return res.status(400).send({ message: 'itemCode is required.' });
+      }
+
+      const query = `
+      DELETE FROM dbo.tblMappedBarcodes
+      WHERE ItemCode = @itemCode
+    `;
+
+      let request = pool2.request();
+      request.input('itemCode', sql.VarChar(100), itemCode);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Item record not found.' });
+      }
+
+      res.status(200).send({ message: 'Data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

@@ -46,7 +46,7 @@ const MappedItems = () => {
         <div>
 
             <UserDataTable data={alldata} addNewNavigation="/" title="MAPPED ITEMS" columnsName={MappedItemsColumn} backButton={true} uniqueId="ItemCode"
-                buttonVisibility={false}
+    
 
             />
 

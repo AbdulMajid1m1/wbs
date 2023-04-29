@@ -18,7 +18,7 @@ const FirstTable = () => {
 
 
         userRequest.get("/getAllShipmentDataFromtShipmentReceiving")
-        
+
           .then(response => {
             // response.data == "no data available" ? setData([]) : setData(response.data);
             console.log(response?.data);
@@ -44,13 +44,13 @@ const FirstTable = () => {
     <div>
 
       {/* <SideBar2 /> */}
-      <UserDataTable data={data} title="EXPECTED SHIPMENT" columnsName={allUserAssetsColumns}
+      <UserDataTable data={data} title="EXPECTED RECEVING " columnsName={allUserAssetsColumns}
         backButton={true}
         uniqueId="SHIPMENTID"
         addNewNavigation="/addnew"
         ShipmentIdSearchEnable={true}
         actionColumnVisibility={true}
-        
+
       />
 
       {isLoading &&

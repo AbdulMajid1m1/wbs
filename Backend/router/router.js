@@ -173,6 +173,7 @@ router.post("/getInventTableWMSDataByItemId", checkAuthentication, WBSDB.getInve
 
 // tblMappedBarcodes APIS Start
 
+router.get("/getAllTblMappedBarcodes", checkAuthentication, WBSDB.getAllTblMappedBarcodes);
 
 router.post("/getmapBarcodeDataByItemCode", checkAuthentication, WBSDB.getmapBarcodeDataByItemCode); // tblMappedBarcodes
 

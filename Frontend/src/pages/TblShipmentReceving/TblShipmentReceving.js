@@ -50,8 +50,10 @@ const FirstTable = () => {
       <UserDataTable data={data} title="EXPECTED SHIPMENT" columnsName={allUserAssetsColumns}
         backButton={true}
         uniqueId="SHIPMENTID"
+        addNewNavigation="/addnew"
         ShipmentIdSearchEnable={true}
-        actionColumnVisibility={false}
+        actionColumnVisibility={true}
+        
       />
 
       {isLoading &&

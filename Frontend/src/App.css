@@ -46,11 +46,11 @@
 }
 
 .left-layout {
-  width: 20% !important;
+  width: 21% !important;
 }
 
 .right-layout {
-  width: 80%;
+  width: 79%;
   height: 100vh;
   overflow-y: scroll;
   height: 100%;

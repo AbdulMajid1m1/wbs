@@ -134,6 +134,7 @@ const AddNewTblLocations = ({ inputs, title,
 
                                     <div className="buttonAdd" >
                                         <button
+                                            style={{background: '#e69138'}}
                                             type="submit"
                                         >Save</button>
                                     </div>

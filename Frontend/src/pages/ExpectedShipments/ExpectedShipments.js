@@ -47,7 +47,7 @@ const ExpectedShipments = () => {
 
             <UserDataTable data={alldata} title="Expected Shipments" columnsName={allUserAssetsColumns} backButton={true} uniqueId="itemTableId"
                 actionColumnVisibility={false}
-
+                buttonVisibility={false}
             />
 
             {isLoading &&

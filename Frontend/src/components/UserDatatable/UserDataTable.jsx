@@ -137,6 +137,21 @@ const UserDataTable = ({
             }
             break;
 
+               // call the api to delete the data from the PickingCL table
+          case "PICKINGROUTEID":
+            try {
+              const response = await userRequest.delete(
+                "deleteTblPickingDataCL?PICKINGROUTEID=" + rowdata.PICKINGROUTEID
+              );
+              console.log(response);
+              setMessage(response?.data?.message ?? "User deleted successfully");
+              success = true; // to update the state of the table
+            } catch (error) {
+              setError(error?.message ?? "Something went wrong");
+              success = false;
+            }
+            break;
+
 
         default:
           // do nothing
@@ -171,6 +186,9 @@ const UserDataTable = ({
         break;
       case "PACKINGSLIPID":
         navigate("/tbldispatchingupdates/" + rowData.PACKINGSLIPID)
+        break;
+      case "PICKINGROUTEID":
+        navigate("/tblpickingupdates/" + rowData.PICKINGROUTEID)
         break;
       // case "ITEMNAME":
       //   navigate("/allitems/" + rowData.ITEMNAME)

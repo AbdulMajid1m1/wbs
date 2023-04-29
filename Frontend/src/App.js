@@ -30,6 +30,9 @@ import TblItemCl from './pages/TblItemCl/TblItemCl'
 import AddDispatchingCl from './components/AddNew/AddDispatchingCl'
 import FigmaSidebar from './components/SideBar/FigmaSidebar'
 import ExpectedShipments from './pages/ExpectedShipments/ExpectedShipments'
+import TblPickingCl from './pages/TblPickingCl/TblPickingCl'
+import AddPickingList from './components/AddNew/AddPickingList'
+import TblPickingListUpdates from './components/UpdatesItem/TblPickingListUpdates'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -89,6 +92,9 @@ const App = () => {
                 <Route path='/expectedorder' element={<ExpectedTranferOrder />} />
                 <Route path='/picklist' element={<PickList />} />
                 <Route path='/expectedshipments' element={<ExpectedShipments />} />
+                <Route path='/pickingcl' element={<TblPickingCl />} />
+                <Route path='/tbl-new-picking' element={<AddPickingList title="New Picking List" />} />
+                <Route path='/tblpickingupdates/:id' element={<TblPickingListUpdates title="New Picking List Updates" />} />
               </Routes>
             </MainLayout>
           } />

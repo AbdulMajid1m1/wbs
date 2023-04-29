@@ -45,7 +45,7 @@ const InternalTransfer = () => {
 
             <UserDataTable data={alldata} title="Internal Tranfer" columnsName={InternalTransferColumn} backButton={true}
                 actionColumnVisibility={false}
-
+                buttonVisibility={false}
             />
 
             {isLoading &&

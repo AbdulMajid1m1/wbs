@@ -45,7 +45,7 @@ const ExpectedTranferOrder = () => {
 
             <UserDataTable data={alldata} title="Expected Tranfer Order" columnsName={ExpectedTranferOrderColumn} backButton={true}
                 actionColumnVisibility={false}
-
+                buttonVisibility={false}
             />
 
             {isLoading &&

@@ -48,7 +48,7 @@ const PackingSlip = () => {
 
             <UserDataTable data={alldata} title="PackingSlip" columnsName={PackingSlipColumn} backButton={true}
                 actionColumnVisibility={false}
-
+                buttonVisibility={false}
             />
 
 

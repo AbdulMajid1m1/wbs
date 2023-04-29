@@ -76,7 +76,7 @@ export const AllItems = [
   {
     field: "ITEMNAME",
     headerName: "ITEM NAME",
-    width: 180,
+    width: 300,
 
   },
   {
@@ -255,7 +255,7 @@ export const PackingSlipColumn = [
     width: 200,
 
   },
-  
+
 ]
 
 
@@ -444,7 +444,7 @@ export const ExpectedReceiptsColumn = [
     width: 180,
 
   },
-  
+
 
 ]
 
@@ -452,32 +452,26 @@ export const ExpectedReceiptsColumn = [
 
 export const ExpectedTranferOrderColumn = [
   {
-    field: "PURCHID",
-    headerName: "PURCH ID",
+    field: "TRANSFERID",
+    headerName: "TRANSFER ID",
+    width: 200,
+
+  },
+  {
+    field: "TRANSFERSTATUS",
+    headerName: "TRANSFER STATUS",
     width: 180,
 
   },
   {
-    field: "CREATEDDATETIME",
-    headerName: "CREATED DATE TIME",
+    field: "INVENTLOCATIONIDFROM",
+    headerName: "INVENT LOCATION ID FROM",
     width: 180,
 
   },
   {
-    field: "SHIPMENTID",
-    headerName: "SHIPMENT ID",
-    width: 180,
-
-  },
-  {
-    field: "SHIPMENTSTATUS",
-    headerName: "SHIPMENT STATUS",
-    width: 180,
-
-  },
-  {
-    field: "CONTAINERID",
-    headerName: "CONTAINER ID",
+    field: "INVENTLOCATIONIDTO",
+    headerName: "INVENT LOCATION ID TO",
     width: 180,
 
   },
@@ -488,12 +482,25 @@ export const ExpectedTranferOrderColumn = [
 
   },
   {
-    field: "QTY",
-    headerName: "QTY",
+    field: "QTYTRANSFER",
+    headerName: "QTY TRANSFER",
     width: 180,
 
   },
-  
+
+  {
+    field: "QTYRECEIVED",
+    headerName: "QTY RECEIVED",
+    width: 180,
+
+  },
+  {
+    field: "CREATEDDATETIME",
+    headerName: "CREATED DATE TIME",
+    width: 180,
+
+  },
+
 
 ]
 
@@ -542,7 +549,7 @@ export const PickListColumn = [
     width: 220,
 
   },
-  
+
 
 ]
 

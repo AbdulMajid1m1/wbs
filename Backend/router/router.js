@@ -162,5 +162,29 @@ router.post("/login", WBSDB.loginUser);
 
 // ----- tblUsers APIS End -----------------
 
+
+// -------------   Alessa Project: API's for mobile app ------------------------
+
+router.post("/getDispatchingDataByPackingSlipId", checkAuthentication, WBSDB.getDispatchingDataByPackingSlipId);// tbl_Dispatching
+
+
+
+router.post("/getInventTableWMSDataByItemId", checkAuthentication, WBSDB.getInventTableWMSDataByItemId); // InventTableWMS 
+
+// tblMappedBarcodes APIS Start
+
+router.post("/getmapBarcodeDataByItemId", checkAuthentication, WBSDB.getmapBarcodeDataByItemId); // tblMappedBarcodes
+
+router.post("/insertIntoMappedBarcode", checkAuthentication, WBSDB.insertIntoMappedBarcode);
+
+router.put("/updateTblMappedBarcodeByItemId", checkAuthentication, WBSDB.updateTblMappedBarcodeByItemId);
+router.put("/updateTblMappedBarcodeByGtin", checkAuthentication, WBSDB.updateTblMappedBarcodeByGtin);
+
+
+
+
+
+
+
 export default router;
 

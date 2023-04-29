@@ -489,7 +489,7 @@ const WBSDB = {
     // delete data from tbl_Shipment_Receiving_CL based on SHIPMENTID
     try {
       const { SHIPMENTID } = req.query;
-
+      console.log(SHIPMENTID)
       if (!SHIPMENTID) {
         return res.status(400).send({ message: 'shipment ID is required' });
       }
@@ -499,7 +499,7 @@ const WBSDB = {
       WHERE SHIPMENTID = @SHIPMENTID
     `;
 
-      let request = pool1.request();
+      let request = pool2.request();
       request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
       const result = await request.query(query);
 
@@ -1894,12 +1894,335 @@ const WBSDB = {
 
 
 
+  // --------------- Alessa APIS for Mobile App Start ------------------
 
 
+  async getDispatchingDataByPackingSlipId(req, res, next) {
+    try {
+      const packingSlipId = req.headers['packingslipid']; // Get PACKINGSLIPID from headers
+      console.log(packingSlipId);
+      let query = `
+        SELECT * FROM dbo.tbl_Dispatching
+        WHERE PACKINGSLIPID = @packingSlipId
+      `;
+      let request = pool1.request();
+      request.input('packingSlipId', sql.NVarChar(255), packingSlipId); // Remove parseInt() from this line
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async getInventTableWMSDataByItemId(req, res, next) {
+    try {
+      const itemId = req.headers['itemid']; // Get ITEMID from headers
+      console.log(itemId);
+      let query = `
+        SELECT * FROM dbo.InventTableWMS
+        WHERE ITEMID = @itemId
+      `;
+      let request = pool1.request();
+      request.input('itemId', sql.NVarChar(255), itemId); // Assuming ITEMID is of type nvarchar(255)
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
+  async getmapBarcodeDataByItemId(req, res, next) {
+    try {
+      const itemId = req.headers['itemid']; // Get ITEMID from headers
+      console.log(itemId);
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE ITEMID = @itemId
+      `;
+      let request = pool1.request();
+      request.input('itemId', sql.NVarChar(255), itemId); // Assuming ITEMID is of type nvarchar(255)
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async insertIntoMappedBarcode(req, res, next) {
+    try {
+      const {
+        itemid,
+        itemname,
+        itemgroupid,
+        gtin,
+        serialnumber,
+        batchno,
+        manufacturingdate,
+        expirydate,
+        qrcode,
+        binlocation,
+        whlocation,
+        qty
+      } = req.headers; // Assuming all columns are provided in the headers or null is allowed
+
+      let query = `
+        INSERT INTO dbo.tblMappedBarcodes (ITEMID, ITEMNAME, ITEMGROUPID, GTIN, SerialNumber, BatchNo, ManufacturingDate, ExpiryDate, QRCode, BINLocation, WHLocation, Qty)
+        VALUES (@itemId, @itemName, @itemGroupId, @gtin, @serialNumber, @batchNo, @manufacturingDate, @expiryDate, @qrCode, @binLocation, @whLocation, @qty)
+      `;
+      let request = pool1.request();
+      request.input('itemId', sql.NVarChar(255), itemid);
+      request.input('itemName', sql.NVarChar(255), itemname);
+      request.input('itemGroupId', sql.NVarChar(255), itemgroupid);
+      request.input('gtin', sql.NVarChar(50), gtin);
+      request.input('serialNumber', sql.NVarChar(100), serialnumber);
+      request.input('batchNo', sql.NVarChar(100), batchno);
+      request.input('manufacturingDate', sql.NVarChar(100), manufacturingdate);
+      request.input('expiryDate', sql.NVarChar(100), expirydate);
+      request.input('qrCode', sql.NVarChar(255), qrcode);
+      request.input('binLocation', sql.NVarChar(100), binlocation);
+      request.input('whLocation', sql.NVarChar(100), whlocation);
+      request.input('qty', sql.NVarChar(100), qty);
+
+      await request.query(query);
+
+      return res.status(201).send({ message: "Data successfully added.", });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
+  async updateTblMappedBarcodeByItemId(req, res, next) {
+    try {
+      const {
+        itemid,
+        itemname,
+        itemgroupid,
+        gtin,
+        serialnumber,
+        batchno,
+        manufacturingdate,
+        expirydate,
+        qrcode,
+        binlocation,
+        whlocation,
+        qty
+      } = req.headers;
+
+      if (!itemid) {
+        return res.status(400).send({ message: 'ITEMID is required.' });
+      }
+
+      let query = `
+        UPDATE dbo.tblMappedBarcodes
+        SET `;
+
+      const updateFields = [];
+      const request = pool1.request();
+
+      if (itemname !== undefined) {
+        updateFields.push('ITEMNAME = @itemName');
+        request.input('itemName', sql.NVarChar(255), itemname);
+      }
+
+      if (itemgroupid !== undefined) {
+        updateFields.push('ITEMGROUPID = @itemGroupId');
+        request.input('itemGroupId', sql.NVarChar(255), itemgroupid);
+      }
+
+      if (gtin !== undefined) {
+        updateFields.push('GTIN = @gtin');
+        request.input('gtin', sql.NVarChar(50), gtin);
+      }
+
+      if (serialnumber !== undefined) {
+        updateFields.push('SerialNumber = @serialNumber');
+        request.input('serialNumber', sql.NVarChar(100), serialnumber);
+      }
+
+      if (batchno !== undefined) {
+        updateFields.push('BatchNo = @batchNo');
+        request.input('batchNo', sql.NVarChar(100), batchno);
+      }
+
+      if (manufacturingdate !== undefined) {
+        updateFields.push('ManufacturingDate = @manufacturingDate');
+        request.input('manufacturingDate', sql.NVarChar(100), manufacturingdate);
+      }
+
+      if (expirydate !== undefined) {
+        updateFields.push('ExpiryDate = @expiryDate');
+        request.input('expiryDate', sql.NVarChar(100), expirydate);
+      }
+
+      if (qrcode !== undefined) {
+        updateFields.push('QRCode = @qrCode');
+        request.input('qrCode', sql.NVarChar(255), qrcode);
+      }
+
+      if (binlocation !== undefined) {
+        updateFields.push('BINLocation = @binLocation');
+        request.input('binLocation', sql.NVarChar(100), binlocation);
+      }
+
+      if (whlocation !== undefined) {
+        updateFields.push('WHLocation = @whLocation');
+        request.input('whLocation', sql.NVarChar(100), whlocation);
+      }
+
+      if (qty !== undefined) {
+        updateFields.push('Qty = @qty');
+        request.input('qty', sql.NVarChar(100), qty);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+        OUTPUT INSERTED.*
+        WHERE ITEMID = @itemId
+      `;
+
+      request.input('itemId', sql.NVarChar(255), itemid);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset[0] });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateTblMappedBarcodeByGtin(req, res, next) {
+    try {
+      const {
+        itemid,
+        itemname,
+        itemgroupid,
+        gtin,
+        serialnumber,
+        batchno,
+        manufacturingdate,
+        expirydate,
+        qrcode,
+        binlocation,
+        whlocation,
+        qty
+      } = req.headers;
+
+      if (!gtin) {
+        return res.status(400).send({ message: 'GTIN is required.' });
+      }
+
+      let query = `
+        UPDATE dbo.tblMappedBarcodes
+        SET `;
+
+      const updateFields = [];
+      const request = pool1.request();
+
+      if (itemname !== undefined) {
+        updateFields.push('ITEMNAME = @itemName');
+        request.input('itemName', sql.NVarChar(255), itemname);
+      }
+
+      if (itemgroupid !== undefined) {
+        updateFields.push('ITEMGROUPID = @itemGroupId');
+        request.input('itemGroupId', sql.NVarChar(255), itemgroupid);
+      }
+
+      if (itemid !== undefined) {
+        updateFields.push('ITEMID = @itemid');
+        request.input('itemid', sql.NVarChar(255), itemid);
+      }
+
+      if (serialnumber !== undefined) {
+        updateFields.push('SerialNumber = @serialNumber');
+        request.input('serialNumber', sql.NVarChar(100), serialnumber);
+      }
+
+      if (batchno !== undefined) {
+        updateFields.push('BatchNo = @batchNo');
+        request.input('batchNo', sql.NVarChar(100), batchno);
+      }
+
+      if (manufacturingdate !== undefined) {
+        updateFields.push('ManufacturingDate = @manufacturingDate');
+        request.input('manufacturingDate', sql.NVarChar(100), manufacturingdate);
+      }
+
+      if (expirydate !== undefined) {
+        updateFields.push('ExpiryDate = @expiryDate');
+        request.input('expiryDate', sql.NVarChar(100), expirydate);
+      }
+
+      if (qrcode !== undefined) {
+        updateFields.push('QRCode = @qrCode');
+        request.input('qrCode', sql.NVarChar(255), qrcode);
+      }
+
+      if (binlocation !== undefined) {
+        updateFields.push('BINLocation = @binLocation');
+        request.input('binLocation', sql.NVarChar(100), binlocation);
+      }
+
+      if (whlocation !== undefined) {
+        updateFields.push('WHLocation = @whLocation');
+        request.input('whLocation', sql.NVarChar(100), whlocation);
+      }
+
+      if (qty !== undefined) {
+        updateFields.push('Qty = @qty');
+        request.input('qty', sql.NVarChar(100), qty);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+        OUTPUT INSERTED.*
+        WHERE GTIN = @gtin
+      `;
+
+      request.input('gtin', sql.NVarChar(50), gtin);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset[0] });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 };
 

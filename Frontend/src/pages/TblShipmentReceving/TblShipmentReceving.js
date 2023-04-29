@@ -17,7 +17,7 @@ const FirstTable = () => {
       try {
 
 
-        userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
+        userRequest.get("/getAllShipmentDataFromtShipmentReceiving")
           // userRequest.post("/getShipmentDataFromtShipmentReceiving", {
           //   SHIPMENTID: "BSP-0001008",
           //   CONTAINERID: "1"

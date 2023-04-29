@@ -15,7 +15,7 @@ const TblPickingListUpdates = ({ inputs, title,
     // get id from url
     const { id } = params;
     const [rowData, setstateRowData] = useState([]);
-   
+
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({});
 
@@ -41,52 +41,58 @@ const TblPickingListUpdates = ({ inputs, title,
     })
     console.log(rowdata)
 
-  // Handle Submit
-  const handleSubmit = async event => {
-    event.preventDefault();
-    setIsLoading(true);
+    // Handle Submit
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setIsLoading(true);
 
-    try {
-        const updatedData = {};
+        try {
+            const updatedData = {};
 
-        for (const input of updateAllItemsInput) {
-            const inputName = input.name;
-            if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
-                updatedData[inputName] = formData[inputName];
+            for (const input of TblPickingClInsertInput) {
+                const inputName = input.name;
+                if (
+                    formData[inputName] !== undefined &&
+                    formData[inputName] !== rowdata[inputName]
+                ) {
+                    updatedData[inputName] = formData[inputName];
+                }
             }
-        }
 
-        updatedData["PICKINGROUTEID"] = id;
+            updatedData["PICKINGROUTEID"] = id;
 
-        if (Object.keys(updatedData).length <= 1) {
-            setError("No changes detected.");
+            if (Object.keys(updatedData).length <= 1) {
+                setError("No changes detected.");
+                setIsLoading(false);
+                return;
+            }
+
+            const queryParameters = new URLSearchParams(updatedData).toString();
+
+            userRequest
+                .put(`/updateTblPickingDataCL?${queryParameters}`)
+                .then((response) => {
+                    setIsLoading(false);
+                    console.log(response.data);
+                    setMessage("Successfully Updated");
+                    setTimeout(() => {
+                        navigate(-1);
+                    }, 1000);
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    setError(
+                        error?.response?.data?.message ?? "Failed to Update"
+                    );
+                });
+        } catch (error) {
             setIsLoading(false);
-            return;
+            console.log(error);
+            setError("Failed to Update");
         }
+    };
 
-        const queryParameters = new URLSearchParams(updatedData).toString();
-
-        userRequest
-            .put(`/updateTblPickingDataCL?${queryParameters}`)
-            .then((response) => {
-                setIsLoading(false);
-                console.log(response.data);
-                setMessage("Successfully Updated");
-                setTimeout(() => {
-                    navigate(-1);
-                }, 1000);
-            })
-            .catch((error) => {
-                setIsLoading(false);
-                console.log(error);
-                setError(error?.response?.data?.message ?? "Failed to Update");
-            });
-    } catch (error) {
-        setIsLoading(false);
-        console.log(error);
-        setError("Failed to Update");
-    }
-};
     return (
         <>
 
@@ -144,10 +150,13 @@ const TblPickingListUpdates = ({ inputs, title,
                                                         [input.name]: e.target.value,
                                                     })
                                                 }
-                                            // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
+                                                disabled={input.name === "PICKINGROUTEID" ? true : false}
                                             />
                                         </div>
+
                                     ))}
+                                    {TblPickingClInsertInput.length % 2 !== 0 && <div className="formInput"></div>}
+
 
                                     <div className="buttonAdd" >
                                         <button

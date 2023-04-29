@@ -27,5 +27,6 @@ const server = app.listen(PORT, () => {
   console.log(`Server started on PORT ${PORT}`);
 });
 
-// Set the timeout to 2 minutes (120000 milliseconds)
+// Set the timeout to 2 minutes (120000 milliseconds) 
+
 server.timeout = 120000;

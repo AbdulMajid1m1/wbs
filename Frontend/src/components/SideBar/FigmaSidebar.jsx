@@ -22,7 +22,7 @@ const FigmaSidebar = () => {
   return (
     <div className='main-sidebar'>
         
-        <div className='main-images-container'>
+        <div className='main-images-container' onClick={() => navigate('/dashboard')}>
             <img src={packing} className='main-inside-image' alt='' />
             <p className='sidebar-text'>Dashboard</p>
         </div>

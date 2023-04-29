@@ -17,11 +17,8 @@ const FirstTable = () => {
       try {
 
 
-        userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
-          // userRequest.post("/getShipmentDataFromtShipmentReceiving", {
-          //   SHIPMENTID: "BSP-0001008",
-          //   CONTAINERID: "1"
-          // })
+        userRequest.get("/getAllShipmentDataFromtShipmentReceiving")
+
           .then(response => {
             // response.data == "no data available" ? setData([]) : setData(response.data);
             console.log(response?.data);
@@ -53,7 +50,7 @@ const FirstTable = () => {
         addNewNavigation="/addnew"
         ShipmentIdSearchEnable={true}
         actionColumnVisibility={true}
-        
+
       />
 
       {isLoading &&

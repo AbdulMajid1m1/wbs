@@ -370,7 +370,7 @@ const UserDataTable = ({
 
         {/* Displaying myValue inside the table Value in center*/}
         <div style={{ display: "flex", justifyContent: "center", marginTop: "-40px", marginLeft: "10px", }}>
-          <h1 style={{ whiteSpace: "nowrap" }}>UserId: {myValue}</h1>
+          {/* <h1 style={{ whiteSpace: "nowrap" }}>UserId: {myValue}</h1> */}
           <style>
             {`
             @media (max-width: 480px) {

@@ -627,3 +627,112 @@ export const TblPickingClColumn = [
 ]
 
 
+
+export const MappedItemsColumn = [
+  {
+    field: "ItemCode",
+    headerName: "ITEM CODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "ITEM DESCRIPTION",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+  {
+    field: "Remarks",
+    headerName: "REMARKS",
+    width: 180,
+
+  },
+  {
+    field: "User",
+    headerName: "USER",
+    width: 180,
+
+  },
+  {
+    field: "Classification",
+    headerName: "CLASSIFICATION",
+    width: 180,
+
+  },
+  {
+    field: "MainLocation",
+    headerName: "MAIN LOCATION",
+    width: 180,
+
+  },
+  {
+    field: "BinLocation",
+    headerName: "BIN LOCATION",
+    width: 180,
+
+  },
+  {
+    field: "IntCode",
+    headerName: "INT CODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemSerialNo",
+    headerName: "ITEM SERIAL NO",
+    width: 180,
+
+  },
+  {
+    field: "MapDate",
+    headerName: "MAP DATE",
+    width: 220,
+
+  },
+  {
+    field: "PalletCode",
+    headerName: "PALLET CODE",
+    width: 180,
+
+  },
+  {
+    field: "Reference",
+    headerName: "REFERENCE",
+    width: 220,
+
+  },
+  {
+    field: "SID",
+    headerName: "SID",
+    width: 180,
+
+  },
+  {
+    field: "CID",
+    headerName: "CID",
+    width: 180,
+
+  },
+  {
+    field: "PO",
+    headerName: "PO",
+    width: 180,
+
+  },
+  {
+    field: "Trans",
+    headerName: "TRANS",
+    width: 180,
+
+  },
+
+
+]
+
+

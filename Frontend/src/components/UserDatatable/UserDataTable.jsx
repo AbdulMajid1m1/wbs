@@ -137,7 +137,7 @@ const UserDataTable = ({
             }
             break;
 
-               // call the api to delete the data from the PickingCL table
+          // call the api to delete the data from the PickingCL table
           case "PICKINGROUTEID":
             try {
               const response = await userRequest.delete(
@@ -151,6 +151,42 @@ const UserDataTable = ({
               success = false;
             }
             break;
+
+            // call the api to delete the data from the Mapped table
+          // case "ItemCode":
+          //   try {
+          //     const response = await userRequest.delete(
+          //       "deleteTblMappedBarcodesDataByItemCode?ItemCode=" + rowdata.ItemCode
+          //     );
+          //     console.log(response);
+          //     setMessage(response?.data?.message ?? "User deleted successfully");
+          //     success = true; // to update the state of the table
+          //   } catch (error) {
+          //     setError(error?.message ?? "Something went wrong");
+          //     success = false;
+          //   }
+          //   break;
+
+          // call the api to delete the data from the Mapped table
+          case "ItemCode":
+            try {
+              const response = await userRequest.delete(
+                "deleteTblMappedBarcodesDataByItemCode",
+                {
+                  headers: {
+                    ItemCode: rowdata.ItemCode
+                  }
+                }
+              );
+              console.log(response);
+              setMessage(response?.data?.message ?? "User deleted successfully");
+              success = true; // to update the state of the table
+            } catch (error) {
+              setError(error?.message ?? "Something went wrong");
+              success = false;
+            }
+            break;
+
 
 
         default:

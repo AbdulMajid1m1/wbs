@@ -74,6 +74,128 @@ export const assetCategoryInput = [
   
   ];
   
+  export const mappedBarcodesInput = [
+    {
+      id: "input1",
+      label: "Item Code*",
+      name: "ItemCode",
+      type: "text",
+      placeholder: "Item Code",
+    },
+    {
+      id: "input2",
+      label: "Item Description*",
+      name: "ItemDesc",
+      type: "text",
+      placeholder: "Item Description",
+    },
+    {
+      id: "input3",
+      label: "GTIN*",
+      name: "GTIN",
+      type: "text",
+      placeholder: "GTIN",
+    },
+    {
+      id: "input4",
+      label: "Remarks",
+      name: "Remarks",
+      type: "text",
+      placeholder: "Remarks",
+    },
+    {
+      id: "input5",
+      label: "User",
+      name: "User",
+      type: "text",
+      placeholder: "User",
+    },
+    {
+      id: "input6",
+      label: "Classification",
+      name: "Classification",
+      type: "text",
+      placeholder: "Classification",
+    },
+    {
+      id: "input7",
+      label: "Main Location",
+      name: "MainLocation",
+      type: "text",
+      placeholder: "Main Location",
+    },
+    {
+      id: "input8",
+      label: "Bin Location",
+      name: "BinLocation",
+      type: "text",
+      placeholder: "Bin Location",
+    },
+    {
+      id: "input9",
+      label: "Int Code",
+      name: "IntCode",
+      type: "text",
+      placeholder: "Int Code",
+    },
+    {
+      id: "input10",
+      label: "Item Serial No",
+      name: "ItemSerialNo",
+      type: "text",
+      placeholder: "Item Serial No",
+    },
+    {
+      id: "input11",
+      label: "Map Date",
+      name: "MapDate",
+      type: "date",
+      placeholder: "Map Date",
+    },
+    {
+      id: "input12",
+      label: "Pallet Code",
+      name: "PalletCode",
+      type: "text",
+      placeholder: "Pallet Code",
+    },
+    {
+      id: "input13",
+      label: "Reference",
+      name: "Reference",
+      type: "text",
+      placeholder: "Reference",
+    },
+    {
+      id: "input14",
+      label: "SID",
+      name: "SID",
+      type: "text",
+      placeholder: "SID",
+    },
+    {
+      id: "input15",
+      label: "CID",
+      name: "CID",
+      type: "text",
+      placeholder: "CID",
+    },
+    {
+      id: "input16",
+      label: "PO",
+      name: "PO",
+      type: "text",
+      placeholder: "PO",
+    },
+    {
+      id: "input17",
+      label: "Trans",
+      name: "Trans",
+      type: "number",
+      placeholder: "Trans",
+    },
+  ];
+  
   
 export const allItemsInput = [
   // {

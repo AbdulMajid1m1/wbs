@@ -34,6 +34,8 @@ import TblPickingCl from './pages/TblPickingCl/TblPickingCl'
 import AddPickingList from './components/AddNew/AddPickingList'
 import TblPickingListUpdates from './components/UpdatesItem/TblPickingListUpdates'
 import MappedItems from './pages/MappedItems/MappedItems'
+import AddMappedBarcodes from './components/AddNew/AddMappedBarcodes'
+import TblMappedBarCodeUpdate from './components/UpdatesItem/TblMappedBarCodeUpdate'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -97,6 +99,10 @@ const App = () => {
                 <Route path='/tbl-new-picking' element={<AddPickingList title="New Picking List" />} />
                 <Route path='/tblpickingupdates/:id' element={<TblPickingListUpdates title="New Picking List Updates" />} />
                 <Route path='/mappeditems' element={<MappedItems />} />
+                <Route path='/insert-mapped-barcode' element={<AddMappedBarcodes />} />
+    
+                <Route path='/tblmappedbarcodesupdates/:id' element={<TblMappedBarCodeUpdate />} />
+
               </Routes>
             </MainLayout>
           } />

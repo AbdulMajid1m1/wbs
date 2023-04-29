@@ -22,9 +22,10 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", WBSDB);
 const PORT = process.env.PORT || 3005;
-app.listen(PORT, () => {
+
+const server = app.listen(PORT, () => {
   console.log(`Server started on PORT ${PORT}`);
 });
 
-
-// TODO: npm i cookie-parser and its setup  update verify token function in jwt_Token.js
+// Set the timeout to 2 minutes (120000 milliseconds)
+server.timeout = 120000;

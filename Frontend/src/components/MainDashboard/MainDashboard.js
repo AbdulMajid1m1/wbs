@@ -20,12 +20,10 @@ const MainComponent = () => {
 
       userRequest.get("/getAllExpectedShipments")
         .then(response => {
-          // response.data == "no data available" ? setNewExpectedReceipts([]) : setNewExpectedReceipts(response.data);
           setNewExpectedReceipts([])
         })
         .catch(error => {
 
-          // setError(error?.response?.data?.message ?? "Something went wrong");
 
           console.error(error);
         });
@@ -44,11 +42,9 @@ const MainComponent = () => {
         .then(response => {
             console.log(response.data)
             setNewExpectedShipments(response.data)
-          // response.data == "no data available" ? setNewExpectedShipments([]) : setNewExpectedShipments(response.data);
         })
         .catch(error => {
           
-          // setError(error?.response?.data?.message ?? "Something went wrong");
 
           console.error(error);
         });

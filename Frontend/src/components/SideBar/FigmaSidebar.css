@@ -5,8 +5,18 @@
     background: #1E3B8B;
     border: 2px solid #0E0E71;
     box-shadow: 5px 5px 10px 5px #ABACAE;
-    border-radius: 10px;
+    /* border-radius: 10px; */
+    border-bottom-right-radius: 10px;
     overflow-y: auto; /* add this line to enable scrolling */
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #fff;
+  border-bottom-right-radius: 10px;
 }
 
 .main-images-container {

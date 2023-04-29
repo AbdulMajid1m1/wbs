@@ -47,7 +47,7 @@ const MappedItems = () => {
 
             <UserDataTable data={alldata} addNewNavigation="/" title="MAPPED ITEMS" columnsName={MappedItemsColumn} backButton={true} uniqueId="ItemCode"
     
-
+                
             />
 
             {isLoading &&

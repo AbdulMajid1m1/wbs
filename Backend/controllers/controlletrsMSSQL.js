@@ -2237,9 +2237,9 @@ const WBSDB = {
       request.input('serialNumber', sql.NVarChar(100), serialNumber);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
-        return res.status(200).send({ exists: false });
+        return res.status(200).send(false);
       }
-      return res.status(200).send({ exists: true });
+      return res.status(200).send(true);
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
@@ -2255,7 +2255,7 @@ const WBSDB = {
         WHERE SerialNumber = @serialNumber
       `;
       let request = pool1.request();
-      request.input('serialNumber', sql.NVarChar(100), serialNumber); 
+      request.input('serialNumber', sql.NVarChar(100), serialNumber);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
@@ -2266,7 +2266,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-  
+
 
 
 

@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from './pages/Login/Login'
-import TblShipmentReceving from './pages/TblShipmentReceving/TblShipmentReceving'
+import TblShipmentReceving from './pages/TblShipmentRecevingCl/TblShipmentRecevingCl'
 import TblShipmentReceiveCl from './pages/TblShipmentReceiveCl/TblShipmentReceiveCl'
 import TblItem from './pages/TblItem/TblItem'
 // import NavBar from './components/NavBar/Navbar'
@@ -29,6 +29,7 @@ import PickList from './pages/PickList/PickList'
 import TblItemCl from './pages/TblItemCl/TblItemCl'
 import AddDispatchingCl from './components/AddNew/AddDispatchingCl'
 import FigmaSidebar from './components/SideBar/FigmaSidebar'
+import ExpectedShipments from './pages/ExpectedShipments/ExpectedShipments'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -87,6 +88,7 @@ const App = () => {
                 <Route path='/expectedreceipts' element={<ExpectedReceipts />} />
                 <Route path='/expectedorder' element={<ExpectedTranferOrder />} />
                 <Route path='/picklist' element={<PickList />} />
+                <Route path='/expectedshipments' element={<ExpectedShipments />} />
               </Routes>
             </MainLayout>
           } />

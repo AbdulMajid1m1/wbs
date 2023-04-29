@@ -47,7 +47,7 @@ const FirstTable = () => {
     <div>
 
       {/* <SideBar2 /> */}
-      <UserDataTable data={data} title="EXPECTED SHIPMENT" columnsName={allUserAssetsColumns}
+      <UserDataTable data={data} title="EXPECTED RECEVING " columnsName={allUserAssetsColumns}
         backButton={true}
         uniqueId="SHIPMENTID"
         addNewNavigation="/addnew"

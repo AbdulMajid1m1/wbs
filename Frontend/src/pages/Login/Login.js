@@ -21,7 +21,7 @@ const Login = () => {
       })
       .then((response) => {
         Cookies.set("accessToken", response?.data?.token);
-        navigate("/shipmentid");
+        navigate("/dashboard");
 
 
 

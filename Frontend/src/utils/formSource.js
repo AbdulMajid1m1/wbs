@@ -344,3 +344,88 @@ export const TblDispatchingInsertColumn = [
 
 
 ];
+
+
+
+export const TblPickingClInsertInput = [
+  {
+    id: "pickingIdInput1",
+    name: "PICKINGROUTEID",
+    label: "PICKING ROUTE ID*",
+    type: "text",
+    placeholder: "PICKING ROUTE ID",
+  },
+  {
+    id: "pickingIdInput2",
+    label: "CUSTOMER*",
+    name: "CUSTOMER",
+    type: "text",
+    placeholder: "CUSTOMER",
+  },
+  {
+    id: "pickingIdInput3",
+    label: "INVENT LOCATION ID*",
+    name: "INVENTLOCATIONID",
+    type: "text",
+    placeholder: "INVENT LOCATION ID",
+  },
+
+  {
+    id: "pickingIdInput4",
+    label: "TRANSREF ID*",
+    name: "TRANSREFID",
+    type: "text",
+    placeholder: "TRANSREF ID",
+  },
+  {
+    id: "pickingIdInput5",
+    name: "ITEMID",
+    label: "ITEM ID*",
+    type: "text",
+    placeholder: "ITEM ID",
+  },
+  {
+    id: "pickingIdInput6",
+    name: "QTY",
+    label: "QTY*",
+    type: "text",
+    placeholder: "QTY",
+  }, 
+  {
+    id: "pickingIdInput7",
+    name: "EXPEDITIONSTATUS",
+    label: "EXPEDITION STATUS*",
+    type: "text",
+    placeholder: "EXPEDITION STATUS",
+  },  
+  {
+    id: "pickingIdInput8",
+    name: "CONFIGID",
+    label: "CONFIG ID*",
+    type: "text",
+    placeholder: "CONFIG ID",
+  },   
+  {
+    id: "pickingIdInput9",
+    name: "WMSLOCATIONID",
+    label: "WMS LOCATION ID*",
+    type: "text",
+    placeholder: "WMS LOCATION ID",
+  },
+  {
+    id: "pickingIdInput10",
+    name: "ITEMNAME",
+    label: "ITEM NAME*",
+    type: "text",
+    placeholder: "ITEM NAME",
+  },
+  {
+    id: "pickingIdInput11",
+    name: "inventTransId",
+    label: "INVENT TRANS ID*",
+    type: "text",
+    placeholder: "INVENT TRANS ID",
+  },
+
+
+];

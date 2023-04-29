@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { AllItems } from '../../utils/datatablesource'
+import { TblPickingClColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 // import SideBar from '../../components/SideBar/SideBar'
 import SideBar2 from '../../components/SideBar/SideBar2'
 
-const TblItem = () => {
+const TblPickingCl = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -16,7 +16,7 @@ const TblItem = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllTblItems")
+                userRequest.get("/getAllTblPickingCL")
                     // axios.get("http://localhost:7008/api/getAllTblItems")
                     // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
@@ -45,9 +45,9 @@ const TblItem = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId"
-                actionColumnVisibility={false}
-                buttonVisibility={false}
+            <UserDataTable data={alldata} addNewNavigation="/tbl-new-picking" title="PICKING" columnsName={TblPickingClColumn} backButton={true} uniqueId="PICKINGROUTEID"
+
+
             />
 
             {isLoading &&
@@ -74,4 +74,4 @@ const TblItem = () => {
     )
 }
 
-export default TblItem
+export default TblPickingCl

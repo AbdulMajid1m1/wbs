@@ -47,7 +47,7 @@ const AllItemsDispatch = () => {
 
             <UserDataTable data={alldata} title="Items For Dispatch" columnsName={AllItemsDispatchColumn} backButton={true}
                 actionColumnVisibility={false}
-
+                buttonVisibility={false}
             />
 
 

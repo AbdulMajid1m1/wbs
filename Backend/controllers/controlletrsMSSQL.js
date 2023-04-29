@@ -2224,6 +2224,56 @@ const WBSDB = {
     }
   },
 
+
+  async checkBarcodeValidityBySerialNo(req, res, next) {
+    try {
+      const serialNumber = req.headers['serialnumber']; // Get ItemSerialNo from headers
+      console.log(serialNumber);
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE SerialNumber = @serialNumber
+      `;
+      let request = pool1.request();
+      request.input('serialNumber', sql.NVarChar(100), serialNumber);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(200).send({ exists: false });
+      }
+      return res.status(200).send({ exists: true });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async getItemInfoBySerialNo(req, res, next) {
+    try {
+      const serialNumber = req.headers['serialnumber']; // Get ItemSerialNo from headers
+      console.log(serialNumber);
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE SerialNumber = @serialNumber
+      `;
+      let request = pool1.request();
+      request.input('serialNumber', sql.NVarChar(100), serialNumber); 
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  
+
+
+
+
+
+
+
 };
 
 

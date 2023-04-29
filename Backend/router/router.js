@@ -180,6 +180,9 @@ router.post("/insertIntoMappedBarcode", checkAuthentication, WBSDB.insertIntoMap
 router.put("/updateTblMappedBarcodeByItemId", checkAuthentication, WBSDB.updateTblMappedBarcodeByItemId);
 router.put("/updateTblMappedBarcodeByGtin", checkAuthentication, WBSDB.updateTblMappedBarcodeByGtin);
 
+router.post("/checkBarcodeValidityBySerialNo", checkAuthentication, WBSDB.checkBarcodeValidityBySerialNo);
+
+router.post("/getItemInfoBySerialNo", checkAuthentication, WBSDB.getItemInfoBySerialNo);
 
 
 

@@ -10,6 +10,13 @@ import internal from "../../images/internal.png"
 import picklist from "../../images/picklist.png"
 import packing from "../../images/packing.png"
 import setting from "../../images/setting.png"
+import dispatch from "../../images/van.png"
+import wms from "../../images/wms.png"
+import receipts from "../../images/bill.png"
+import stocking from "../../images/stocking.png"
+import barcode from "../../images/barcode.png"
+import productreturn from "../../images/return.png"
+
 import { useNavigate } from 'react-router-dom'
 
 
@@ -17,6 +24,7 @@ import { useNavigate } from 'react-router-dom'
 const FigmaSidebar = () => {
     const [showWarehouseDropdown, setShowWarehouseDropdown] = useState(false);
     const [showMasterData, setShowMasterData] = useState(false);
+    const [wmsMobileApp, setWmsMobileApp] =useState(false);
 
     const navigate = useNavigate();
   return (
@@ -32,7 +40,7 @@ const FigmaSidebar = () => {
             <p className='sidebar-text'>Warehouse Operation</p>
         </div>
         {showWarehouseDropdown && (
-            <div>
+            <div className='ml-3'>
                <div className='main-images-container' onClick={() => navigate('/itemscl')}>
                     <img src={items} className='main-inside-image' alt='' />
                     <p className='sidebar-text'>Items</p>
@@ -91,7 +99,7 @@ const FigmaSidebar = () => {
         </div>
 
         {showMasterData && (
-            <div>
+          <div className='ml-3'>
 
         <div className='main-images-container' onClick={() => navigate('/items')}>
             <img src={inventory} className='main-inside-image' alt='' />
@@ -135,6 +143,52 @@ const FigmaSidebar = () => {
 
         </div>
         )}
+
+        <div className='main-images-container' onClick={() => setWmsMobileApp(!wmsMobileApp)}>
+            <img src={wms} className='main-inside-image rounded-full bg-white' alt='' />
+            <p className='sidebar-text'>WMS Mobile App</p>
+        </div>
+        
+        {wmsMobileApp && (
+         <div className='ml-3'>
+
+            <div className='main-images-container'>
+                <img src={dispatch} className='main-inside-image bg-white rounded-full' alt='' />
+                <p className='sidebar-text'>Dispatch Management</p>
+            </div>
+
+            <div className='main-images-container'>
+                <img src={receipts} className='main-inside-image rounded-full bg-white' alt='' />
+                <p className='sidebar-text'>Receipts Management</p>
+            </div>
+
+            <div className='main-images-container'>
+                <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
+                <p className='sidebar-text'>Physical Inventory</p>
+            </div>
+
+            <div className='main-images-container'>
+                <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
+                <p className='sidebar-text'>Stocks Management</p>
+            </div>
+
+            <div className='main-images-container'>
+                <img src={barcode} className='main-inside-image rounded-full bg-white' alt='' />
+                <p className='sidebar-text'>Product Barcode Mapping</p>
+            </div>
+
+            <div className='main-images-container'>
+                <img src={picklist} className='main-inside-image' alt='' />
+                <p className='sidebar-text'>Palletizing</p>
+            </div>
+
+            <div className='main-images-container'>
+                <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
+                <p className='sidebar-text'>Return RMA</p>
+            </div>
+
+         </div>   
+            )}
 
         <div className='main-images-container'>
             <img src={setting} className='main-inside-image' alt='' />

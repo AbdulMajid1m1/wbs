@@ -17,7 +17,7 @@ const FirstTable = () => {
       try {
 
 
-        userRequest.get("/getAllShipmentDataFromtShipmentReceiving")
+        userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
 
           .then(response => {
             // response.data == "no data available" ? setData([]) : setData(response.data);

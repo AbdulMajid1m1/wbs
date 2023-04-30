@@ -40,7 +40,7 @@ const FigmaSidebar = () => {
             <p className='sidebar-text'>Warehouse Operation</p>
         </div>
         {showWarehouseDropdown && (
-            <div className='ml-3'>
+            <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                <div className='main-images-container' onClick={() => navigate('/itemscl')}>
                     <img src={items} className='main-inside-image' alt='' />
                     <p className='sidebar-text'>Items</p>
@@ -99,7 +99,7 @@ const FigmaSidebar = () => {
         </div>
 
         {showMasterData && (
-          <div className='ml-3'>
+          <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
 
         <div className='main-images-container' onClick={() => navigate('/items')}>
             <img src={inventory} className='main-inside-image' alt='' />
@@ -150,7 +150,7 @@ const FigmaSidebar = () => {
         </div>
         
         {wmsMobileApp && (
-         <div className='ml-3'>
+         <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
 
             <div className='main-images-container'>
                 <img src={dispatch} className='main-inside-image bg-white rounded-full' alt='' />

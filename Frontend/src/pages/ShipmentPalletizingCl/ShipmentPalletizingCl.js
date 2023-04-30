@@ -43,7 +43,7 @@ const TblItemCl = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="SHIPMENT PALLETIZING" columnsName={shipmentPalletizingColumn} backButton={true} uniqueId="TRANSFERID"
+            <UserDataTable data={alldata} addNewNavigation="/addnewpalletizing" title="SHIPMENT PALLETIZING" columnsName={shipmentPalletizingColumn} backButton={true} uniqueId="TRANSFERID"
 
 
             />

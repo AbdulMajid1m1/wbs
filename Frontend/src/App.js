@@ -37,6 +37,7 @@ import MappedItems from './pages/MappedItems/MappedItems'
 import AddMappedBarcodes from './components/AddNew/AddMappedBarcodes'
 import TblMappedBarCodeUpdate from './components/UpdatesItem/TblMappedBarCodeUpdate'
 import ShipmentPalletizingCl from './pages/ShipmentPalletizingCl/ShipmentPalletizingCl'
+import AddNewPalletizing from './components/AddNew/AddNewPalletizing'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -104,6 +105,7 @@ const App = () => {
     
                 <Route path='/tblmappedbarcodesupdates/:id' element={<TblMappedBarCodeUpdate />} />
                 <Route path='/shipmentpalletizing' element={<ShipmentPalletizingCl />} />
+                <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing"/>} />
 
               </Routes>
             </MainLayout>

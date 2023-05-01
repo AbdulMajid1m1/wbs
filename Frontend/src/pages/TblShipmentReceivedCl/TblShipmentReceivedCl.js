@@ -44,7 +44,7 @@ const TblShipmentReceivedCl = () => {
       <UserDataTable data={data} title="SHIPMENT RECEIVED" columnsName={TblShipmentReceivedClColumn}
         backButton={true}
         uniqueId="SERIALNUM"
-        // addNewNavigation="/addnew"
+        addNewNavigation="/receipts"
         ShipmentIdSearchEnable={true}
         actionColumnVisibility={true}
 

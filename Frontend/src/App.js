@@ -42,6 +42,7 @@ import ReceiptsManagement from './pages/ReceiptsManagement/ReceiptsManagement'
 import ReceiptsSecond from './pages/ReceiptsManagement/ReceiptsSecond'
 import ReceiptsThirdScreen from './pages/ReceiptsManagement/ReceiptsThirdScreen'
 import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
+import TblShipmentUpdate from './components/UpdatesItem/TblShipmentUpdate'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -80,7 +81,8 @@ const App = () => {
                 <Route path='/shipment' element={<TblShipmentReceivingCl />} />
                 <Route path='/shipmentid' element={<ShipmentRecevingId />} />
                 <Route path='/shipmentreceived' element={<TblShipmentReceivedCl />} />
-                {/* <Route path='/shipmentcl' element={<TblShipmentReceivedCl />} /> */}
+                <Route path='/shipmentupdate/:id' element={<TblShipmentUpdate title="Update Shipment Received Data" />} />
+
                 <Route path='/items' element={<TblItem />} />
                 <Route path='/itemscl' element={<TblItemCl />} />
                 <Route path='/addnew' element={<AddNew title="Add New Shipment Receving Details" />} />

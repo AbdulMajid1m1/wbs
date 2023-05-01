@@ -99,6 +99,8 @@ const WBSDB = {
     }
   },
 
+
+
   async getAllShipmentDataFromtShipmentReceiving(req, res, next) {
 
     try {
@@ -731,6 +733,34 @@ const WBSDB = {
     }
   },
 
+  async getShipmentRecievedCLDataCByShipmentId(req, res, next) {
+
+    try {
+      const { SHIPMENTID } = req.query;
+      console.log(SHIPMENTID);
+
+      if (!SHIPMENTID) {
+        return res.status(400).send({ message: "SHIPMENTID is required." });
+      }
+
+      const query = `
+        SELECT * FROM dbo.tbl_Shipment_Received_CL
+        WHERE SHIPMENTID = @SHIPMENTID
+      `;
+      let request = pool2.request();
+      request.input('SHIPMENTID', sql.NVarChar(255), SHIPMENTID);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "Shipment not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
 
   async deleteShipmentRecievedDataCL(req, res, next) {
     try {

@@ -2,8 +2,8 @@ import React, { createContext, useState } from 'react';
 
 export const ReceiptsContext = createContext();
 
-export const ShipmentProvider = ({ children }) => {
-    const [shipmentData, setShipmentData] = useState({
+export const ReceiptsProvider = ({ children }) => {
+    const [statedata, setSateData] = useState({
         shipmentId: '',
         containerId: '',
         arrivalWarehouse: '',
@@ -21,12 +21,12 @@ export const ShipmentProvider = ({ children }) => {
         remarks: ''
     });
 
-    const updateShipmentData = (newData) => {
-        setShipmentData({ ...shipmentData, ...newData });
+    const updateData = (newData) => {
+        setSateData({ ...statedata, ...newData });
     };
 
     return (
-        <ReceiptsContext.Provider value={{ shipmentData, updateShipmentData }}>
+        <ReceiptsContext.Provider value={{ statedata, updateData }}>
             {children}
         </ReceiptsContext.Provider>
     );

@@ -75,6 +75,7 @@ router.post("/insertTblItemsCLData", checkAuthentication, WBSDB.insertTblItemsCL
 router.delete("/deleteTblItemsCLData", checkAuthentication, WBSDB.deleteTblItemsCLData);
 router.put("/updateTblItemsCLData", checkAuthentication, WBSDB.updateTblItemsCLData);
 
+
 //  ----------- tbl_Items_CL APIS End -----------------
 
 
@@ -82,6 +83,8 @@ router.put("/updateTblItemsCLData", checkAuthentication, WBSDB.updateTblItemsCLD
 // ----------- tbl_Shipment_Received_CL APIS Start -----------------
 
 router.get("/getAllTblShipmentReceivedCL", checkAuthentication, WBSDB.getAllTblShipmentReceivedCL);
+
+router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
 
 router.post("/insertShipmentRecievedDataCL", checkAuthentication, WBSDB.insertShipmentRecievedDataCL);
 

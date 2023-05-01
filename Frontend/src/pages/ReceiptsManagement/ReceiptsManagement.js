@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 // import accept from "../../../images/accept.png"
 import userRequest from "../../utils/userRequest"
 import "./ReceiptsManagement.css";
 import Swal from 'sweetalert2';
+import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 
 const ReceiptsManagement = () => {
   const navigate = useNavigate();
-
+  const { statedata, updateData } = useContext(ReceiptsContext);
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState(0);
@@ -20,6 +21,10 @@ const ReceiptsManagement = () => {
 
   };
 
+  const handleDataChange = (e) => {
+    const { name, value } = e.target;
+    // updateShipmentData({ [name]: value });
+  };
   const handleChangeValue = (e) => {
     setShipmentTag(e.target.value);
   }
@@ -27,7 +32,7 @@ const ReceiptsManagement = () => {
   const handleForm = (e) => {
     e.preventDefault();
 
-    userRequest.post(`/getShipmentDataFromtShipmentReceivingCL?SHIPMENTID=${shipmentTag}`)
+    userRequest.post(`/getShipmentRecievedCLDataCByShipmentId?SHIPMENTID=${shipmentTag}`)
       .then(response => {
         console.log(response?.data);
         setData(response?.data ?? []);
@@ -42,13 +47,13 @@ const ReceiptsManagement = () => {
 
 
   useEffect(() => {
-   
+
   }, []);
 
 
 
   const handleNextBtnClick = () => {
-   
+
     navigate('/receiptsecond')
   }
   //   }

@@ -42,6 +42,7 @@ import TblUpdatePalletizing from './components/UpdatesItem/TblUpdatePalletizing'
 import ReceiptsManagement from './pages/ReceiptsManagement/ReceiptsManagement'
 import ReceiptsSecond from './pages/ReceiptsManagement/ReceiptsSecond'
 import ReceiptsThirdScreen from './pages/ReceiptsManagement/ReceiptsThirdScreen'
+import { ReceiptsProvider } from './contexts/ReceiptsContext'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -67,9 +68,10 @@ const App = () => {
       <Routes>
 
         <Route path="/" element={<Login />} />
-        <Route path="/receipts" element={<ReceiptsManagement />} />
-        <Route path="/receiptsecond" element={<ReceiptsSecond />} />
-        <Route path="/receiptsthird" element={<ReceiptsThirdScreen />} />
+
+        <Route path="/receipts" element={<ReceiptsProvider><ReceiptsManagement /></ReceiptsProvider>} />
+        <Route path="/receiptsecond" element={<ReceiptsProvider><ReceiptsSecond /></ReceiptsProvider>} />
+        <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
 
 
         <Route
@@ -109,12 +111,12 @@ const App = () => {
 
                 <Route path='/tblmappedbarcodesupdates/:id' element={<TblMappedBarCodeUpdate />} />
                 <Route path='/shipmentpalletizing' element={<ShipmentPalletizingCl />} />
-                <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing"/>} />
-                <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data"/>} />
-                <Route path='/receipts' element={<ReceiptsManagement />} />
-                <Route path='/receiptsecond' element={<ReceiptsSecond />} />
-                
-              <Route path='/receiptthird' element={<ReceiptsThirdScreen />} />
+                <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing" />} />
+                <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data" />} />
+                {/* <Route path='/receipts' element={<ReceiptsManagement />} />
+                <Route path='/receiptsecond' element={<ReceiptsSecond />} /> */}
+
+                <Route path='/receiptthird' element={<ReceiptsThirdScreen />} />
                 <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing" />} />
                 <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data" />} />
 

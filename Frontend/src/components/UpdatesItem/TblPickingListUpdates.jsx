@@ -4,7 +4,7 @@ import "../AddNew/AddNew.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { TblPickingClInsertInput, updateAllItemsInput } from "../../utils/formSource";
+import { TblPickingClInsertInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 
@@ -160,6 +160,7 @@ const TblPickingListUpdates = ({ inputs, title,
 
                                     <div className="buttonAdd" >
                                         <button
+                                            style={{background: '#e69138'}}
                                             type="submit"
                                         >Update</button>
                                     </div>

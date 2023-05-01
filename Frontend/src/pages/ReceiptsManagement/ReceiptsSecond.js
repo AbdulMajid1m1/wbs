@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 
-const Details1 = () => {
+const ReceiptsSecond = () => {
   return (
     <>
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-[79%] h-screen px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
           <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#f4d0a9] text-xl mb:2 md:mb-5">
-              <div className='flex flex-col gap-2'>
+              <div className='flex flex-col gap-2 text-xs sm:text-xl'>
                     <span>Job Order Number</span>
                     <span>Container Number</span>
               </div>
-              <div className='flex justify-between'>
+              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                     <div className='flex items-center'>
                         <span>Item Code</span>
                     </div>
@@ -57,4 +57,4 @@ const Details1 = () => {
   )
 }
 
-export default Details1
+export default ReceiptsSecond

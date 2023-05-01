@@ -42,8 +42,8 @@ import TblUpdatePalletizing from './components/UpdatesItem/TblUpdatePalletizing'
 import ReceiptsManagement from './pages/ReceiptsManagement/ReceiptsManagement'
 import ReceiptsSecond from './pages/ReceiptsManagement/ReceiptsSecond'
 
-const LoginLayout = ({ children }) => {
-  return <>{children}</>;
+const WithoutSideBarLayout = ({ children }) => {
+  return { children };
 };
 
 const MainLayout = ({ children }) => {
@@ -64,12 +64,11 @@ const App = () => {
       {/* <NavBar /> */}
 
       <Routes>
-        <Route path='/' element={
-          <LoginLayout>
-            <Login />
-          </LoginLayout>
 
-        } />
+        <Route path="/" element={<Login />} />
+        <Route path="/receipts" element={<ReceiptsManagement />} />
+        <Route path="/receiptsecond" element={<ReceiptsSecond />} />
+
 
         <Route
           path="/*"
@@ -105,14 +104,13 @@ const App = () => {
                 <Route path='/tblpickingupdates/:id' element={<TblPickingListUpdates title="New Picking List Updates" />} />
                 <Route path='/mappeditems' element={<MappedItems />} />
                 <Route path='/insert-mapped-barcode' element={<AddMappedBarcodes />} />
-    
+
                 <Route path='/tblmappedbarcodesupdates/:id' element={<TblMappedBarCodeUpdate />} />
                 <Route path='/shipmentpalletizing' element={<ShipmentPalletizingCl />} />
-                <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing"/>} />
-                <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data"/>} />
-                <Route path='/receipts' element={<ReceiptsManagement />} />
-                <Route path='/receiptsecond' element={<ReceiptsSecond />} />
-                
+                <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing" />} />
+                <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data" />} />
+
+
               </Routes>
             </MainLayout>
           } />

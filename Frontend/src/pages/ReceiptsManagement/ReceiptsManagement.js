@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-// import accept from "../../../images/accept.png"
+import accept from "../../images/success.png"
 import userRequest from "../../utils/userRequest"
 import "./ReceiptsManagement.css";
 import Swal from 'sweetalert2';
+
 
 const ReceiptsManagement = () => {
   const navigate = useNavigate();
@@ -75,8 +76,7 @@ const ReceiptsManagement = () => {
                   type='submit'
                   className="bg-[#e69138] hover:bg-[#efae68] text-black font-medium py-1 px-6 rounded-sm w-[15%]">
                   <span>
-                    Click
-                    {/* <img src={accept} className='h-6 w-6' alt='' /> */}
+                    <img src={accept} className='h-6 w-9' alt='' />
                   </span>
                 </button>
 

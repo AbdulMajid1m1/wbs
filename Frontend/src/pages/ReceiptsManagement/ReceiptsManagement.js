@@ -51,21 +51,21 @@ const ReceiptsManagement = () => {
   // Use selectedRow in the component
 
 
-//   const handleNextBtnClick = () => {
-//     console.log(selectedRow);
-//     if (selectedRow !== null) {
-//       console.log("working");
-//       localStorage.setItem("AssetData", JSON.stringify(selectedRow));
-//       localStorage.setItem("navigatePath", JSON.stringify('/location'));
-//       navigate('/locationdetails')
-//     }
+  const handleNextBtnClick = () => {
+    // console.log(selectedRow);
+    // if (selectedRow !== null) {
+    //   console.log("working");
+    //   localStorage.setItem("AssetData", JSON.stringify(selectedRow));
+    //   localStorage.setItem("navigatePath", JSON.stringify('/location'));
+      navigate('/receiptsecond')
+    }
 //   }
   return (
     <>
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
-        <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-start absolute">
-          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-6  rounded-lg">
+        <div className="w-[79%] h-screen px-3 sm:px-5 flex items-center justify-center absolute">
+          <div className="w-full px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-6 rounded-lg">
             <div className="w-full flex justify-center text-black font-semibold text-xl mb:2 md:mb-5">
               Receipts Management
             </div>
@@ -75,10 +75,12 @@ const ReceiptsManagement = () => {
                 <input
                   id="total"
                   onChange={handleChangeValue}
-                  className="bg-yellow-300 border text-center border-gray-300 text-gray-900 text-xs font-bold tracking-wider rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[60%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-yellow-300 border text-center border-gray-300 text-gray-900 text-xs font-bold tracking-wider rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
 
-                <button type='submit' className="bg-gray-300 hover:bg-gray-400 text-black font-medium py-1 px-6 rounded-r">
+                <button 
+                    type='submit'                   
+                        className="bg-[#e69138] hover:bg-[#efae68] text-black font-medium py-1 px-6 rounded-sm w-[15%]">
                   <span>
                     Click
                     {/* <img src={accept} className='h-6 w-6' alt='' /> */}
@@ -133,17 +135,17 @@ const ReceiptsManagement = () => {
                 </div>
               </div >
 
-              {/* <div className="mb-6">
+              <div className="mb-6">
                 <span
                   onClick={handleNextBtnClick}
                 >
                   <button
-                    className="bg-gray-300 hover:bg-gray-400 border border-gray-300 font-bold tracking-wider text-gray-900 text-xs rounded-lg block w-full p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-300 hover:bg-gray-400 border border-gray-300 font-bold tracking-wider text-gray-900 text-xs rounded-lg block w-full p-1.5 md:p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
-                    Click the Asset For More Details
+                    Next Screen
                   </button>
                 </span>
-              </div> */}
+              </div>
             </form >
           </div >
         </div >

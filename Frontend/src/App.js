@@ -40,6 +40,7 @@ import ShipmentPalletizingCl from './pages/ShipmentPalletizingCl/ShipmentPalleti
 import AddNewPalletizing from './components/AddNew/AddNewPalletizing'
 import TblUpdatePalletizing from './components/UpdatesItem/TblUpdatePalletizing'
 import ReceiptsManagement from './pages/ReceiptsManagement/ReceiptsManagement'
+import ReceiptsSecond from './pages/ReceiptsManagement/ReceiptsSecond'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -110,6 +111,7 @@ const App = () => {
                 <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing"/>} />
                 <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data"/>} />
                 <Route path='/receipts' element={<ReceiptsManagement />} />
+                <Route path='/receiptsecond' element={<ReceiptsSecond />} />
                 
               </Routes>
             </MainLayout>

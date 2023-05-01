@@ -107,7 +107,7 @@ const App = () => {
                 <Route path='/tblmappedbarcodesupdates/:id' element={<TblMappedBarCodeUpdate />} />
                 <Route path='/shipmentpalletizing' element={<ShipmentPalletizingCl />} />
                 <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing"/>} />
-                <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing"/>} />
+                <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data"/>} />
 
               </Routes>
             </MainLayout>

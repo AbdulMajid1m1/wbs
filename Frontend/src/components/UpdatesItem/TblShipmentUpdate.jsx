@@ -144,10 +144,13 @@ const TblShipmentUpdate = ({ inputs, title,
                                                         [input.name]: e.target.value,
                                                     })
                                                 }
-                                            // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
+                                            disabled={input.name === "SHIPMENTID" ? true : false}
+                                            
                                             />
                                         </div>
                                     ))}
+                                    {TblShipmentReceivedClInput.length % 2 !== 0 && <div className="formInput"></div>}
+
 
                                     <div className="buttonAdd" >
                                         <button

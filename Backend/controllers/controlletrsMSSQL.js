@@ -10,7 +10,7 @@ import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import { client } from "../cacheManager.js";
+// import { client } from "../cacheManager.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -33,6 +33,7 @@ const WBSDB = {
           WHERE SHIPMENTID = @SHIPMENTID AND CONTAINERID = @CONTAINERID
         `;
       } else {
+        console.log("req.query.SHIPMENTID", req.query.SHIPMENTID);
         query = `
           SELECT * FROM dbo.tbl_Shipment_Receiving
           WHERE SHIPMENTID = @SHIPMENTID
@@ -72,6 +73,7 @@ const WBSDB = {
           WHERE SHIPMENTID = @SHIPMENTID AND CONTAINERID = @CONTAINERID
         `;
       } else {
+        console.log("req.query.SHIPMENTID", req.query.SHIPMENTID);
         query = `
           SELECT * FROM dbo.tbl_Shipment_Receiving_CL
           WHERE SHIPMENTID = @SHIPMENTID
@@ -116,6 +118,10 @@ const WBSDB = {
 
     }
   },
+
+
+
+
   async getAllShipmentDataFromtShipmentReceivingCL(req, res, next) {
 
     try {
@@ -403,57 +409,57 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-  // async getAllTblDispatchingData(req, res, next) {
-
-  //   try {
-  //     let query = `
-  //     SELECT * FROM dbo.tbl_Dispatching
-  //     `;
-  //     let request = pool1.request();
-  //     const data = await request.query(query);
-  //     if (data.recordsets[0].length === 0) {
-  //       return res.status(404).send({ message: "N0 data found." });
-  //     }
-  //     return res.status(200).send(data.recordsets[0]);
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // },
-
   async getAllTblDispatchingData(req, res, next) {
+
     try {
-      const cacheKey = "tblDispatchingData";
-
-      // Try to get data from Redis cache
-      const cachedData = await client.get(cacheKey);
-
-      if (cachedData) {
-        // Parse the cached data and return it
-        const parsedData = JSON.parse(cachedData);
-        return res.status(200).send(parsedData);
-      } else {
-        // Fetch data from the database if not in cache
-        let query = `
-          SELECT * FROM dbo.tbl_Dispatching
-        `;
-        let request = pool1.request();
-        const data = await request.query(query);
-
-        if (data.recordsets[0].length === 0) {
-          return res.status(404).send({ message: "No data found." });
-        }
-
-        // Cache the data in Redis with an expiration time (e.g., 1 hour)
-        await client.set(cacheKey, JSON.stringify(data.recordsets[0]), "EX", 3600);
-
-        return res.status(200).send(data.recordsets[0]);
+      let query = `
+      SELECT * FROM dbo.tbl_Dispatching
+      `;
+      let request = pool1.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "N0 data found." });
       }
+      return res.status(200).send(data.recordsets[0]);
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
+
+  // async getAllTblDispatchingData(req, res, next) {
+  //   try {
+  //     const cacheKey = "tblDispatchingData";
+
+  //     // Try to get data from Redis cache
+  //     const cachedData = await client.get(cacheKey);
+
+  //     if (cachedData) {
+  //       // Parse the cached data and return it
+  //       const parsedData = JSON.parse(cachedData);
+  //       return res.status(200).send(parsedData);
+  //     } else {
+  //       // Fetch data from the database if not in cache
+  //       let query = `
+  //         SELECT * FROM dbo.tbl_Dispatching
+  //       `;
+  //       let request = pool1.request();
+  //       const data = await request.query(query);
+
+  //       if (data.recordsets[0].length === 0) {
+  //         return res.status(404).send({ message: "No data found." });
+  //       }
+
+  //       // Cache the data in Redis with an expiration time (e.g., 1 hour)
+  //       await client.set(cacheKey, JSON.stringify(data.recordsets[0]), "EX", 3600);
+
+  //       return res.status(200).send(data.recordsets[0]);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // },
 
   async getAllTblShipmentPalletizing(req, res, next) {
 
@@ -1995,41 +2001,61 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+  // async getAllTblMappedBarcodes(req, res, next) {
+  //   try {
+  //     const cacheKey = "tblMappedBarcodes";
+
+  //     // Try to get data from Redis cache
+  //     const cachedData = await client.get(cacheKey);
+
+  //     if (cachedData) {
+  //       // Parse the cached data and return it
+  //       const parsedData = JSON.parse(cachedData);
+  //       return res.status(200).send(parsedData);
+  //     } else {
+  //       // Fetch data from the database if not in cache
+  //       let query = `
+  //         SELECT * FROM dbo.tblMappedBarcodes
+  //       `;
+  //       let request = pool2.request();
+  //       const data = await request.query(query);
+
+  //       if (data.recordsets[0].length === 0) {
+  //         return res.status(404).send({ message: "No data found." });
+  //       }
+
+  //       // Cache the data in Redis with an expiration time (e.g., 1 hour)
+  //       await client.set(cacheKey, JSON.stringify(data.recordsets[0]), "EX", 3600);
+
+  //       return res.status(200).send(data.recordsets[0]);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // },
+
   async getAllTblMappedBarcodes(req, res, next) {
     try {
-      const cacheKey = "tblMappedBarcodes";
 
-      // Try to get data from Redis cache
-      const cachedData = await client.get(cacheKey);
+      let query = `
+            SELECT * FROM dbo.tblMappedBarcodes
+          `;
+      let request = pool2.request();
+      const data = await request.query(query);
 
-      if (cachedData) {
-        // Parse the cached data and return it
-        const parsedData = JSON.parse(cachedData);
-        return res.status(200).send(parsedData);
-      } else {
-        // Fetch data from the database if not in cache
-        let query = `
-          SELECT * FROM dbo.tblMappedBarcodes
-        `;
-        let request = pool2.request();
-        const data = await request.query(query);
-
-        if (data.recordsets[0].length === 0) {
-          return res.status(404).send({ message: "No data found." });
-        }
-
-        // Cache the data in Redis with an expiration time (e.g., 1 hour)
-        await client.set(cacheKey, JSON.stringify(data.recordsets[0]), "EX", 3600);
-
-        return res.status(200).send(data.recordsets[0]);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
       }
-    } catch (error) {
+
+
+      return res.status(200).send(data.recordsets[0]);
+    }
+    catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  }
-  ,
-
+  },
   async insertIntoMappedBarcode(req, res, next) {
     try {
       const {
@@ -2460,6 +2486,20 @@ const WBSDB = {
     }
   },
 
+
+  async getAllTblRZones(req, res, next) {
+
+    try {
+      const query = `
+        SELECT * FROM dbo.tbl_RZONES
+      `;
+      const data = await pool1.query(query);
+      res.status(200).send(data.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  }
 
 
 

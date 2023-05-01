@@ -27,7 +27,7 @@ const ReceiptsManagement = () => {
   const handleForm = (e) => {
     e.preventDefault();
 
-    userRequest.get(`/getAllShipmentDataFromtShipmentReceiving/${shipmentTag}`)
+    userRequest.post(`/getShipmentDataFromtShipmentReceivingCL?SHIPMENTID=${shipmentTag}`)
       .then(response => {
         console.log(response?.data);
         setData(response?.data ?? []);
@@ -36,30 +36,22 @@ const ReceiptsManagement = () => {
 
       .catch(error => {
         console.error(error);
-        
+
       });
   }
 
-  
+
   useEffect(() => {
-    // const AssetData = JSON.parse(localStorage.getItem('AssetData'));
-    // setSelectedRow(AssetData);
-    // localStorage.removeItem('AssetData');
-    // localStorage.removeItem('navigatePath');
+   
   }, []);
 
-  // Use selectedRow in the component
 
 
   const handleNextBtnClick = () => {
-    // console.log(selectedRow);
-    // if (selectedRow !== null) {
-    //   console.log("working");
-    //   localStorage.setItem("AssetData", JSON.stringify(selectedRow));
-    //   localStorage.setItem("navigatePath", JSON.stringify('/location'));
-      navigate('/receiptsecond')
-    }
-//   }
+   
+    navigate('/receiptsecond')
+  }
+  //   }
   return (
     <>
 
@@ -78,9 +70,9 @@ const ReceiptsManagement = () => {
                   className="bg-yellow-300 border text-center border-gray-300 text-gray-900 text-xs font-bold tracking-wider rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
 
-                <button 
-                    type='submit'                   
-                        className="bg-[#e69138] hover:bg-[#efae68] text-black font-medium py-1 px-6 rounded-sm w-[15%]">
+                <button
+                  type='submit'
+                  className="bg-[#e69138] hover:bg-[#efae68] text-black font-medium py-1 px-6 rounded-sm w-[15%]">
                   <span>
                     Click
                     {/* <img src={accept} className='h-6 w-6' alt='' /> */}
@@ -145,15 +137,15 @@ const ReceiptsManagement = () => {
                     Next Screen
                   </button>
                 </span>
-   
+
               </div>
               <div className='flex items-center gap-2'>
                 <label htmlFor="total" className="block ml-8 text-xs font-medium text-black">Total Records</label>
-                    <input
-                    id="total"
-                    value={data.length}
-                    className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[10%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    />
+                <input
+                  id="total"
+                  value={data.length}
+                  className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[10%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
               </div>
             </form >
           </div >

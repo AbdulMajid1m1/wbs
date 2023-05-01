@@ -12,6 +12,7 @@ import { checkAuthentication } from "../helpers/apiAuth.js";
 router.post("/getShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceiving);
 router.post("/getShipmentDataFromtShipmentReceivingCL", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceivingCL);
 // not using this api
+// getShipmentReceivingCLByShipmentId
 
 
 router.get("/getAllShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceiving);
@@ -196,7 +197,9 @@ router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, WBS
 
 
 
+// ------------- tbl_RZONES APIS Start -------------
 
+router.get("/getAllTblRZones", checkAuthentication, WBSDB.getAllTblRZones);
 
 
 export default router;

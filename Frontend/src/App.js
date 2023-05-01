@@ -41,6 +41,7 @@ import AddNewPalletizing from './components/AddNew/AddNewPalletizing'
 import TblUpdatePalletizing from './components/UpdatesItem/TblUpdatePalletizing'
 import ReceiptsManagement from './pages/ReceiptsManagement/ReceiptsManagement'
 import ReceiptsSecond from './pages/ReceiptsManagement/ReceiptsSecond'
+import ReceiptsThirdScreen from './pages/ReceiptsManagement/ReceiptsThirdScreen'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -113,6 +114,7 @@ const App = () => {
                 <Route path='/receipts' element={<ReceiptsManagement />} />
                 <Route path='/receiptsecond' element={<ReceiptsSecond />} />
                 
+              <Route path='/receiptthird' element={<ReceiptsThirdScreen />} />
               </Routes>
             </MainLayout>
           } />

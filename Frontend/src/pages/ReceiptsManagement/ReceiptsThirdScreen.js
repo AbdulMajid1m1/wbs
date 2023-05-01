@@ -10,44 +10,56 @@ const ReceiptsThirdScreen = () => {
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
           <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#f4d0a9] text-xl mb:2 md:mb-5">
-              <div className='flex flex-col gap-2 text-xs sm:text-xl'>
-                    <span>Job Order Number</span>
-                    <span>Container Number</span>
+            
+               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
+                <span className='text-white'>JOB ORDER NUMBER</span>
+                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
+                  block w-full p-1.5 md:p-2.5 " placeholder="Job Order Number" required />
+                <span className='text-white'>CONTAINER NUMBER</span>
+                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
+                  block w-full p-1.5 md:p-2.5 " placeholder="Job Order Number" required />
               </div>
+              
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                    <div className='flex items-center'>
-                        <span>Item Code</span>
-                    </div>
-                    <div className='flex gap-4'>
-                    <div className='flex flex-col justify-center items-center gap-2'>
-                            <span>Classification</span>
-                            <span>1</span>    
-                        </div>
-                        <div className='flex flex-col justify-center items-center gap-2'>
-                            <span>Qty</span>
-                            <span>45</span>    
-                        </div>
-                        <div className='flex flex-col justify-center items-center gap-2'>
-                            <span>Received</span>
-                            <span>23</span>
-                        </div>
-                    </div>
+                <div className='flex items-center gap-2'>
+                  <span>Item Code:</span>
+                  <span>0001</span>
+                </div>
+              
+                <div className='flex gap-4'>
+                  <div className='flex flex-col justify-center items-center gap-2'>
+                    <span>Qty</span>
+                    <span>45</span>
+                  </div>
+                  <div className='flex flex-col justify-center items-center gap-2'>
+                    <span>Received</span>
+                    <span>23</span>
+                  </div>
+
+                  <div className='flex flex-col justify-center items-center gap-2'>
+                      <span>Class</span>
+                      <span>1</span>    
+                  </div>
+                </div>
               </div>
+
             </div>
             <form>
 
               <div className="mb-6">
                 <label className="block mb-2 text-lg font-medium text-black">ITEM NAME</label>
+                <input id="scan" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/GTIN Number" required />
+              
               </div>
 
               <div className="mb-6">
-                <label htmlFor="scan" className="block mb-2 text-xs font-medium text-black">Enter Scan/GTIN Number</label>
+                {/* <label htmlFor="scan" className="block mb-2 text-xs font-medium text-black">Enter Scan/GTIN Number</label> */}
                 <input id="scan" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/GTIN Number" required />
               </div>
 
               <div className="mb-6">
-                <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">Enter/Scan Receiving Zone</label>
-                <input id="zone" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter/Scan Receiving Zone" required />
+                <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">Remarks</label>
+                <input id="zone" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Remarks (USER INPUT)" required />
               </div>
             
               <div className="mb-6">

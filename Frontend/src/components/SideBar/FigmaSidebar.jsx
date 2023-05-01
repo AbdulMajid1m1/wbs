@@ -25,6 +25,7 @@ const FigmaSidebar = () => {
     const [showWarehouseDropdown, setShowWarehouseDropdown] = useState(false);
     const [showMasterData, setShowMasterData] = useState(false);
     const [wmsMobileApp, setWmsMobileApp] =useState(false);
+    const [kpiDashboard, setKpiDashbaord] = useState(false);
 
     const navigate = useNavigate();
   return (
@@ -188,6 +189,26 @@ const FigmaSidebar = () => {
             </div>
 
          </div>   
+            )}
+
+
+        <div className='main-images-container' onClick={() => setKpiDashbaord(!kpiDashboard)}>
+            <img src={packing} className='main-inside-image' alt='' />
+            <p className='sidebar-text'>KPI Dashboard's</p>
+        </div>
+        
+        {kpiDashboard && (
+        <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+        <div className='main-images-container'>
+            <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
+            <p className='sidebar-text'>Receiving</p>
+        </div>
+
+        <div className='main-images-container'>
+            <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
+            <p className='sidebar-text'>Dispatching</p>
+        </div>
+        </div>
             )}
 
         <div className='main-images-container'>

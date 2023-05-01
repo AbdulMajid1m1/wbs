@@ -16,6 +16,10 @@ router.post("/getShipmentDataFromtShipmentReceivingCL", checkAuthentication, WBS
 
 
 router.get("/getAllShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceiving);
+
+router.get("/getTblShipmentReceivingQty", checkAuthentication, WBSDB.getTblShipmentReceivingQty);
+
+
 router.get("/getAllShipmentDataFromtShipmentReceived", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceived);
 router.get("/getAllTblItems", checkAuthentication, WBSDB.getAllTblItems);
 

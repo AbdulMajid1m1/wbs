@@ -1,25 +1,31 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 export const ReceiptsContext = createContext();
 
 export const ReceiptsProvider = ({ children }) => {
-    const [statedata, setSateData] = useState({
-        shipmentId: '',
-        containerId: '',
-        arrivalWarehouse: '',
-        itemName: '',
-        itemId: '',
-        purchId: '',
-        classification: '',
-        serialNum: '',
-        rcvdConfigId: '',
-        gtin: '',
-        rzone: '',
-        rcvd_date: '',
-        palletCod: '',
-        pallet_date: '',
-        remarks: ''
-    });
+    const initialData = JSON.parse(sessionStorage.getItem('receiptData')) || {
+        ARRIVALWAREHOUSE: '',
+        BIN: '',
+        CLASSIFICATION: '',
+        CONTAINERID: '',
+        GTIN: '',
+        ITEMID: '',
+        ITEMNAME: '',
+        PALLETCODE: '',
+        PALLET_DATE: '',
+        PURCHID: '',
+        RCVDCONFIGID: '',
+        RCVD_DATE: '',
+        RZONE: '',
+        SERIALNUM: '',
+        SHIPMENTID: ''
+    };
+
+    const [statedata, setSateData] = useState(initialData);
+
+    useEffect(() => {
+        sessionStorage.setItem('receiptData', JSON.stringify(statedata));
+    }, [statedata]);
 
     const updateData = (newData) => {
         setSateData({ ...statedata, ...newData });

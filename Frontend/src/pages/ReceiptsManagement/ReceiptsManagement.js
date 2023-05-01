@@ -17,14 +17,17 @@ const ReceiptsManagement = () => {
 
   const handleRowClick = (rowData, index) => {
     setSelectedRowIndex(index);
+
     setSelectedRow(rowData);
-
+    updateData(rowData); // update context data
   };
 
-  const handleDataChange = (e) => {
-    const { name, value } = e.target;
-    // updateShipmentData({ [name]: value });
-  };
+  // useEffect(() => {
+  //   console.log('Updated data:', statedata);
+  // }, [statedata]);
+
+
+
   const handleChangeValue = (e) => {
     setShipmentTag(e.target.value);
   }
@@ -72,7 +75,8 @@ const ReceiptsManagement = () => {
                 <input
                   id="total"
                   onChange={handleChangeValue}
-                  className="bg-yellow-300 border text-center border-gray-300 text-gray-900 text-xs font-bold tracking-wider rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder='Enter Shipment ID'
+                  className="bg-white border border-gray-300 text-gray-900 text-xs font-bold tracking-wider rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70%] p-1.5 md:p-2.5 "
                 />
 
                 <button
@@ -144,12 +148,12 @@ const ReceiptsManagement = () => {
                 </span>
 
               </div>
-              <div className='flex items-center gap-2'>
-                <label htmlFor="total" className="block ml-8 text-xs font-medium text-black">Total Records</label>
+              <div className='flex justify-end items-center gap-3'>
+                <label htmlFor="total" className="block ml-8 text-xs font-medium text-black">TOTALS</label>
                 <input
                   id="total"
                   value={data.length}
-                  className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[10%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[15%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
             </form >

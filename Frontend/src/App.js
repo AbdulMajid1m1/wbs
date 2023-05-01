@@ -2,8 +2,8 @@ import React from 'react'
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from './pages/Login/Login'
-import TblShipmentReceving from './pages/TblShipmentRecevingCl/TblShipmentRecevingCl'
-import TblShipmentReceiveCl from './pages/TblShipmentReceiveCl/TblShipmentReceiveCl'
+import TblShipmentReceivingCl from './pages/TblShipmentReceivingCl/TblShipmentRecevingCl'
+// import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 import TblItem from './pages/TblItem/TblItem'
 // import NavBar from './components/NavBar/Navbar'
 import ShipmentRecevingId from './pages/ShipmentRecevingId/ShipmentRecevingId'
@@ -12,7 +12,6 @@ import UpdateData from './components/UpdatesItem/UpdateData'
 import AllItemsAddNew from './components/AddNew/AllItemsAddNew'
 import UpdateAllItems from './components/UpdatesItem/UpdateAllItems'
 import MainDashboard from './components/MainDashboard/MainDashboard'
-import SideBar2 from './components/SideBar/SideBar2'
 
 import TblAllLocations from './pages/TblAllLocations/TblAllLocations'
 import TblLocationsUpdates from './components/UpdatesItem/TblLocationsUpdates'
@@ -43,6 +42,7 @@ import ReceiptsManagement from './pages/ReceiptsManagement/ReceiptsManagement'
 import ReceiptsSecond from './pages/ReceiptsManagement/ReceiptsSecond'
 import ReceiptsThirdScreen from './pages/ReceiptsManagement/ReceiptsThirdScreen'
 import { ReceiptsProvider } from './contexts/ReceiptsContext'
+import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -74,14 +74,16 @@ const App = () => {
         <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
 
 
+
         <Route
           path="/*"
           element={
             <MainLayout>
               <Routes>
-                <Route path='/shipment' element={<TblShipmentReceving />} />
+                <Route path='/shipment' element={<TblShipmentReceivingCl />} />
                 <Route path='/shipmentid' element={<ShipmentRecevingId />} />
-                <Route path='/shipmentcl' element={<TblShipmentReceiveCl />} />
+                <Route path='/shipmentreceived' element={<TblShipmentReceivedCl />} />
+                {/* <Route path='/shipmentcl' element={<TblShipmentReceivedCl />} /> */}
                 <Route path='/items' element={<TblItem />} />
                 <Route path='/itemscl' element={<TblItemCl />} />
                 <Route path='/addnew' element={<AddNew title="Add New Shipment Receving Details" />} />
@@ -116,7 +118,6 @@ const App = () => {
                 {/* <Route path='/receipts' element={<ReceiptsManagement />} />
                 <Route path='/receiptsecond' element={<ReceiptsSecond />} /> */}
 
-                <Route path='/receiptthird' element={<ReceiptsThirdScreen />} />
                 <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing" />} />
                 <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data" />} />
 

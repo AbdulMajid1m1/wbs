@@ -120,6 +120,23 @@ const WBSDB = {
 
     }
   },
+  async getTblShipmentReceivingQty(req, res, next) {
+    try {
+      let query = `
+      SELECT TOP 1 QTY FROM dbo.tbl_Shipment_Receiving
+      `;
+      let request = pool1.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "Shipment quantity not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
 
 
 

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { TblShipmentReceivedClColumn } from '../../utils/datatablesource'
+import { allUserAssetsColumns } from '../../utils/datatablesource'
 // import userRequest from "../utils/userRequest";
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
+// import SideBar from '../components/SideBar/SideBar';
+import SideBar2 from '../../components/SideBar/SideBar2';
 
-const TblShipmentReceivedCl = () => {
+
+const FirstTable = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -14,7 +17,7 @@ const TblShipmentReceivedCl = () => {
       try {
 
 
-        userRequest.get("/getAllTblShipmentReceivedCL")
+        userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
 
           .then(response => {
             // response.data == "no data available" ? setData([]) : setData(response.data);
@@ -41,10 +44,10 @@ const TblShipmentReceivedCl = () => {
     <div>
 
       {/* <SideBar2 /> */}
-      <UserDataTable data={data} title="SHIPMENT RECEIVED" columnsName={TblShipmentReceivedClColumn}
+      <UserDataTable data={data} title="RECEIVING" columnsName={allUserAssetsColumns}
         backButton={true}
-        uniqueId="SERIALNUM"
-        // addNewNavigation="/addnew"
+        uniqueId="SHIPMENTID"
+        addNewNavigation="/addnew"
         ShipmentIdSearchEnable={true}
         actionColumnVisibility={true}
 
@@ -70,4 +73,4 @@ const TblShipmentReceivedCl = () => {
   )
 }
 
-export default TblShipmentReceivedCl
+export default FirstTable

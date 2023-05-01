@@ -49,7 +49,12 @@ const FigmaSidebar = () => {
 
                <div className='main-images-container' onClick={() => navigate('/shipment')}>
                     <img src={expected} className='main-inside-image' alt='' />
-                    <p className='sidebar-text'>Shipment Receivied</p>
+                    <p className='sidebar-text'>Receiving</p>
+               </div>
+
+               <div className='main-images-container' onClick={() => navigate('/shipmentreceived')}>
+                    <img src={expected} className='main-inside-image' alt='' />
+                    <p className='sidebar-text'>Shipment Received</p>
                </div>
 
                <div className='main-images-container' onClick={() => navigate('/tbldispatching')}>

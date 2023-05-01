@@ -2,8 +2,8 @@ import React from 'react'
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from './pages/Login/Login'
-import TblShipmentReceving from './pages/TblShipmentRecevingCl/TblShipmentRecevingCl'
 import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
+// import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 import TblItem from './pages/TblItem/TblItem'
 // import NavBar from './components/NavBar/Navbar'
 import ShipmentRecevingId from './pages/ShipmentRecevingId/ShipmentRecevingId'
@@ -12,7 +12,6 @@ import UpdateData from './components/UpdatesItem/UpdateData'
 import AllItemsAddNew from './components/AddNew/AllItemsAddNew'
 import UpdateAllItems from './components/UpdatesItem/UpdateAllItems'
 import MainDashboard from './components/MainDashboard/MainDashboard'
-import SideBar2 from './components/SideBar/SideBar2'
 
 import TblAllLocations from './pages/TblAllLocations/TblAllLocations'
 import TblLocationsUpdates from './components/UpdatesItem/TblLocationsUpdates'
@@ -77,9 +76,9 @@ const App = () => {
           element={
             <MainLayout>
               <Routes>
-                <Route path='/shipment' element={<TblShipmentReceving />} />
+                <Route path='/shipment' element={<TblShipmentReceivedCl />} />
                 <Route path='/shipmentid' element={<ShipmentRecevingId />} />
-                <Route path='/shipmentcl' element={<TblShipmentReceivedCl />} />
+                {/* <Route path='/shipmentcl' element={<TblShipmentReceivedCl />} /> */}
                 <Route path='/items' element={<TblItem />} />
                 <Route path='/itemscl' element={<TblItemCl />} />
                 <Route path='/addnew' element={<AddNew title="Add New Shipment Receving Details" />} />

@@ -73,6 +73,119 @@ export const assetCategoryInput = [
     },
   
   ];
+
+  
+export const TblShipmentReceivedClInput = [
+    {
+      id: "shipmentIdInput1",
+      label: "Shipment ID*",
+      name: "SHIPMENTID",
+      type: "text",
+      placeholder: "Shipment ID",
+    },
+    {
+      id: "shipmentIdInput2",
+      label: "CONTAINER ID*",
+      name: "CONTAINERID",
+      type: "text",
+      placeholder: "CONTAINER ID",
+    },
+  
+    {
+      id: "shipmentIdInput3",
+      label: "ARRIVAL WAREHOUSE*",
+      name: "ARRIVALWAREHOUSE",
+      type: "text",
+      placeholder: "ARRIVAL WAREHOUSE",
+    },
+    {
+      id: "shipmentIdInput4",
+      label: "ITEM NAME*",
+      name: "ITEMNAME",
+      type: "text",
+      placeholder: "ITEM NAME",
+    },
+    {
+      id: "shipmentIdInput5",
+      label: "ITEM ID*",
+      name: "ITEMID",
+      type: "text",
+      placeholder: "ITEM ID",
+    },
+    {
+      id: "shipmentIdInput6",
+      label: "PURCH ID*",
+      name: "PURCHID",
+      type: "text",
+      placeholder: "PURCH ID",
+    },
+    {
+      id: "shipmentIdInput7",
+      label: "CLASSIFICATION*",
+      name: "CLASSIFICATION",
+      type: "text",
+      placeholder: "CLASSIFICATION",
+    },
+    {
+      id: "shipmentIdInput8",
+      name: "SERIALNUM",
+      label: "SERIAL NUM*",
+      type: "text",
+      placeholder: "SERIAL NUM",
+    },
+    {
+      id: "shipmentIdInput9",
+      name: "RCVDCONFIGID",
+      label: "RCVD CONFIG ID*",
+      type: "text",
+      placeholder: "RCVD CONFIG ID",
+    },
+    {
+      id: "shipmentIdInput10",
+      name: "RCVD_DATE",
+      label: "RCVD DATE*",
+      type: "text",
+      placeholder: "RCVD DATE",
+    },
+    {
+      id: "shipmentIdInput11",
+      name: "GTIN",
+      label: "GTIN*",
+      type: "text",
+      placeholder: "GTIN",
+    },
+    {
+      id: "shipmentIdInput12",
+      name: "RZONE",
+      label: "RZONE*",
+      type: "text",
+      placeholder: "RZONE",
+    },
+    {
+      id: "shipmentIdInput13",
+      name: "PALLET_DATE",
+      label: "PALLET DATE*",
+      type: "text",
+      placeholder: "PALLET DATE",
+    },
+    {
+      id: "shipmentIdInput14",
+      name: "PALLETCODE",
+      label: "PALLET CODE*",
+      type: "text",
+      placeholder: "PALLET CODE",
+    },
+    {
+      id: "shipmentIdInput15",
+      name: "BIN",
+      label: "BIN*",
+      type: "text",
+      placeholder: "BIN",
+    },
+
+
+  
+  ];
   
   export const mappedBarcodesInput = [
     {

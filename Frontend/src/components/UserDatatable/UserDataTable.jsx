@@ -225,6 +225,9 @@ const UserDataTable = ({
     sessionStorage.setItem('edit', JSON.stringify(rowData));
     console.log(rowData)
     switch (uniqueId) {
+      case "SERIALNUM":
+        navigate("/shipmentupdate/" + rowData.SHIPMENTID)
+        break;
       case "SHIPMENTID":
         navigate("/update/" + rowData.SHIPMENTID)
         break;

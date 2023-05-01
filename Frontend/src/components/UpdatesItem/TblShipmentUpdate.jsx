@@ -4,9 +4,9 @@ import "../AddNew/AddNew.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { TblShipmentReceivedClInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
+import { TblShipmentReceivedClInput } from "../../utils/formSource";
 
 
 const TblShipmentUpdate = ({ inputs, title,
@@ -15,14 +15,14 @@ const TblShipmentUpdate = ({ inputs, title,
     // get id from url
     const { id } = params;
     const [rowData, setstateRowData] = useState([]);
-   
+
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({});
 
     // get state data from navigation 
 
-    const [error, setError] = useState(null);
-    const [message, setMessage] = useState(null);
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
     const navigate = useNavigate();
     // to reset snakebar messages
     const resetSnakeBarMessages = () => {
@@ -41,8 +41,8 @@ const TblShipmentUpdate = ({ inputs, title,
     })
     console.log(rowdata)
 
-  // Handle Submit
-  const handleSubmit = async event => {
+ // Handle Submit
+ const handleSubmit = async event => {
     event.preventDefault();
     setIsLoading(true);
 
@@ -100,6 +100,7 @@ const TblShipmentUpdate = ({ inputs, title,
 
                     }}
                 >
+                    {/* Spinners */}
                     <BeatLoader
                         size={18}
                         color={"#6439ff"}
@@ -145,12 +146,9 @@ const TblShipmentUpdate = ({ inputs, title,
                                                     })
                                                 }
                                             disabled={input.name === "SHIPMENTID" ? true : false}
-                                            
                                             />
                                         </div>
                                     ))}
-                                    {TblShipmentReceivedClInput.length % 2 !== 0 && <div className="formInput"></div>}
-
 
                                     <div className="buttonAdd" >
                                         <button

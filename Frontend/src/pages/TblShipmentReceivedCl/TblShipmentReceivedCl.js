@@ -45,7 +45,7 @@ const TableShipmentReceiveCl = () => {
         <UserDataTable 
         
           data={data} 
-            title="SHIPMENT RECEIVING CL" 
+            title="SHIPMENT RECEIVIED CL" 
               columnsName={allUserAssetsColumns} 
                 backButton={true} 
                   uniqueId="SHIPMENTID"

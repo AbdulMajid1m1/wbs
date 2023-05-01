@@ -3,7 +3,7 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from './pages/Login/Login'
 import TblShipmentReceving from './pages/TblShipmentRecevingCl/TblShipmentRecevingCl'
-import TblShipmentReceiveCl from './pages/TblShipmentReceiveCl/TblShipmentReceiveCl'
+import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 import TblItem from './pages/TblItem/TblItem'
 // import NavBar from './components/NavBar/Navbar'
 import ShipmentRecevingId from './pages/ShipmentRecevingId/ShipmentRecevingId'
@@ -79,7 +79,7 @@ const App = () => {
               <Routes>
                 <Route path='/shipment' element={<TblShipmentReceving />} />
                 <Route path='/shipmentid' element={<ShipmentRecevingId />} />
-                <Route path='/shipmentcl' element={<TblShipmentReceiveCl />} />
+                <Route path='/shipmentcl' element={<TblShipmentReceivedCl />} />
                 <Route path='/items' element={<TblItem />} />
                 <Route path='/itemscl' element={<TblItemCl />} />
                 <Route path='/addnew' element={<AddNew title="Add New Shipment Receving Details" />} />

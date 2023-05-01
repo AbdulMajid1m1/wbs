@@ -36,6 +36,7 @@ import TblPickingListUpdates from './components/UpdatesItem/TblPickingListUpdate
 import MappedItems from './pages/MappedItems/MappedItems'
 import AddMappedBarcodes from './components/AddNew/AddMappedBarcodes'
 import TblMappedBarCodeUpdate from './components/UpdatesItem/TblMappedBarCodeUpdate'
+import ShipmentPalletizingCl from './pages/ShipmentPalletizingCl/ShipmentPalletizingCl'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -102,6 +103,7 @@ const App = () => {
                 <Route path='/insert-mapped-barcode' element={<AddMappedBarcodes />} />
     
                 <Route path='/tblmappedbarcodesupdates/:id' element={<TblMappedBarCodeUpdate />} />
+                <Route path='/shipmentpalletizing' element={<ShipmentPalletizingCl />} />
 
               </Routes>
             </MainLayout>

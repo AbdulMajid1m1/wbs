@@ -1,89 +1,85 @@
-import "../AddNew/AddNew.css";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import "./AddNew.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { assetCategoryInput } from "../../utils/formSource";
+import { shipmentPalletizingInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 
-
-const UpdateData = ({ inputs, title,
+const AddNewPalletizing = ({ inputs, title,
+    method, apiEndPoint
 }) => {
-    const params = useParams();
-    // get id from url
-    const { id } = params;
-
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({});
-
-    // get state data from navigation 
-
+    // get selectedRow from session storage
+    const selectedRow = JSON.parse(sessionStorage.getItem("selectedRow"));
+    console.log(selectedRow);
+    const [formValues, setFormValues] = useState(selectedRow);
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
+
     const navigate = useNavigate();
-    // to reset snakebar messages
+
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
 
     };
-
-
-    const [rowdata, setRowData] = useState(() => {
-        const storedData = sessionStorage.getItem('edit');
-        const parsedData = JSON.parse(storedData);
-        // console.log(parsedData)
-        return parsedData
-    })
-    console.log(rowdata)
-
-  // Handle Submit
-  const handleSubmit = async event => {
-    event.preventDefault();
-    setIsLoading(true);
-
-    try {
-        const updatedData = {};
-
-        for (const input of assetCategoryInput) {
-            const inputName = input.name;
-            if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
-                updatedData[inputName] = formData[inputName];
-            }
-        }
-
-        updatedData["SHIPMENTID"] = id;
-
-        if (Object.keys(updatedData).length <= 1) {
-            setError("No changes detected.");
-            setIsLoading(false);
+    const handleSubmit = async event => {
+        // if form is not valid, do not submit
+        if (!event.target.checkValidity()) {
             return;
         }
+        event.preventDefault();
+        try {
+            setIsLoading(true);
 
-        const queryParameters = new URLSearchParams(updatedData).toString();
+            const data = {
+                ALS_PACKINGSLIPREF: event.target.ALS_PACKINGSLIPREF.value,
+                ALS_TRANSFERORDERTYPE: event.target.ALS_TRANSFERORDERTYPE.value,
+                TRANSFERID: event.target.TRANSFERID.value,
+                INVENTLOCATIONIDFROM: event.target.INVENTLOCATIONIDFROM.value,
+                INVENTLOCATIONIDTO: event.target.INVENTLOCATIONIDTO.value,
+                QTYTRANSFER: event.target.QTYTRANSFER.value,
+                ITEMID: event.target.ITEMID.value,
+                ITEMNAME: event.target.ITEMNAME.value,
+                CONFIGID: event.target.CONFIGID.value,
+                WMSLOCATIONID: event.target.WMSLOCATIONID.value,
+                SHIPMENTID: event.target.SHIPMENTID.value,
+            };
+            
+            console.log(data);
 
-        userRequest
-            .put(`/updateShipmentRecievingDataCL?${queryParameters}`)
-            .then((response) => {
-                setIsLoading(false);
-                console.log(response.data);
-                setMessage("Successfully Updated");
-                setTimeout(() => {
-                    navigate(-1);
-                }, 1000);
-            })
-            .catch((error) => {
-                setIsLoading(false);
-                console.log(error);
-                setError(error?.response?.data?.message ?? "Failed to Update");
-            });
-    } catch (error) {
-        setIsLoading(false);
-        console.log(error);
-        setError("Failed to Update");
-    }
-};
+            const queryParameters = new URLSearchParams(data).toString();
 
+            userRequest.post(
+                `/insertShipmentPalletizingDataCL?${queryParameters}`)
+                .then((response) => {
+                    setIsLoading(false);
+                    console.log(response.data);
+                    setMessage("Successfully Added");
+                    setTimeout(() => {
+                        navigate(-1)
+                    }, 1000)
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    setError(error?.response?.data?.message ?? "Failed to Add")
+                });
+        } catch (error) {
+            setIsLoading(false);
+            console.log(error);
+            setError("Failed to Add");
+        }
+    };
+
+    const handleInputChange = (event, inputName) => {
+        const value = event.target.value;
+        setFormValues({
+            ...formValues,
+            [inputName]: value,
+        });
+    };
     return (
         <>
 
@@ -128,20 +124,17 @@ const UpdateData = ({ inputs, title,
 
 
                             <div className="right">
+                                
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {assetCategoryInput.map((input) => (
+                                    {shipmentPalletizingInput.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                defaultValue={rowdata && rowdata[input.name]}
-                                                onChange={(e) =>
-                                                    setFormData({
-                                                        ...formData,
-                                                        [input.name]: e.target.value,
-                                                    })
-                                                }
-                                            // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
+                                                // defaultValue={selectedRow && selectedRow[input.name]}
+                                                value={formValues ? formValues[input.name] : ''}
+                                                onChange={(event) => handleInputChange(event, input.name)}
+
                                             />
                                         </div>
                                     ))}
@@ -150,7 +143,7 @@ const UpdateData = ({ inputs, title,
                                         <button
                                             style={{background: '#e69138'}}
                                             type="submit"
-                                        >Update</button>
+                                        >Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -165,4 +158,4 @@ const UpdateData = ({ inputs, title,
     );
 };
 
-export default UpdateData;
+export default AddNewPalletizing;

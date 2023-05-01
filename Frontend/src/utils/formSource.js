@@ -551,3 +551,88 @@ export const TblPickingClInsertInput = [
 
 
 ];
+
+
+
+export const shipmentPalletizingInput = [
+  {
+    id: "palletizingIdInput1",
+    name: "ALS_PACKINGSLIPREF",
+    label: "ALS PACKINGSLIP REF*",
+    type: "text",
+    placeholder: "ALS PACKINGSLIP REF",
+  },
+  {
+    id: "palletizingIdInput2",
+    label: "ALS TRANSFER ORDER TYPE*",
+    name: "ALS_TRANSFERORDERTYPE",
+    type: "text",
+    placeholder: "ALS TRANSFER ORDER TYPE",
+  },
+  {
+    id: "palletizingIdInput3",
+    label: "TRANSFER ID*",
+    name: "TRANSFERID",
+    type: "text",
+    placeholder: "TRANSFER ID",
+  },
+
+  {
+    id: "palletizingIdInput4",
+    label: "INVENT LOCATION ID FROM*",
+    name: "INVENTLOCATIONIDFROM",
+    type: "text",
+    placeholder: "INVENT LOCATION ID FROM",
+  },
+  {
+    id: "palletizingIdInput5",
+    name: "INVENTLOCATIONIDTO",
+    label: "INVENT LOCATION ID TO*",
+    type: "text",
+    placeholder: "INVENT LOCATION ID TO",
+  },
+  {
+    id: "palletizingIdInput6",
+    name: "QTYTRANSFER",
+    label: "QTY TRANSFER*",
+    type: "text",
+    placeholder: "QTY TRANSFER",
+  }, 
+  {
+    id: "palletizingIdInput7",
+    name: "ITEMID",
+    label: "ITEM ID*",
+    type: "text",
+    placeholder: "ITEM ID",
+  },  
+  {
+    id: "palletizingIdInput8",
+    name: "ITEMNAME",
+    label: "ITEM NAME*",
+    type: "text",
+    placeholder: "ITEM NAME",
+  },   
+  {
+    id: "palletizingIdInput9",
+    name: "CONFIGID",
+    label: "CONFIG ID*",
+    type: "text",
+    placeholder: "CONFIG ID",
+  },
+  {
+    id: "palletizingIdInput10",
+    name: "WMSLOCATIONID",
+    label: "WMS LOCATION ID*",
+    type: "text",
+    placeholder: "WMS LOCATION ID",
+  },
+  {
+    id: "palletizingIdInput11",
+    name: "SHIPMENTID",
+    label: "SHIPMENT ID*",
+    type: "text",
+    placeholder: "SHIPMENT ID",
+  },
+
+
+];

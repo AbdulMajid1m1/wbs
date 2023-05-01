@@ -231,7 +231,9 @@ const UserDataTable = ({
       case "ItemCode":
         navigate("/tblmappedbarcodesupdates/" + rowData.ItemCode)
         break;
-        
+      case "TRANSFERID":
+        navigate("/updatepalletizing/" + rowData.ALS_PACKINGSLIPREF)
+        break;
       // case "ITEMNAME":
       //   navigate("/allitems/" + rowData.ITEMNAME)
       //   break;

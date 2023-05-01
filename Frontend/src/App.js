@@ -37,6 +37,10 @@ import MappedItems from './pages/MappedItems/MappedItems'
 import AddMappedBarcodes from './components/AddNew/AddMappedBarcodes'
 import TblMappedBarCodeUpdate from './components/UpdatesItem/TblMappedBarCodeUpdate'
 import ShipmentPalletizingCl from './pages/ShipmentPalletizingCl/ShipmentPalletizingCl'
+import AddNewPalletizing from './components/AddNew/AddNewPalletizing'
+import TblUpdatePalletizing from './components/UpdatesItem/TblUpdatePalletizing'
+import ReceiptsManagement from './pages/ReceiptsManagement/ReceiptsManagement'
+import ReceiptsSecond from './pages/ReceiptsManagement/ReceiptsSecond'
 
 const LoginLayout = ({ children }) => {
   return <>{children}</>;
@@ -104,7 +108,11 @@ const App = () => {
     
                 <Route path='/tblmappedbarcodesupdates/:id' element={<TblMappedBarCodeUpdate />} />
                 <Route path='/shipmentpalletizing' element={<ShipmentPalletizingCl />} />
-
+                <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing"/>} />
+                <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data"/>} />
+                <Route path='/receipts' element={<ReceiptsManagement />} />
+                <Route path='/receiptsecond' element={<ReceiptsSecond />} />
+                
               </Routes>
             </MainLayout>
           } />

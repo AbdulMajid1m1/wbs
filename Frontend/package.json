@@ -25,6 +25,7 @@
     "sass": "^1.62.0",
     "scss": "^0.2.4",
     "style-loader": "^3.3.2",
+    "sweetalert2": "^11.7.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

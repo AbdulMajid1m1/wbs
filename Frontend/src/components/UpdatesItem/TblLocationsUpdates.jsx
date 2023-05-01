@@ -150,6 +150,7 @@ const TblAllLocationsUpdates = ({ inputs, title,
 
                                     <div className="buttonAdd" >
                                         <button
+                                            style={{background: '#e69138'}}
                                             type="submit"
                                         >Update</button>
                                     </div>

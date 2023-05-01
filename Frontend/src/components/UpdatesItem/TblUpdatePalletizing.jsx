@@ -2,24 +2,25 @@ import "../AddNew/AddNew.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { assetCategoryInput } from "../../utils/formSource";
+import { shipmentPalletizingInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 
 
-const UpdateData = ({ inputs, title,
+const TblUpdatePalletizing = ({ inputs, title,
 }) => {
     const params = useParams();
     // get id from url
     const { id } = params;
+    const [rowData, setstateRowData] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({});
 
     // get state data from navigation 
 
-    const [error, setError] = useState(false);
-    const [message, setMessage] = useState("");
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
     const navigate = useNavigate();
     // to reset snakebar messages
     const resetSnakeBarMessages = () => {
@@ -27,6 +28,7 @@ const UpdateData = ({ inputs, title,
         setMessage(null);
 
     };
+
 
 
     const [rowdata, setRowData] = useState(() => {
@@ -37,22 +39,22 @@ const UpdateData = ({ inputs, title,
     })
     console.log(rowdata)
 
-  // Handle Submit
-  const handleSubmit = async event => {
+ // Handle Submit
+ const handleSubmit = async event => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
         const updatedData = {};
 
-        for (const input of assetCategoryInput) {
+        for (const input of shipmentPalletizingInput) {
             const inputName = input.name;
             if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
                 updatedData[inputName] = formData[inputName];
             }
         }
 
-        updatedData["SHIPMENTID"] = id;
+        updatedData["ALS_PACKINGSLIPREF"] = id;
 
         if (Object.keys(updatedData).length <= 1) {
             setError("No changes detected.");
@@ -63,7 +65,7 @@ const UpdateData = ({ inputs, title,
         const queryParameters = new URLSearchParams(updatedData).toString();
 
         userRequest
-            .put(`/updateShipmentRecievingDataCL?${queryParameters}`)
+            .put(`/updateShipmentPalletizingDataCL?${queryParameters}`)
             .then((response) => {
                 setIsLoading(false);
                 console.log(response.data);
@@ -129,7 +131,7 @@ const UpdateData = ({ inputs, title,
 
                             <div className="right">
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {assetCategoryInput.map((input) => (
+                                    {shipmentPalletizingInput.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
@@ -141,10 +143,13 @@ const UpdateData = ({ inputs, title,
                                                         [input.name]: e.target.value,
                                                     })
                                                 }
-                                            // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
+                                                disabled={input.name === "ALS_PACKINGSLIPREF" ? true : false}
                                             />
                                         </div>
+
                                     ))}
+                                    {shipmentPalletizingInput.length % 2 !== 0 && <div className="formInput"></div>}
+
 
                                     <div className="buttonAdd" >
                                         <button
@@ -165,4 +170,4 @@ const UpdateData = ({ inputs, title,
     );
 };
 
-export default UpdateData;
+export default TblUpdatePalletizing;

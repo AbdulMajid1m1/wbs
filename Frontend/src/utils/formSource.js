@@ -343,16 +343,22 @@ export const allItemsInput = [
 ];
 
 export const updateAllItemsInput = [
-  
   {
     id: "allItemsInput1",
+    label: "ITEM ID*",
+    name: "ITEMID",
+    type: "text",
+    placeholder: "ITEM ID",
+  },
+  {
+    id: "allItemsInput2",
     label: "ITEM NAME*",
     name: "ITEMNAME",
     type: "text",
     placeholder: "ITEM NAME",
   },
   {
-    id: "allItemsInput2",
+    id: "allItemsInput3",
     label: "ITEM GROUP ID*",
     name: "ITEMGROUPID",
     type: "text",

@@ -74,8 +74,6 @@ const App = () => {
         <Route path="/receiptsecond" element={<ReceiptsProvider><ReceiptsSecond /></ReceiptsProvider>} />
         <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
 
-
-
         <Route
           path="/*"
           element={

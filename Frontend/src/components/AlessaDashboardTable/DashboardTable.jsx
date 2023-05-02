@@ -1,19 +1,21 @@
 import "./DashboardTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 // import logo from "../../../images/download.png";
 import CustomSnakebar from "../../utils/CustomSnakebar";
+import { ReceiptsContext } from "../../contexts/ReceiptsContext";
 
 const DashboardTable = ({
     columnsName,
     data,
     title,
+    uniqueId,
 }) => {
     const navigate = useNavigate();
     const [record, setRecord] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
-
+    const { statedata, updateData } = useContext(ReceiptsContext);
     const [qrcodeValue, setQRCodeValue] = useState('');
     const [selectedRow, setSelectedRow] = useState([]);
     const [selectedRowIndex, setSelectedRowIndex] = useState(null);
@@ -29,17 +31,6 @@ const DashboardTable = ({
 
     // Retrieve the value with the key "myKey" from localStorage getvalue
     const myValue = localStorage.getItem("userId");
-    // useEffect(() => {
-
-    //     setRecord(() => {
-    //         data.map((item, index) => {
-    //             item.id = index + 1;
-    //         });
-    //         setRecord(
-    //             data.map((item, index) => ({ ...item, id: index + 1 }))
-    //         );
-    //     });
-    // }, [data]);
     useEffect(() => {
         if (data) {
             setRecord(
@@ -49,11 +40,12 @@ const DashboardTable = ({
     }, [data]);
 
 
+
     console.log("see the data");
     console.log(data);
 
 
-  
+
     const CustomCell = (params) => {
         const style = {
             whiteSpace: 'nowrap',
@@ -84,6 +76,18 @@ const DashboardTable = ({
             width: 30,
         },
     ];
+
+    const handleRowClick = (rowData, idx) => {
+        if (uniqueId === "receiptsManagement") {
+            updateData(rowData);
+            sessionStorage.setItem("POQTY", rowData.POQTY);
+            navigate("/receiptsecond")
+        }
+        else {
+            return
+        }
+
+    };
 
     return (
         <>
@@ -117,8 +121,9 @@ const DashboardTable = ({
                     checkboxSelection={false}
                     onRowClick={(params, rowIdx) => {
                         // call your handle function and pass the row data as a parameter
-                        // handleRowClick(params.row, rowIdx);
+                        handleRowClick(params.row, rowIdx);
                     }}
+
                 />
 
                 {/* Displaying myValue inside the table Value in center*/}

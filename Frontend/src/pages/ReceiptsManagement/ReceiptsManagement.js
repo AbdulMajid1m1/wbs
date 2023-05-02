@@ -139,7 +139,13 @@ const ReceiptsManagement = () => {
                   </table>
                 </div> */}
 
-                <DashboardTable data={data} title={"Receipts Management"} columnsName={TblShipmentReceivedClColumn}/>
+                <DashboardTable data={data} title={"Receipts Management"} columnsName={TblShipmentReceivedClColumn}
+                  uniqueId="receiptsManagement"
+
+        
+
+
+                />
               </div >
 
               <div className="mb-6">

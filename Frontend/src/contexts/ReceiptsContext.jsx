@@ -3,6 +3,7 @@ import React, { createContext, useState, useEffect } from 'react';
 export const ReceiptsContext = createContext();
 
 export const ReceiptsProvider = ({ children }) => {
+    let date = Date.now();
     const initialData = JSON.parse(sessionStorage.getItem('receiptData')) || {
         ARRIVALWAREHOUSE: '',
         BIN: '',
@@ -12,13 +13,16 @@ export const ReceiptsProvider = ({ children }) => {
         ITEMID: '',
         ITEMNAME: '',
         PALLETCODE: '',
-        PALLET_DATE: '',
+        PALLET_DATE: date,
         PURCHID: '',
         RCVDCONFIGID: '',
-        RCVD_DATE: '',
+        RCVD_DATE: date,
         RZONE: '',
         SERIALNUM: '',
-        SHIPMENTID: ''
+        SHIPMENTID: '',
+        POQTY: '',
+        RCVQTY: "",
+        REMAININGQTY: '',
     };
 
     const [statedata, setSateData] = useState(initialData);

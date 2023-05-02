@@ -14,19 +14,7 @@ const ReceiptsThirdScreen = () => {
 
   ])
 
-  useEffect(() => {
-    console.log('Updated data:', statedata);
 
-    userRequest.get("/getTblShipmentReceivingQty")
-      .then(response => {
-        setQuantity(response?.data[0].QTY ?? null);
-      }
-      )
-      .catch(error => {
-        console.error(error);
-      }
-      );
-  }, []);
 
   // const handleInsert = () => {
   //   if (SERIALNUM === null || SERIALNUM === '') {
@@ -46,7 +34,8 @@ const ReceiptsThirdScreen = () => {
       return;
     }
 
-
+    console.log(statedata);
+    statedata.REMAININGQTY = statedata.POQTY - statedata.RCVQTY
 
     const queryParameters = new URLSearchParams(statedata).toString();
     try {
@@ -113,11 +102,11 @@ const ReceiptsThirdScreen = () => {
                 <div className='flex gap-4'>
                   <div className='flex flex-col justify-center items-center gap-2'>
                     <span>Qty</span>
-                    <span>{quantity}</span>
+                    <span>{statedata?.POQTY ?? ""}</span>
                   </div>
                   <div className='flex flex-col justify-center items-center gap-2'>
                     <span>Received Qty</span>
-                    <span>{tableData.length}</span>
+                    <span>{statedata.RCVQTY}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center gap-2'>

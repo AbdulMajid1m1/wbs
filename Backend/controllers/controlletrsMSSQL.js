@@ -698,6 +698,7 @@ const WBSDB = {
   },
 
   // post request to insert data 
+
   async insertShipmentRecievedDataCL(req, res, next) {
     try {
       const {
@@ -716,53 +717,60 @@ const WBSDB = {
         PALLET_DATE,
         PALLETCODE,
         BIN,
-        REMARKS
+        REMARKS,
+        POQTY,
+        RCVQTY,
+        REMAININGQTY,
       } = req.query;
 
       const checkSerialNumQuery = `
-        SELECT COUNT(*) as count
-        FROM dbo.tbl_Shipment_Received_CL
-        WHERE SERIALNUM = @SERIALNUM
-      `;
+          SELECT COUNT(*) as count
+          FROM dbo.tbl_Shipment_Received_CL
+          WHERE SERIALNUM = @SERIALNUM
+        `;
 
       let request = pool2.request();
-      request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
+      request.input("SERIALNUM", sql.NVarChar, SERIALNUM);
 
       const checkSerialNumResult = await request.query(checkSerialNumQuery);
       if (checkSerialNumResult.recordset[0].count > 0) {
-        res.status(409).send({ message: 'Error: SerialNum already exists.' });
+        res.status(409).send({ message: "Error: SerialNum already exists." });
         return;
       }
 
       const query = `
-        INSERT INTO dbo.tbl_Shipment_Received_CL
-          (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN, REMARKS)
-        VALUES
-          (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS)
-      `;
+          INSERT INTO dbo.tbl_Shipment_Received_CL
+            (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN, REMARKS, POQTY, RCVQTY, REMAININGQTY)
+          VALUES
+            (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS, @POQTY, @RCVQTY, @REMAININGQTY)
+        `;
 
-      request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
-      request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
-      request.input('ARRIVALWAREHOUSE', sql.NVarChar, ARRIVALWAREHOUSE);
-      request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
-      request.input('ITEMID', sql.NVarChar, ITEMID);
-      request.input('PURCHID', sql.NVarChar, PURCHID);
-      request.input('CLASSIFICATION', sql.Float, CLASSIFICATION);
-      request.input('RCVDCONFIGID', sql.NVarChar, RCVDCONFIGID);
-      request.input('RCVD_DATE', sql.Date, RCVD_DATE);
-      request.input('GTIN', sql.NVarChar, GTIN);
-      request.input('RZONE', sql.NVarChar, RZONE);
-      request.input('PALLET_DATE', sql.Date, PALLET_DATE);
-      request.input('PALLETCODE', sql.NVarChar, PALLETCODE);
-      request.input('BIN', sql.NVarChar, BIN);
-      request.input('REMARKS', sql.NVarChar, REMARKS);
+      request.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
+      request.input("CONTAINERID", sql.NVarChar, CONTAINERID);
+      request.input("ARRIVALWAREHOUSE", sql.NVarChar, ARRIVALWAREHOUSE);
+      request.input("ITEMNAME", sql.NVarChar, ITEMNAME);
+      request.input("ITEMID", sql.NVarChar, ITEMID);
+      request.input("PURCHID", sql.NVarChar, PURCHID);
+      request.input("CLASSIFICATION", sql.Float, CLASSIFICATION);
+      request.input("RCVDCONFIGID", sql.NVarChar, RCVDCONFIGID);
+      request.input("RCVD_DATE", sql.Date, RCVD_DATE);
+      request.input("GTIN", sql.NVarChar, GTIN);
+      request.input("RZONE", sql.NVarChar, RZONE);
+      request.input("PALLET_DATE", sql.Date, PALLET_DATE);
+      request.input("PALLETCODE", sql.NVarChar, PALLETCODE);
+      request.input("BIN", sql.NVarChar, BIN);
+      request.input("REMARKS", sql.NVarChar, REMARKS);
+      request.input("POQTY", sql.Numeric(18, 0), POQTY);
+      request.input("RCVQTY", sql.Numeric(18, 0), RCVQTY);
+      request.input("REMAININGQTY", sql.Numeric(18, 0), REMAININGQTY);
 
       await request.query(query);
-      res.status(201).send({ message: 'Shipment data inserted successfully.' });
+      res.status(201).send({ message: "Shipment data inserted successfully." });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
+
   },
 
 

@@ -157,6 +157,12 @@ export const TblShipmentReceivedClColumn = [
     width: 180,
 
   },
+  {
+    field: "REMARKS",
+    headerName: "REMARKS",
+    width: 180,
+
+  },
 
 
 

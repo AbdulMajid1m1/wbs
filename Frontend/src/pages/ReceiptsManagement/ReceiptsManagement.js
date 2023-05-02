@@ -6,6 +6,9 @@ import userRequest from "../../utils/userRequest"
 import "./ReceiptsManagement.css";
 import Swal from 'sweetalert2';
 import { ReceiptsContext } from '../../contexts/ReceiptsContext';
+import UserDataTable from '../../components/UserDatatable/UserDataTable';
+import { TblShipmentReceivedClColumn } from '../../utils/datatablesource';
+import DashboardTable from '../../components/AlessaDashboardTable/DashboardTable';
 
 
 const ReceiptsManagement = () => {
@@ -82,19 +85,20 @@ const ReceiptsManagement = () => {
 
                 <button
                   type='submit'
-                  className="bg-[#e69138] hover:bg-[#efae68] text-black font-medium py-1 px-6 rounded-sm w-[15%]">
-                  <span>
-                    <img src={accept} className='h-6 w-9' alt='' />
+                  className="bg-[#e69138] hover:bg-[#efae68] text-white font-medium py-1 px-6 rounded-sm w-[15%]">
+                  <span className='flex justify-center items-center'>
+                    <p>Click</p>
+                    {/* <img src={accept} className='h-6 w-9' alt='' /> */}
                   </span>
                 </button>
 
               </div>
 
               <div className="mb-6">
-                <label className="block mb-2 text-xs font-medium text-black">Receipts Management</label>
+                {/* <label className="block mb-2 text-xs font-medium text-black">Receipts Management</label> */}
 
                 {/* // creae excel like Tables  */}
-                <div className="table-location-generate">
+                {/* <div className="table-location-generate">
                   <table>
                     <thead>
                       <tr>
@@ -133,18 +137,20 @@ const ReceiptsManagement = () => {
                       }
                     </tbody>
                   </table>
-                </div>
+                </div> */}
+
+                <DashboardTable data={data} title={"Receipts Management"} columnsName={TblShipmentReceivedClColumn}/>
               </div >
 
               <div className="mb-6">
                 <span
                   onClick={handleNextBtnClick}
                 >
-                  <button
+                  {/* <button
                     className="bg-gray-300 hover:bg-gray-400 border border-gray-300 font-bold tracking-wider text-gray-900 text-xs rounded-lg block w-full p-1.5 md:p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
                     Next Screen
-                  </button>
+                  </button> */}
                 </span>
 
               </div>
@@ -153,7 +159,7 @@ const ReceiptsManagement = () => {
                 <input
                   id="total"
                   value={data.length}
-                  className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[15%] p-1.5 md:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[15%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
             </form >

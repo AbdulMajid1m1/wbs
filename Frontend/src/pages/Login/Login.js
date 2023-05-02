@@ -5,6 +5,7 @@ import axios from 'axios'
 import baseUrl from '../../utils/config'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,11 +24,20 @@ const Login = () => {
         Cookies.set("accessToken", response?.data?.token);
         navigate("/dashboard");
 
-
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Welcome To Warehouse Dashboard',
+        })
 
       })
       .catch((error) => {
         console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.message ?? 'Something went wrong!',
+        })
       });
   }
 

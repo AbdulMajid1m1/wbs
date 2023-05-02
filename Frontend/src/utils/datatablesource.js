@@ -163,6 +163,24 @@ export const TblShipmentReceivedClColumn = [
     width: 180,
 
   },
+  {
+    field: "POQTY",
+    headerName: "PO QTY",
+    width: 180,
+
+  },
+  {
+    field: "RCVQTY",
+    headerName: "RCV QTY",
+    width: 180,
+
+  },
+  {
+    field: "REMAININGQTY",
+    headerName: "REMAINING QTY",
+    width: 180,
+
+  },
 
 
 

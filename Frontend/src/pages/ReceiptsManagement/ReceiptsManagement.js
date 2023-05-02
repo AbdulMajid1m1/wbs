@@ -7,21 +7,24 @@ import "./ReceiptsManagement.css";
 import Swal from 'sweetalert2';
 import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
-import { TblShipmentReceivedClColumn } from '../../utils/datatablesource';
+import { TblReceiptsManagementColumn } from '../../utils/datatablesource';
 import DashboardTable from '../../components/AlessaDashboardTable/DashboardTable';
 
 
 const ReceiptsManagement = () => {
   const navigate = useNavigate();
   const { statedata, updateData } = useContext(ReceiptsContext);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(
+    JSON.parse(sessionStorage.getItem('receiptsData')) ?? []
+
+  );
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState(0);
   const [shipmentTag, setShipmentTag] = useState('');
 
   const handleRowClick = (rowData, index) => {
     setSelectedRowIndex(index);
-    
+
     setSelectedRow(rowData);
     updateData(rowData); // update context data
   };
@@ -42,8 +45,12 @@ const ReceiptsManagement = () => {
     userRequest.post(`/getShipmentDataFromtShipmentReceiving?SHIPMENTID=${shipmentTag}`)
       .then(response => {
         console.log(response?.data);
+
         setData(response?.data ?? []);
         setSelectedRow(response?.data[0] ?? []);
+        // save data in session storage
+        sessionStorage.setItem('receiptsData', JSON.stringify(response?.data ?? []));
+     
       })
 
       .catch(error => {
@@ -53,17 +60,7 @@ const ReceiptsManagement = () => {
   }
 
 
-  useEffect(() => {
 
-  }, []);
-
-
-
-  const handleNextBtnClick = () => {
-
-    navigate('/receiptsecond')
-  }
-  //   }
   return (
     <>
 
@@ -87,7 +84,7 @@ const ReceiptsManagement = () => {
                   type='submit'
                   className="bg-[#e69138] hover:bg-[#efae68] text-white font-medium py-1 px-6 rounded-sm w-[15%]">
                   <span className='flex justify-center items-center'>
-                    <p>Click</p>
+                    <p>Find</p>
                     {/* <img src={accept} className='h-6 w-9' alt='' /> */}
                   </span>
                 </button>
@@ -95,68 +92,14 @@ const ReceiptsManagement = () => {
               </div>
 
               <div className="mb-6">
-                {/* <label className="block mb-2 text-xs font-medium text-black">Receipts Management</label> */}
 
-                {/* // creae excel like Tables  */}
-                {/* <div className="table-location-generate">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>SHIPMENTSTATUS</th>
-                        <th>ENTITY</th>
-                        <th>CONTAINERID</th>
-                        <th>ARRIVALWAREHOUSE</th>
-                        <th>ITEMNAME</th>
-                        <th>QTY</th>
-                        <th>ITEMID</th>
-                        <th>PURCHID</th>
-                        <th>CLASSIFICATION</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.length > 0 &&
-                        data.map((item, index) => {
-                          return (
-                            <tr
-                              key={index}
-                              onClick={() => handleRowClick(item, index)}
-                              style={{ backgroundColor: selectedRowIndex === index && 'orange' }}
-                            >
-                              <td>{item.SHIPMENTSTATUS}</td>
-                              <td>{item.ENTITY}</td>
-                              <td>{item.CONTAINERID}</td>
-                              <td>{item.ARRIVALWAREHOUSE}</td>
-                              <td>{item.ITEMNAME}</td>
-                              <td>{item.QTY}</td>
-                              <td>{item.ITEMID}</td>
-                              <td>{item.PURCHID}</td>
-                              <td>{item.CLASSIFICATION}</td>
-                            </tr>
-                          )
-                        })
-                      }
-                    </tbody>
-                  </table>
-                </div> */}
-
-                <DashboardTable data={data} title={"Receipts Management"} columnsName={TblShipmentReceivedClColumn}
+                <DashboardTable data={data} title={"Receipts Management"} columnsName={TblReceiptsManagementColumn}
                   uniqueId="receiptsManagement"
 
                 />
               </div >
 
-              <div className="mb-6">
-                <span
-                  onClick={handleNextBtnClick}
-                >
-                  {/* <button
-                    className="bg-gray-300 hover:bg-gray-400 border border-gray-300 font-bold tracking-wider text-gray-900 text-xs rounded-lg block w-full p-1.5 md:p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    Next Screen
-                  </button> */}
-                </span>
 
-              </div>
               <div className='flex justify-end items-center gap-3'>
                 <label htmlFor="total" className="block ml-8 text-xs font-medium text-black">TOTALS</label>
                 <input

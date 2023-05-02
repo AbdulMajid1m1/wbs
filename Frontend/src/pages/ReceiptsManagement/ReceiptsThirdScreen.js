@@ -6,7 +6,7 @@ import userRequest from '../../utils/userRequest';
 import Swal from 'sweetalert2';
 
 const ReceiptsThirdScreen = () => {
-  const { statedata, updateData } = useContext(ReceiptsContext);
+  const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
   const [quantity, setQuantity] = useState(null);
   const [SERIALNUM, setSERIALNUM] = useState('');
 
@@ -16,17 +16,6 @@ const ReceiptsThirdScreen = () => {
 
 
 
-  // const handleInsert = () => {
-  //   if (SERIALNUM === null || SERIALNUM === '') {
-  //     return;
-  //   }
-
-  //   setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: "G" }]);
-  //   setSERIALNUM('');
-
-  //   // empty the input field
-  //   document.getElementById('SERIALNUM').value = '';
-  // }
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +24,7 @@ const ReceiptsThirdScreen = () => {
     }
 
     console.log(statedata);
-    statedata.REMAININGQTY = statedata.POQTY - statedata.RCVQTY
+    statedata.REMAININGQTY = statedata.POQTY - 1;
 
     const queryParameters = new URLSearchParams(statedata).toString();
     try {
@@ -45,13 +34,6 @@ const ReceiptsThirdScreen = () => {
 
       console.log(response?.data);
       setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID }]);
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Data inserted successfully',
-      })
-
     }
     catch (error) {
 
@@ -106,7 +88,7 @@ const ReceiptsThirdScreen = () => {
                   </div>
                   <div className='flex flex-col justify-center items-center gap-2'>
                     <span>Received Qty</span>
-                    <span>{statedata.RCVQTY}</span>
+                    <span>{Number(serialNumLength) + Number(tableData.length)}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center gap-2'>
@@ -136,28 +118,14 @@ const ReceiptsThirdScreen = () => {
                   onChange={(e) => {
                     updateData({ ...statedata, SERIALNUM: e.target.value });
                     setSERIALNUM(e.target.value);
-
-                  }
-                  }
+                  }}
+                  onBlur={handleFormSubmit}
                 />
               </div>
+
               <div className='mb-6'>
                 <label htmlFor="selectConfig" className="block mb-2 text-xs font-medium text-black">List of Item Config</label>
 
-                {/* <select
-                  name="selectConfig"
-                  id="selectCongigId"
-                  className="bg-gray-50 border-2 text-gray-900 text-xs rounded-lg focus:ring-bg-[#e69138]-500 focus:border-orange-500 block w-full p-2 md:p-3 dark:focus:ring-orange-500 dark:focus:border-orange-500"
-                  onChange={(e) => {
-                    updateData({ ...statedata, RCVDCONFIGID: e.target.value });
-                  }}
-                >
-                  <option value="G">G</option>
-                  <option value="D">D</option>
-                  <option value="DC">DC</option>
-                  <option value="MCI">MCI</option>
-                  <option value="S">S</option>
-                </select> */}
                 <select
                   name="selectConfig"
                   id="selectCongigId"
@@ -186,12 +154,12 @@ const ReceiptsThirdScreen = () => {
                   }
                 />
               </div>
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <button type='submit'
                   className="bg-[#e69138] text-white font-semibold py-2 px-10 rounded-sm">
                   Insert Serial Number
                 </button>
-              </div>
+              </div> */}
 
               <div className="mb-6">
                 {/* // creae excel like Tables  */}
@@ -223,13 +191,6 @@ const ReceiptsThirdScreen = () => {
                 </div>
               </div >
 
-              {/* </div> */}
-
-              <div className="mt-4 md:mt-10 w-full flex justify-end text-sm md:text-xl py-2 rounded-md">
-                {/* <button type='submit' className="bg-[#e69138] text-white font-semibold py-2 px-10 rounded-sm">
-                  Save
-                </button> */}
-              </div>
             </form>
           </div>
         </div >

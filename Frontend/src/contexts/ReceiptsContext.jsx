@@ -6,6 +6,8 @@ export const ReceiptsContext = createContext();
 export const ReceiptsProvider = ({ children }) => {
     // get ios date format
     const date = new Date().toISOString().slice(0, 10);
+    const [serialNumLength, setSerialNumLength] = useState('');
+
     console.log(date);
     const initialData = JSON.parse(sessionStorage.getItem('receiptData')) || {
         ARRIVALWAREHOUSE: '',
@@ -24,7 +26,7 @@ export const ReceiptsProvider = ({ children }) => {
         SERIALNUM: '',
         SHIPMENTID: '',
         POQTY: '',
-        RCVQTY: "",
+        RCVQTY: 1,
         REMAININGQTY: '',
     };
 
@@ -40,7 +42,8 @@ export const ReceiptsProvider = ({ children }) => {
 
                 .then(response => {
                     console.log(response?.data);
-                    updateData({ RCVQTY: response?.data.length });
+
+                    setSerialNumLength(response?.data?.length ?? '');
 
                 })
                 .catch(error => {
@@ -56,7 +59,7 @@ export const ReceiptsProvider = ({ children }) => {
     };
 
     return (
-        <ReceiptsContext.Provider value={{ statedata, updateData }}>
+        <ReceiptsContext.Provider value={{ serialNumLength, statedata, updateData }}>
             {children}
         </ReceiptsContext.Provider>
     );

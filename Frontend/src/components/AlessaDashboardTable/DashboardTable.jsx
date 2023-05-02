@@ -89,7 +89,6 @@ const DashboardTable = ({
             let newData = updateRowData(rowData);
             console.log("newData", newData);
             updateData(newData);
-
             navigate("/receiptsecond")
         }
         else {

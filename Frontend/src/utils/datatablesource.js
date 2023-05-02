@@ -187,6 +187,126 @@ export const TblShipmentReceivedClColumn = [
 ];
 
 
+export const TblReceiptsManagementColumn = [
+  {
+    field: "SHIPMENTID",
+    headerName: "SHIPMENT ID",
+    width: 180,
+
+  },
+  {
+    field: "CONTAINERID",
+    headerName: "CONTAINER ID",
+    width: 180,
+
+  },
+  {
+    field: "ARRIVALWAREHOUSE",
+    headerName: "ARRIVAL WAREHOUSE",
+    width: 180,
+
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEM NAME",
+    width: 180,
+
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "PURCHID",
+    headerName: "PURCH ID",
+    width: 180,
+
+  },
+  {
+    field: "CLASSIFICATION",
+    headerName: "CLASSIFICATION",
+    width: 180,
+
+  },
+  {
+    field: "SERIALNUM",
+    headerName: "SERIAL NUM",
+    width: 180,
+
+  },
+  {
+    field: "RCVDCONFIGID",
+    headerName: "RCVD CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "RCVD_DATE",
+    headerName: "RCVD DATE",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+  {
+    field: "RZONE",
+    headerName: "RZONE",
+    width: 180,
+
+  },
+  {
+    field: "PALLET_DATE",
+    headerName: "PALLET DATE",
+    width: 180,
+
+  },
+  {
+    field: "PALLETCODE",
+    headerName: "PALLET CODE",
+    width: 180,
+
+  },
+  {
+    field: "BIN",
+    headerName: "BIN",
+    width: 180,
+
+  },
+  {
+    field: "REMARKS",
+    headerName: "REMARKS",
+    width: 180,
+
+  },
+  {
+    field: "QTY",
+    headerName: "PO QTY",
+    width: 180,
+
+  },
+  {
+    field: "RCVQTY",
+    headerName: "RCV QTY",
+    width: 180,
+
+  },
+  {
+    field: "REMAININGQTY",
+    headerName: "REMAINING QTY",
+    width: 180,
+
+  },
+
+
+
+];
+
 export const AllItems = [
   {
     field: "ITEMID",

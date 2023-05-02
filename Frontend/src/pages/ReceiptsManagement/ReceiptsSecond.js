@@ -8,7 +8,7 @@ import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 const ReceiptsSecond = () => {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(null);
-  const { statedata, updateData } = useContext(ReceiptsContext);
+  const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
 
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
@@ -70,7 +70,7 @@ const ReceiptsSecond = () => {
                   </div>
                   <div className='flex flex-col justify-center items-center gap-2'>
                     <span>Received Qty</span>
-                    <span>0</span>
+                    <span>{serialNumLength}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center gap-2'>

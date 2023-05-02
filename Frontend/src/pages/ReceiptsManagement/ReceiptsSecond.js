@@ -42,6 +42,11 @@ const ReceiptsSecond = () => {
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#e69138] text-xl mb:2 md:mb-5">
 
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
+                <div className='w-full flex justify-end'>
+                <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm bg-[#fff] text-[#e69138]'>
+                    Back
+                </button>
+                </div>
                 <span className='text-white'>JOB ORDER NUMBER</span>
                 <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                   block w-full p-1.5 md:p-2.5 " placeholder="Job Order Number"
@@ -57,23 +62,23 @@ const ReceiptsSecond = () => {
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center sm:text-lg gap-2'>
                   <span>Item Code:</span>
                   <span>{statedata?.ITEMID ?? ''}</span>
 
                 </div>
 
                 <div className='flex gap-4'>
-                  <div className='flex flex-col justify-center items-center gap-2'>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>
                     <span>Qty</span>
                     <span>{statedata?.POQTY ?? ""}</span>
                   </div>
-                  <div className='flex flex-col justify-center items-center gap-2'>
+                  <div className='flex flex-col justify-center items-center text-center sm:text-lg gap-2'>
                     <span>Received Qty</span>
                     <span>{serialNumLength}</span>
                   </div>
 
-                  <div className='flex flex-col justify-center items-center gap-2'>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>
                     <span>CON</span>
                     <span>{statedata?.CLASSIFICATION ?? ""}</span>
                   </div>

@@ -32,6 +32,7 @@ const ReceiptsManagement = () => {
 
 
 
+
   const handleChangeValue = (e) => {
     setShipmentTag(e.target.value);
   }

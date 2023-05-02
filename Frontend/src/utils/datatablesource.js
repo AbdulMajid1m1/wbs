@@ -164,7 +164,7 @@ export const TblShipmentReceivedClColumn = [
 
   },
   {
-    field: "POQTY",
+    field: "QTY",
     headerName: "PO QTY",
     width: 180,
 

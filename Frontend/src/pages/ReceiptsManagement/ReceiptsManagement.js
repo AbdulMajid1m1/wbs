@@ -39,7 +39,7 @@ const ReceiptsManagement = () => {
   const handleForm = (e) => {
     e.preventDefault();
 
-    userRequest.post(`/getShipmentRecievedCLDataCByShipmentId?SHIPMENTID=${shipmentTag}`)
+    userRequest.post(`/getShipmentDataFromtShipmentReceiving?SHIPMENTID=${shipmentTag}`)
       .then(response => {
         console.log(response?.data);
         setData(response?.data ?? []);

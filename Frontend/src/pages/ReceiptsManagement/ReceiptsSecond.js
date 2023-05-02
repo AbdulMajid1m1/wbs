@@ -43,7 +43,7 @@ const ReceiptsSecond = () => {
 
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
                 <div className='w-full flex justify-end'>
-                <button onClick={() => navigate(-1)} className='text-white w-[15%] rounded-sm bg-[#00006B]'>
+                <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm bg-[#fff] text-[#e69138]'>
                     Back
                 </button>
                 </div>

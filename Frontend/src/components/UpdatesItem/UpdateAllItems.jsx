@@ -144,7 +144,7 @@ const UpdateAllItems = ({ inputs, title,
                                                         [input.name]: e.target.value,
                                                     })
                                                 }
-                                            // disabled={input.name === "MainCategoryCode" || input.name === "SubCategoryCode" ? true : false}
+                                                disabled={input.name === "ITEMID" ? true : false}
                                             />
                                         </div>
                                     ))}

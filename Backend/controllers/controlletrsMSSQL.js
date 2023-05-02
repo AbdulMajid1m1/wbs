@@ -715,17 +715,32 @@ const WBSDB = {
         RZONE,
         PALLET_DATE,
         PALLETCODE,
-        BIN
+        BIN,
+        REMARKS
       } = req.query;
 
-      const query = `
-        INSERT INTO dbo.tbl_Shipment_Received_CL
-          (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN)
-        VALUES
-          (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN)
+      const checkSerialNumQuery = `
+        SELECT COUNT(*) as count
+        FROM dbo.tbl_Shipment_Received_CL
+        WHERE SERIALNUM = @SERIALNUM
       `;
 
       let request = pool2.request();
+      request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
+
+      const checkSerialNumResult = await request.query(checkSerialNumQuery);
+      if (checkSerialNumResult.recordset[0].count > 0) {
+        res.status(409).send({ message: 'Error: SerialNum already exists.' });
+        return;
+      }
+
+      const query = `
+        INSERT INTO dbo.tbl_Shipment_Received_CL
+          (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN, REMARKS)
+        VALUES
+          (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS)
+      `;
+
       request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
       request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
       request.input('ARRIVALWAREHOUSE', sql.NVarChar, ARRIVALWAREHOUSE);
@@ -733,7 +748,6 @@ const WBSDB = {
       request.input('ITEMID', sql.NVarChar, ITEMID);
       request.input('PURCHID', sql.NVarChar, PURCHID);
       request.input('CLASSIFICATION', sql.Float, CLASSIFICATION);
-      request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
       request.input('RCVDCONFIGID', sql.NVarChar, RCVDCONFIGID);
       request.input('RCVD_DATE', sql.Date, RCVD_DATE);
       request.input('GTIN', sql.NVarChar, GTIN);
@@ -741,6 +755,7 @@ const WBSDB = {
       request.input('PALLET_DATE', sql.Date, PALLET_DATE);
       request.input('PALLETCODE', sql.NVarChar, PALLETCODE);
       request.input('BIN', sql.NVarChar, BIN);
+      request.input('REMARKS', sql.NVarChar, REMARKS);
 
       await request.query(query);
       res.status(201).send({ message: 'Shipment data inserted successfully.' });
@@ -749,6 +764,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
 
   async getShipmentRecievedCLDataCByShipmentId(req, res, next) {
 
@@ -834,7 +850,8 @@ const WBSDB = {
         RZONE,
         PALLET_DATE,
         PALLETCODE,
-        BIN
+        BIN,
+        REMARKS
       } = req.query;
 
       if (!SERIALNUM) {
@@ -917,6 +934,10 @@ const WBSDB = {
       if (BIN !== undefined) {
         updateFields.push('BIN = @BIN');
         request.input('BIN', sql.NVarChar, BIN);
+      }
+      if (REMARKS !== undefined) {
+        updateFields.push('REMARKS = @REMARKS');
+        request.input('REMARKS', sql.NVarChar, REMARKS);
       }
 
       if (updateFields.length === 0) {

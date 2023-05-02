@@ -40,7 +40,7 @@ const ReceiptsThirdScreen = () => {
   //   document.getElementById('SERIALNUM').value = '';
   // }
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (SERIALNUM === null || SERIALNUM === '') {
       return;
@@ -51,7 +51,7 @@ const ReceiptsThirdScreen = () => {
     const queryParameters = new URLSearchParams(statedata).toString();
     try {
 
-      const response = userRequest.post(
+      const response = await userRequest.post(
         `/insertShipmentRecievedDataCL?${queryParameters}`)
 
       console.log(response?.data);
@@ -70,7 +70,7 @@ const ReceiptsThirdScreen = () => {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Data insertion failed',
+        text: error.response?.data?.message ?? 'Something went wrong!',
       })
     }
     finally {
@@ -183,7 +183,7 @@ const ReceiptsThirdScreen = () => {
 
                       {tableData.length > 0 && tableData.map((item, index) => {
                         return (
-                          <tr>
+                          <tr key={"record" + index}>
 
                             <td key={index}>{item.SERIALNUM}</td>
                             <td key={index}>{item.RCVDCONFIGID}</td>

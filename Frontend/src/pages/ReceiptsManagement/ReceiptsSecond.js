@@ -95,7 +95,9 @@ const ReceiptsSecond = () => {
               <div className="mb-6">
                 <label htmlFor='item' className="block mb-2 text-lg font-medium text-black">ITEM NAME</label>
                 <input id="item" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
-                  block w-full p-1.5 md:p-2.5 " placeholder="ITEM NAME" required
+                  block w-full p-1.5 md:p-2.5 " placeholder="ITEM NAME"
+                  value={statedata?.ITEMNAME ?? ''}
+                  disabled
 
                   onChange={(e) => {
                     updateData({ ...statedata, ITEMNAME: e.target.value });
@@ -110,7 +112,7 @@ const ReceiptsSecond = () => {
                   block w-full p-1.5 md:p-2.5 " placeholder="Enter Scan/GTIN" required
 
                   onChange={(e) => {
-                    updateData({ ...statedata, GTIN: e.target.value});
+                    updateData({ ...statedata, GTIN: e.target.value });
                   }
                   }
                 />

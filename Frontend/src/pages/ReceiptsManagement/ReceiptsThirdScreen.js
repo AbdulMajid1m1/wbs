@@ -44,7 +44,7 @@ const ReceiptsThirdScreen = () => {
         `/insertShipmentRecievedDataCL?${queryParameters}`)
 
       console.log(response?.data);
-      setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: "G" }]);
+      setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID }]);
 
       Swal.fire({
         icon: 'success',
@@ -141,6 +141,41 @@ const ReceiptsThirdScreen = () => {
                   }
                 />
               </div>
+              <div className='mb-6'>
+                <label htmlFor="selectConfig" className="block mb-2 text-xs font-medium text-black">List of Item Config</label>
+
+                {/* <select
+                  name="selectConfig"
+                  id="selectCongigId"
+                  className="bg-gray-50 border-2 text-gray-900 text-xs rounded-lg focus:ring-bg-[#e69138]-500 focus:border-orange-500 block w-full p-2 md:p-3 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+                  onChange={(e) => {
+                    updateData({ ...statedata, RCVDCONFIGID: e.target.value });
+                  }}
+                >
+                  <option value="G">G</option>
+                  <option value="D">D</option>
+                  <option value="DC">DC</option>
+                  <option value="MCI">MCI</option>
+                  <option value="S">S</option>
+                </select> */}
+                <select
+                  name="selectConfig"
+                  id="selectCongigId"
+                  className="select-custom bg-gray-50 border-2 text-gray-900 text-xs rounded-lg focus:ring-bg-[#e69138]-500 focus:border-orange-500 block w-full p-2 md:p-3 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+
+                  onChange={(e) => {
+                    updateData({ ...statedata, RCVDCONFIGID: e.target.value });
+                  }}
+                >
+                  <option value="G">G</option>
+                  <option value="D">D</option>
+                  <option value="DC">DC</option>
+                  <option value="MCI">MCI</option>
+                  <option value="S">S</option>
+                </select>
+
+
+              </div>
 
               <div className="mb-6">
                 <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">Remarks</label>
@@ -197,8 +232,8 @@ const ReceiptsThirdScreen = () => {
               </div>
             </form>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   )
 }

@@ -1,44 +1,59 @@
 .table-location-generate1 {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    /* // give width accourding to colums and then make it scoll  */
-    height: 120px;
-    overflow-x: auto;
-    overflow-y: auto;
-    border: 2px solid gray;
-    border-radius: 5px;
-  }
-  
-  .table-location-generate1 table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #ccc;
-    font-size: 10px;
-  }
-  
-  .table-location-generate1 table thead {
-    background-color: #e69138;
-    color: white;
-  }
-  .table-location-generate1 table thead tr th {
-    padding: 10px;
-    border: 1px solid #ccc;
-  }
-  
-  .table-location-generate1 table tbody tr td {
-    padding: 10px;
-    border: 1px solid black;
-    /* min height should be 30 */
-    color: black;
-    text-align: center;
-    font-size: 12px;
-    height: 25px;
-  }
-  /* change table row background */
-  .table-location-generate1 table tbody tr:nth-child(even) {
-    background-color: rgb(242, 242, 221);
-  }
-  
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* // give width accourding to colums and then make it scoll  */
+  height: 120px;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 2px solid gray;
+  border-radius: 5px;
+}
+
+.table-location-generate1 table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  font-size: 10px;
+}
+
+.table-location-generate1 table thead {
+  background-color: #e69138;
+  color: white;
+}
+.table-location-generate1 table thead tr th {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.table-location-generate1 table tbody tr td {
+  padding: 10px;
+  border: 1px solid black;
+  /* min height should be 30 */
+  color: black;
+  text-align: center;
+  font-size: 12px;
+  height: 25px;
+}
+/* change table row background */
+.table-location-generate1 table tbody tr:nth-child(even) {
+  background-color: rgb(242, 242, 221);
+}
+
+/* Change the background color on hover */
+.select-custom option:hover {
+  background-color: #e69138;
+}
+
+/* Add padding to the right of the arrow icon */
+.select-custom {
+  appearance: none;
+  padding-right: 2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M6.9 6.1a.5.5 0 0 1 .7 0l2.6 2.6 2.6-2.6a.5.5 0 1 1 .7.7l-3 3a.5.5 0 0 1-.7 0l-3-3a.5.5 0 0 1 0-.7z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.5rem;
+}
+

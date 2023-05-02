@@ -18,7 +18,7 @@ export const ReceiptsProvider = ({ children }) => {
         PALLETCODE: '',
         PALLET_DATE: date,
         PURCHID: '',
-        RCVDCONFIGID: '',
+        RCVDCONFIGID: 'G',
         RCVD_DATE: date,
         RZONE: '',
         SERIALNUM: '',

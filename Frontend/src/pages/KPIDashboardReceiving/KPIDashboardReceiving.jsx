@@ -27,103 +27,42 @@ ReactFC.fcRoot(FusionCharts, Components, FusionTheme);
 
 
 const KPIDashboardRece = () => {
-  const [newExpectedReceipts, setNewExpectedReceipts] = useState([]);
-  const [newExpectedShipments, setNewExpectedShipments] = useState([]);
-  const [newItemsDispatch, setNewItemsDispatch] = useState([]);
-  const [newTransferOrder, setNewTransferOrder] = useState([]);
+  const [data, setData] = useState(
+    {
+      uniqueShipmentCount: "",
+      totalReceipts: "",
+      totalItems: ""
+    }
+  );
+
 
   useEffect(() => {
 
     const getAllAssetsList = async () => {
       try {
 
-      userRequest.get("/getAllExpectedShipments")
-        .then(response => {
-          setNewExpectedReceipts(response.data)
-        })
-        .catch(error => {
+        userRequest.get("/getTblShipmentReceivedCLStats")
+          .then(response => {
 
-
-          console.error(error);
-        });
-
-    }
-    catch (error) {
-      console.log(error);
-
-    }
-  };
-
-  const getAllExpectedShipments = async () => {
-    try {
-
-      userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
-        .then(response => {
+            setData(response.data)
             console.log(response.data)
-            setNewExpectedShipments(response.data)
-        })
-        .catch(error => {
-          
 
-          console.error(error);
-        });
-        
-    }
-    catch (error) {
-      console.log(error);
+          })
+          .catch(error => {
+            console.error(error);
+          });
 
-    }
-  };
+      }
+      catch (error) {
+        console.log(error);
 
-  const getNewItemsDispatch = async () => {
-    try {
+      }
 
-      userRequest.get("/getAllTblDispatchingData")
-        .then(response => {
-          // response.data == "no data available" ? setNewItemsDispatch([]) : setNewItemsDispatch(response.data);
-          setNewItemsDispatch(response.data)
-        })
-        .catch(error => {
-          
-          // setError(error?.response?.data?.message ?? "Something went wrong");
+    };
 
-          console.error(error);
-        });
-        
-    }
-    catch (error) {
-      console.log(error);
 
-    }
-  };
-
-  const getNewTransferOrder = async () => {
-    try {
-
-      userRequest.get("/getAllExpectedTransferOrder")
-        .then(response => {
-          // response.data == "no data available" ? setNewTransferOrder([]) : setNewTransferOrder(response.data);
-          setNewTransferOrder(response.data)
-        })
-        .catch(error => {
-          
-          // setError(error?.response?.data?.message ?? "Something went wrong");
-
-          console.error(error);
-        });
-        
-    }
-    catch (error) {
-      console.log(error);
-
-    }
-  };
-
-  getAllAssetsList();
-  getAllExpectedShipments();
-  getNewItemsDispatch();
-  getNewTransferOrder();
-},[])
+    getAllAssetsList();
+  }, [])
   return (
     <div>
       <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white text-black dark:text-white">
@@ -137,7 +76,7 @@ const KPIDashboardRece = () => {
                 <img src={expected} className='' alt='' />
               </div>
               <div className="text-right">
-                <span>{newExpectedReceipts.length > 0 ? newExpectedReceipts.length : null}</span>
+                <span>{data.totalReceipts}</span>
                 <p>Daily Receipts</p>
               </div>
             </div>
@@ -147,7 +86,7 @@ const KPIDashboardRece = () => {
                 <img src={shipment} className='' alt='' />
               </div>
               <div className="text-right">
-                <span>{newExpectedShipments.length > 0 ? newExpectedShipments.length : null}</span>
+                <span>{data.uniqueShipmentCount}</span>
                 <p>Total Shipments</p>
               </div>
             </div>
@@ -156,11 +95,11 @@ const KPIDashboardRece = () => {
                 <img src={items} className='' alt='' />
               </div>
               <div className="text-right">
-                <span>{newItemsDispatch.length > 0 ? newItemsDispatch.length : null}</span>
+                <span>{data.totalItems}</span>
                 <p>Total Items</p>
               </div>
             </div>
-            <div className="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+            {/* <div className="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div className="flex justify-center items-center w-14 h-14 bg-white rounded-full transition-all duration-300 transform group-hover:rotate-12">
                 <img src={transfer} className='' alt='' />
               </div>
@@ -168,31 +107,31 @@ const KPIDashboardRece = () => {
                 <span>{newTransferOrder.length > 0 ? newTransferOrder.length : null}</span>
                 <p>Transfer Orders</p>
               </div>
-            </div>
+            </div> */}
           </div>
           {/* <!-- ./Statistics Cards --> */}
 
           <div className="grid grid-cols-1 md:grid-cols-2 p-4 gap-4 bg-gradient-to-r from-[#5666e2]">
             {/* <!-- Social Traffic --> */}
             <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
-                <DailyReceiptsChart ReactFC={ReactFC}/>
-            </div>
-
-             {/* <!-- Social Traffic2 --> */}
-             <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
-                <TotalShipment ReactFC={ReactFC}/>
+              <DailyReceiptsChart ReactFC={ReactFC} />
             </div>
 
             {/* <!-- Social Traffic2 --> */}
             <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
-                <ItemsChart ReactFC={ReactFC}/>
-               {/* <DashboardTable data={newItemsDispatch} columnsName={TblDispatchingCLColumn} title={"Items Dispatch"} UniqueId="assetPrintingId"/> */}
+              <TotalShipment ReactFC={ReactFC} />
             </div>
 
             {/* <!-- Social Traffic2 --> */}
             <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
-               <ShipementReceivedChart ReactFC={ReactFC}/>
-               {/* <DashboardTable data={newTransferOrder} columnsName={InternalTransferColumn} title={"Internal Transfer"} UniqueId="assetPrintingId"/> */}
+              <ItemsChart ReactFC={ReactFC} />
+              {/* <DashboardTable data={newItemsDispatch} columnsName={TblDispatchingCLColumn} title={"Items Dispatch"} UniqueId="assetPrintingId"/> */}
+            </div>
+
+            {/* <!-- Social Traffic2 --> */}
+            <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
+              <ShipementReceivedChart ReactFC={ReactFC} />
+              {/* <DashboardTable data={newTransferOrder} columnsName={InternalTransferColumn} title={"Internal Transfer"} UniqueId="assetPrintingId"/> */}
             </div>
 
           </div>

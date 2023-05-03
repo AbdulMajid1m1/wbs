@@ -43,11 +43,11 @@ const ReceiptsSecond = () => {
 
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
                 <div className='w-full flex justify-end'>
-                <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm bg-[#fff] text-[#e69138]'>
+                  <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm bg-[#fff] text-[#e69138]'>
                     Back
-                </button>
+                  </button>
                 </div>
-                <span className='text-white'>JOB ORDER NUMBER</span>
+                <span className='text-white'>JOB ORDER NUMBER (SHIPMENT ID)</span>
                 <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                   block w-full p-1.5 md:p-2.5 " placeholder="Job Order Number"
                   value={statedata?.SHIPMENTID ?? ''}

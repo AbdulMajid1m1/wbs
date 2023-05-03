@@ -167,7 +167,7 @@ const UserDataTable = ({
           }
           break;
 
-      
+
 
         // call the api to delete the data from the Mapped table
         case "ItemCode":
@@ -189,7 +189,7 @@ const UserDataTable = ({
             success = false;
           }
           break;
-          
+
         // call the api to delete the data from the Palletizing table
         case "TRANSFERID":
           try {
@@ -387,7 +387,13 @@ const UserDataTable = ({
           </div>
 
           <span className="leftDatatableTitle">
-            {buttonVisibility !== false && <span className="leftDatatableTitle">
+            {buttonVisibility !== false && <span className="leftDatatableTitle"
+              onClick={uniqueId === "SERIALNUM" ?
+                // cleart sessionStorage for receiptsData
+                () => { sessionStorage.removeItem("receiptsData") }
+                : null}
+
+            >
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
@@ -395,8 +401,6 @@ const UserDataTable = ({
             }
 
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
-            {/* <button onClick={handlePrint}>Print Asset</button> */}
-            {/* {uniqueId === "GenerateTagsId" ? <button onClick={handleApiCall}>GenerateTags</button> : <button>Print Asset</button>} */}
           </span>
         </div>
 

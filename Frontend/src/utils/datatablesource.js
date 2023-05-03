@@ -181,7 +181,16 @@ export const TblShipmentReceivedClColumn = [
     width: 180,
 
   },
-
+  {
+    field: "USERID",
+    headerName: "USER ID",
+    width: 180,
+  },
+  {
+    field: "TRXDATETIME",
+    headerName: "TRX DATE TIME",
+    width: 180,
+  },
 
 
 ];
@@ -302,6 +311,8 @@ export const TblReceiptsManagementColumn = [
     width: 180,
 
   },
+
+
 
 
 

@@ -700,6 +700,7 @@ const WBSDB = {
   // post request to insert data 
 
   async insertShipmentRecievedDataCL(req, res, next) {
+    console.log(req.token)
     try {
       const {
         SHIPMENTID,
@@ -721,7 +722,12 @@ const WBSDB = {
         POQTY,
         RCVQTY,
         REMAININGQTY,
+
       } = req.query;
+
+      // get current date in yyyy-mm-dd format
+      const localDateString = new Date().toISOString();
+
 
       const checkSerialNumQuery = `
           SELECT COUNT(*) as count
@@ -740,9 +746,9 @@ const WBSDB = {
 
       const query = `
           INSERT INTO dbo.tbl_Shipment_Received_CL
-            (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN, REMARKS, POQTY, RCVQTY, REMAININGQTY)
+            (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN, REMARKS, POQTY, RCVQTY, REMAININGQTY, USERID, TRXDATETIME)
           VALUES
-            (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS, @POQTY, @RCVQTY, @REMAININGQTY)
+            (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS, @POQTY, @RCVQTY, @REMAININGQTY, @USERID, @TRXDATETIME)
         `;
 
       request.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
@@ -763,6 +769,8 @@ const WBSDB = {
       request.input("POQTY", sql.Numeric(18, 0), POQTY);
       request.input("RCVQTY", sql.Numeric(18, 0), RCVQTY);
       request.input("REMAININGQTY", sql.Numeric(18, 0), REMAININGQTY);
+      request.input("USERID", sql.NVarChar, req.token.UserID);
+      request.input("TRXDATETIME", sql.DateTime, localDateString);
 
       await request.query(query);
       res.status(201).send({ message: "Shipment data inserted successfully." });
@@ -859,7 +867,10 @@ const WBSDB = {
         PALLET_DATE,
         PALLETCODE,
         BIN,
-        REMARKS
+        REMARKS,
+        POQTY,
+        RCVQTY,
+        REMAININGQTY
       } = req.query;
 
       if (!SERIALNUM) {
@@ -873,13 +884,14 @@ const WBSDB = {
       const updateFields = [];
       const request = pool2.request();
 
-      if (CONTAINERID !== undefined) {
-        updateFields.push('CONTAINERID = @CONTAINERID');
-        request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
-      }
       if (SHIPMENTID !== undefined) {
         updateFields.push('SHIPMENTID = @SHIPMENTID');
         request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+      }
+
+      if (CONTAINERID !== undefined) {
+        updateFields.push('CONTAINERID = @CONTAINERID');
+        request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
       }
 
       if (ARRIVALWAREHOUSE !== undefined) {
@@ -906,8 +918,6 @@ const WBSDB = {
         updateFields.push('CLASSIFICATION = @CLASSIFICATION');
         request.input('CLASSIFICATION', sql.Float, CLASSIFICATION);
       }
-
-
 
       if (RCVDCONFIGID !== undefined) {
         updateFields.push('RCVDCONFIGID = @RCVDCONFIGID');
@@ -943,19 +953,36 @@ const WBSDB = {
         updateFields.push('BIN = @BIN');
         request.input('BIN', sql.NVarChar, BIN);
       }
+
       if (REMARKS !== undefined) {
         updateFields.push('REMARKS = @REMARKS');
         request.input('REMARKS', sql.NVarChar, REMARKS);
       }
 
+      if (POQTY !== undefined) {
+        updateFields.push('POQTY = @POQTY');
+        request.input('POQTY', sql.Numeric(18, 0), POQTY);
+      }
+
+      if (RCVQTY !== undefined) {
+        updateFields.push('RCVQTY = @RCVQTY');
+        request.input('RCVQTY', sql.Numeric(18, 0), RCVQTY);
+      }
+
+      if (REMAININGQTY !== undefined) {
+        updateFields.push('REMAININGQTY = @REMAININGQTY');
+        request.input('REMAININGQTY', sql.Numeric(18, 0), REMAININGQTY);
+      }
+
       if (updateFields.length === 0) {
         return res.status(400).send({ message: 'At least one field is required to update.' });
       }
+
       query += updateFields.join(', ');
 
       query += `
-  WHERE SERIALNUM = @SERIALNUM
-`;
+      WHERE SERIALNUM = @SERIALNUM
+      `;
 
       request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
 
@@ -971,6 +998,8 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
+
 
 
   // ----------------------------- tbl_Shipment_Received_CL END ----------------------------- //

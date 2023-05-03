@@ -16,6 +16,11 @@ const ReceiptsThirdScreen = () => {
 
   ])
 
+  useEffect(() => {
+
+    updateData({ REMARKS: '' });
+
+  }, [])
 
 
 
@@ -35,7 +40,7 @@ const ReceiptsThirdScreen = () => {
         `/insertShipmentRecievedDataCL?${queryParameters}`)
 
       console.log(response?.data);
-      setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID }]);
+      setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID, REMARKS: statedata.REMARKS }]);
     }
     catch (error) {
 
@@ -63,10 +68,10 @@ const ReceiptsThirdScreen = () => {
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#e69138] text-xl mb:2 md:mb-5">
 
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
-              <div className='w-full flex justify-end'>
-                <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm bg-[#fff] text-[#e69138]'>
+                <div className='w-full flex justify-end'>
+                  <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm bg-[#fff] text-[#e69138]'>
                     Back
-                </button>
+                  </button>
                 </div>
                 <span className='text-white'>JOB ORDER NUMBER</span>
                 <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
@@ -120,13 +125,12 @@ const ReceiptsThirdScreen = () => {
               </div>
 
               <div className="mb-6">
-                <label htmlFor="SERIALNUM" className="block mb-2 text-xs font-medium text-black">Enter Serial Number</label>
-                <input id="SERIALNUM" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/GTIN Number"
+                <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">Remarks</label>
+                <input id="zone" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Remarks (USER INPUT)"
                   onChange={(e) => {
-                    updateData({ ...statedata, SERIALNUM: e.target.value });
-                    setSERIALNUM(e.target.value);
-                  }}
-                  onBlur={handleFormSubmit}
+                    updateData({ ...statedata, REMARKS: e.target.value });
+                  }
+                  }
                 />
               </div>
 
@@ -153,14 +157,16 @@ const ReceiptsThirdScreen = () => {
               </div>
 
               <div className="mb-6">
-                <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">Remarks</label>
-                <input id="zone" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Remarks (USER INPUT)"
+                <label htmlFor="SERIALNUM" className="block mb-2 text-xs font-medium text-black">Enter Serial Number</label>
+                <input id="SERIALNUM" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/GTIN Number"
                   onChange={(e) => {
-                    updateData({ ...statedata, REMARKS: e.target.value });
-                  }
-                  }
+                    updateData({ ...statedata, SERIALNUM: e.target.value });
+                    setSERIALNUM(e.target.value);
+                  }}
+                  onBlur={handleFormSubmit}
                 />
               </div>
+
               {/* <div className="mb-6">
                 <button type='submit'
                   className="bg-[#e69138] text-white font-semibold py-2 px-10 rounded-sm">
@@ -176,6 +182,7 @@ const ReceiptsThirdScreen = () => {
                       <tr>
                         <th>Serial Number</th>
                         <th>Config</th>
+                        <th>Remarks</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -184,8 +191,10 @@ const ReceiptsThirdScreen = () => {
                         return (
                           <tr key={"record" + index}>
 
-                            <td key={index}>{item.SERIALNUM}</td>
-                            <td key={index}>{item.RCVDCONFIGID}</td>
+                            <td key={index + "td1"}>{item.SERIALNUM}</td>
+                            <td key={index + "td2"}>{item.RCVDCONFIGID}</td>
+                            <td key={index + "td4"}>{item.REMARKS}</td>
+
                           </tr>
                         )
                       }

@@ -5,7 +5,7 @@ export const ReceiptsContext = createContext();
 
 export const ReceiptsProvider = ({ children }) => {
     // get ios date format
-    const date = new Date().toISOString().slice(0, 10);
+    const date = new Date().toISOString();
     const [serialNumLength, setSerialNumLength] = useState('');
 
     console.log(date);

@@ -15,6 +15,7 @@ const DashboardTable = ({
     const navigate = useNavigate();
     const [record, setRecord] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
+    // Temporary Comment
     const { statedata, updateData } = useContext(ReceiptsContext);
     const [qrcodeValue, setQRCodeValue] = useState('');
     const [selectedRow, setSelectedRow] = useState([]);
@@ -88,6 +89,7 @@ const DashboardTable = ({
 
             let newData = updateRowData(rowData);
             console.log("newData", newData);
+            // temporary Comment
             updateData(newData);
             navigate("/receiptsecond")
         }

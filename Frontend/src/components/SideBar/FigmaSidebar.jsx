@@ -208,7 +208,7 @@ const FigmaSidebar = () => {
 
             {kpiDashboard && (
                 <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
-                    <div className='main-images-container'>
+                    <div className='main-images-container' onClick={() => navigate('/kpireceiving')}>
                         <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Receiving</p>
                     </div>

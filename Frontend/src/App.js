@@ -44,6 +44,7 @@ import ReceiptsThirdScreen from './pages/ReceiptsManagement/ReceiptsThirdScreen'
 import { ReceiptsProvider } from './contexts/ReceiptsContext'
 import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 import TblShipmentUpdate from './components/UpdatesItem/TblShipmentUpdate'
+import KPIDashboardReceiving from './pages/KPIDashboardReceiving/KPIDashboardReceiving'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -121,7 +122,7 @@ const App = () => {
                 <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing" />} />
                 <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data" />} />
 
-
+                <Route path='/kpireceiving' element={<KPIDashboardReceiving />}/>
               </Routes>
             </MainLayout>
           } />

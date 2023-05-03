@@ -6,6 +6,9 @@ import { ExpectedReceiptsColumn, InternalTransferColumn, TblDispatchingCLColumn,
 import expected from "../../images/expected.png"
 import shipment from "../../images/shipment.png"
 import transfer from "../../images/transfer.png"
+import pdf from "../../images/pdf.png"
+import excel from "../../images/excel.png"
+
 import items from "../../images/items.png"
 
 
@@ -99,15 +102,12 @@ const KPIDashboardRece = () => {
                 <p>Total Items</p>
               </div>
             </div>
-            {/* <div className="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
-              <div className="flex justify-center items-center w-14 h-14 bg-white rounded-full transition-all duration-300 transform group-hover:rotate-12">
-                <img src={transfer} className='' alt='' />
-              </div>
-              <div className="text-right">
-                <span>{newTransferOrder.length > 0 ? newTransferOrder.length : null}</span>
-                <p>Transfer Orders</p>
-              </div>
-            </div> */}
+            <div className="card-icons-div">
+            
+              <img src={excel} alt="icon" className="icon-image" />
+              <img src={pdf} alt="icon" className="icon-image" />
+            </div>
+
           </div>
           {/* <!-- ./Statistics Cards --> */}
 

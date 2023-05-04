@@ -109,22 +109,63 @@
 // export default TotalShipment
 
 
+// import React, { useState, useEffect } from 'react'
+// import axios from 'axios'
+
+// const MyChart = ({ReactFC}) => {
+//   const [products, setProducts] = useState([])
+
+//   useEffect(() => {
+//     axios.get('https://dummyjson.com/products')
+//       .then(res => {
+//         const productsData = res.data.products.map(product => {
+//           return {
+//             label: product.title,
+//             value: product.price
+//           }
+//         })
+//         setProducts(productsData)
+//       })
+//       .catch(err => console.log(err))
+//   }, [])
+
+//   const chartConfigs = {
+//     type: "column2d",
+//     width: "100%",
+//     height: "400",
+//     dataFormat: "json",
+//     dataSource: {
+//       chart: {
+//         caption: "Product Prices",
+//         subCaption: "Prices of various products",
+//         xAxisName: "Product",
+//         yAxisName: "Price (USD)",
+//         numberSuffix: "$",
+//         theme: "fusion"
+//       },
+//       data: products
+//     }
+//   }
+
+//   return (
+//     <ReactFC {...chartConfigs} />
+//   )
+// }
+
+// export default MyChart
+
+
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import userRequest from '../../utils/userRequest'
 
 const MyChart = ({ReactFC}) => {
-  const [products, setProducts] = useState([])
+  const [shipmentData, setShipmentData] = useState({})
 
   useEffect(() => {
-    axios.get('https://dummyjson.com/products')
+    userRequest.get('/getTblShipmentReceivedCLStats')
       .then(res => {
-        const productsData = res.data.products.map(product => {
-          return {
-            label: product.title,
-            value: product.price
-          }
-        })
-        setProducts(productsData)
+        const shipmentData = res.data
+        setShipmentData(shipmentData)
       })
       .catch(err => console.log(err))
   }, [])
@@ -136,14 +177,26 @@ const MyChart = ({ReactFC}) => {
     dataFormat: "json",
     dataSource: {
       chart: {
-        caption: "Product Prices",
-        subCaption: "Prices of various products",
-        xAxisName: "Product",
-        yAxisName: "Price (USD)",
-        numberSuffix: "$",
+        caption: "Shipment Statistics",
+        subCaption: "Statistics for shipped products",
+        xAxisName: "Metric",
+        yAxisName: "Value",
         theme: "fusion"
       },
-      data: products
+      data: [
+        {
+          label: "Unique Shipment Count",
+          value: shipmentData.uniqueShipmentCount || 0
+        },
+        {
+          label: "Total Receipts",
+          value: shipmentData.totalReceipts || 0
+        },
+        {
+          label: "Total Items",
+          value: shipmentData.totalItems || 0
+        }
+      ]
     }
   }
 

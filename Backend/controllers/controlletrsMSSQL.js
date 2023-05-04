@@ -697,6 +697,25 @@ const WBSDB = {
     }
   },
 
+  async getTransferDistributionByTransferId(req, res, next, transferId) {
+    try {
+      let query = `
+        SELECT * FROM dbo.Transfer_Distribution
+        WHERE TRANSFERID = @transferId
+      `;
+      let request = pool1.request();
+      request.input('transferId', sql.VarChar, transferId); // Replace 'sql.VarChar' with the appropriate data type for TRANSFERID
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "Shipment not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  }
+  ,
 
   async getTblShipmentReceivedCLStats(req, res, next) {
     try {

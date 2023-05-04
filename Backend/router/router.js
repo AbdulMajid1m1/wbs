@@ -211,5 +211,16 @@ router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, WBS
 router.get("/getAllTblRZones", checkAuthentication, WBSDB.getAllTblRZones);
 
 
+// ------------- tbl_RZONES APIS End ---------------
+
+
+// ------------- Transfer_Distribution APIS Start -------------
+
+
+router.get("/getTransferDistributionByTransferId", checkAuthentication, WBSDB.getTransferDistributionByTransferId);
+
+// ------------- Transfer_Distribution APIS End ---------------
+
+
 export default router;
 

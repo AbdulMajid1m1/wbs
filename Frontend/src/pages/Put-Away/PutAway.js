@@ -1,9 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Autocomplete from '@mui/material/Autocomplete';
-import userRequest from '../../utils/userRequest';
-import TextField from '@mui/material/TextField';
 import { useNavigate } from 'react-router-dom';
-import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 import DashboardTable from '../../components/AlessaDashboardTable/DashboardTable';
 import { TblReceiptsManagementColumn } from '../../utils/datatablesource';
 
@@ -26,8 +22,8 @@ const PutAway = () => {
                 <span className='text-white'>Transfer ID</span>
                 
                 <div className='flex justify-center gap-1'>
-                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
-                  block w-full p-1.5 md:p-2.5 " placeholder="Enter/Scan Transfer ID"
+                <input className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
+                  block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/Scan Transfer ID"
                   
                 />
 

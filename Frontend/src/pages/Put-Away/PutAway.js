@@ -23,11 +23,11 @@ const PutAway = () => {
                     Back
                   </button>
                 </div>
-                <span className='text-white'>Scan Transfer Order</span>
+                <span className='text-white'>Transfer ID</span>
                 
                 <div className='flex justify-center gap-1'>
                 <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
-                  block w-full p-1.5 md:p-2.5 " placeholder="Scan Transfer Order"
+                  block w-full p-1.5 md:p-2.5 " placeholder="Enter/Scan Transfer ID"
                   
                 />
 
@@ -43,11 +43,11 @@ const PutAway = () => {
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-white'>
+                {/* <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>Results:</span>
                   <span>0</span>
 
-                </div>
+                </div> */}
 
               </div>
 
@@ -55,7 +55,7 @@ const PutAway = () => {
 
             <div className="mb-6">
 
-            <DashboardTable data={data} title={"Put-Away"} columnsName={TblReceiptsManagementColumn}
+            <DashboardTable data={data} title={"Shipment Details"} columnsName={TblReceiptsManagementColumn}
 
             />
             </div >

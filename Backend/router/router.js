@@ -88,6 +88,8 @@ router.put("/updateTblItemsCLData", checkAuthentication, WBSDB.updateTblItemsCLD
 
 router.get("/getAllTblShipmentReceivedCL", checkAuthentication, WBSDB.getAllTblShipmentReceivedCL);
 
+router.get("/getTblShipmentReceivedCLStats", checkAuthentication, WBSDB.getTblShipmentReceivedCLStats);
+
 router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
 
 router.post("/insertShipmentRecievedDataCL", checkAuthentication, WBSDB.insertShipmentRecievedDataCL);

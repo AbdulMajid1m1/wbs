@@ -45,6 +45,7 @@ import { ReceiptsProvider } from './contexts/ReceiptsContext'
 import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 import TblShipmentUpdate from './components/UpdatesItem/TblShipmentUpdate'
 import KPIDashboardReceiving from './pages/KPIDashboardReceiving/KPIDashboardReceiving'
+import PutAway from './pages/Put-Away/PutAway'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -74,6 +75,7 @@ const App = () => {
         <Route path="/receipts" element={<ReceiptsProvider><ReceiptsManagement /></ReceiptsProvider>} />
         <Route path="/receiptsecond" element={<ReceiptsProvider><ReceiptsSecond /></ReceiptsProvider>} />
         <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
+        <Route path='/putaway' element={<PutAway />}/>
 
         <Route
           path="/*"

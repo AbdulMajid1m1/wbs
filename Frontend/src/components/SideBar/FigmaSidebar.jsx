@@ -177,7 +177,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Physical Inventory</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/putaway')}>
+                    <div className='main-images-container' onClick={() => navigate('/putaway1')}>
                         <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Put-Away</p>
                     </div>

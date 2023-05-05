@@ -90,7 +90,7 @@ const PutAway = () => {
                   
                   <button type='button' onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium -mt-2 rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                     <span>
-                        <img src={icon} className='h-auto w-10 object-contain' alt='' />
+                        <img src={icon} className='h-auto w-8 object-contain' alt='' />
                     </span>
                   </button>
                 </div>

@@ -4,11 +4,42 @@ import {FaSearch} from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import { Autocomplete, TextField } from '@mui/material';
 import icon from "../../images/close.png"
+import "./PutAwayScreen3.css"
+import axios from 'axios';
+
+
 
 const PutAwayScreen3 = () => {
   const navigate = useNavigate();
 
   const [dataList, setDataList] = useState([]);
+  // const [serialnumberlist, setSerialNumberList] = useState([]);
+
+  // const handleseriallist = (e) => {
+  //   setSerialNumberList(e.target.value);
+  // }
+
+  const [serialnumberlist, setSerialNumberList] = useState([]);
+  const validateSerialNumber = async (serialNumber) => {
+    try {
+      const response = await userRequest.get(`/vaildatehipmentPalletizingSerialNumber?ItemSerialNo=${serialNumber}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleSerialNumberInput = async (e) => {
+    const serialNumber = e.target.value;
+    const result = await validateSerialNumber(serialNumber);
+    if (result) {
+      setSerialNumberList([...serialnumberlist, serialNumber]);
+    } else {
+      // alert('Serial number does not exist');
+    }
+  }
+
+
   useEffect(() => {
     // console.log('Updated data:', statedata);
     userRequest.get('/getAllTblRZones')
@@ -50,7 +81,7 @@ const PutAwayScreen3 = () => {
                   
                   <button type='button' onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium -mt-2 rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                     <span>
-                        <img src={icon} className='h-auto w-10 object-contain' alt='' />
+                        <img src={icon} className='h-auto w-8 object-contain' alt='' />
                     </span>
                   </button>
                   
@@ -139,19 +170,34 @@ const PutAwayScreen3 = () => {
             </div>
 
             <div className="mb-6">
-                {/* <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter/Scan Serial Number</label> */}
-                <input id="enterscan" className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/Pallete Number"
-                />
+                <input 
+                  id="enterscan" 
+                    className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/Serial Number"
+                      // value={serialnumberlist}
+                      onChange={handleSerialNumberInput}
+              />
             </div >
 
             <div className="mb-6">
                 <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Serial Number</label>
-                <select id="serial" className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/Pallete Number"
-                >
-                    <option>Serial Number</option>
-                    <option>Serial Number</option>
-                    <option>Serial Number</option>
-                </select>
+          
+                   {/* // creae excel like Tables  */}
+                   <div className="table-putaway-generate1">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Serial Number</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {serialnumberlist.map((serialNumber, index) => (
+                      <tr key={index}>
+                        <td>{serialNumber}</td>
+                      </tr>
+                    ))}     
+                    </tbody>
+                  </table>
+                </div>
             </div >
 
             <div className='mt-6'>

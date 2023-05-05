@@ -55,7 +55,7 @@ const PutAwayScreen2 = () => {
                   
                   <button type='button' onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium -mt-2 rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                     <span>
-                        <img src={icon} className='h-auto w-10 object-contain' alt='' />
+                        <img src={icon} className='h-auto w-8 object-contain' alt='' />
                     </span>
                   </button>
                 </div>
@@ -79,8 +79,10 @@ const PutAwayScreen2 = () => {
 
             <div className="mb-6">
             <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">List of Receiving Zones</label>
+            </div>
 
-
+            <div className='mb-6'>
+            <span className='text-[#00006A] font-semibold'>RZONE</span>
             <Autocomplete
                   id="zone"
                   options={dataList}

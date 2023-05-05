@@ -5,14 +5,21 @@ import PutAwayTable from '../../components/Put-AwayTable/PutAwayTable';
 import {FaSearch} from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
+import Swal from 'sweetalert2';
+import { BeatLoader } from 'react-spinners';
 
 const PutAway = () => {
   const navigate = useNavigate();
   const [data, setData] = useState();
   const [shipmentTag, setShipmentTag] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+ 
+  // const [selectedRow, setSelectedRow] = useState(null);
+
 
   const handleForm = (e) => {
     e.preventDefault();
+    setIsLoading(true)
 
     userRequest.get(`/getShipmentPalletizingByTransferId?TRANSFERID=${shipmentTag}`)
       .then(response => {
@@ -20,13 +27,18 @@ const PutAway = () => {
         setData(response?.data ?? []);
         // setSelectedRow(response?.data[0] ?? []);
         // save data in session storage
-        // sessionStorage.setItem('puyawaydata', JSON.stringify(response?.data ?? []));
-     
+        sessionStorage.setItem('putawaydata', JSON.stringify(response?.data ?? []));
+        setIsLoading(false); 
       })
 
       .catch(error => {
         console.error(error);
-
+        setIsLoading(false); 
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.message ?? 'Something went wrong!',
+        })
       });
   }
 
@@ -37,6 +49,25 @@ const PutAway = () => {
 
   return (
     <>
+         {isLoading &&
+
+            <div className='loading-spinner-background'
+                style={{
+                    zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+
+
+                }}
+            >
+                <BeatLoader
+                    size={18}
+                    color={"#6439ff"}
+                    // height={4}
+                    loading={isLoading}
+                />
+            </div>
+            }
+
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-300 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
@@ -69,8 +100,9 @@ const PutAway = () => {
                 <div className='flex justify-center gap-1'>
                 <input
                   onChange={handleChangeValue} 
-                  className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
-                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Transfer Order ID"
+                    name=''
+                     className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
+                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Transfer Order ID"
                   
                 />
 

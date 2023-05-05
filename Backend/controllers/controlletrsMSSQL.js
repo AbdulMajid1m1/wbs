@@ -18,6 +18,35 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 let jwtSecret = process.env.JWT_SECRET;
 let jwtExpiration = process.env.JWT_EXPIRATION;
 
+function ssccCheckDigit(barcode) {
+  // Strip off leading 0's if 20-digit or 19-digit format was provided
+  const len = barcode.length;
+  if ((len === 20 || len === 19) && barcode.startsWith("00")) {
+    barcode = barcode.substring(2);
+  }
+
+  // Return false if invalid length
+  const newLen = barcode.length;
+  if (newLen !== 18 && newLen !== 17) {
+    return false;
+  }
+
+  // For explanation see: http://www.gs1.org/how-calculate-check-digit-manually
+  let sum = 0;
+  for (let i = 0; i < 17; i++) {
+    const multiplier = i % 2 === 0 ? 3 : 1;
+    sum += parseInt(barcode[i]) * multiplier;
+  }
+
+  const checkDigit = Math.ceil(sum / 10) * 10 - sum;
+
+  if (newLen === 17) {
+    return barcode + checkDigit;
+  }
+  if (newLen === 18) {
+    return checkDigit === parseInt(barcode[17]);
+  }
+}
 
 const WBSDB = {
   async getShipmentDataFromtShipmentReceiving(req, res, next) {
@@ -522,49 +551,6 @@ const WBSDB = {
   },
 
 
-  // async vaildatehipmentPalletizingSerialNumber(req, res, next) {
-  //   try {
-  //     const { ItemSerialNo } = req.params;
-
-  //     // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
-  //     const checkMappedBarcodesQuery = `
-  //       SELECT COUNT(*) as count
-  //       FROM dbo.tblMappedBarcodes
-  //       WHERE ItemSerialNo = @ItemSerialNo
-  //     `;
-
-  //     let request = pool2.request();
-  //     request.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
-  //     const checkMappedBarcodesResult = await request.query(checkMappedBarcodesQuery);
-
-  //     if (checkMappedBarcodesResult.recordset[0].count > 0) {
-  //       return res.status(400).send({ message: "Error: ItemSerialNo already exists in tbl_mappedBarcodes." });
-  //     }
-
-  //     let request2 = pool1.request();
-  //     request2
-  //     // Check if SHIPMENTID matches between tbl_Shipment_Palletizing and tbl_Shipment_Received_CL
-  //     const checkShipmentIDMatchQuery = `
-  //       SELECT COUNT(*) as count
-  //       FROM tbl_Shipment_Palletizing p
-  //       JOIN tbl_Shipment_Received_CL c
-  //         ON p.SHIPMENTID = c.SHIPMENTID
-  //       WHERE c.ItemSerialNo = @ItemSerialNo
-  //     `;
-
-  //     const checkShipmentIDMatchResult = await request2.query(checkShipmentIDMatchQuery);
-
-  //     if (checkShipmentIDMatchResult.recordset[0].count > 0) {
-  //       return res.status(200).send({ message: "Success: SHIPMENTID matches between tbl_Shipment_Palletizing and tbl_Shipment_Received_CL." });
-  //     } else {
-  //       return res.status(400).send({ message: "Error: SHIPMENTID does not match between tbl_Shipment_Palletizing and tbl_Shipment_Received_CL." });
-  //     }
-
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // }
 
   async vaildatehipmentPalletizingSerialNumber(req, res, next) {
     try {
@@ -629,6 +615,76 @@ const WBSDB = {
   },
 
 
+  async generateAndUpdatePalletIds(req, res) {
+    try {
+      const serialNumberList = req.query.serialNumberList;
+
+      // Fetch the first GS1GCPID and last SSCC_AutoCounter from TblSysNo using pool2
+      const query = `
+      SELECT 
+        (SELECT TOP 1 GS1GCPID FROM TblGCP ORDER BY TblSysNoID ASC) as FirstGS1GCPID,
+        (SELECT TOP 1 SSCC_AutoCounter FROM TblSysNo ORDER BY SSCC_AutoCounter DESC) as LastSSCCAutoCounter
+    `;
+
+      const result = await pool2.request().query(query);
+      const GS1GCPID = result.recordset[0].FirstGS1GCPID.toString();
+      let SSCC_AutoCounter = result.recordset[0].LastSSCCAutoCounter;
+
+      // If there is no number in SSCC_AutoCounter, use 1 as the starting counter
+      if (!SSCC_AutoCounter) {
+        SSCC_AutoCounter = 1;
+      } else {
+        SSCC_AutoCounter = parseInt(SSCC_AutoCounter) + 1;
+      }
+
+      for (const serialNumber of serialNumberList) {
+        // Create 17-digit number with the given formula
+        const prefix = '0' + GS1GCPID;
+        const padding = '0000000'.substring(0, 7 - SSCC_AutoCounter.toString().length);
+        const inputNumber = prefix + padding + SSCC_AutoCounter.toString();
+
+        // Generate 18-digit PalletID
+        const palletID = ssccCheckDigit(inputNumber);
+
+        // Update tbl_Shipment_Received_CL based on SERIALNUM
+        const updateQuery = `
+          UPDATE tbl_Shipment_Received_CL
+          SET PALLETCODE = @PalletID
+          WHERE SERIALNUM = @SerialNumber
+        `;
+
+        await pool2.request()
+          .input('PalletID', sql.NVarChar, palletID)
+          .input('SerialNumber', sql.NVarChar, serialNumber)
+          .query(updateQuery);
+
+        // Update or insert SSCC_AutoCounter in TblSysNo
+        const updateTblSysNoQuery = `
+          IF EXISTS (SELECT * FROM TblSysNo)
+          BEGIN
+            UPDATE TblSysNo SET SSCC_AutoCounter = @SSCC_AutoCounter
+          END
+          ELSE
+          BEGIN
+            INSERT INTO TblSysNo (SSCC_AutoCounter) VALUES (1)
+          END
+        `;
+
+        await pool2.request()
+          .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
+          .query(updateTblSysNoQuery);
+
+        // Increment SSCC_AutoCounter
+        SSCC_AutoCounter = SSCC_AutoCounter + 1;
+      }
+
+      res.status(200).send({ message: 'PalletIDs generated and updated successfully.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: error.message });
+    }
+  }
+  ,
 
 
   // tbl_Shipment_Palletizing end ------------------------------
@@ -1034,6 +1090,35 @@ const WBSDB = {
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "Shipment not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+  async getShipmentRecievedCLDataByPalletId(req, res, next) {
+
+    try {
+      const { PalletCode } = req.query;
+      console.log(PalletCode);
+
+      if (!PalletCode) {
+        return res.status(400).send({ message: "PalletCode is required." });
+      }
+
+      const query = `
+        SELECT * FROM dbo.tbl_Shipment_Received_CL
+        WHERE PalletCode = @PalletCode
+      `;
+      let request = pool2.request();
+      request.input('PalletCode', sql.NVarChar(255), PalletCode);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "Data not found." });
       }
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {
@@ -2836,11 +2921,46 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
+  },
+
+
+
+  // ------ tb_location_CL table conroller Start --------
+  async getTblLocationsCLByZoneCode(req, res) {
+    try {
+      const zoneCode = req.query.zoneCode;
+
+      if (!zoneCode) {
+        return res.status(400).send({ message: 'ZONE_CODE is required in the query.' });
+      }
+
+      // Fetch data from tbl_locations_CL based on ZONE_CODE
+      const query = `
+      SELECT * FROM tbl_locations_CL
+      WHERE ZONE_CODE = @ZoneCode
+    `;
+
+      const result = await pool2.request()
+        .input('ZoneCode', sql.NVarChar, zoneCode)
+        .query(query);
+
+      const locations = result.recordset;
+
+      res.status(200).send({ locations });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: error.message });
+    }
   }
+  ,
+
+
 
 
 
 };
+
+
 
 
 

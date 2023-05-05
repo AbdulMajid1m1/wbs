@@ -92,6 +92,8 @@ router.get("/getTblShipmentReceivedCLStats", checkAuthentication, WBSDB.getTblSh
 
 router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
 
+router.post("/getShipmentRecievedCLDataByPalletId", checkAuthentication, WBSDB.getShipmentRecievedCLDataByPalletId)
+
 router.post("/insertShipmentRecievedDataCL", checkAuthentication, WBSDB.insertShipmentRecievedDataCL);
 
 router.delete("/deleteShipmentRecievedDataCL", checkAuthentication, WBSDB.deleteShipmentRecievedDataCL);
@@ -228,7 +230,14 @@ router.get("/getShipmentPalletizingByTransferId", checkAuthentication, WBSDB.get
 
 router.get("/vaildatehipmentPalletizingSerialNumber", checkAuthentication, WBSDB.vaildatehipmentPalletizingSerialNumber);
 
+router.post("/generateAndUpdatePalletIds", checkAuthentication, WBSDB.generateAndUpdatePalletIds);
+
 // ------------- tbl_Shipment_Palletizing APIS End ---------------
 
-export default router;
 
+// ------------- tbl_locations_CL APIS Start ------------- 
+
+
+router.get("/getTblLocationsCLByZoneCode", checkAuthentication, WBSDB.getTblLocationsCLByZoneCode);
+
+export default router;

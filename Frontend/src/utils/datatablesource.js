@@ -1062,3 +1062,77 @@ export const shipmentPalletizingColumn = [
 ]
 
 
+
+export const PalletizingByTransferIdColumn = [
+  {
+    field: "ALS_PACKINGSLIPREF",
+    headerName: "ALS PACKINGSLIP REF",
+    width: 180,
+
+  },
+  {
+    field: "ALS_TRANSFERORDERTYPE",
+    headerName: "ALS TRANSFER ORDER TYPE",
+    width: 180,
+
+  },
+  {
+    field: "TRANSFERID",
+    headerName: "TRANSFER ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONIDFROM",
+    headerName: "INVENT LOCATION ID FROM",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONIDTO",
+    headerName: "INVENT LOCATION ID TO",
+    width: 180,
+
+  },
+  {
+    field: "QTYTRANSFER",
+    headerName: "QTY TRANSFER",
+    width: 180,
+
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEM NAME",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "SHIPMENTID",
+    headerName: "SHIPMENT ID",
+    width: 180,
+
+  },
+
+
+
+]
+
+

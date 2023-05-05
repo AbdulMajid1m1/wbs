@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {FaSearch} from "react-icons/fa"
-import Autocomplete from '@mui/material/Autocomplete';
 import userRequest from '../../utils/userRequest';
-import TextField from '@mui/material/TextField';
-// import { ReceiptsContext } from '../../contexts/ReceiptsContext';
+import { Autocomplete, TextField } from '@mui/material';
 import icon from "../../images/close.png"
 
-const PutAwayScreen2 = () => {
+const PutAwayScreen3 = () => {
   const navigate = useNavigate();
-
-//   const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
 
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
@@ -30,7 +26,6 @@ const PutAwayScreen2 = () => {
     console.log('Selected value:', value);
     // updateData({ ...statedata, RZONE: value.RZONE });
   };
-
 
   return (
     <>
@@ -58,6 +53,7 @@ const PutAwayScreen2 = () => {
                         <img src={icon} className='h-auto w-10 object-contain' alt='' />
                     </span>
                   </button>
+                  
                 </div>
               </div>
               
@@ -75,12 +71,24 @@ const PutAwayScreen2 = () => {
                 </div>
               </div>
 
+              <div>
+                <div className='flex gap-6 justify-center items-center'>
+                    <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                        <span>Quantity</span>
+                        <span>67</span>
+                    </div>
+
+                    <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                        <span>Picked</span>
+                        <span>4567</span>
+                    </div>
+                    </div>
+                </div>
+
             </div>
 
-            <div className="mb-6">
-            <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">List of Receiving Zones</label>
-
-
+            <div className='mb-6'>
+                
             <Autocomplete
                   id="zone"
                   options={dataList}
@@ -113,7 +121,7 @@ const PutAwayScreen2 = () => {
                       }}
 
                       className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Enter/Scan Receiving Zone"
+                      placeholder="Select Pallet type"
                       required
                     />
                   )}
@@ -127,13 +135,30 @@ const PutAwayScreen2 = () => {
                   }}
                 />
 
+
+            </div>
+
+            <div className="mb-6">
+                {/* <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter/Scan Serial Number</label> */}
+                <input id="enterscan" className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/Pallete Number"
+                />
+            </div >
+
+            <div className="mb-6">
+                <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Serial Number</label>
+                <select id="serial" className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/Pallete Number"
+                >
+                    <option>Serial Number</option>
+                    <option>Serial Number</option>
+                    <option>Serial Number</option>
+                </select>
             </div >
 
             <div className='mt-6'>
                 <button type='submit' 
                     className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
                   <span className='flex justify-center items-center'>
-                    <p>Proceed</p>
+                    <p>Generate Pallete Code</p>
                   </span>
                 </button>
             </div>
@@ -145,4 +170,4 @@ const PutAwayScreen2 = () => {
   )
 }
 
-export default PutAwayScreen2
+export default PutAwayScreen3

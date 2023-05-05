@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {FaSearch} from "react-icons/fa"
-import Autocomplete from '@mui/material/Autocomplete';
 import userRequest from '../../utils/userRequest';
-import TextField from '@mui/material/TextField';
-// import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 import icon from "../../images/close.png"
+import { Autocomplete, TextField } from '@mui/material';
 
-const PutAwayScreen2 = () => {
+const PutAwayLastScreen = () => {
   const navigate = useNavigate();
-
-//   const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
 
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
@@ -31,7 +27,6 @@ const PutAwayScreen2 = () => {
     // updateData({ ...statedata, RZONE: value.RZONE });
   };
 
-
   return (
     <>
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
@@ -45,7 +40,7 @@ const PutAwayScreen2 = () => {
                     <div className='relative'>
                       <input
                         className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
-                        placeholder='Shipment Palletizing'
+                        placeholder='Shipment Putaway'
                       />
                       <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
                         <FaSearch size={20} className='text-[#FFF]' />
@@ -53,7 +48,8 @@ const PutAwayScreen2 = () => {
                     </div>
                   </div>
                   
-                  <button type='button' onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium -mt-2 rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
+                  <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
+                    {/* Cancel */}
                     <span>
                         <img src={icon} className='h-auto w-10 object-contain' alt='' />
                     </span>
@@ -63,26 +59,26 @@ const PutAwayScreen2 = () => {
               
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>ITEMNAME</span>
-                  <span>PRODUCT</span>
+                  <span>ALL IN CAPS</span>
+                  <span>(PRODUCT)</span>
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
+              <div className='flex justify-between gap-2 mt-2 font-thin text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>Itemcode:</span>
-                  <span>0</span>
+                  <span>Results:</span>
+                  <span className='font-medium'>0</span>
                 </div>
               </div>
+
 
             </div>
 
-            <div className="mb-6">
-            <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">List of Receiving Zones</label>
-
-
+            <div className='mb-6'>
+            <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">List of Serial Numbers</label>   
+           
             <Autocomplete
-                  id="zone"
+                  id="serial"
                   options={dataList}
                   getOptionLabel={(option) => option.RZONE}
                   onChange={handleAutoComplete}
@@ -113,7 +109,7 @@ const PutAwayScreen2 = () => {
                       }}
 
                       className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Enter/Scan Receiving Zone"
+                      placeholder="SN"
                       required
                     />
                   )}
@@ -127,13 +123,23 @@ const PutAwayScreen2 = () => {
                   }}
                 />
 
+
+            </div>
+
+            <div className="mb-6">
+                {/* <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter/Scan Serial Number</label> */}
+                <input 
+                  id="enterscan" 
+                    className="bg-gray-50 font-semibold text-center border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                      placeholder="Enter/Scan Warehouse Location"
+                />
             </div >
 
             <div className='mt-6'>
                 <button type='submit' 
                     className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
                   <span className='flex justify-center items-center'>
-                    <p>Proceed</p>
+                    <p>Put-Away</p>
                   </span>
                 </button>
             </div>
@@ -145,4 +151,4 @@ const PutAwayScreen2 = () => {
   )
 }
 
-export default PutAwayScreen2
+export default PutAwayLastScreen

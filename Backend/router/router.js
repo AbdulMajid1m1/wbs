@@ -222,5 +222,13 @@ router.get("/getTransferDistributionByTransferId", checkAuthentication, WBSDB.ge
 // ------------- Transfer_Distribution APIS End ---------------
 
 
+// ------------- tbl_Shipment_Palletizing APIS Start -------------
+
+router.get("/getShipmentPalletizingByTransferId", checkAuthentication, WBSDB.getShipmentPalletizingByTransferId);
+
+router.get("/vaildatehipmentPalletizingSerialNumber", checkAuthentication, WBSDB.vaildatehipmentPalletizingSerialNumber);
+
+// ------------- tbl_Shipment_Palletizing APIS End ---------------
+
 export default router;
 

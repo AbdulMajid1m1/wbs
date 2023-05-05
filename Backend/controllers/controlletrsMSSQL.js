@@ -480,6 +480,9 @@ const WBSDB = {
   //   }
   // },
 
+
+  // tbl_Shipment_Palletizing start ------------------------------
+
   async getAllTblShipmentPalletizing(req, res, next) {
 
     try {
@@ -498,9 +501,137 @@ const WBSDB = {
     }
   },
 
+  async getShipmentPalletizingByTransferId(req, res, next,) {
+    try {
+      let query = `
+        SELECT * FROM dbo.tbl_Shipment_Palletizing
+        WHERE TRANSFERID = @TRANSFERID
+      `;
+      const { TRANSFERID } = req.query;
+      let request = pool1.request();
+      request.input('TRANSFERID', sql.NVarChar(20), TRANSFERID);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "Data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  // async vaildatehipmentPalletizingSerialNumber(req, res, next) {
+  //   try {
+  //     const { ItemSerialNo } = req.params;
+
+  //     // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
+  //     const checkMappedBarcodesQuery = `
+  //       SELECT COUNT(*) as count
+  //       FROM dbo.tblMappedBarcodes
+  //       WHERE ItemSerialNo = @ItemSerialNo
+  //     `;
+
+  //     let request = pool2.request();
+  //     request.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+  //     const checkMappedBarcodesResult = await request.query(checkMappedBarcodesQuery);
+
+  //     if (checkMappedBarcodesResult.recordset[0].count > 0) {
+  //       return res.status(400).send({ message: "Error: ItemSerialNo already exists in tbl_mappedBarcodes." });
+  //     }
+
+  //     let request2 = pool1.request();
+  //     request2
+  //     // Check if SHIPMENTID matches between tbl_Shipment_Palletizing and tbl_Shipment_Received_CL
+  //     const checkShipmentIDMatchQuery = `
+  //       SELECT COUNT(*) as count
+  //       FROM tbl_Shipment_Palletizing p
+  //       JOIN tbl_Shipment_Received_CL c
+  //         ON p.SHIPMENTID = c.SHIPMENTID
+  //       WHERE c.ItemSerialNo = @ItemSerialNo
+  //     `;
+
+  //     const checkShipmentIDMatchResult = await request2.query(checkShipmentIDMatchQuery);
+
+  //     if (checkShipmentIDMatchResult.recordset[0].count > 0) {
+  //       return res.status(200).send({ message: "Success: SHIPMENTID matches between tbl_Shipment_Palletizing and tbl_Shipment_Received_CL." });
+  //     } else {
+  //       return res.status(400).send({ message: "Error: SHIPMENTID does not match between tbl_Shipment_Palletizing and tbl_Shipment_Received_CL." });
+  //     }
+
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // }
+
+  async vaildatehipmentPalletizingSerialNumber(req, res, next) {
+    try {
+      const { ItemSerialNo } = req.query;
+
+
+      // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
+      const checkMappedBarcodesQuery = `
+        SELECT COUNT(*) as count
+        FROM dbo.tblMappedBarcodes
+        WHERE ItemSerialNo = @ItemSerialNo
+      `;
+
+      let request1 = pool2.request();
+      request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
+
+      if (checkMappedBarcodesResult.recordset[0].count > 0) {
+        return res.status(400).send({ message: "Error: ItemSerialNo already exists in tbl_mappedBarcodes." });
+      }
+
+      let request2 = pool1.request();
+      let request3 = pool2.request();
+
+      request2.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      request3.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+
+      // Fetch SHIPMENTID from tbl_Shipment_Received_CL
+
+      const getShipmentIDFromReceivedCLQuery = `
+        SELECT SHIPMENTID
+        FROM tbl_Shipment_Received_CL
+        WHERE SERIALNUM = @ItemSerialNo
+      `;
+      const shipmentIDFromReceivedCLResult = await request3.query(getShipmentIDFromReceivedCLQuery);
+      console.log(shipmentIDFromReceivedCLResult);
+      if (shipmentIDFromReceivedCLResult.recordset.length > 0) {
+        const receivedCLShipmentID = shipmentIDFromReceivedCLResult.recordset[0].SHIPMENTID;
+
+        // Check if SHIPMENTID exists in tbl_Shipment_Palletizing
+        console.log(receivedCLShipmentID);
+        const checkShipmentIDInPalletizingQuery = `
+          SELECT COUNT(*) as count
+          FROM tbl_Shipment_Palletizing
+          WHERE SHIPMENTID = @ReceivedCLShipmentID
+        `;
+        request2.input("ReceivedCLShipmentID", sql.NVarChar, receivedCLShipmentID);
+        const checkShipmentIDInPalletizingResult = await request2.query(checkShipmentIDInPalletizingQuery);
+
+        if (checkShipmentIDInPalletizingResult.recordset[0].count > 0) {
+          return res.status(200).send({ message: "Success: SHIPMENTID matches" });
+        } else {
+          return res.status(400).send({ message: "Error: SHIPMENTID does not match." });
+        }
+      } else {
+        return res.status(404).send({ message: "Error: ItemSerialNo not found in tbl_Shipment_Received_CL." });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 
+
+  // tbl_Shipment_Palletizing end ------------------------------
 
   // post request to insert data 
   async insertShipmentRecievingDataCL(req, res, next) {
@@ -697,25 +828,29 @@ const WBSDB = {
     }
   },
 
-  async getTransferDistributionByTransferId(req, res, next, transferId) {
+
+
+
+
+  async getTransferDistributionByTransferId(req, res, next,) {
     try {
       let query = `
         SELECT * FROM dbo.Transfer_Distribution
-        WHERE TRANSFERID = @transferId
+        WHERE TRANSFERID = @TRANSFERID
       `;
+      const { TRANSFERID } = req.query;
       let request = pool1.request();
-      request.input('transferId', sql.VarChar, transferId); // Replace 'sql.VarChar' with the appropriate data type for TRANSFERID
+      request.input('TRANSFERID', sql.NVarChar(20), TRANSFERID);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
-        return res.status(404).send({ message: "Shipment not found." });
+        return res.status(404).send({ message: "Data not found." });
       }
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
 
   async getTblShipmentReceivedCLStats(req, res, next) {
     try {

@@ -5,6 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
+import * as XLSX from 'xlsx';
 const UserDataTable = ({
   columnsName = [],
   data,
@@ -32,6 +36,8 @@ const UserDataTable = ({
     setMessage(null);
 
   };
+
+
   useEffect(() => {
     data.map((item, index) => {
       item.id = index + 1;
@@ -40,12 +46,6 @@ const UserDataTable = ({
       data.map((item, index) => ({ ...item, id: index + 1 }))
     );
   }, [data]);
-
-  // const filteredData = shipmentIdSearch
-  //   ? record.filter((item) =>
-  //     item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
-  //   )
-  //   : record;
 
   const filteredData = shipmentIdSearch && containerIdSearch
     ? record.filter((item) =>
@@ -218,6 +218,7 @@ const UserDataTable = ({
   };
 
 
+
   //Edit
   const handleEdit = async (rowData) => {
     // sessionStorage.setItem("edit", JSON.stringify(rowData));
@@ -252,9 +253,6 @@ const UserDataTable = ({
       case "TRANSFERID":
         navigate("/updatepalletizing/" + rowData.ALS_PACKINGSLIPREF)
         break;
-      // case "ITEMNAME":
-      //   navigate("/allitems/" + rowData.ITEMNAME)
-      //   break;
 
       default:
         // do nothing
@@ -322,34 +320,63 @@ const UserDataTable = ({
     },
   ];
 
-  // const RemoveBtn = [
-  //   {
-  //     field: "action",
-  //     headerName: "Action",
-  //     width: 130,
-  //     renderCell: (params) => {
-  //       return (
-  //         <div className="cellAction">
-  //           <div
-  //             className="deleteButton"
-  //             onClick={() => handleRemoveRole(params.row)}
-  //           >
-  //             REMOVE ROLE
-  //           </div>
+  const handleExport = () => {
+    // get only the data from the record array which matsch columnsName field
+    const data = record.map((item) => {
+      const row = {};
+      columnsName.forEach((column) => {
+        row[column.field] = item[column.field];
+      });
 
-  //         </div>
-  //       );
-  //     },
-  //   },
-  // ];
+      return row;
+    });
+    // Create a new array that excludes the 'id' field
+    const dataWithoutId = data.map(({ id, ...rest }) => rest);
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(dataWithoutId); // Pass the new array to the 'json_to_sheet' method
+    XLSX.utils.book_append_sheet(wb, ws, title);
+    XLSX.writeFile(wb, `${title}.xlsx`); // Export the file
+  };
 
-  // const idColumn = [
-  //   {
-  //     field: "id",
-  //     headerName: "ID",
-  //     width: 30,
-  //   },
-  // ];
+
+
+
+
+  const handlePdfExport = () => {
+    const doc = new jsPDF("landscape");
+
+    // Calculate the font size based on the number of columns
+    const maxColumns = 10; // Maximum number of columns before font size starts to decrease
+    const minFontSize = 4; // Minimum font size
+    const maxFontSize = 8; // Maximum font size
+    const fontSize = columnsName.length <= maxColumns ? maxFontSize : Math.max(minFontSize, maxFontSize - (columnsName.length - maxColumns));
+
+    const tableData = record.map((item) => {
+      const row = {};
+      columnsName.forEach((column) => {
+        row[column.field] = item[column.field];
+      });
+      return Object.values(row);
+    });
+
+    const headers = columnsName.map((column) => column.headerName);
+
+    // Use autoTable to generate the table in the PDF
+    doc.autoTable({
+      head: [headers],
+      body: tableData,
+      theme: "grid",
+      styles: { fontSize: fontSize },
+      headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: "bold" },
+      startY: 20,
+      tableWidth: "auto", // Automatically adjust table width based on content
+    });
+
+    doc.save(`${title}.pdf`);
+  };
+
+
+
 
   return (
     <>
@@ -384,6 +411,8 @@ const UserDataTable = ({
               />
             </span> : null}
 
+
+
           </div>
 
           <span className="leftDatatableTitle">
@@ -397,6 +426,10 @@ const UserDataTable = ({
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
+              <button onClick={handleExport}>Export to Excel</button>
+              <button onClick={() => handlePdfExport(8)}
+              >Export to Pdf</button>
+
             </span>
             }
 
@@ -416,12 +449,7 @@ const UserDataTable = ({
           className="datagrid"
           // rows={record}
           rows={filteredData}
-          // columns={
-          //   // actionColumnVisibility !== false
-          //   //   ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
-          //   //   : 
-          //   idColumn.concat(columnsWithCustomCell)
-          // }
+
           columns={
             actionColumnVisibility !== false
               ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
@@ -433,21 +461,6 @@ const UserDataTable = ({
           rowsPerPageOptions={[30]}
           checkboxSelection
         />
-
-        {/* Displaying myValue inside the table Value in center*/}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "-40px", marginLeft: "10px", }}>
-          {/* <h1 style={{ whiteSpace: "nowrap" }}>UserId: {myValue}</h1> */}
-          <style>
-            {`
-            @media (max-width: 480px) {
-              h1 {
-                display: none;
-              }
-            }
-            `}
-          </style>
-        </div>
-
       </div>
     </>
 

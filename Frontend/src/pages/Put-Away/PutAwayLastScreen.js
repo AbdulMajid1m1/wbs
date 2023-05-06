@@ -48,25 +48,7 @@ const PutAwayLastScreen = () => {
         // get selectedShipmentReceivedClData from session storage
         const selectedShipmentReceivedClData = JSON.parse(sessionStorage.getItem('selectedShipmentReceivedClData'));
         console.log(response.data);
-        console.log({
-          itemcode: selectedShipmentReceivedClData.ITEMID,
-          itemdesc: selectedShipmentReceivedClData.ITEMNAME,
-          gtin: selectedShipmentReceivedClData.GTIN,
-          remarks: selectedShipmentReceivedClData.REMARKS,
-          classification: selectedShipmentReceivedClData.CLASSIFICATION,
-          // Provide the correct values for mainlocation, binlocation, intcode, itemserialno, mapdate, reference, sid, cid, po, and trans based on your data.
-          mainlocation: selectedPutAwayData.INVENTLOCATIONIDFROM,
-          binlocation: selectedPutAwayData.WMSLOCATIONID,
-          intcode: selectedPutAwayData.CONFIGID,
-          itemserialno: selectedShipmentReceivedClData.SERIALNUM,
-          mapdate: selectedShipmentReceivedClData.PALLET_DATE,
-          palletcode: palletCode,
-          reference: selectedPutAwayData.ALS_PACKINGSLIPREF,
-          sid: selectedShipmentReceivedClData.SHIPMENTID,
-          cid: selectedShipmentReceivedClData.CONTAINERID,
-          po: selectedShipmentReceivedClData.POQTY,
-          trans: selectedPutAwayData.TRANSFERID,
-        })
+
 
         // Call the insertIntoMappedBarcode API
         userRequest.post('/insertIntoMappedBarcode', null, {
@@ -79,7 +61,7 @@ const PutAwayLastScreen = () => {
             classification: selectedShipmentReceivedClData.CLASSIFICATION,
             // Provide the correct values for mainlocation, binlocation, intcode, itemserialno, mapdate, reference, sid, cid, po, and trans based on your data.
             mainlocation: selectedPutAwayData.INVENTLOCATIONIDFROM,
-            binlocation: selectedPutAwayData.WMSLOCATIONID,
+            binlocation: selectedPutAwayData.zonecode,
             intcode: selectedPutAwayData.CONFIGID,
             itemserialno: selectedShipmentReceivedClData.SERIALNUM,
             mapdate: selectedShipmentReceivedClData.PALLET_DATE,
@@ -96,6 +78,15 @@ const PutAwayLastScreen = () => {
           console.log(err);
           alert('Error in insertIntoMappedBarcode API');
         });
+
+        userRequest.put(`/updateShipmentRecievedDataCL?SERIALNUM=${selectedShipmentReceivedClData.SERIALNUM}&BIN=${selectedPutAwayData.zonecode}}`)
+          .then((updateResponse) => {
+            console.log(updateResponse.data);
+          }).catch(err => {
+            console.log(err);
+            alert('Error in updateShipmentRecievedDataCL API');
+          });
+
 
       }).catch(err => {
         console.log(err);

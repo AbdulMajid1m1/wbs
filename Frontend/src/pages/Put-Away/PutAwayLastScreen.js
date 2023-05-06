@@ -11,7 +11,9 @@ const PutAwayLastScreen = () => {
   const [palletCode, setPalletCode] = useState('');
   const [serialNumbers, setSerialNumbers] = useState([]);
   const [ShipmentRecevedClData, setShipmentRecevedClData] = useState([]);
-
+  // const [selectedShipmentReceivedClData, setSelectedShipmentReceivedClData] = useState({});
+  // get data from selectedPutAwayData session storage and set it to selectedPutAwayData if it is not null
+  const [selectedPutAwayData, setSelectedPutAwayData] = useState(JSON.parse(sessionStorage.getItem('selectedPutAwayData')) ?? {});
   const [zonecode, setZoneCode] = useState('');
 
 
@@ -31,8 +33,11 @@ const PutAwayLastScreen = () => {
 
   const handleAutoComplete = (event, value) => {
     console.log(`Selected serial number: ${value}`);
-    // find the shipment received cl data by serial number and save in session storage name is selectedShipmentReceivedClData
     const selectedShipmentReceivedClData = ShipmentRecevedClData.find(item => item.SERIALNUM === value);
+    console.log(selectedShipmentReceivedClData);
+    // if (!selectedShipmentReceivedClData) {
+    //   setSelectedShipmentReceivedClData(selectedShipmentReceivedClData);
+    // }
     sessionStorage.setItem('selectedShipmentReceivedClData', JSON.stringify(selectedShipmentReceivedClData));
 
   };
@@ -40,14 +45,63 @@ const PutAwayLastScreen = () => {
   const handleClick = () => {
     userRequest.get(`/validateZoneCode?ZONECODE=${zonecode}&PALLETCODE=${palletCode}`)
       .then((response) => {
-        // setZoneCode(response.data)
-        alert('Done')
-      })
-      .catch(err => {
-        console.log(err)
-        alert('error')
-      })
-  }
+        // get selectedShipmentReceivedClData from session storage
+        const selectedShipmentReceivedClData = JSON.parse(sessionStorage.getItem('selectedShipmentReceivedClData'));
+        console.log(response.data);
+        console.log({
+          itemcode: selectedShipmentReceivedClData.ITEMID,
+          itemdesc: selectedShipmentReceivedClData.ITEMNAME,
+          gtin: selectedShipmentReceivedClData.GTIN,
+          remarks: selectedShipmentReceivedClData.REMARKS,
+          classification: selectedShipmentReceivedClData.CLASSIFICATION,
+          // Provide the correct values for mainlocation, binlocation, intcode, itemserialno, mapdate, reference, sid, cid, po, and trans based on your data.
+          mainlocation: selectedPutAwayData.INVENTLOCATIONIDFROM,
+          binlocation: selectedPutAwayData.WMSLOCATIONID,
+          intcode: selectedPutAwayData.CONFIGID,
+          itemserialno: selectedShipmentReceivedClData.SERIALNUM,
+          mapdate: selectedShipmentReceivedClData.PALLET_DATE,
+          palletcode: palletCode,
+          reference: selectedPutAwayData.ALS_PACKINGSLIPREF,
+          sid: selectedShipmentReceivedClData.SHIPMENTID,
+          cid: selectedShipmentReceivedClData.CONTAINERID,
+          po: selectedShipmentReceivedClData.POQTY,
+          trans: selectedPutAwayData.TRANSFERID,
+        })
+
+        // Call the insertIntoMappedBarcode API
+        userRequest.post('/insertIntoMappedBarcode', null, {
+
+          headers: {
+            itemcode: selectedShipmentReceivedClData.ITEMID,
+            itemdesc: selectedShipmentReceivedClData.ITEMNAME,
+            gtin: selectedShipmentReceivedClData.GTIN,
+            remarks: selectedShipmentReceivedClData.REMARKS,
+            classification: selectedShipmentReceivedClData.CLASSIFICATION,
+            // Provide the correct values for mainlocation, binlocation, intcode, itemserialno, mapdate, reference, sid, cid, po, and trans based on your data.
+            mainlocation: selectedPutAwayData.INVENTLOCATIONIDFROM,
+            binlocation: selectedPutAwayData.WMSLOCATIONID,
+            intcode: selectedPutAwayData.CONFIGID,
+            itemserialno: selectedShipmentReceivedClData.SERIALNUM,
+            mapdate: selectedShipmentReceivedClData.PALLET_DATE,
+            palletcode: palletCode,
+            reference: selectedPutAwayData.ALS_PACKINGSLIPREF,
+            sid: selectedShipmentReceivedClData.SHIPMENTID,
+            cid: selectedShipmentReceivedClData.CONTAINERID,
+            po: selectedShipmentReceivedClData.POQTY,
+            trans: selectedPutAwayData.TRANSFERID,
+          }
+        }).then((insertResponse) => {
+          console.log(insertResponse.data);
+        }).catch(err => {
+          console.log(err);
+          alert('Error in insertIntoMappedBarcode API');
+        });
+
+      }).catch(err => {
+        console.log(err);
+        alert('Error in validateZoneCode API');
+      });
+  };
 
 
 
@@ -64,9 +118,9 @@ const PutAwayLastScreen = () => {
                     <div className='relative'>
                       <input
                         className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
-                          placeholder='Shipment Putaway'
-                            value={palletCode}
-                              onChange={handleInputChange}
+                        placeholder='Shipment Putaway'
+                        value={palletCode}
+                        onChange={handleInputChange}
                       />
                       <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
                         <FaSearch size={20} className='text-[#FFF]' />
@@ -101,8 +155,8 @@ const PutAwayLastScreen = () => {
             </div>
 
             <div className='mb-6'>
-            <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">List of Serial Numbers</label>   
-            {/* <input 
+              <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">List of Serial Numbers</label>
+              {/* <input 
                   id="serial" 
                     className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                       placeholder="List of Serial Numbers"

@@ -84,7 +84,6 @@ const PutAwayLastScreen = () => {
 
         }).catch(err => {
           console.log(err);
-          // alert('Error in insertIntoMappedBarcode API');
           Swal.fire({
             icon: 'error',
             title: 'Error',

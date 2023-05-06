@@ -78,20 +78,12 @@ const PutAwayTable = ({
         },
     ];
 
-    const updateRowData = rowData => {
-        rowData.POQTY = rowData.QTY;
-        delete rowData.QTY;
-        return rowData;
-    };
-    const handleRowClick = (rowData, idx) => {
-        if (uniqueId === "receiptsManagement") {
-            console.log("rowData", rowData);
 
-            let newData = updateRowData(rowData);
-            console.log("newData", newData);
-            // temporary Comment
-            // updateData(newData);
-            // navigate("/receiptsecond")
+    const handleRowClick = (rowData, idx) => {
+        if (uniqueId === "pustawayScreen1") {
+            console.log("rowData", rowData);
+            sessionStorage.setItem("selectedPutAwayData", JSON.stringify(rowData));
+            navigate("/putaway2");
         }
         else {
             return

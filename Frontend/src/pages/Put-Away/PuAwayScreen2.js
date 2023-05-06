@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import {FaSearch} from "react-icons/fa"
+import { FaSearch } from "react-icons/fa"
 import Autocomplete from '@mui/material/Autocomplete';
 import userRequest from '../../utils/userRequest';
 import TextField from '@mui/material/TextField';
@@ -10,7 +10,7 @@ import icon from "../../images/close.png"
 const PutAwayScreen2 = () => {
   const navigate = useNavigate();
 
-//   const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
+  //   const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
 
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
@@ -38,7 +38,7 @@ const PutAwayScreen2 = () => {
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#e69138] text-xl mb:2 md:mb-5">
-        
+
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
                 <div className='w-full flex justify-between'>
                   <div className='w-[85%]'>
@@ -52,15 +52,15 @@ const PutAwayScreen2 = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <button type='button' onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium -mt-2 rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                     <span>
-                        <img src={icon} className='h-auto w-8 object-contain' alt='' />
+                      <img src={icon} className='h-auto w-8 object-contain' alt='' />
                     </span>
                   </button>
                 </div>
               </div>
-              
+
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>ITEMNAME</span>
@@ -78,66 +78,66 @@ const PutAwayScreen2 = () => {
             </div>
 
             <div className="mb-6">
-            <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">List of Receiving Zones</label>
+              <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">List of Receiving Zones</label>
             </div>
 
             <div className='mb-6'>
-            <span className='text-[#00006A] font-semibold'>RZONE</span>
-            <Autocomplete
-                  id="zone"
-                  options={dataList}
-                  getOptionLabel={(option) => option.RZONE}
-                  onChange={handleAutoComplete}
+              <span className='text-[#00006A] font-semibold'>RZONE</span>
+              <Autocomplete
+                id="zone"
+                options={dataList}
+                getOptionLabel={(option) => option.RZONE}
+                onChange={handleAutoComplete}
 
-                  // onChange={(event, value) => {
-                  //   if (value) {
-                  //     console.log(`Selected: ${value}`);
+                // onChange={(event, value) => {
+                //   if (value) {
+                //     console.log(`Selected: ${value}`);
 
-                  //   }
-                  // }}
-                  onInputChange={(event, value) => {
-                    if (!value) {
-                      // perform operation when input is cleared
-                      console.log("Input cleared");
+                //   }
+                // }}
+                onInputChange={(event, value) => {
+                  if (!value) {
+                    // perform operation when input is cleared
+                    console.log("Input cleared");
 
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        className: "text-white",
-                      }}
-                      InputLabelProps={{
-                        ...params.InputLabelProps,
-                        style: { color: "white" },
-                      }}
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      className: "text-white",
+                    }}
+                    InputLabelProps={{
+                      ...params.InputLabelProps,
+                      style: { color: "white" },
+                    }}
 
-                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Enter/Scan Receiving Zone"
-                      required
-                    />
-                  )}
-                  classes={{
-                    endAdornment: "text-white",
-                  }}
-                  sx={{
-                    '& .MuiAutocomplete-endAdornment': {
-                      color: 'white',
-                    },
-                  }}
-                />
+                    className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                    placeholder="Enter/Scan Receiving Zone"
+                    required
+                  />
+                )}
+                classes={{
+                  endAdornment: "text-white",
+                }}
+                sx={{
+                  '& .MuiAutocomplete-endAdornment': {
+                    color: 'white',
+                  },
+                }}
+              />
 
             </div >
 
             <div className='mt-6'>
-                <button type='submit' 
-                    className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
-                  <span className='flex justify-center items-center'>
-                    <p>Proceed</p>
-                  </span>
-                </button>
+              <button type='submit' onClick={() => navigate('/putaway3')}
+                className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
+                <span className='flex justify-center items-center'>
+                  <p>Proceed</p>
+                </span>
+              </button>
             </div>
 
           </div>

@@ -128,7 +128,9 @@ const PutAway = () => {
 
             <div className="mb-6">
 
-            <PutAwayTable data={data} columnsName={PalletizingByTransferIdColumn}
+            <PutAwayTable 
+            uniqueId={"pustawayScreen1"}
+            data={data} columnsName={PalletizingByTransferIdColumn}
 
             />
             </div >

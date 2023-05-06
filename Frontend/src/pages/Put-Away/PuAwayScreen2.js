@@ -11,6 +11,10 @@ const PutAwayScreen2 = () => {
   const navigate = useNavigate();
 
   //   const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
+  const data = sessionStorage.getItem('putawaydata')
+  const parsedData = JSON.parse(data)
+  console.log(parsedData);
+  console.log(data)
 
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
@@ -64,14 +68,14 @@ const PutAwayScreen2 = () => {
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>ITEMNAME</span>
-                  <span>PRODUCT</span>
+                  <span>{parsedData[0].ITEMNAME}</span>
                 </div>
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>Itemcode:</span>
-                  <span>0</span>
+                  <span>{parsedData[0].TRANSFERID}</span>
                 </div>
               </div>
 

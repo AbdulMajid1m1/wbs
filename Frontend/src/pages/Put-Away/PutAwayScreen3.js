@@ -13,6 +13,12 @@ const PutAwayScreen3 = () => {
   const navigate = useNavigate();
   const [palletIds, setPalletIds] = useState([]);
 
+  //getItem data
+  const data = sessionStorage.getItem('putawaydata')
+  const parsedData = JSON.parse(data)
+  console.log(parsedData);
+  console.log(data)
+
   const options = [
     { label: "1000 x 1200" },
     { label: "80 x 1200" }
@@ -97,14 +103,14 @@ const PutAwayScreen3 = () => {
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>ITEMNAME</span>
-                  <span>PRODUCT</span>
+                  <span>{parsedData[0].ITEMNAME}</span>
                 </div>
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>Itemcode:</span>
-                  <span>0</span>
+                  <span>{parsedData[0].TRANSFERID}</span>
                 </div>
               </div>
 
@@ -112,12 +118,12 @@ const PutAwayScreen3 = () => {
                 <div className='flex gap-6 justify-center items-center'>
                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                         <span>Quantity</span>
-                        <span>67</span>
+                        <span>{parsedData[0].QTYTRANSFER}</span>
                     </div>
 
                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                         <span>Picked</span>
-                        <span>4567</span>
+                        <span>0</span>
                     </div>
                     </div>
                 </div>

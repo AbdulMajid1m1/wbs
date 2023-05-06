@@ -8,24 +8,41 @@ import { Autocomplete, TextField } from '@mui/material';
 const PutAwayLastScreen = () => {
   const navigate = useNavigate();
 
-  const [dataList, setDataList] = useState([]);
-  useEffect(() => {
-    // console.log('Updated data:', statedata);
-    userRequest.get('/getAllTblRZones')
-      .then(response => {
-        console.log(response?.data);
-        setDataList(response?.data ?? []);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  const [palletCode, setPalletCode] = useState('');
+  const [serialNumbers, setSerialNumbers] = useState([]);
+  const [zonecode, setZoneCode] = useState('');
 
-  }, []);
 
-  const handleAutoComplete = (event, value) => {
-    console.log('Selected value:', value);
-    // updateData({ ...statedata, RZONE: value.RZONE });
-  };
+    const handleInputChange = (event) => {
+      const value = event.target.value;
+      setPalletCode(value);
+      if (value) {
+        userRequest.post(`/getShipmentRecievedCLDataByPalletCode?PalletCode=${value}`)
+          .then(response => {
+            const serials = response.data.map(item => item.SERIALNUM);
+            setSerialNumbers(serials);
+          })
+          .catch(error => console.log(error));
+      }
+    };
+
+    const handleAutoComplete = (event, value) => {
+      console.log(`Selected serial number: ${value}`);
+    };
+
+    const handleClick = () => {
+      userRequest.get(`/validateZoneCode?ZONECODE=${zonecode}&PALLETCODE=${palletCode}`)
+        .then((response) => {
+            // setZoneCode(response.data)
+            alert('Done')
+        })
+        .catch(err => {
+          console.log(err)
+          alert('error')
+        })
+    }
+
+
 
   return (
     <>
@@ -41,6 +58,8 @@ const PutAwayLastScreen = () => {
                       <input
                         className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
                         placeholder='Shipment Putaway'
+                        value={palletCode}
+                        onChange={handleInputChange}
                       />
                       <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
                         <FaSearch size={20} className='text-[#FFF]' />
@@ -59,8 +78,8 @@ const PutAwayLastScreen = () => {
               
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>ALL IN CAPS</span>
-                  <span>(PRODUCT)</span>
+                  <span>All IN CAPS (LETTERS, DIGITS AND SIZE)</span>
+                  {/* <span>(PRODUCT)</span> */}
                 </div>
               </div>
 
@@ -84,12 +103,10 @@ const PutAwayLastScreen = () => {
             </div>
 
             <div className='mb-6'>
-            <Autocomplete
-                  id="serial"
-                  options={dataList}
-                  getOptionLabel={(option) => option.RZONE}
-                  onChange={handleAutoComplete}
-
+              <Autocomplete
+                 id="serial"
+                 options={serialNumbers}
+                 onChange={handleAutoComplete}            
                   // onChange={(event, value) => {
                   //   if (value) {
                   //     console.log(`Selected: ${value}`);
@@ -136,14 +153,17 @@ const PutAwayLastScreen = () => {
             <div className="mb-6">
                 {/* <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter/Scan Serial Number</label> */}
                 <input 
+                 onChange={(e) => setZoneCode(e.target.value)}
                   id="enterscan" 
                     className="bg-gray-50 font-semibold text-center border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                      placeholder="Enter/Scan Warehouse Location"
+                      placeholder="Enter/Scan Warehouse Zone"
                 />
             </div >
 
             <div className='mt-6'>
-                <button type='submit' 
+                <button 
+                 onClick={handleClick}
+                  type='submit' 
                     className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
                   <span className='flex justify-center items-center'>
                     <p>Put-Away</p>

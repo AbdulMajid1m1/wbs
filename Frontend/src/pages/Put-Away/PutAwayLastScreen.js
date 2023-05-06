@@ -174,7 +174,7 @@ const PutAwayLastScreen = () => {
                 <input 
                   id="enterscan" 
                     className="bg-gray-50 font-semibold text-center border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                      placeholder="Enter/Scan Warehouse Location"
+                      placeholder="Enter/Scan Warehouse Zone"
                 />
             </div >
 

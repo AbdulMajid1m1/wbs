@@ -1099,7 +1099,7 @@ const WBSDB = {
     }
   },
 
-  async getShipmentRecievedCLDataByPalletId(req, res, next) {
+  async getShipmentRecievedCLDataByPalletCode(req, res, next) {
 
     try {
       const { PalletCode } = req.query;
@@ -2926,12 +2926,17 @@ const WBSDB = {
 
 
   // ------ tb_location_CL table conroller Start --------
-  async getTblLocationsCLByZoneCode(req, res) {
+  async validateZoneCode(req, res) {
     try {
-      const zoneCode = req.query.zoneCode;
+      const zoneCode = req.query.ZONECODE;
+      const palletCode = req.query.PALLETCODE;
 
       if (!zoneCode) {
-        return res.status(400).send({ message: 'ZONE_CODE is required in the query.' });
+        return res.status(400).send({ message: 'ZONECODE is required in the query.' });
+      }
+
+      if (!palletCode) {
+        return res.status(400).send({ message: 'PALLETCODE is required in the query.' });
       }
 
       // Fetch data from tbl_locations_CL based on ZONE_CODE
@@ -2946,14 +2951,37 @@ const WBSDB = {
 
       const locations = result.recordset;
 
-      res.status(200).send({ locations });
+      if (locations.length === 0) {
+        return res.status(404).send({ message: 'ZoneCode not found in tbl_locations.' });
+      }
+
+      // Check if Zone_Code is matched in tbl_Shipment_Received_CL based on PalletCode
+      const shipmentQuery = `
+      SELECT * FROM tbl_Shipment_Received_CL
+      WHERE RZONE = @ZoneCode AND PalletCode = @PalletCode
+    `;
+
+      const shipmentResult = await pool2.request()
+        .input('ZoneCode', sql.NVarChar, zoneCode)
+        .input('PalletCode', sql.NVarChar, palletCode)
+        .query(shipmentQuery);
+
+      const shipments = shipmentResult.recordset;
+
+      if (shipments.length === 0) {
+        return res.status(404).send({ message: 'Zone_Code and PalletCode not matched in tbl_Shipment_Received_CL.' });
+      }
+
+      res.status(200).send({
+        message: "Zone_Code and PalletCode matched in tbl_Shipment_Received_CL.",
+        locations, shipments
+      });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: error.message });
     }
   }
   ,
-
 
 
 

@@ -92,7 +92,7 @@ router.get("/getTblShipmentReceivedCLStats", checkAuthentication, WBSDB.getTblSh
 
 router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
 
-router.post("/getShipmentRecievedCLDataByPalletId", checkAuthentication, WBSDB.getShipmentRecievedCLDataByPalletId)
+router.post("/getShipmentRecievedCLDataByPalletCode", checkAuthentication, WBSDB.getShipmentRecievedCLDataByPalletCode)
 
 router.post("/insertShipmentRecievedDataCL", checkAuthentication, WBSDB.insertShipmentRecievedDataCL);
 
@@ -238,6 +238,6 @@ router.post("/generateAndUpdatePalletIds", checkAuthentication, WBSDB.generateAn
 // ------------- tbl_locations_CL APIS Start ------------- 
 
 
-router.get("/getTblLocationsCLByZoneCode", checkAuthentication, WBSDB.getTblLocationsCLByZoneCode);
+router.get("/validateZoneCode", checkAuthentication, WBSDB.validateZoneCode);
 
 export default router;

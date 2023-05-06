@@ -55,6 +55,7 @@ const PutAwayScreen3 = () => {
       // handle response
       setPalletIds(response.data);
       alert(response.data.message)
+      navigate('/putawaylast')
     })
     .catch(error => {
       // handle error

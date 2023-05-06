@@ -12,12 +12,11 @@ import axios from 'axios';
 const PutAwayScreen3 = () => {
   const navigate = useNavigate();
 
-  const [dataList, setDataList] = useState([]);
-  // const [serialnumberlist, setSerialNumberList] = useState([]);
-
-  // const handleseriallist = (e) => {
-  //   setSerialNumberList(e.target.value);
-  // }
+  // const [dataList, setDataList] = useState([]);
+  const options = [
+    { label: "1000 x 1200" },
+    { label: "80 x 1200" }
+  ];
 
   const [serialnumberlist, setSerialNumberList] = useState([]);
   const validateSerialNumber = async (serialNumber) => {
@@ -40,18 +39,19 @@ const PutAwayScreen3 = () => {
   }
 
 
-  useEffect(() => {
-    // console.log('Updated data:', statedata);
-    userRequest.get('/getAllTblRZones')
-      .then(response => {
-        console.log(response?.data);
-        setDataList(response?.data ?? []);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  // useEffect(() => {
+  //   // console.log('Updated data:', statedata);
+  //   userRequest.get('/getAllTblRZones')
+  //     .then(response => {
+  //       console.log(response?.data);
+  //       setDataList(response?.data ?? []);
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //     });
 
-  }, []);
+  // }, []);
+
 
   const handleAutoComplete = (event, value) => {
     console.log('Selected value:', value);
@@ -122,8 +122,8 @@ const PutAwayScreen3 = () => {
                 
             <Autocomplete
                   id="zone"
-                  options={dataList}
-                  getOptionLabel={(option) => option.RZONE}
+                  options={options}
+                  getOptionLabel={(option) => option.label}
                   onChange={handleAutoComplete}
 
                   // onChange={(event, value) => {

@@ -2485,7 +2485,7 @@ const WBSDB = {
         itemdesc,
         gtin,
         remarks,
-        user,
+
         classification,
         mainlocation,
         binlocation,
@@ -2500,6 +2500,8 @@ const WBSDB = {
         trans
       } = req.headers;
 
+
+
       let query = ` 
         INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
         VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
@@ -2509,7 +2511,7 @@ const WBSDB = {
       request.input('itemDesc', sql.NVarChar(255), itemdesc);
       request.input('gtin', sql.VarChar(150), gtin);
       request.input('remarks', sql.VarChar(100), remarks);
-      request.input('user', sql.VarChar(50), user);
+      request.input('user', sql.VarChar(50), req.token.UserID);
       request.input('classification', sql.VarChar(150), classification);
       request.input('mainLocation', sql.VarChar(200), mainlocation);
       request.input('binLocation', sql.VarChar(200), binlocation);

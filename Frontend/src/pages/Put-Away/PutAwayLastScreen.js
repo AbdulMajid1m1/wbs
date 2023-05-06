@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import { Autocomplete, TextField } from '@mui/material';
+import Swal from 'sweetalert2';
 
 const PutAwayLastScreen = () => {
   const navigate = useNavigate();
@@ -74,9 +75,21 @@ const PutAwayLastScreen = () => {
           }
         }).then((insertResponse) => {
           console.log(insertResponse.data);
+          // alert(insertResponse.data.message)
+          Swal.fire({
+            icon: 'success',
+            title: 'Inserted',
+            text: insertResponse.data.message,
+          })
+
         }).catch(err => {
           console.log(err);
-          alert('Error in insertIntoMappedBarcode API');
+          // alert('Error in insertIntoMappedBarcode API');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error in insertIntoMappedBarcode API',
+          })
         });
 
         userRequest.put(`/updateShipmentRecievedDataCL?SERIALNUM=${selectedShipmentReceivedClData.SERIALNUM}&BIN=${selectedPutAwayData.zonecode}}`)

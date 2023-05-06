@@ -57,9 +57,9 @@ const PutAwayLastScreen = () => {
                     <div className='relative'>
                       <input
                         className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
-                        placeholder='Shipment Putaway'
-                        // value={palletCode}
-                        // onChange={handleInputChange}
+                          placeholder='Shipment Putaway'
+                            value={palletCode}
+                              onChange={handleInputChange}
                       />
                       <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
                         <FaSearch size={20} className='text-[#FFF]' />
@@ -95,13 +95,13 @@ const PutAwayLastScreen = () => {
 
             <div className='mb-6'>
             <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">List of Serial Numbers</label>   
-            <input 
+            {/* <input 
                   id="serial" 
                     className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                       placeholder="List of Serial Numbers"
                         value={palletCode}
                            onChange={handleInputChange}
-                />
+                /> */}
             </div>
 
             <div className='mb-6'>

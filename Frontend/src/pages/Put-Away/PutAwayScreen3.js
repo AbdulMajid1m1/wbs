@@ -180,7 +180,8 @@ const PutAwayScreen3 = () => {
                   id="enterscan" 
                     className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/Serial Number"
                       // value={serialnumberlist}
-                      onChange={handleSerialNumberInput}
+                      // onChange={handleSerialNumberInput}
+                      onBlur={handleSerialNumberInput}
               />
             </div >
 

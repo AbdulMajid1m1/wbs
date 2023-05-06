@@ -11,8 +11,8 @@ import axios from 'axios';
 
 const PutAwayScreen3 = () => {
   const navigate = useNavigate();
+  const [palletIds, setPalletIds] = useState([]);
 
-  // const [dataList, setDataList] = useState([]);
   const options = [
     { label: "1000 x 1200" },
     { label: "80 x 1200" }
@@ -39,23 +39,28 @@ const PutAwayScreen3 = () => {
   }
 
 
-  // useEffect(() => {
-  //   // console.log('Updated data:', statedata);
-  //   userRequest.get('/getAllTblRZones')
-  //     .then(response => {
-  //       console.log(response?.data);
-  //       setDataList(response?.data ?? []);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-
-  // }, []);
-
-
   const handleAutoComplete = (event, value) => {
     console.log('Selected value:', value);
     // updateData({ ...statedata, RZONE: value.RZONE });
+  };
+
+  const handleClick = () => {
+    userRequest.post('/generateAndUpdatePalletIds', null, {
+      params: {
+        // serialNumberList: ['SN12347', 'SN12342']
+        serialNumberList: serialnumberlist
+      }
+    })
+    .then(response => {
+      // handle response
+      setPalletIds(response.data);
+      alert(response.data.message)
+    })
+    .catch(error => {
+      // handle error
+      console.error(error);
+      alert("error")
+    });
   };
 
   return (
@@ -201,8 +206,10 @@ const PutAwayScreen3 = () => {
             </div >
 
             <div className='mt-6'>
-                <button type='submit' 
-                    className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
+                <button
+                  onClick={handleClick}
+                    type='submit' 
+                      className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
                   <span className='flex justify-center items-center'>
                     <p>Generate Pallete Code</p>
                   </span>

@@ -96,11 +96,11 @@ const PutAwayLastScreen = () => {
             <div className='mb-6'>
             <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">List of Serial Numbers</label>   
             <input 
-                value={palletCode}
-                onChange={handleInputChange}
                   id="serial" 
                     className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                       placeholder="List of Serial Numbers"
+                        value={palletCode}
+                           onChange={handleInputChange}
                 />
             </div>
 

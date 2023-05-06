@@ -7,7 +7,7 @@ import { Autocomplete, TextField } from '@mui/material';
 
 const PutAwayLastScreen = () => {
   const navigate = useNavigate();
-
+  // something is change
   const [palletCode, setPalletCode] = useState('');
   const [serialNumbers, setSerialNumbers] = useState([]);
   const [zonecode, setZoneCode] = useState('');

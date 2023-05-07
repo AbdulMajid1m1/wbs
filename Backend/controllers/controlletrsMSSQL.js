@@ -554,9 +554,7 @@ const WBSDB = {
 
   async vaildatehipmentPalletizingSerialNumber(req, res, next) {
     try {
-      const { ItemSerialNo } = req.query;
-
-
+      const { ItemSerialNo, SHIPMENTID } = req.query;
       // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
       const checkMappedBarcodesQuery = `
         SELECT COUNT(*) as count
@@ -569,7 +567,7 @@ const WBSDB = {
       const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
 
       if (checkMappedBarcodesResult.recordset[0].count > 0) {
-        return res.status(400).send({ message: "Error: ItemSerialNo already exists in tbl_mappedBarcodes." });
+        return res.status(400).send({ message: "ItemSerialNo already exists in tbl_mappedBarcodes." });
       }
 
       let request2 = pool1.request();
@@ -577,13 +575,15 @@ const WBSDB = {
 
       request2.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
       request3.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      request3.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
+
 
       // Fetch SHIPMENTID from tbl_Shipment_Received_CL
 
       const getShipmentIDFromReceivedCLQuery = `
         SELECT SHIPMENTID
         FROM tbl_Shipment_Received_CL
-        WHERE SERIALNUM = @ItemSerialNo
+        WHERE SERIALNUM = @ItemSerialNo AND SHIPMENTID = @SHIPMENTID
       `;
       const shipmentIDFromReceivedCLResult = await request3.query(getShipmentIDFromReceivedCLQuery);
       console.log(shipmentIDFromReceivedCLResult);
@@ -592,21 +592,23 @@ const WBSDB = {
 
         // Check if SHIPMENTID exists in tbl_Shipment_Palletizing
         console.log(receivedCLShipmentID);
-        const checkShipmentIDInPalletizingQuery = `
-          SELECT COUNT(*) as count
-          FROM tbl_Shipment_Palletizing
-          WHERE SHIPMENTID = @ReceivedCLShipmentID
-        `;
-        request2.input("ReceivedCLShipmentID", sql.NVarChar, receivedCLShipmentID);
-        const checkShipmentIDInPalletizingResult = await request2.query(checkShipmentIDInPalletizingQuery);
+        // const checkShipmentIDInPalletizingQuery = `
+        //   SELECT COUNT(*) as count
+        //   FROM tbl_Shipment_Palletizing
+        //   WHERE SHIPMENTID = @ReceivedCLShipmentID
+        // `;
+        // request2.input("ReceivedCLShipmentID", sql.NVarChar, receivedCLShipmentID);
+        // const checkShipmentIDInPalletizingResult = await request2.query(checkShipmentIDInPalletizingQuery);
 
-        if (checkShipmentIDInPalletizingResult.recordset[0].count > 0) {
-          return res.status(200).send({ message: "Success: SHIPMENTID matches" });
-        } else {
-          return res.status(400).send({ message: "Error: SHIPMENTID does not match." });
-        }
+        // if (checkShipmentIDInPalletizingResult.recordset[0].count > 0) {
+        //   return res.status(200).send({ message: "Success: SHIPMENTID matches" });
+        // } else {
+        //   return res.status(400).send({ message: "Error: SHIPMENTID does not match." });
+        // }
+
+        return res.status(200).send({ message: "Success: Serial number is valid" });
       } else {
-        return res.status(404).send({ message: "Error: ItemSerialNo not found in tbl_Shipment_Received_CL." });
+        return res.status(404).send({ message: " ItemSerialNo not found in tbl_Shipment_Received_CL." });
       }
     } catch (error) {
       console.log(error);
@@ -647,15 +649,19 @@ const WBSDB = {
         const palletID = ssccCheckDigit(inputNumber);
 
         // Update tbl_Shipment_Received_CL based on SERIALNUM
+
+        let currentDate = new Date().toISOString();
         const updateQuery = `
           UPDATE tbl_Shipment_Received_CL
-          SET PALLETCODE = @PalletID
+          SET PALLETCODE = @PalletID,
+          PALLET_DATE = @currentDate
           WHERE SERIALNUM = @SerialNumber
         `;
 
         await pool2.request()
           .input('PalletID', sql.NVarChar, palletID)
           .input('SerialNumber', sql.NVarChar, serialNumber)
+          .input("currentDate", sql.Date, currentDate)
           .query(updateQuery);
 
         // Update or insert SSCC_AutoCounter in TblSysNo

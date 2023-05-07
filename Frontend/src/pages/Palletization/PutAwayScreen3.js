@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import {FaSearch} from "react-icons/fa"
+import {FaSearch,FaPrescriptionBottle} from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import { Autocomplete, TextField } from '@mui/material';
 import icon from "../../images/close.png"
@@ -87,7 +87,7 @@ const PutAwayScreen3 = () => {
                         Shipment Palletizing
                       </div>
                       <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
-                        <FaSearch size={18} className='text-[#FFF]' />
+                        <FaPrescriptionBottle size={18} className='text-[#FFF]' />
                       </div>
                     </div>
                   </div>

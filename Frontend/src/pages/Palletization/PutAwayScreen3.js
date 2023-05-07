@@ -123,8 +123,8 @@ const PutAwayScreen3 = () => {
                     </div>
 
                     <div className='flex flex-col justify-center items-center text-xs sm:text-lg gap-2 text-[#FFFFFF]'>
-                        <span>Picked</span>
-                        <span>0</span>
+                        <span>Put-away</span>
+                        <span>{parsedData[0].WMSLOCATIONID}</span>
                     </div>
                     </div>
                 </div>

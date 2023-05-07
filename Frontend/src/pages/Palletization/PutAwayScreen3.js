@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {FaSearch,FaPrescriptionBottle} from "react-icons/fa"
-// import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import { Autocomplete, TextField } from '@mui/material';
 import icon from "../../images/close.png"
@@ -134,14 +133,14 @@ const PutAwayScreen3 = () => {
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>ITEMNAME</span>
-                  <span>{parsedData[0].ITEMNAME}</span>
+                  <span>{selectedPutAwayData.ITEMNAME}</span>
                 </div>
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>ItemID:</span>
-                  <span>{parsedData[0].ITEMID}</span>
+                  <span>{selectedPutAwayData.ITEMID}</span>
                 </div>
               </div>
 
@@ -149,7 +148,7 @@ const PutAwayScreen3 = () => {
                 <div className='flex gap-6 justify-center items-center'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Quantity</span>
-                    <span>{parsedData[0].QTYTRANSFER}</span>
+                    <span>{selectedPutAwayData.QTYTRANSFER}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>

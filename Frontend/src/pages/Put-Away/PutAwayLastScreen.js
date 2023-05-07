@@ -5,6 +5,7 @@ import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import { Autocomplete, TextField } from '@mui/material';
 import Swal from 'sweetalert2';
+import "./TransferID.css";
 
 const PutAwayLastScreen = () => {
   const navigate = useNavigate();
@@ -197,14 +198,12 @@ const PutAwayLastScreen = () => {
                 <div className='w-full flex justify-between'>
                   <div className='w-[85%]'>
                     <div className='relative'>
-                      <div
-                        className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
-                        placeholder=''
-                        // value={palletCode}
-                        // onChange={handleInputChange}
-                      >
-                        Shipment Putaway
-                      </div>
+                      <input
+                        className='w-full text-lg placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
+                        placeholder='Shipment Putaway'
+                        value={palletCode}
+                        onChange={handleInputChange}
+                      />
                       <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
                         <FaSearch size={18} className='text-[#FFF]' />
                       </div>
@@ -222,7 +221,7 @@ const PutAwayLastScreen = () => {
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>All IN CAPS (LETTERS, DIGITS AND SIZE)</span>
+                  <span>Scan for Pallet Code</span>
                   {/* <span>(PRODUCT)</span> */}
                 </div>
               </div>
@@ -230,7 +229,7 @@ const PutAwayLastScreen = () => {
               <div className='flex justify-between gap-2 mt-2 font-thin text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>Results:</span>
-                  <span className='font-medium'>0</span>
+                  <span className='font-medium'>{serialNumbers.length}</span>
                 </div>
               </div>
 
@@ -239,17 +238,36 @@ const PutAwayLastScreen = () => {
 
             <div className='mb-6'>
               <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">List of Serial Numbers</label>
-              <input 
+              {/* <input 
                   id="serial" 
                     className="bg-gray-50 font-semibold border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                       placeholder="List of Serial Numbers"
                         value={palletCode}
                            onChange={handleInputChange}
-                />
+                /> */}
             </div>
 
             <div className='mb-6'>
-              <Autocomplete
+
+              {/* // creae excel like Tables  */}
+              <div className="table-location-generate1">
+                <table>
+                  <thead>
+                    {/* <tr>
+                      <th>Serial Number</th>
+                    </tr> */}
+                  </thead>
+                  <tbody>
+                    {serialNumbers.map((serialNumber, index) => (
+                      <tr key={index}>
+                        <td>{serialNumber}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* <Autocomplete
                 id="serial"
                 options={serialNumbers}
                 onChange={handleAutoComplete}
@@ -291,7 +309,7 @@ const PutAwayLastScreen = () => {
                     color: 'white',
                   },
                 }}
-              />
+              /> */}
 
 
             </div>

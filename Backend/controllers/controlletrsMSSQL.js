@@ -554,9 +554,7 @@ const WBSDB = {
 
   async vaildatehipmentPalletizingSerialNumber(req, res, next) {
     try {
-      const { ItemSerialNo } = req.query;
-
-
+      const { ItemSerialNo, SHIPMENTID } = req.query;
       // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
       const checkMappedBarcodesQuery = `
         SELECT COUNT(*) as count
@@ -577,13 +575,15 @@ const WBSDB = {
 
       request2.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
       request3.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      request3.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
+
 
       // Fetch SHIPMENTID from tbl_Shipment_Received_CL
 
       const getShipmentIDFromReceivedCLQuery = `
         SELECT SHIPMENTID
         FROM tbl_Shipment_Received_CL
-        WHERE SERIALNUM = @ItemSerialNo
+        WHERE SERIALNUM = @ItemSerialNo AND SHIPMENTID = @SHIPMENTID
       `;
       const shipmentIDFromReceivedCLResult = await request3.query(getShipmentIDFromReceivedCLQuery);
       console.log(shipmentIDFromReceivedCLResult);
@@ -647,15 +647,19 @@ const WBSDB = {
         const palletID = ssccCheckDigit(inputNumber);
 
         // Update tbl_Shipment_Received_CL based on SERIALNUM
+
+        let currentDate = new Date().toISOString();
         const updateQuery = `
           UPDATE tbl_Shipment_Received_CL
-          SET PALLETCODE = @PalletID
+          SET PALLETCODE = @PalletID,
+          PALLET_DATE = @currentDate
           WHERE SERIALNUM = @SerialNumber
         `;
 
         await pool2.request()
           .input('PalletID', sql.NVarChar, palletID)
           .input('SerialNumber', sql.NVarChar, serialNumber)
+          .input("currentDate", sql.Date, currentDate)
           .query(updateQuery);
 
         // Update or insert SSCC_AutoCounter in TblSysNo

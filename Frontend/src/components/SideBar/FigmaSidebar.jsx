@@ -182,7 +182,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Physical Inventory</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/palletscreen1')}>
+                    <div className='main-images-container' onClick={() => navigate('/putaway')}>
                         <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Put-Away Transaction</p>
                     </div>
@@ -192,7 +192,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Product Barcode Mapping</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/putaway')}>
+                    <div className='main-images-container' onClick={() => navigate('/palletscreen1')}>
                         <img src={picklist} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Palletizing</p>
                     </div>

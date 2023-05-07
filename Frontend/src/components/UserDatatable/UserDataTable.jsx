@@ -1,12 +1,14 @@
 // import "./UserDataTable.scss";
 import "./UserDataTable.css"
-import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
+// import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 import * as XLSX from 'xlsx';
 const UserDataTable = ({
@@ -38,7 +40,6 @@ const UserDataTable = ({
 
   };
 
-  const apiRef = useGridApiRef();
 
 
   useEffect(() => {
@@ -467,6 +468,7 @@ const UserDataTable = ({
 
 
         <DataGrid
+          slots={{ toolbar: GridToolbar }}
           getRowHeight={({ }) => {
             let x;
             title === "USER ACCOUNTS" ? x = 100 : x = 60;
@@ -484,8 +486,8 @@ const UserDataTable = ({
               : idColumn.concat(columnsWithCustomCell)
           }
           pageSize={30}
+          rowsPerPageOptions={[30, 50, 100]}
 
-          rowsPerPageOptions={[30]}
           checkboxSelection
         />
 

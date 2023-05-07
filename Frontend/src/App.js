@@ -45,11 +45,11 @@ import { ReceiptsProvider } from './contexts/ReceiptsContext'
 import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 import TblShipmentUpdate from './components/UpdatesItem/TblShipmentUpdate'
 import KPIDashboardReceiving from './pages/KPIDashboardReceiving/KPIDashboardReceiving'
-import PutAway from './pages/Put-Away/PutAway'
-import TransferID from './pages/Put-Away/TransferID'
-import PutAwayScreen1 from './pages/Put-Away/PutAwayScreen1'
-import PutAwayScreen2 from './pages/Put-Away/PuAwayScreen2'
-import PutAwayScreen3 from './pages/Put-Away/PutAwayScreen3'
+// import PutAway from './pages/Put-Away/PutAway'
+// import TransferID from './pages/Put-Away/TransferID'
+import PutAwayScreen1 from './pages/Palletization/PutAwayScreen1'
+import PutAwayScreen2 from './pages/Palletization/PuAwayScreen2'
+import PutAwayScreen3 from './pages/Palletization/PutAwayScreen3'
 import PutAwayLastScreen from './pages/Put-Away/PutAwayLastScreen'
 
 const WithoutSideBarLayout = ({ children }) => {
@@ -82,10 +82,10 @@ const App = () => {
         <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
         {/* <Route path='/putaway' element={<PutAway />}/> */}
         {/* <Route path='/transferid' element={<TransferID />}/> */}
-        <Route path="/putaway1" element={<PutAwayScreen1 />} />
-        <Route path="/putaway2" element={<PutAwayScreen2 />} />
-        <Route path="/putaway3" element={<PutAwayScreen3 />} />
-        <Route path="/putawaylast" element={<PutAwayLastScreen />} />
+        <Route path="/palletscreen1" element={<PutAwayScreen1 />} />
+        <Route path="/palletscreen2" element={<PutAwayScreen2 />} />
+        <Route path="/palletscreen3" element={<PutAwayScreen3 />} />
+        <Route path="/putaway" element={<PutAwayLastScreen />} />
 
         <Route
           path="/*"

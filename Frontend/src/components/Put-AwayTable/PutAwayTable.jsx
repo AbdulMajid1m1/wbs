@@ -83,7 +83,7 @@ const PutAwayTable = ({
         if (uniqueId === "pustawayScreen1") {
             console.log("rowData", rowData);
             sessionStorage.setItem("selectedPutAwayData", JSON.stringify(rowData));
-            navigate("/putaway2");
+            navigate("/palletscreen2");
         }
         else {
             return

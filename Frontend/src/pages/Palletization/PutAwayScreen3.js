@@ -92,12 +92,13 @@ const PutAwayScreen3 = () => {
                 <div className='w-full flex justify-between'>
                   <div className='w-[85%]'>
                     <div className='relative'>
-                      <input
-                        className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
-                        placeholder='Shipment Palletizing'
-                      />
+                      <div
+                        className='w-full text-lg font-thin -mt-1 placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
+                      >
+                        Shipment Palletizing
+                      </div>
                       <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
-                        <FaSearch size={20} className='text-[#FFF]' />
+                        <FaSearch size={18} className='text-[#FFF]' />
                       </div>
                     </div>
                   </div>
@@ -127,15 +128,16 @@ const PutAwayScreen3 = () => {
 
               <div>
                 <div className='flex gap-6 justify-center items-center'>
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Quantity</span>
-                    <span>{parsedData[0].QTYTRANSFER}</span>
-                  </div>
+                    <div className='flex flex-col justify-center items-center text-xs sm:text-lg gap-2 text-[#FFFFFF]'>
+                        <span>Quantity</span>
+                        <span>{parsedData[0].QTYTRANSFER}</span>
+                    </div>
 
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked</span>
-                    <span>0</span>
-                  </div>
+                    <div className='flex flex-col justify-center items-center text-xs sm:text-lg gap-2 text-[#FFFFFF]'>
+                        <span>Picked</span>
+                        <span>0</span>
+                    </div>
+                    </div>
                 </div>
               </div>
 

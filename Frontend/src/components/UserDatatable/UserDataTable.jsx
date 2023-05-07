@@ -376,6 +376,23 @@ const UserDataTable = ({
   };
 
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const handleOpenPopup = () => {
+    setIsOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsOpen(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(email);
+    setIsOpen(false);
+  };
+
 
 
   return (
@@ -426,6 +443,7 @@ const UserDataTable = ({
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
+              <button onClick={handleOpenPopup}>Send to Email</button>
               <button onClick={handleExport}>Export to Excel</button>
               <button onClick={() => handlePdfExport(8)}
               >Export to Pdf</button>
@@ -461,6 +479,33 @@ const UserDataTable = ({
           rowsPerPageOptions={[30]}
           checkboxSelection
         />
+
+
+        {/* Email Screen */}
+        {isOpen && (
+        <div className="popup-container">
+          <div className="popup">
+            <div className="header">
+              <h2>Warehouse Management System v.2.0</h2>
+              <button className="close-btn" onClick={handleClosePopup}>
+                x
+              </button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button type="submit">SEND</button>
+            </form>
+          </div>
+        </div>
+      )}
+
       </div>
     </>
 

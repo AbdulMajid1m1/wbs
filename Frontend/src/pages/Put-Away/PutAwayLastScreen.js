@@ -43,86 +43,12 @@ const PutAwayLastScreen = () => {
     sessionStorage.setItem('selectedShipmentReceivedClData', JSON.stringify(selectedShipmentReceivedClData));
 
   };
-
-  // const handleClick = () => {
-  //   userRequest.get(`/validateZoneCode?ZONECODE=${zonecode}&PALLETCODE=${palletCode}`)
-  //     .then((response) => {
-  //       // get selectedShipmentReceivedClData from session storage
-  //       const selectedShipmentReceivedClData = JSON.parse(sessionStorage.getItem('selectedShipmentReceivedClData'));
-  //       console.log(response.data);
-
-  //       userRequest.put(`/updateShipmentRecievedDataCL?SERIALNUM=${selectedShipmentReceivedClData.SERIALNUM}&BIN=${selectedPutAwayData.zonecode}}`)
-  //         .then((updateResponse) => {
-  //           console.log(updateResponse.data);
-  //         }).catch(err => {
-  //           console.log(err);
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Error',
-  //             text: err?.response?.data?.message ?? 'Error in updateShipmentRecievedDataCL API',
-  //           })
-  //         });
-
-  //       // Call the insertIntoMappedBarcode API
-  //       userRequest.post('/insertIntoMappedBarcode', null, {
-
-  //         headers: {
-  //           itemcode: selectedShipmentReceivedClData.ITEMID,
-  //           itemdesc: selectedShipmentReceivedClData.ITEMNAME,
-  //           gtin: selectedShipmentReceivedClData.GTIN,
-  //           remarks: selectedShipmentReceivedClData.REMARKS,
-  //           classification: selectedShipmentReceivedClData.CLASSIFICATION,
-  //           // Provide the correct values for mainlocation, binlocation, intcode, itemserialno, mapdate, reference, sid, cid, po, and trans based on your data.
-  //           mainlocation: selectedShipmentReceivedClData.ARRIVALWAREHOUSE,
-  //           binlocation: zonecode, // it will be updated in received cl table too.
-  //           intcode: selectedShipmentReceivedClData.RCVDCONFIGID,
-  //           itemserialno: selectedShipmentReceivedClData.SERIALNUM,
-  //           mapdate: selectedShipmentReceivedClData.PALLET_DATE,
-  //           palletcode: palletCode,
-  //           reference: selectedShipmentReceivedClData.SHIPMENTID,
-  //           sid: selectedShipmentReceivedClData.SHIPMENTID,
-  //           cid: selectedShipmentReceivedClData.CONTAINERID,
-  //           po: selectedShipmentReceivedClData.POQTY,
-  //           trans: selectedShipmentReceivedClData.PURCHID,
-  //         }
-  //       }).then((insertResponse) => {
-  //         console.log(insertResponse.data);
-  //         // alert(insertResponse.data.message)
-  //         Swal.fire({
-  //           icon: 'success',
-  //           title: 'Inserted',
-  //           text: insertResponse.data.message,
-  //         })
-
-  //       }).catch(err => {
-  //         console.log(err);
-  //         Swal.fire({
-  //           icon: 'error',
-  //           title: 'Error',
-  //           text: err.response.data.message,
-  //         })
-  //       });
-
-
-
-
-  //     }).catch(err => {
-  //       console.log(err);
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'Error',
-  //         text: err?.response?.data?.message ?? 'Error in validateZoneCode API',
-  //       })
-  //     });
-  // };
-
+  
   const handleClick = async () => {
-    try {
-      const response = await userRequest.get(`/validateZoneCode?ZONECODE=${zonecode}&PALLETCODE=${palletCode}`);
+   
 
       // get selectedShipmentReceivedClData from session storage
       const selectedShipmentReceivedClData = JSON.parse(sessionStorage.getItem('selectedShipmentReceivedClData'));
-      console.log(response.data);
 
       try {
         const updateResponse = await userRequest.put(`/updateShipmentRecievedDataCL?SERIALNUM=${selectedShipmentReceivedClData.SERIALNUM}&BIN=${selectedPutAwayData.zonecode}}`);
@@ -158,7 +84,7 @@ const PutAwayLastScreen = () => {
             cid: selectedShipmentReceivedClData.CONTAINERID,
             po: selectedShipmentReceivedClData.POQTY,
             // trans: selectedShipmentReceivedClData.PURCHID,
-            trans:'132'
+            trans:selectedShipmentReceivedClData.POQTY
           }
         });
         console.log(insertResponse.data);
@@ -175,14 +101,7 @@ const PutAwayLastScreen = () => {
           text: err.response.data.message,
         });
       }
-    } catch (err) {
-      console.log(err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err?.response?.data?.message ?? 'Error in validateZoneCode API',
-      });
-    }
+    
   };
 
 

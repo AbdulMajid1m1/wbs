@@ -12,6 +12,8 @@ const PutAwayScreen2 = () => {
 
   //   const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
   const data = sessionStorage.getItem('putawaydata')
+  const selectedPutAwayData = JSON.parse(sessionStorage.getItem('selectedPutAwayData'))
+
   const parsedData = JSON.parse(data)
   console.log(parsedData);
   console.log(data)
@@ -68,14 +70,14 @@ const PutAwayScreen2 = () => {
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>ITEMNAME</span>
-                  <span>{parsedData[0].ITEMNAME}</span>
+                  <span>{selectedPutAwayData.ITEMNAME}</span>
                 </div>
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
                   <span>ItemId:</span>
-                  <span>{parsedData[0].ITEMID}</span>
+                  <span>{selectedPutAwayData.ITEMID}</span>
                 </div>
               </div>
 

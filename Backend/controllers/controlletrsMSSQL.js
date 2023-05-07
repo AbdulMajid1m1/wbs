@@ -584,6 +584,7 @@ const WBSDB = {
         SELECT SHIPMENTID
         FROM tbl_Shipment_Received_CL
         WHERE SERIALNUM = @ItemSerialNo AND SHIPMENTID = @SHIPMENTID
+        AND (PALLETCODE IS NULL OR PALLETCODE = '' OR PALLETCODE = 'undefined')
       `;
       const shipmentIDFromReceivedCLResult = await request3.query(getShipmentIDFromReceivedCLQuery);
       console.log(shipmentIDFromReceivedCLResult);
@@ -592,23 +593,9 @@ const WBSDB = {
 
         // Check if SHIPMENTID exists in tbl_Shipment_Palletizing
         console.log(receivedCLShipmentID);
-        // const checkShipmentIDInPalletizingQuery = `
-        //   SELECT COUNT(*) as count
-        //   FROM tbl_Shipment_Palletizing
-        //   WHERE SHIPMENTID = @ReceivedCLShipmentID
-        // `;
-        // request2.input("ReceivedCLShipmentID", sql.NVarChar, receivedCLShipmentID);
-        // const checkShipmentIDInPalletizingResult = await request2.query(checkShipmentIDInPalletizingQuery);
-
-        // if (checkShipmentIDInPalletizingResult.recordset[0].count > 0) {
-        //   return res.status(200).send({ message: "Success: SHIPMENTID matches" });
-        // } else {
-        //   return res.status(400).send({ message: "Error: SHIPMENTID does not match." });
-        // }
-
         return res.status(200).send({ message: "Success: Serial number is valid" });
       } else {
-        return res.status(404).send({ message: " ItemSerialNo not found in tbl_Shipment_Received_CL." });
+        return res.status(404).send({ message: "ShipmentId does not matched." });
       }
     } catch (error) {
       console.log(error);
@@ -664,25 +651,27 @@ const WBSDB = {
           .input("currentDate", sql.Date, currentDate)
           .query(updateQuery);
 
-        // Update or insert SSCC_AutoCounter in TblSysNo
-        const updateTblSysNoQuery = `
-          IF EXISTS (SELECT * FROM TblSysNo)
-          BEGIN
-            UPDATE TblSysNo SET SSCC_AutoCounter = @SSCC_AutoCounter
-          END
-          ELSE
-          BEGIN
-            INSERT INTO TblSysNo (SSCC_AutoCounter) VALUES (1)
-          END
-        `;
 
-        await pool2.request()
-          .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
-          .query(updateTblSysNoQuery);
 
-        // Increment SSCC_AutoCounter
-        SSCC_AutoCounter = SSCC_AutoCounter + 1;
       }
+
+
+
+      // Update or insert SSCC_AutoCounter in TblSysNo
+      const updateTblSysNoQuery = `
+       IF EXISTS (SELECT * FROM TblSysNo)
+       BEGIN
+         UPDATE TblSysNo SET SSCC_AutoCounter = @SSCC_AutoCounter
+       END
+       ELSE
+       BEGIN
+         INSERT INTO TblSysNo (SSCC_AutoCounter) VALUES (1)
+       END
+     `;
+
+      await pool2.request()
+        .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
+        .query(updateTblSysNoQuery);
 
       res.status(200).send({ message: 'PalletIDs generated and updated successfully.' });
     } catch (error) {
@@ -2948,29 +2937,32 @@ const WBSDB = {
       }
 
       // Fetch data from tbl_locations_CL based on ZONE_CODE
-      const query = `
-      SELECT * FROM tbl_locations_CL
-      WHERE ZONE_CODE = @ZoneCode
-    `;
+      //   const query = `
+      //   SELECT * FROM tbl_locations_CL
+      //   WHERE ZONE_CODE = @ZoneCode
+      // `;
 
-      const result = await pool2.request()
-        .input('ZoneCode', sql.NVarChar, zoneCode)
-        .query(query);
+      //   const result = await pool2.request()
+      //     .input('ZoneCode', sql.NVarChar, zoneCode)
+      //     .query(query);
 
-      const locations = result.recordset;
+      //   const locations = result.recordset;
 
-      if (locations.length === 0) {
-        return res.status(404).send({ message: 'ZoneCode not found in tbl_locations.' });
-      }
+      //   if (locations.length === 0) {
+      //     return res.status(404).send({ message: 'ZoneCode not found in tbl_locations.' });
+      //   }
 
       // Check if Zone_Code is matched in tbl_Shipment_Received_CL based on PalletCode
+      //   const shipmentQuery = `
+      //   SELECT * FROM tbl_Shipment_Received_CL
+      //   WHERE RZONE = @ZoneCode AND PalletCode = @PalletCode
+      // `;
       const shipmentQuery = `
       SELECT * FROM tbl_Shipment_Received_CL
-      WHERE RZONE = @ZoneCode AND PalletCode = @PalletCode
-    `;
+      WHERE PalletCode = @PalletCode
+  `;
 
       const shipmentResult = await pool2.request()
-        .input('ZoneCode', sql.NVarChar, zoneCode)
         .input('PalletCode', sql.NVarChar, palletCode)
         .query(shipmentQuery);
 

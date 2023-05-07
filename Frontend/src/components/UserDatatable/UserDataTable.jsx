@@ -1,6 +1,6 @@
 // import "./UserDataTable.scss";
 import "./UserDataTable.css"
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import userRequest from "../../utils/userRequest";
@@ -31,11 +31,14 @@ const UserDataTable = ({
   const [containerIdSearch, setContainerIdSearch] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
+  const [muiFilteredData, setMuiFilteredData] = useState([]);
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
 
   };
+
+  const apiRef = useGridApiRef();
 
 
   useEffect(() => {
@@ -72,6 +75,7 @@ const UserDataTable = ({
   // Retrieve the value with the key "myKey" from localStorage getvalue
   const myValue = localStorage.getItem("userId");
   console.log(myValue)
+
 
   const handleDelete = async (id, rowdata) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
@@ -398,6 +402,9 @@ const UserDataTable = ({
 
 
 
+
+
+
   return (
     <>
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -460,7 +467,6 @@ const UserDataTable = ({
 
 
         <DataGrid
-
           getRowHeight={({ }) => {
             let x;
             title === "USER ACCOUNTS" ? x = 100 : x = 60;
@@ -486,63 +492,63 @@ const UserDataTable = ({
 
         {/* Email Screen */}
         {isOpen && (
-        <div className="popup-container">
-          <div className="popup">
-            <div className="header">
-              <h2>Shipment Receiving Email</h2>
-              {/* <button className="close-btn" onClick={handleClosePopup}>
+          <div className="popup-container">
+            <div className="popup">
+              <div className="header">
+                <h2>Shipment Receiving Email</h2>
+                {/* <button className="close-btn" onClick={handleClosePopup}>
                 x
               </button> */}
-            </div>
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="Email"
-              />
-
-              <label htmlFor="subject">Subject:</label>
-              <input
-                type="subject"
-                id="subject"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                required
-                placeholder="Subject"
-              />
-
-              <label htmlFor="sendTo">Send To:</label>
-              <input
-                type="sendTo"
-                id="sendTo"
-                value={sendTo}
-                onChange={(e) => setSendTo(e.target.value)}
-                required
-                placeholder="Send To"
-              />
-
-              <label htmlFor="remarks">Remarks:</label>
-              <input
-                type="remarks"
-                id="remarks"
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-                required
-                placeholder="Remarks"
-              />
-
-              <div className="flex gap-3">
-                <button className="close-btn" type="button" onClick={handleClosePopup}>CANCEL</button>
-                <button type="submit">SEND</button>
               </div>
-            </form>
+              <form onSubmit={handleSubmit}>
+                <label htmlFor="email">Email:</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="Email"
+                />
+
+                <label htmlFor="subject">Subject:</label>
+                <input
+                  type="subject"
+                  id="subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  required
+                  placeholder="Subject"
+                />
+
+                <label htmlFor="sendTo">Send To:</label>
+                <input
+                  type="sendTo"
+                  id="sendTo"
+                  value={sendTo}
+                  onChange={(e) => setSendTo(e.target.value)}
+                  required
+                  placeholder="Send To"
+                />
+
+                <label htmlFor="remarks">Remarks:</label>
+                <input
+                  type="remarks"
+                  id="remarks"
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                  required
+                  placeholder="Remarks"
+                />
+
+                <div className="flex gap-3">
+                  <button className="close-btn" type="button" onClick={handleClosePopup}>CANCEL</button>
+                  <button type="submit">SEND</button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       </div>
     </>

@@ -378,6 +378,9 @@ const UserDataTable = ({
 
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [sendTo, setSendTo] = useState("");
+  const [remarks, setRemarks] = useState("");
 
   const handleOpenPopup = () => {
     setIsOpen(true);
@@ -486,10 +489,10 @@ const UserDataTable = ({
         <div className="popup-container">
           <div className="popup">
             <div className="header">
-              <h2>Warehouse Management System v.2.0</h2>
-              <button className="close-btn" onClick={handleClosePopup}>
+              <h2>Shipment Receiving Email</h2>
+              {/* <button className="close-btn" onClick={handleClosePopup}>
                 x
-              </button>
+              </button> */}
             </div>
             <form onSubmit={handleSubmit}>
               <label htmlFor="email">Email:</label>
@@ -499,8 +502,43 @@ const UserDataTable = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                placeholder="Email"
               />
-              <button type="submit">SEND</button>
+
+              <label htmlFor="subject">Subject:</label>
+              <input
+                type="subject"
+                id="subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                required
+                placeholder="Subject"
+              />
+
+              <label htmlFor="sendTo">Send To:</label>
+              <input
+                type="sendTo"
+                id="sendTo"
+                value={sendTo}
+                onChange={(e) => setSendTo(e.target.value)}
+                required
+                placeholder="Send To"
+              />
+
+              <label htmlFor="remarks">Remarks:</label>
+              <input
+                type="remarks"
+                id="remarks"
+                value={remarks}
+                onChange={(e) => setRemarks(e.target.value)}
+                required
+                placeholder="Remarks"
+              />
+
+              <div className="flex gap-3">
+                <button className="close-btn" type="button" onClick={handleClosePopup}>CANCEL</button>
+                <button type="submit">SEND</button>
+              </div>
             </form>
           </div>
         </div>

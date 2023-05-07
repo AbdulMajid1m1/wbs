@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {FaSearch,FaPrescriptionBottle} from "react-icons/fa"
-import { FaSearch } from "react-icons/fa"
+// import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import { Autocomplete, TextField } from '@mui/material';
 import icon from "../../images/close.png"

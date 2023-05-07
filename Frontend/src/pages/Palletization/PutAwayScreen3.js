@@ -109,8 +109,8 @@ const PutAwayScreen3 = () => {
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>Itemcode:</span>
-                  <span>{parsedData[0].TRANSFERID}</span>
+                  <span>ItemID:</span>
+                  <span>{parsedData[0].ITEMID}</span>
                 </div>
               </div>
 

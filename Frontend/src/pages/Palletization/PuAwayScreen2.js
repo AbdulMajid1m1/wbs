@@ -74,8 +74,8 @@ const PutAwayScreen2 = () => {
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>Itemcode:</span>
-                  <span>{parsedData[0].TRANSFERID}</span>
+                  <span>ItemId:</span>
+                  <span>{parsedData[0].ITEMID}</span>
                 </div>
               </div>
 
@@ -136,7 +136,7 @@ const PutAwayScreen2 = () => {
             </div >
 
             <div className='mt-6'>
-              <button type='submit' onClick={() => navigate('/putaway3')}
+              <button type='submit' onClick={() => navigate('/palletscreen3')}
                 className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
                 <span className='flex justify-center items-center'>
                   <p>Proceed</p>

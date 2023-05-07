@@ -82,10 +82,10 @@ const App = () => {
         <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
         {/* <Route path='/putaway' element={<PutAway />}/> */}
         {/* <Route path='/transferid' element={<TransferID />}/> */}
-        <Route path="/putaway1" element={<PutAwayScreen1 />} />
-        <Route path="/putaway2" element={<PutAwayScreen2 />} />
-        <Route path="/putaway3" element={<PutAwayScreen3 />} />
-        <Route path="/putawaylast" element={<PutAwayLastScreen />} />
+        <Route path="/palletscreen1" element={<PutAwayScreen1 />} />
+        <Route path="/palletscreen2" element={<PutAwayScreen2 />} />
+        <Route path="/palletscreen3" element={<PutAwayScreen3 />} />
+        <Route path="/putaway" element={<PutAwayLastScreen />} />
 
         <Route
           path="/*"

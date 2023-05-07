@@ -44,8 +44,8 @@ const PutAwayScreen2 = () => {
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#e69138] text-xl mb:2 md:mb-5">
 
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
-                <div className='w-full flex justify-between'>
-                  <div className='w-[85%]'>
+                <div className='w-full flex justify-end'>
+                  {/* <div className='w-[85%]'>
                     <div className='relative'>
                       <input
                         className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
@@ -55,7 +55,7 @@ const PutAwayScreen2 = () => {
                         <FaSearch size={20} className='text-[#FFF]' />
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   <button type='button' onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium -mt-2 rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                     <span>

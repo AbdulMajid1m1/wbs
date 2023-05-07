@@ -21,6 +21,7 @@ const PutAwayScreen3 = () => {
   };
   //getItem data
   const data = sessionStorage.getItem('putawaydata')
+  const selectedPutAwayData = JSON.parse(sessionStorage.getItem('selectedPutAwayData'))
   const parsedData = JSON.parse(data)
   console.log(parsedData);
   console.log(data)
@@ -36,15 +37,30 @@ const PutAwayScreen3 = () => {
   const handleSerialNumberInput = async (e) => {
     if (e.target.value.length == 0) return;
     const serialNumber = e.target.value;
-    try {
+    console.log('serialNumber:', serialNumber);
+    console.log('selectedPutAwayData:', selectedPutAwayData.SHIPMENTID);
 
-      const response = await userRequest.get(`/vaildatehipmentPalletizingSerialNumber?ItemSerialNo=${serialNumber}&SHIPMENTID=${parsedData.SHIPMENTID}`);
-      setMessage(response?.data?.message || 'Inserted Successfully');
-      setSerialNumberList([...serialnumberlist, serialNumber]);
+    let checkList = serialnumberlist.find((item) => item === serialNumber)
+    console.log('checkList:', checkList);
+    if (checkList) {
+      setTimeout(() => {
+
+        setError('Serial Number already exists in the list');
+      }, 400);
+      return;
     }
-    catch (error) {
-      console.log(error);
-      setError(error?.response?.data?.message || 'Something went wrong, please try again later');
+    else {
+      try {
+        const response = await userRequest.get(`/vaildatehipmentPalletizingSerialNumber?ItemSerialNo=${serialNumber}&SHIPMENTID=${selectedPutAwayData.SHIPMENTID}`);
+        setMessage(response?.data?.message || 'Inserted Successfully');
+        setSerialNumberList([...serialnumberlist, serialNumber]);
+        // reset input
+        e.target.value = '';
+      }
+      catch (error) {
+        console.log(error);
+        setError(error?.response?.data?.message || 'Something went wrong, please try again later');
+      }
     }
 
 
@@ -67,9 +83,11 @@ const PutAwayScreen3 = () => {
         // handle response
         setPalletIds(response.data);
         setMessage(response?.data?.message || 'Pallete Ids Updated Successfully');
-        setTimeout(() => {
-          navigate('/putawaylast')
-        }, 1000);
+        // clear serial number list
+        setSerialNumberList([]);
+        // setTimeout(() => {
+        //   navigate('/putawaylast')
+        // }, 1000);
       })
       .catch(error => {
         // handle error
@@ -128,16 +146,15 @@ const PutAwayScreen3 = () => {
 
               <div>
                 <div className='flex gap-6 justify-center items-center'>
-                    <div className='flex flex-col justify-center items-center text-xs sm:text-lg gap-2 text-[#FFFFFF]'>
-                        <span>Quantity</span>
-                        <span>{parsedData[0].QTYTRANSFER}</span>
-                    </div>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Quantity</span>
+                    <span>{parsedData[0].QTYTRANSFER}</span>
+                  </div>
 
-                    <div className='flex flex-col justify-center items-center text-xs sm:text-lg gap-2 text-[#FFFFFF]'>
-                        <span>Picked</span>
-                        <span>0</span>
-                    </div>
-                    </div>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Picked</span>
+                    <span>{serialnumberlist.length}</span>
+                  </div>
                 </div>
               </div>
 

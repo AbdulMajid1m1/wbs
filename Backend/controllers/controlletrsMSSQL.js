@@ -567,7 +567,7 @@ const WBSDB = {
       const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
 
       if (checkMappedBarcodesResult.recordset[0].count > 0) {
-        return res.status(400).send({ message: "Error: ItemSerialNo already exists in tbl_mappedBarcodes." });
+        return res.status(400).send({ message: "ItemSerialNo already exists in tbl_mappedBarcodes." });
       }
 
       let request2 = pool1.request();
@@ -592,21 +592,23 @@ const WBSDB = {
 
         // Check if SHIPMENTID exists in tbl_Shipment_Palletizing
         console.log(receivedCLShipmentID);
-        const checkShipmentIDInPalletizingQuery = `
-          SELECT COUNT(*) as count
-          FROM tbl_Shipment_Palletizing
-          WHERE SHIPMENTID = @ReceivedCLShipmentID
-        `;
-        request2.input("ReceivedCLShipmentID", sql.NVarChar, receivedCLShipmentID);
-        const checkShipmentIDInPalletizingResult = await request2.query(checkShipmentIDInPalletizingQuery);
+        // const checkShipmentIDInPalletizingQuery = `
+        //   SELECT COUNT(*) as count
+        //   FROM tbl_Shipment_Palletizing
+        //   WHERE SHIPMENTID = @ReceivedCLShipmentID
+        // `;
+        // request2.input("ReceivedCLShipmentID", sql.NVarChar, receivedCLShipmentID);
+        // const checkShipmentIDInPalletizingResult = await request2.query(checkShipmentIDInPalletizingQuery);
 
-        if (checkShipmentIDInPalletizingResult.recordset[0].count > 0) {
-          return res.status(200).send({ message: "Success: SHIPMENTID matches" });
-        } else {
-          return res.status(400).send({ message: "Error: SHIPMENTID does not match." });
-        }
+        // if (checkShipmentIDInPalletizingResult.recordset[0].count > 0) {
+        //   return res.status(200).send({ message: "Success: SHIPMENTID matches" });
+        // } else {
+        //   return res.status(400).send({ message: "Error: SHIPMENTID does not match." });
+        // }
+
+        return res.status(200).send({ message: "Success: Serial number is valid" });
       } else {
-        return res.status(404).send({ message: "Error: ItemSerialNo not found in tbl_Shipment_Received_CL." });
+        return res.status(404).send({ message: " ItemSerialNo not found in tbl_Shipment_Received_CL." });
       }
     } catch (error) {
       console.log(error);

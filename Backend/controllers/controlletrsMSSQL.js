@@ -1160,156 +1160,325 @@ const WBSDB = {
 
 
   // controller to update data
-
   async updateShipmentRecievedDataCL(req, res, next) {
     try {
-      const {
-        SHIPMENTID,
-        CONTAINERID,
-        ARRIVALWAREHOUSE,
-        ITEMNAME,
-        ITEMID,
-        PURCHID,
-        CLASSIFICATION,
-        SERIALNUM,
-        RCVDCONFIGID,
-        RCVD_DATE,
-        GTIN,
-        RZONE,
-        PALLET_DATE,
-        PALLETCODE,
-        BIN,
-        REMARKS,
-        POQTY,
-        RCVQTY,
-        REMAININGQTY
-      } = req.query;
+      let records = req.body.records; // Get the records array from the request body
 
-      if (!SERIALNUM) {
-        return res.status(400).send({ message: 'SERIALNUM is required.' });
+      if (!Array.isArray(records)) {
+        records = [req.body]; // If it's not an array, use the original request body as a single-record array
       }
 
-      let query = `
-        UPDATE dbo.tbl_Shipment_Received_CL
-        SET `;
-
-      const updateFields = [];
-      const request = pool2.request();
-
-      if (SHIPMENTID !== undefined) {
-        updateFields.push('SHIPMENTID = @SHIPMENTID');
-        request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+      if (records.length === 0) {
+        return res.status(400).send({ message: 'At least one record is required for update.' });
       }
 
-      if (CONTAINERID !== undefined) {
-        updateFields.push('CONTAINERID = @CONTAINERID');
-        request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
+      let updatedCount = 0;
+
+      for (const record of records) {
+        const {
+          SERIALNUM,
+          SHIPMENTID,
+          CONTAINERID,
+          ARRIVALWAREHOUSE,
+          ITEMNAME,
+          ITEMID,
+          PURCHID,
+          CLASSIFICATION,
+          RCVDCONFIGID,
+          RCVD_DATE,
+          GTIN,
+          RZONE,
+          PALLET_DATE,
+          PALLETCODE,
+          BIN,
+          REMARKS,
+          POQTY,
+          RCVQTY,
+          REMAININGQTY
+        } = record;
+
+        if (!SERIALNUM) {
+          continue; // Skip the record if SERIALNUM is missing
+        }
+
+        let query = `
+          UPDATE dbo.tbl_Shipment_Received_CL
+          SET `;
+
+        const updateFields = [];
+        const request = pool2.request();
+
+        if (SHIPMENTID !== undefined) {
+          updateFields.push('SHIPMENTID = @SHIPMENTID');
+          request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+        }
+
+        if (CONTAINERID !== undefined) {
+          updateFields.push('CONTAINERID = @CONTAINERID');
+          request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
+        }
+
+        if (ARRIVALWAREHOUSE !== undefined) {
+          updateFields.push('ARRIVALWAREHOUSE = @ARRIVALWAREHOUSE');
+          request.input('ARRIVALWAREHOUSE', sql.NVarChar, ARRIVALWAREHOUSE);
+        }
+
+        if (ITEMNAME !== undefined) {
+          updateFields.push('ITEMNAME = @ITEMNAME');
+          request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+        }
+
+        if (ITEMID !== undefined) {
+          updateFields.push('ITEMID = @ITEMID');
+          request.input('ITEMID', sql.NVarChar, ITEMID);
+        }
+
+        if (PURCHID !== undefined) {
+          updateFields.push('PURCHID = @PURCHID');
+          request.input('PURCHID', sql.NVarChar, PURCHID);
+        }
+
+        if (CLASSIFICATION !== undefined) {
+          updateFields.push('CLASSIFICATION = @CLASSIFICATION');
+          request.input('CLASSIFICATION', sql.Float, CLASSIFICATION);
+        }
+
+        if (RCVDCONFIGID !== undefined) {
+          updateFields.push('RCVDCONFIGID = @RCVDCONFIGID');
+          request.input('RCVDCONFIGID', sql.NVarChar, RCVDCONFIGID);
+        }
+
+        if (RCVD_DATE !== undefined) {
+          updateFields.push('RCVD_DATE = @RCVD_DATE');
+          request.input('RCVD_DATE', sql.Date, RCVD_DATE);
+        }
+
+        if (GTIN !== undefined) {
+          updateFields.push('GTIN = @GTIN');
+          request.input('GTIN', sql.NVarChar, GTIN);
+        }
+
+        if (RZONE !== undefined) {
+          updateFields.push('RZONE = @RZONE');
+          request.input('RZONE', sql.NVarChar, RZONE);
+        }
+
+        if (PALLET_DATE !== undefined) {
+          updateFields.push('PALLET_DATE = @PALLET_DATE');
+          request.input('PALLET_DATE', sql.Date, PALLET_DATE);
+        }
+
+        if (PALLETCODE !== undefined) {
+          updateFields.push('PALLETCODE = @PALLETCODE');
+          request.input('PALLETCODE', sql.NVarChar, PALLETCODE);
+        }
+
+        if (BIN !== undefined) {
+          updateFields.push('BIN = @BIN');
+          request.input('BIN', sql.NVarChar, BIN);
+        }
+
+        if (REMARKS !== undefined) {
+          updateFields.push('REMARKS = @REMARKS');
+          request.input('REMARKS', sql.NVarChar, REMARKS);
+        }
+
+        if (POQTY !== undefined) {
+          updateFields.push('POQTY = @POQTY');
+          request.input('POQTY', sql.Numeric(18, 0), POQTY);
+        }
+
+        if (RCVQTY !== undefined) {
+          updateFields.push('RCVQTY = @RCVQTY');
+          request.input('RCVQTY', sql.Numeric(18, 0), RCVQTY);
+        }
+
+        if (REMAININGQTY !== undefined) {
+          updateFields.push('REMAININGQTY = @REMAININGQTY');
+          request.input('REMAININGQTY', sql.Numeric(18, 0), REMAININGQTY);
+        }
+
+        if (updateFields.length === 0) {
+          return res.status(400).send({ message: 'At least one field is required to update.' });
+        }
+
+        query += updateFields.join(', ');
+
+        query += `
+        WHERE SERIALNUM = @SERIALNUM
+        `;
+
+        request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
+
+        const result = await request.query(query);
+
+        if (result.rowsAffected[0] === 1) {
+          updatedCount += 1;
+        }
       }
 
-      if (ARRIVALWAREHOUSE !== undefined) {
-        updateFields.push('ARRIVALWAREHOUSE = @ARRIVALWAREHOUSE');
-        request.input('ARRIVALWAREHOUSE', sql.NVarChar, ARRIVALWAREHOUSE);
+      if (updatedCount === 0) {
+        return res.status(404).send({ message: 'No shipment records were updated.' });
       }
 
-      if (ITEMNAME !== undefined) {
-        updateFields.push('ITEMNAME = @ITEMNAME');
-        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
-      }
-
-      if (ITEMID !== undefined) {
-        updateFields.push('ITEMID = @ITEMID');
-        request.input('ITEMID', sql.NVarChar, ITEMID);
-      }
-
-      if (PURCHID !== undefined) {
-        updateFields.push('PURCHID = @PURCHID');
-        request.input('PURCHID', sql.NVarChar, PURCHID);
-      }
-
-      if (CLASSIFICATION !== undefined) {
-        updateFields.push('CLASSIFICATION = @CLASSIFICATION');
-        request.input('CLASSIFICATION', sql.Float, CLASSIFICATION);
-      }
-
-      if (RCVDCONFIGID !== undefined) {
-        updateFields.push('RCVDCONFIGID = @RCVDCONFIGID');
-        request.input('RCVDCONFIGID', sql.NVarChar, RCVDCONFIGID);
-      }
-
-      if (RCVD_DATE !== undefined) {
-        updateFields.push('RCVD_DATE = @RCVD_DATE');
-        request.input('RCVD_DATE', sql.Date, RCVD_DATE);
-      }
-
-      if (GTIN !== undefined) {
-        updateFields.push('GTIN = @GTIN');
-        request.input('GTIN', sql.NVarChar, GTIN);
-      }
-
-      if (RZONE !== undefined) {
-        updateFields.push('RZONE = @RZONE');
-        request.input('RZONE', sql.NVarChar, RZONE);
-      }
-
-      if (PALLET_DATE !== undefined) {
-        updateFields.push('PALLET_DATE = @PALLET_DATE');
-        request.input('PALLET_DATE', sql.Date, PALLET_DATE);
-      }
-
-      if (PALLETCODE !== undefined) {
-        updateFields.push('PALLETCODE = @PALLETCODE');
-        request.input('PALLETCODE', sql.NVarChar, PALLETCODE);
-      }
-
-      if (BIN !== undefined) {
-        updateFields.push('BIN = @BIN');
-        request.input('BIN', sql.NVarChar, BIN);
-      }
-
-      if (REMARKS !== undefined) {
-        updateFields.push('REMARKS = @REMARKS');
-        request.input('REMARKS', sql.NVarChar, REMARKS);
-      }
-
-      if (POQTY !== undefined) {
-        updateFields.push('POQTY = @POQTY');
-        request.input('POQTY', sql.Numeric(18, 0), POQTY);
-      }
-
-      if (RCVQTY !== undefined) {
-        updateFields.push('RCVQTY = @RCVQTY');
-        request.input('RCVQTY', sql.Numeric(18, 0), RCVQTY);
-      }
-
-      if (REMAININGQTY !== undefined) {
-        updateFields.push('REMAININGQTY = @REMAININGQTY');
-        request.input('REMAININGQTY', sql.Numeric(18, 0), REMAININGQTY);
-      }
-
-      if (updateFields.length === 0) {
-        return res.status(400).send({ message: 'At least one field is required to update.' });
-      }
-
-      query += updateFields.join(', ');
-
-      query += `
-      WHERE SERIALNUM = @SERIALNUM
-      `;
-
-      request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
-
-      const result = await request.query(query);
-
-      if (result.rowsAffected[0] === 0) {
-        return res.status(404).send({ message: 'Shipment record not found.' });
-      }
-
-      res.status(200).send({ message: 'Shipment data updated successfully.' });
+      res.status(200).send({ message: `${updatedCount} shipment record(s) updated successfully.` });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
+
+
+
+  // async updateShipmentRecievedDataCL(req, res, next) {
+  //   try {
+  //     const {
+  //       SHIPMENTID,
+  //       CONTAINERID,
+  //       ARRIVALWAREHOUSE,
+  //       ITEMNAME,
+  //       ITEMID,
+  //       PURCHID,
+  //       CLASSIFICATION,
+  //       SERIALNUM,
+  //       RCVDCONFIGID,
+  //       RCVD_DATE,
+  //       GTIN,
+  //       RZONE,
+  //       PALLET_DATE,
+  //       PALLETCODE,
+  //       BIN,
+  //       REMARKS,
+  //       POQTY,
+  //       RCVQTY,
+  //       REMAININGQTY
+  //     } = req.query;
+
+  //     if (!SERIALNUM) {
+  //       return res.status(400).send({ message: 'SERIALNUM is required.' });
+  //     }
+
+  //     let query = `
+  //       UPDATE dbo.tbl_Shipment_Received_CL
+  //       SET `;
+
+  //     const updateFields = [];
+  //     const request = pool2.request();
+
+  //     if (SHIPMENTID !== undefined) {
+  //       updateFields.push('SHIPMENTID = @SHIPMENTID');
+  //       request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+  //     }
+
+  //     if (CONTAINERID !== undefined) {
+  //       updateFields.push('CONTAINERID = @CONTAINERID');
+  //       request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
+  //     }
+
+  //     if (ARRIVALWAREHOUSE !== undefined) {
+  //       updateFields.push('ARRIVALWAREHOUSE = @ARRIVALWAREHOUSE');
+  //       request.input('ARRIVALWAREHOUSE', sql.NVarChar, ARRIVALWAREHOUSE);
+  //     }
+
+  //     if (ITEMNAME !== undefined) {
+  //       updateFields.push('ITEMNAME = @ITEMNAME');
+  //       request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+  //     }
+
+  //     if (ITEMID !== undefined) {
+  //       updateFields.push('ITEMID = @ITEMID');
+  //       request.input('ITEMID', sql.NVarChar, ITEMID);
+  //     }
+
+  //     if (PURCHID !== undefined) {
+  //       updateFields.push('PURCHID = @PURCHID');
+  //       request.input('PURCHID', sql.NVarChar, PURCHID);
+  //     }
+
+  //     if (CLASSIFICATION !== undefined) {
+  //       updateFields.push('CLASSIFICATION = @CLASSIFICATION');
+  //       request.input('CLASSIFICATION', sql.Float, CLASSIFICATION);
+  //     }
+
+  //     if (RCVDCONFIGID !== undefined) {
+  //       updateFields.push('RCVDCONFIGID = @RCVDCONFIGID');
+  //       request.input('RCVDCONFIGID', sql.NVarChar, RCVDCONFIGID);
+  //     }
+
+  //     if (RCVD_DATE !== undefined) {
+  //       updateFields.push('RCVD_DATE = @RCVD_DATE');
+  //       request.input('RCVD_DATE', sql.Date, RCVD_DATE);
+  //     }
+
+  //     if (GTIN !== undefined) {
+  //       updateFields.push('GTIN = @GTIN');
+  //       request.input('GTIN', sql.NVarChar, GTIN);
+  //     }
+
+  //     if (RZONE !== undefined) {
+  //       updateFields.push('RZONE = @RZONE');
+  //       request.input('RZONE', sql.NVarChar, RZONE);
+  //     }
+
+  //     if (PALLET_DATE !== undefined) {
+  //       updateFields.push('PALLET_DATE = @PALLET_DATE');
+  //       request.input('PALLET_DATE', sql.Date, PALLET_DATE);
+  //     }
+
+  //     if (PALLETCODE !== undefined) {
+  //       updateFields.push('PALLETCODE = @PALLETCODE');
+  //       request.input('PALLETCODE', sql.NVarChar, PALLETCODE);
+  //     }
+
+  //     if (BIN !== undefined) {
+  //       updateFields.push('BIN = @BIN');
+  //       request.input('BIN', sql.NVarChar, BIN);
+  //     }
+
+  //     if (REMARKS !== undefined) {
+  //       updateFields.push('REMARKS = @REMARKS');
+  //       request.input('REMARKS', sql.NVarChar, REMARKS);
+  //     }
+
+  //     if (POQTY !== undefined) {
+  //       updateFields.push('POQTY = @POQTY');
+  //       request.input('POQTY', sql.Numeric(18, 0), POQTY);
+  //     }
+
+  //     if (RCVQTY !== undefined) {
+  //       updateFields.push('RCVQTY = @RCVQTY');
+  //       request.input('RCVQTY', sql.Numeric(18, 0), RCVQTY);
+  //     }
+
+  //     if (REMAININGQTY !== undefined) {
+  //       updateFields.push('REMAININGQTY = @REMAININGQTY');
+  //       request.input('REMAININGQTY', sql.Numeric(18, 0), REMAININGQTY);
+  //     }
+
+  //     if (updateFields.length === 0) {
+  //       return res.status(400).send({ message: 'At least one field is required to update.' });
+  //     }
+
+  //     query += updateFields.join(', ');
+
+  //     query += `
+  //     WHERE SERIALNUM = @SERIALNUM
+  //     `;
+
+  //     request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
+
+  //     const result = await request.query(query);
+
+  //     if (result.rowsAffected[0] === 0) {
+  //       return res.status(404).send({ message: 'Shipment record not found.' });
+  //     }
+
+  //     res.status(200).send({ message: 'Shipment data updated successfully.' });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // },
 
 
 

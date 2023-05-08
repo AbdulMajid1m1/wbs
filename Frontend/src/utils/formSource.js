@@ -182,6 +182,48 @@ export const TblShipmentReceivedClInput = [
       type: "text",
       placeholder: "BIN",
     },
+    {
+      id: "shipmentIdInput16",
+      name: "REMARKS",
+      label: "REMARKS*",
+      type: "text",
+      placeholder: "REMARKS",
+    },
+    {
+      id: "shipmentIdInput17",
+      name: "POQTY",
+      label: "POQTY*",
+      type: "text",
+      placeholder: "POQTY",
+    },
+    {
+      id: "shipmentIdInput18",
+      name: "RCVQTY",
+      label: "RCVQTY*",
+      type: "text",
+      placeholder: "RCVQTY",
+    },
+    {
+      id: "shipmentIdInput19",
+      name: "REMAININGQTY",
+      label: "REMAININGQTY*",
+      type: "text",
+      placeholder: "REMAININGQTY",
+    },
+    {
+      id: "shipmentIdInput20",
+      name: "USERID",
+      label: "USERID*",
+      type: "text",
+      placeholder: "USERID",
+    },
+    {
+      id: "shipmentIdInput21",
+      name: "TRXDATETIME",
+      label: "TRXDATETIME*",
+      type: "text",
+      placeholder: "TRXDATETIME",
+    },
 
 
   

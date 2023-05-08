@@ -2,7 +2,7 @@
 import "./UserDataTable.css"
 // import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import jsPDF from "jspdf";
@@ -41,6 +41,53 @@ const UserDataTable = ({
 
   };
 
+  const [filterModel, setFilterModel] = useState({ items: [] });
+
+  const handleFilterModelChange = (newFilterModel) => {
+    setFilterModel(newFilterModel);
+
+    // You can apply the filtering logic here and use the filtered rows for your other logic
+    const filteredRows = applyFiltering(filteredData, newFilterModel);
+    console.log("Filtered rows:", filteredRows);
+    setMuiFilteredData(filteredRows);
+  };
+
+  const operatorFunctions = {
+    contains: (cellValue, value) => cellValue.toString().includes(value),
+    notContains: (cellValue, value) => !cellValue.toString().includes(value),
+    equals: (cellValue, value) => cellValue.toString() === value,
+    notEqual: (cellValue, value) => cellValue.toString() !== value,
+    greaterThan: (cellValue, value) => cellValue > value,
+    greaterThanOrEqual: (cellValue, value) => cellValue >= value,
+    lessThan: (cellValue, value) => cellValue < value,
+    lessThanOrEqual: (cellValue, value) => cellValue <= value,
+    startsWith: (cellValue, value) => cellValue.toString().startsWith(value),
+    endsWith: (cellValue, value) => cellValue.toString().endsWith(value),
+  };
+
+  const applyFiltering = (filteredData, filterModel) => {
+    if (!filterModel || !filterModel.items || filterModel.items.length === 0) {
+      return filteredData;
+    }
+
+    return filteredData.filter((row) => {
+      return filterModel.items.every((filter) => {
+        const { field, operator, value } = filter;
+        const cellValue = row[field];
+
+        if (!operatorFunctions.hasOwnProperty(operator)) {
+          console.warn(`Unknown filter operator: ${operator}`);
+          return true;
+        }
+
+        return operatorFunctions[operator](cellValue, value);
+      });
+    });
+  };
+
+
+
+
 
 
   useEffect(() => {
@@ -65,6 +112,10 @@ const UserDataTable = ({
           item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
         )
         : record;
+
+  useEffect(() => {
+    setMuiFilteredData(filteredData);
+  }, [filteredData]);
 
 
 
@@ -326,9 +377,9 @@ const UserDataTable = ({
     },
   ];
 
-  const handleExport = () => {
+  const handleExport = (returnBlob = false) => {
     // get only the data from the record array which matsch columnsName field
-    const data = record.map((item) => {
+    const data = muiFilteredData.map((item) => {
       const row = {};
       columnsName.forEach((column) => {
         row[column.field] = item[column.field];
@@ -341,14 +392,20 @@ const UserDataTable = ({
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(dataWithoutId); // Pass the new array to the 'json_to_sheet' method
     XLSX.utils.book_append_sheet(wb, ws, title);
-    XLSX.writeFile(wb, `${title}.xlsx`); // Export the file
+    if (returnBlob) {
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([wbout], { type: 'application/octet-stream' });
+      return blob;
+    } else {
+      XLSX.writeFile(wb, `${title}.xlsx`); // Export the file
+    }
   };
 
 
 
 
 
-  const handlePdfExport = () => {
+  const handlePdfExport = (returnBlob = false) => {
     const doc = new jsPDF("landscape");
 
     // Calculate the font size based on the number of columns
@@ -357,7 +414,7 @@ const UserDataTable = ({
     const maxFontSize = 8; // Maximum font size
     const fontSize = columnsName.length <= maxColumns ? maxFontSize : Math.max(minFontSize, maxFontSize - (columnsName.length - maxColumns));
 
-    const tableData = record.map((item) => {
+    const tableData = muiFilteredData.map((item) => {
       const row = {};
       columnsName.forEach((column) => {
         row[column.field] = item[column.field];
@@ -378,8 +435,54 @@ const UserDataTable = ({
       tableWidth: "auto", // Automatically adjust table width based on content
     });
 
-    doc.save(`${title}.pdf`);
+    if (returnBlob) {
+      const blob = doc.output("blob");
+      return blob;
+    } else {
+      doc.save(`${title}.pdf`);
+    }
   };
+
+  const sendEmail = async (email, subject, remarks) => {
+    const excelFile = handleExport(true);
+    const pdfFile = handlePdfExport(true);
+    let date = new Date().toISOString().slice(0, 10);
+    const formData = new FormData();
+    formData.append('to', email);
+    formData.append('subject', subject + ' - ' + date);
+    formData.append('body', remarks);
+    formData.append('attachments', excelFile, `${title}.xlsx`);
+    formData.append('attachments', pdfFile, `${title}.pdf`);
+
+    try {
+      const response = await userRequest.post('/sendEmail', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log(response.data);
+      setMessage('Email sent successfully');
+      // Show success message
+    } catch (error) {
+      console.log(error);
+      // Show error message
+      setError('Email failed to send');
+    }
+  };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    sendEmail(email, subject, sendTo, remarks);
+    handleClosePopup();
+    // reset form
+    setEmail('');
+    setSubject('');
+    setRemarks('');
+
+  };
+
 
 
   const [isOpen, setIsOpen] = useState(false);
@@ -396,11 +499,6 @@ const UserDataTable = ({
     setIsOpen(false);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(email);
-    setIsOpen(false);
-  };
 
 
 
@@ -455,11 +553,9 @@ const UserDataTable = ({
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
-
-              {/* <button onClick={handleOpenPopup}>Send to Email</button> */}
-              {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
-              <button onClick={handleExport}>Export to Excel</button>
-              <button onClick={() => handlePdfExport(8)}
+              <button onClick={handleOpenPopup}>Send to Email</button>
+              <button onClick={() => handleExport(false)}>Export to Excel</button>
+              <button onClick={() => handlePdfExport(false)}
               >Export to Pdf</button>
 
             </span>
@@ -478,7 +574,6 @@ const UserDataTable = ({
           }
           }
           className="datagrid"
-          // rows={record}
           rows={filteredData}
 
           columns={
@@ -489,8 +584,10 @@ const UserDataTable = ({
           }
           pageSize={30}
           rowsPerPageOptions={[30, 50, 100]}
-
           checkboxSelection
+
+          filterModel={filterModel}
+          onFilterModelChange={handleFilterModelChange}
         />
 
 
@@ -525,7 +622,7 @@ const UserDataTable = ({
                   placeholder="Subject"
                 />
 
-                <label htmlFor="sendTo">Send To:</label>
+                {/* <label htmlFor="sendTo">Send To:</label>
                 <input
                   type="sendTo"
                   id="sendTo"
@@ -533,7 +630,7 @@ const UserDataTable = ({
                   onChange={(e) => setSendTo(e.target.value)}
                   required
                   placeholder="Send To"
-                />
+                /> */}
 
                 <label htmlFor="remarks">Remarks:</label>
                 <input
@@ -547,7 +644,9 @@ const UserDataTable = ({
 
                 <div className="flex gap-3">
                   <button className="close-btn" type="button" onClick={handleClosePopup}>CANCEL</button>
-                  <button type="submit">SEND</button>
+                  <button type="submit"
+
+                  >SEND</button>
                 </div>
               </form>
             </div>

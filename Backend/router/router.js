@@ -3,6 +3,13 @@ const router = express.Router();
 import WBSDB from "../controllers/controlletrsMSSQL.js";
 import { checkAuthentication } from "../helpers/apiAuth.js";
 
+import dotenv from "dotenv";
+import upload from "../config/multerConfig.js";
+dotenv.config();
+
+const userEmail = process.env.USER_EMAIL;
+const userPassword = process.env.USER_PASSWORD;
+
 // import upload from "../config/multerConfig.js";
 // import { checkAuthentication, checkRole, generateToken } from "../helpers/apiAuth.js";
 // import logoUpload from "../config/multerLogoConfig.js";
@@ -239,5 +246,10 @@ router.post("/generateAndUpdatePalletIds", checkAuthentication, WBSDB.generateAn
 
 
 router.get("/validateZoneCode", checkAuthentication, WBSDB.validateZoneCode);
+
+
+// ---------------- EMAIL API -----------------------------
+
+router.post('/sendEmail', upload.array('attachments'), WBSDB.sendEmail);
 
 export default router;

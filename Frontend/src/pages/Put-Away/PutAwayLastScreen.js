@@ -67,6 +67,8 @@ const PutAwayLastScreen = () => {
           BIN: zonecode
         }));
 
+        // print the full url in console wiht data
+        console.log("/updateShipmentRecievedDataCL", { records });
         const updateResponse = await userRequest.put('/updateShipmentRecievedDataCL', { records });
         console.log(updateResponse.data);
         setMessage(updateResponse?.data?.message ?? 'Update successfull');

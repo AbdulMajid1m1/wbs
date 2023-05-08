@@ -51,6 +51,8 @@ import PutAwayScreen1 from './pages/Palletization/PutAwayScreen1'
 import PutAwayScreen2 from './pages/Palletization/PuAwayScreen2'
 import PutAwayScreen3 from './pages/Palletization/PutAwayScreen3'
 import PutAwayLastScreen from './pages/Put-Away/PutAwayLastScreen'
+import BinToBinTransfer from './pages/BinToBinTransfer/BinToBinTransfer'
+import BinToBinScreen2 from './pages/BinToBinTransfer/BinToBinScreen2'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -86,6 +88,8 @@ const App = () => {
         <Route path="/palletscreen2" element={<PutAwayScreen2 />} />
         <Route path="/palletscreen3" element={<PutAwayScreen3 />} />
         <Route path="/putaway" element={<PutAwayLastScreen />} />
+        <Route path="/bintobin" element={<BinToBinTransfer />} />
+        <Route path="/bintobin2" element={<BinToBinScreen2 />} />
 
         <Route
           path="/*"

@@ -172,7 +172,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Receipts Management</p>
                     </div>
 
-                    <div className='main-images-container'>
+                    <div className='main-images-container' onClick={() => navigate('/bintobin')}>
                         <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Internal Transfer Order</p>
                     </div>

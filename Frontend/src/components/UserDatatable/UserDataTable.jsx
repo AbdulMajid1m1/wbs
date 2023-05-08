@@ -24,6 +24,7 @@ const UserDataTable = ({
   ContainerIdSearchEnable,
   buttonVisibility,
   addNewNavigation,
+  emailButton,
   detectAddRole
 
 }) => {
@@ -559,7 +560,6 @@ const UserDataTable = ({
 
             </span>
             }
-
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>

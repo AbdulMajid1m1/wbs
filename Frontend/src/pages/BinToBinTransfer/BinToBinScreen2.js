@@ -121,7 +121,6 @@ const BinToBinTransfer2 = () => {
               <div className='w-full flex justify-between place-items-end'>
                   <div>
                   <button
-                    onClick={() => navigate('/bintobin2')}
                     type='submit'
                       className='bg-[#e69138] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
                     <span className='flex justify-center items-center'>

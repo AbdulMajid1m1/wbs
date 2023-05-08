@@ -6,6 +6,8 @@ pool2.connect().catch((err) => console.log("Error connecting to config2:", err))
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
+import nodemailer from 'nodemailer';
+import fs from 'fs';
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import path from "path";
@@ -17,6 +19,11 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "../.env") });
 let jwtSecret = process.env.JWT_SECRET;
 let jwtExpiration = process.env.JWT_EXPIRATION;
+import upload from "../config/multerConfig.js";
+dotenv.config();
+
+const userEmail = process.env.USER_EMAIL;
+const userPassword = process.env.USER_PASSWORD;
 
 function ssccCheckDigit(barcode) {
   // Strip off leading 0's if 20-digit or 19-digit format was provided
@@ -3149,18 +3156,55 @@ const WBSDB = {
       console.error(error);
       res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
+
+
+
+
+  async sendEmail(req, res, next) {
+    const { to, subject, body } = req.body;
+    const attachments = req.files;
+
+    try {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: userEmail,
+          pass: userPassword,
+        },
+      });
+
+      const mailOptions = {
+        from: userEmail,
+        to,
+        subject,
+        html: body,
+        attachments: attachments.map((file) => ({
+          filename: file.originalname,
+          path: file.path,
+        })),
+      };
+
+      const info = await transporter.sendMail(mailOptions);
+
+      // Delete the uploaded files after sending the email
+      attachments.forEach((file) => {
+        fs.unlinkSync(file.path);
+      });
+
+      res.status(200).send({ message: 'Email sent successfully', info });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).send({ message: 'Error sending email', error });
+    }
+  },
+
+
+
 
 
 
 
 };
-
-
-
-
-
-
 
 export default WBSDB;

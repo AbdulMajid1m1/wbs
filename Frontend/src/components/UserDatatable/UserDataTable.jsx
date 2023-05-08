@@ -24,6 +24,7 @@ const UserDataTable = ({
   ContainerIdSearchEnable,
   buttonVisibility,
   addNewNavigation,
+  emailButton,
   detectAddRole
 
 }) => {
@@ -454,14 +455,15 @@ const UserDataTable = ({
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
-              <button onClick={handleOpenPopup}>Send to Email</button>
+
+              {/* <button onClick={handleOpenPopup}>Send to Email</button> */}
+              {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
               <button onClick={handleExport}>Export to Excel</button>
               <button onClick={() => handlePdfExport(8)}
               >Export to Pdf</button>
 
             </span>
             }
-
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>

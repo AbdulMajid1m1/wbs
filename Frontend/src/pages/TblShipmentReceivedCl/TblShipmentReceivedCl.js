@@ -47,6 +47,7 @@ const TblShipmentReceivedCl = () => {
         addNewNavigation="/receipts"
         ShipmentIdSearchEnable={true}
         actionColumnVisibility={true}
+        emailButton={true}
 
       />
 

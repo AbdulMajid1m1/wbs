@@ -2657,7 +2657,7 @@ const WBSDB = {
         WHERE ItemCode  = @ItemCode
       `;
       let request = pool2.request();
-      request.input('ItemCode', sql.NVarChar(100), ItemCode); // Assuming ITEMID is of type nvarchar(255)
+      request.input('ItemCode', sql.NVarChar(100), ItemCode);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
@@ -2668,39 +2668,29 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-  // async getAllTblMappedBarcodes(req, res, next) {
-  //   try {
-  //     const cacheKey = "tblMappedBarcodes";
 
-  //     // Try to get data from Redis cache
-  //     const cachedData = await client.get(cacheKey);
 
-  //     if (cachedData) {
-  //       // Parse the cached data and return it
-  //       const parsedData = JSON.parse(cachedData);
-  //       return res.status(200).send(parsedData);
-  //     } else {
-  //       // Fetch data from the database if not in cache
-  //       let query = `
-  //         SELECT * FROM dbo.tblMappedBarcodes
-  //       `;
-  //       let request = pool2.request();
-  //       const data = await request.query(query);
+  async getmapBarcodeDataByBinLocation(req, res, next) {
+    try {
+      const { BinLocation } = req.query;
+      console.log(BinLocation);
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE BinLocation  = @BinLocation
+      `;
+      let request = pool2.request();
+      request.input('BinLocation', sql.VarChar(200), BinLocation);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
-  //       if (data.recordsets[0].length === 0) {
-  //         return res.status(404).send({ message: "No data found." });
-  //       }
-
-  //       // Cache the data in Redis with an expiration time (e.g., 1 hour)
-  //       await client.set(cacheKey, JSON.stringify(data.recordsets[0]), "EX", 3600);
-
-  //       return res.status(200).send(data.recordsets[0]);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // },
 
   async getAllTblMappedBarcodes(req, res, next) {
     try {
@@ -3059,6 +3049,40 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
+  
+  async updateTblMappedBarcodeBinLocation(req, res, next) {
+    try {
+        const { oldbinlocation, newbinlocation } = req.headers;
+
+        if (!oldbinlocation || !newbinlocation) {
+            return res.status(400).send({ message: 'Both oldbinlocation and newbinlocation are required.' });
+        }
+
+        let query = `
+            UPDATE dbo.tblMappedBarcodes
+            SET BinLocation = @newbinlocation
+            OUTPUT INSERTED.*
+            WHERE BinLocation = @oldbinlocation
+        `;
+
+        const request = pool2.request();
+        request.input('oldbinlocation', sql.VarChar(100), oldbinlocation);
+        request.input('newbinlocation', sql.VarChar(100), newbinlocation);
+
+        const result = await request.query(query);
+
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).send({ message: 'Data not found.' });
+        }
+
+        res.status(200).send({ message: 'Data updated successfully.', data: result.recordset });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: error.message });
+    }
+},
+
 
 
   async checkBarcodeValidityByItemSerialNo(req, res, next) {

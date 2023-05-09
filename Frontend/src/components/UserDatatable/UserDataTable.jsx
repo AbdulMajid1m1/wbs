@@ -567,12 +567,7 @@ const UserDataTable = ({
 
         <DataGrid
           slots={{ toolbar: GridToolbar }}
-          getRowHeight={({ }) => {
-            let x;
-            title === "USER ACCOUNTS" ? x = 100 : x = 60;
-            return x;
-          }
-          }
+
           className="datagrid"
           rows={filteredData}
 

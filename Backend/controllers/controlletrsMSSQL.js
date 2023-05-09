@@ -256,6 +256,8 @@ const WBSDB = {
     }
   },
 
+
+  // --- expectedTransferOrder controller --- //
   async getAllExpectedTransferOrder(req, res, next) {
     try {
       let query = `
@@ -275,6 +277,45 @@ const WBSDB = {
     }
   },
 
+  async getExpectedTransferOrderByTransferId(req, res, next) {
+    try {
+      // Extract TRANSFERID from request parameters
+      const { TRANSFERID } = req.query;
+      if (!TRANSFERID) {
+        return res.status(400).send({ message: "TRANSFERID is required." });
+      }
+
+      // Define SQL query
+      let query = `
+        SELECT * 
+          FROM dbo.expectedTransferOrder
+          WHERE TRANSFERID = @TRANSFERID
+      `;
+
+      // Create a new request
+      let request = pool1.request();
+
+      // Add parameters to the SQL request
+      request.input('TRANSFERID', sql.NVarChar, TRANSFERID);
+
+      // Execute the query
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found for provided TRANSFERID." });
+      }
+
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  }
+  ,
+
+
+
+  // --- expectedTransferOrder controllers END --- //
   async getAllPickingList(req, res, next) {
     try {
       let query = `

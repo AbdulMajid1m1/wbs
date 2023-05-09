@@ -51,8 +51,10 @@ import PutAwayScreen1 from './pages/Palletization/PutAwayScreen1'
 import PutAwayScreen2 from './pages/Palletization/PuAwayScreen2'
 import PutAwayScreen3 from './pages/Palletization/PutAwayScreen3'
 import PutAwayLastScreen from './pages/Put-Away/PutAwayLastScreen'
-import BinToBinTransfer from './pages/BinToBinTransfer/BinToBinTransfer'
-import BinToBinScreen2 from './pages/BinToBinTransfer/BinToBinScreen2'
+import BinToBinInternal from './pages/BinToBinInternal/BinToBinInternal'
+import BinToBinJournalID from './pages/BinToBinJournalID/BinToBinJournalID'
+import TransferID from './pages/TransferID/TransferID'
+import TransferIDPage from './pages/TransferID/TransferIDPage1'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -83,13 +85,14 @@ const App = () => {
         <Route path="/receiptsecond" element={<ReceiptsProvider><ReceiptsSecond /></ReceiptsProvider>} />
         <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
         {/* <Route path='/putaway' element={<PutAway />}/> */}
-        {/* <Route path='/transferid' element={<TransferID />}/> */}
+        <Route path='/transferpage1' element={<TransferIDPage />}/>
+        <Route path='/transferid' element={<TransferID />}/>
         <Route path="/palletscreen1" element={<PutAwayScreen1 />} />
         <Route path="/palletscreen2" element={<PutAwayScreen2 />} />
         <Route path="/palletscreen3" element={<PutAwayScreen3 />} />
         <Route path="/putaway" element={<PutAwayLastScreen />} />
-        <Route path="/bintobin" element={<BinToBinTransfer />} />
-        <Route path="/bintobin2" element={<BinToBinScreen2 />} />
+        <Route path="/bintobin" element={<BinToBinInternal />} />
+        <Route path="/bintobin2" element={<BinToBinJournalID />} />
 
         <Route
           path="/*"

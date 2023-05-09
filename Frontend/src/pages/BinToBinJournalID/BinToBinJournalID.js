@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
-import "./BinToBinTransfer.css";
+import "./BinToBinJournalID.css";
 // import CustomSnakebar from '../../utils/CustomSnakebar';
 // import back from "../../images/back.png"
 import undo from "../../images/undo.png"
 
-const BinToBinTransfer2 = () => {
+const BinToBinJournalID = () => {
   const navigate = useNavigate();
  
   return (
@@ -61,17 +61,17 @@ const BinToBinTransfer2 = () => {
                   </div> 
             </div>
 
-            <div className='mb-6'>
+            {/* <div className='mb-6'>
                  <div className='flex gap-2 justify-center items-center'>
                     <span className='text-[#00006A] font-semibold'>FROM:</span>
                     <input className="bg-gray-50 border border-gray-300 placeholder:text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 " placeholder="Location Reference "
                     />
                   </div>
-            </div>
+            </div> */}
 
             <div className='mb-6'>
-              <label className='text-[#00006A] font-semibold'>Shipment Details<span className='text-[#FF0404]'>*</span></label>
+              <label className='text-[#00006A] font-semibold'>List of Items on Bin<span className='text-[#FF0404]'>*</span></label>
               {/* // creae excel like Tables  */}
               <div className="table-location-generate1">
                 <table>
@@ -80,6 +80,13 @@ const BinToBinTransfer2 = () => {
                       <th>ID</th>
                       <th>TransferID</th>
                       <th>Config</th>
+                      <th>InventoryLocationIDFrom</th>
+                      <th>InventoryLocationIDTo</th>
+                      <th>Item ID </th>
+                      <th>InventDIMID</th>
+                      <th>Qty.Transfer</th>
+                      <th>Qty.RemainRecieve </th>
+                      <th>Created DateTime</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -92,16 +99,37 @@ const BinToBinTransfer2 = () => {
                         <td>1</td>
                         <td>IRT-00398365</td>
                         <td>G</td>
+                        <td>RMW01</td>
+                        <td>RSR01</td>
+                        <td>SF-P110XAV 2206 WH</td>
+                        <td>ID00000000003</td>
+                        <td>1.000000000000</td>
+                        <td>1.000000000000</td>
+                        <td>2023-04-28 12:04:13.000</td>
                     </tr>
                     <tr>
                         <td>1</td>
                         <td>IRT-00398365</td>
                         <td>G</td>
+                        <td>RMW01</td>
+                        <td>RSR01</td>
+                        <td>SF-P110XAV 2206 WH</td>
+                        <td>ID00000000003</td>
+                        <td>1.000000000000</td>
+                        <td>1.000000000000</td>
+                        <td>2023-04-28 12:04:13.000</td>
                     </tr>
                     <tr>
                         <td>1</td>
                         <td>IRT-00398365</td>
                         <td>G</td>
+                        <td>RMW01</td>
+                        <td>RSR01</td>
+                        <td>SF-P110XAV 2206 WH</td>
+                        <td>ID00000000003</td>
+                        <td>1.000000000000</td>
+                        <td>1.000000000000</td>
+                        <td>2023-04-28 12:04:13.000</td>
                     </tr>
                   </tbody>
                 </table>
@@ -147,4 +175,4 @@ const BinToBinTransfer2 = () => {
   )
 }
 
-export default BinToBinTransfer2
+export default BinToBinJournalID

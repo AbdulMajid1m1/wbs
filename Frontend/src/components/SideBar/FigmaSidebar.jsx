@@ -172,11 +172,21 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Receipts Management</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/bintobin')}>
+                    <div className='main-images-container' onClick={() => navigate('/transferpage1')}>
                         <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Internal Transfer Order</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/bintobin')}>
+                        <img src={receipts} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Bin To Bin (Internal)</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/bintobin2')}>
+                        <img src={dispatch} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Bin To Bin (Journal)</p>
+                    </div>
+                    
                     <div className='main-images-container'>
                         <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Physical Inventory</p>

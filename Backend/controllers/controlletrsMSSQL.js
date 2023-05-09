@@ -286,9 +286,15 @@ const WBSDB = {
       }
 
       // Define SQL query
+      // TODO: uncommit the original query
+      // let query = `
+      //   SELECT * 
+      //     FROM dbo.expectedTransferOrder
+      //     WHERE TRANSFERID = @TRANSFERID
+      // `;
       let query = `
         SELECT * 
-          FROM dbo.expectedTransferOrder
+          FROM dbo.expectedTransferOrderTable
           WHERE TRANSFERID = @TRANSFERID
       `;
 
@@ -1133,6 +1139,33 @@ const WBSDB = {
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "Shipment not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+  async getShipmentRecievedCLDataCBySerialNumber(req, res, next) {
+
+    try {
+      const { SERIALNUM } = req.query;
+
+      if (!SERIALNUM) {
+        return res.status(400).send({ message: "SERIALNUM is required." });
+      }
+
+      const query = `
+        SELECT * FROM dbo.tbl_Shipment_Received_CL
+        WHERE SERIALNUM = @SERIALNUM
+      `;
+      let request = pool2.request();
+      request.input('SERIALNUM', sql.NVarChar(100), SERIALNUM);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "data not found." });
       }
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {
@@ -3239,6 +3272,72 @@ const WBSDB = {
       res.status(500).send({ message: 'Error sending email', error });
     }
   },
+
+
+
+
+
+  async insertTblTransferBinToBinCL(req, res, next) {
+    try {
+      // Extract the array of records from the request body.
+      const records = req.body;
+
+      // For each record in the array
+      for (const record of records) {
+        let request = new sql.Request(pool2);
+
+        // Add input parameters for each field. If the field is not provided in the record, set it to null.
+        request.input('SHIPMENTID', sql.NVarChar, record.SHIPMENTID || null);
+        request.input('CONTAINERID', sql.NVarChar, record.CONTAINERID || null);
+        request.input('ARRIVALWAREHOUSE', sql.NVarChar, record.ARRIVALWAREHOUSE || null);
+        request.input('ITEMNAME', sql.NVarChar, record.ITEMNAME || null);
+        request.input('ITEMID', sql.NVarChar, record.ITEMID || null);
+        request.input('PURCHID', sql.NVarChar, record.PURCHID || null);
+        request.input('CLASSIFICATION', sql.Float, record.CLASSIFICATION || null);
+        request.input('SERIALNUM', sql.VarChar, record.SERIALNUM || null);
+        request.input('RCVDCONFIGID', sql.VarChar, record.RCVDCONFIGID || null);
+        request.input('RCVD_DATE', sql.Date, record.RCVD_DATE ? new Date(record.RCVD_DATE) : null);
+        request.input('GTIN', sql.VarChar, record.GTIN || null);
+        request.input('RZONE', sql.VarChar, record.RZONE || null);
+        request.input('PALLET_DATE', sql.Date, record.PALLET_DATE ? new Date(record.PALLET_DATE) : null);
+        request.input('PALLETCODE', sql.VarChar, record.PALLETCODE || null);
+        request.input('BIN', sql.VarChar, record.BIN || null);
+        request.input('REMARKS', sql.NVarChar, record.REMARKS || null);
+        request.input('POQTY', sql.Numeric, record.POQTY || null);
+        request.input('RCVQTY', sql.Numeric, record.RCVQTY || null);
+        request.input('REMAININGQTY', sql.Numeric, record.REMAININGQTY || null);
+        request.input('USERID', sql.NChar, record.USERID || null);
+        request.input('TRXDATETIME', sql.DateTime, record.TRXDATETIME ? new Date(record.TRXDATETIME) : null);
+        request.input('TRANSFERID', sql.NVarChar, record.TRANSFERID || null);
+        request.input('TRANSFERSTATUS', sql.Int, record.TRANSFERSTATUS || null);
+        request.input('INVENTLOCATIONIDFROM', sql.NVarChar, record.INVENTLOCATIONIDFROM || null);
+        request.input('INVENTLOCATIONIDTO', sql.NVarChar, record.INVENTLOCATIONIDTO || null);
+        request.input('QTYTRANSFER', sql.Int, record.QTYTRANSFER || null);
+        request.input('QTYRECEIVED', sql.Int, record.QTYRECEIVED || null);
+        request.input('CREATEDDATETIME', sql.DateTime, record.CREATEDDATETIME ? new Date(record.CREATEDDATETIME) : null);
+        request.input('SELECTTYPE', sql.NVarChar, record.SELECTTYPE || null);
+        // Continue to add the rest of the columns here with the same pattern
+        const query = `
+            INSERT INTO dbo.tbl_TransferBinToBin_CL
+            (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN, REMARKS, POQTY, RCVQTY, REMAININGQTY, USERID, TRXDATETIME, TRANSFERID, TRANSFERSTATUS, INVENTLOCATIONIDFROM, INVENTLOCATIONIDTO, QTYTRANSFER, QTYRECEIVED, CREATEDDATETIME,SELECTTYPE) 
+            VALUES
+            (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS, @POQTY, @RCVQTY, @REMAININGQTY, @USERID, @TRXDATETIME, @TRANSFERID, @TRANSFERSTATUS, @INVENTLOCATIONIDFROM, @INVENTLOCATIONIDTO, @QTYTRANSFER, @QTYRECEIVED, @CREATEDDATETIME,@SELECTTYPE)
+            `;
+
+        // Execute the query
+        await request.query(query);
+      }
+
+      // After all records are inserted, send a response.
+      res.status(201).send({ message: 'Data inserted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
 
 
 

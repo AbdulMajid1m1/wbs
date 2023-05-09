@@ -39,7 +39,7 @@ router.get("/getAllExpectedShipments", checkAuthentication, WBSDB.getAllExpected
 // expectedTransferOrder APIS Start
 
 router.get("/getAllExpectedTransferOrder", checkAuthentication, WBSDB.getAllExpectedTransferOrder);
-
+// TODO: uncommit the original query
 router.get("/getExpectedTransferOrderByTransferId", checkAuthentication, WBSDB.getExpectedTransferOrderByTransferId);
 
 // expectedTransferOrder APIS End
@@ -98,10 +98,11 @@ router.put("/updateTblItemsCLData", checkAuthentication, WBSDB.updateTblItemsCLD
 // ----------- tbl_Shipment_Received_CL APIS Start -----------------
 
 router.get("/getAllTblShipmentReceivedCL", checkAuthentication, WBSDB.getAllTblShipmentReceivedCL);
-
 router.get("/getTblShipmentReceivedCLStats", checkAuthentication, WBSDB.getTblShipmentReceivedCLStats);
 
 router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
+
+router.get("/getShipmentRecievedCLDataCBySerialNumber", checkAuthentication, WBSDB.getShipmentRecievedCLDataCBySerialNumber)
 
 router.post("/getShipmentRecievedCLDataByPalletCode", checkAuthentication, WBSDB.getShipmentRecievedCLDataByPalletCode)
 
@@ -255,5 +256,16 @@ router.get("/validateZoneCode", checkAuthentication, WBSDB.validateZoneCode);
 // ---------------- EMAIL API -----------------------------
 
 router.post('/sendEmail', upload.array('attachments'), WBSDB.sendEmail);
+
+// ---------------- EMAIL API -----------------------------
+
+
+
+
+// ----------------- tbl_TransferBinToBin_CL APIS Start -----------------
+
+router.post("/insertTblTransferBinToBinCL", checkAuthentication, WBSDB.insertTblTransferBinToBinCL);
+
+
 
 export default router;

@@ -37,7 +37,11 @@ router.get("/getAllExpectedShipments", checkAuthentication, WBSDB.getAllExpected
 // dbo.expectedShipments APIS End
 
 // expectedTransferOrder APIS Start
+
 router.get("/getAllExpectedTransferOrder", checkAuthentication, WBSDB.getAllExpectedTransferOrder);
+
+router.get("/getExpectedTransferOrderByTransferId", checkAuthentication, WBSDB.getExpectedTransferOrderByTransferId);
+
 // expectedTransferOrder APIS End
 
 // dbo.pickinglist APIS Start

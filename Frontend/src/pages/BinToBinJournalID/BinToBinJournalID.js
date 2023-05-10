@@ -43,6 +43,8 @@ const BinToBinJournalID = () => {
 
   const handleBinLocation = (e) => {
     e.preventDefault();
+    console.log(data[0].BinLocation)
+    console.log(binlocation)
     userRequest.put('/updateTblMappedBarcodeBinLocation', {
       headers: {
         'oldbinlocation': data[0].BinLocation,

@@ -7,14 +7,63 @@ import "./BinToBinInternal.css";
 // import CustomSnakebar from '../../utils/CustomSnakebar';
 // import back from "../../images/back.png"
 import undo from "../../images/undo.png"
+import { SyncLoader } from 'react-spinners';
 
 const BinToBinInternal = () => {
   const navigate = useNavigate();
- 
+
+  const [transferTag, setTransferTag] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  const handleChangeValue = (e) => {
+    setTransferTag(e.target.value);
+  }
+
+  const handleForm = (e) => {
+    e.preventDefault();
+    setIsLoading(true)
+
+    userRequest.get(`/getmapBarcodeDataByBinLocation?BinLocation=${transferTag}`)
+      .then(response => {
+        console.log(response?.data);
+
+        setData(response?.data ?? []);
+        setIsLoading(false)
+      })
+
+      .catch(error => {
+        console.error(error);
+        setIsLoading(false)
+      });
+
+  }
+
   return (
     <>
+    
       {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
       {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+
+      {isLoading &&
+
+      <div className='loading-spinner-background'
+          style={{
+              zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+
+
+          }}
+      >
+            <SyncLoader
+
+                size={18}
+                color={"#FFA500"}
+                // height={4}
+                loading={isLoading}
+            />
+        </div>
+        }
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
@@ -41,7 +90,8 @@ const BinToBinInternal = () => {
             <div className=''>
                 <h2 className='text-[#00006A] text-center font-semibold'>Internal<span className='text-[#FF0404]'>*</span></h2>
             </div>
-      
+
+            <form onSubmit={handleForm}>
             <div className='mb-6'>
               <label htmlFor='transfer' 
                 className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Bin (FROM)<span className='text-[#FF0404]'>*</span></label>
@@ -50,11 +100,10 @@ const BinToBinInternal = () => {
                   id="transfer" 
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5" 
                       placeholder="Scan Bin From"
-                     // value={palletCode}
-                  //    onChange={handleInputChange}
+                        onChange={handleChangeValue}
                   />
                 <button
-                  type='button' 
+                  type='submit' 
                     className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm'
                     >
                       FIND
@@ -62,6 +111,7 @@ const BinToBinInternal = () => {
                   
                   </div> 
             </div>
+            </form>
 
             <div className='mb-6'>
               <label className='text-[#00006A] font-semibold'>Items On Bin<span className='text-[#FF0404]'>*</span></label>
@@ -70,60 +120,47 @@ const BinToBinInternal = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>ID</th>
-                      <th>TransferID</th>
-                      <th>Config</th>
-                      <th>InventoryLocationIDFrom</th>
-                      <th>InventoryLocationIDTo</th>
-                      <th>Item ID </th>
-                      <th>InventDIMID</th>
-                      <th>Qty.Transfer</th>
-                      <th>Qty.RemainRecieve </th>
-                      <th>Created DateTime</th>
+                      <th>ItemCode</th>
+                      <th>ItemDesc</th>
+                      <th>GTIN</th>
+                      <th>Remarks</th>
+                      <th>User</th>
+                      <th>Classification</th>
+                      <th>MainLocation</th>
+                      <th>BinLocation</th>
+                      <th>IntCode</th>
+                      <th>ItemSerialNo</th>
+                      <th>MapDate</th>
+                      <th>PalletCode</th>
+                      <th>Reference</th>
+                      <th>SID</th>
+                      <th>CID</th>
+                      <th>PO</th>
+                      <th>Trans</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {/* {serialNumbers.map((serialNumber, index) => (
+                  {data.map((item, index) => (
                       <tr key={index}>
-                        <td>{serialNumber}</td>
+                        <td>{item.ItemCode}</td>
+                        <td>{item.ItemDesc}</td>
+                        <td>{item.GTIN}</td>
+                        <td>{item.Remarks}</td>
+                        <td>{item.User}</td>
+                        <td>{item.Classification}</td>
+                        <td>{item.MainLocation}</td>
+                        <td>{item.BinLocation}</td>
+                        <td>{item.IntCode}</td>
+                        <td>{item.ItemSerialNo}</td>
+                        <td>{item.MapDate}</td>
+                        <td>{item.PalletCode}</td>
+                        <td>{item.Reference}</td>
+                        <td>{item.SID}</td>
+                        <td>{item.CID}</td>
+                        <td>{item.PO}</td>
+                        <td>{item.Trans}</td>
                       </tr>
-                    ))} */}
-                    <tr>
-                        <td>1</td>
-                        <td>IRT-00398365</td>
-                        <td>G</td>
-                        <td>RMW01</td>
-                        <td>RSR01</td>
-                        <td>SF-P110XAV 2206 WH</td>
-                        <td>ID00000000003</td>
-                        <td>1.000000000000</td>
-                        <td>1.000000000000</td>
-                        <td>2023-04-28 12:04:13.000</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>IRT-00398365</td>
-                        <td>G</td>
-                        <td>RMW01</td>
-                        <td>RSR01</td>
-                        <td>SF-P110XAV 2206 WH</td>
-                        <td>ID00000000003</td>
-                        <td>1.000000000000</td>
-                        <td>1.000000000000</td>
-                        <td>2023-04-28 12:04:13.000</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>IRT-00398365</td>
-                        <td>G</td>
-                        <td>RMW01</td>
-                        <td>RSR01</td>
-                        <td>SF-P110XAV 2206 WH</td>
-                        <td>ID00000000003</td>
-                        <td>1.000000000000</td>
-                        <td>1.000000000000</td>
-                        <td>2023-04-28 12:04:13.000</td>
-                    </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>

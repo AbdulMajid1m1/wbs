@@ -130,11 +130,30 @@ const TransferID = () => {
         console.log(response);
         setMessage("Data inserted successfully");
         // clear the table
-        setTableData([]);
-        // clear the location input
-        setLocationInputValue('');
-        // clear the scan input
-        setScanInputValue('');
+
+        // call the update api to 
+        userRequest.put("/updateQtyReceivedInTblItemMaster", {
+          itemid: parsedData.ITEMID,
+          qty: dataForAPI.length
+        })
+          .then(response => {
+            console.log(response);
+            setMessage("Data updated successfully");
+            // clear the table
+            setTableData([]);
+            // clear the location input
+            setLocationInputValue('');
+            // clear the scan input
+            setScanInputValue('');
+            // clear the selection type
+
+
+          })
+          .catch(error => {
+            console.log(error);
+            setError(error?.response?.data?.message ?? 'Cannot insert data');
+          });
+
 
       })
       .catch(error => {

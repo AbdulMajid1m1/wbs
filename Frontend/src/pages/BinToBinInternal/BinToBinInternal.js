@@ -16,6 +16,7 @@ const BinToBinInternal = () => {
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const resetSnakeBarMessages = () => {
@@ -39,7 +40,7 @@ const BinToBinInternal = () => {
 
         setData(response?.data ?? []);
         setIsLoading(false)
-         setMessage(response?.data?.message ?? 'Show All data');
+         setMessage(response?.data?.message ?? 'Data Displayed');
       })
 
       .catch(error => {
@@ -50,6 +51,32 @@ const BinToBinInternal = () => {
       });
 
   }
+
+
+
+  const handleBinLocation = (e) => {
+    e.preventDefault();
+    console.log(data[0].BinLocation)
+    console.log(binlocation)
+
+    userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
+      headers: {
+        'oldbinlocation': data[0].BinLocation,
+        'newbinlocation': binlocation
+      }
+    })
+    .then((response) => {
+      console.log(response);
+      setMessage(response?.data?.message);
+      // alert('done')
+    })
+    .catch((error) => {
+      console.log(error);
+      setError(error.response?.data?.message);
+      // alert(error)
+    });
+}
+
 
   return (
     <>
@@ -178,12 +205,14 @@ const BinToBinInternal = () => {
               </div>
             </div>
 
+            <form onSubmit={handleBinLocation}>
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="enterscan"
-                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Enter/Scan Location"
+                  className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Enter/Scan Location"
+                      onChange={(e) => setBinLocation(e.target.value)}
               />
             </div >
 
@@ -206,11 +235,12 @@ const BinToBinInternal = () => {
                         className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Totals"
                         value={data.length}
-                      />
+                        />
                   </div>
                 </div>
                   
               </div>
+            </form>
           </div>
         </div>
       </div>

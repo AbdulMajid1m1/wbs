@@ -8,6 +8,7 @@ import "./BinToBinInternal.css";
 // import back from "../../images/back.png"
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const BinToBinInternal = () => {
   const navigate = useNavigate();
@@ -15,6 +16,14 @@ const BinToBinInternal = () => {
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+  const resetSnakeBarMessages = () => {
+    setError(null);
+    setMessage(null);
+
+  };
+
 
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
@@ -30,11 +39,14 @@ const BinToBinInternal = () => {
 
         setData(response?.data ?? []);
         setIsLoading(false)
+         setMessage(response?.data?.message ?? 'Show All data');
       })
 
       .catch(error => {
         console.error(error);
         setIsLoading(false)
+        setError(error?.response.data?.message ?? 'Wrong Bin Scan');
+     
       });
 
   }
@@ -42,8 +54,8 @@ const BinToBinInternal = () => {
   return (
     <>
     
-      {/* {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />} */}
-      {/* {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />} */}
+      {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
       {isLoading &&
 
@@ -193,6 +205,7 @@ const BinToBinInternal = () => {
                         id="totals"
                         className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Totals"
+                        value={data.length}
                       />
                   </div>
                 </div>

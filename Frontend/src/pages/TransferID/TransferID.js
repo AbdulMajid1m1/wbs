@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "./TransferID.css";
 import userRequest from '../../utils/userRequest';
@@ -6,6 +6,11 @@ import icon from "../../images/close.png"
 
 const TransferID = () => {
     const navigate = useNavigate();
+
+    // retrieve data from session storage
+      const storedData = sessionStorage.getItem('transferData');
+         const parsedData = JSON.parse(storedData);
+         console.log(parsedData)
 
   return (
     <>
@@ -23,9 +28,12 @@ const TransferID = () => {
                   </button>
                 </div>
                 <span className='text-white -mt-7'>TRANSFER ID#:</span>
-                <input className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                  block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
-                />
+                <input
+                  value={parsedData.TRANSFERID} 
+                  className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
+                     readOnly
+               />
                 
                 <div className='flex gap-2 justify-center items-center'>
                     <span className='text-white'>FROM:</span>
@@ -38,11 +46,11 @@ const TransferID = () => {
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
-                  <span>ITEM-0001</span>
+                  <span>{parsedData.ITEMID}</span>
                 </div>
 
                 <div className='text-[#FFFFFF]'>
-                    <span>CLASS G</span>
+                    <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span>
                 </div>
               </div>
               
@@ -50,12 +58,12 @@ const TransferID = () => {
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                         <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                        <span>67</span>
+                        <span>{parsedData.QTYTRANSFER}</span>
                     </div>
 
                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                         <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                        <span>4567</span>
+                        <span>0</span>
                     </div>
                     </div>
                 </div>

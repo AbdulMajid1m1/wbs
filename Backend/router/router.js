@@ -287,4 +287,10 @@ router.put("/updateTblItemMaster", checkAuthentication, WBSDB.updateTblItemMaste
 
 router.put("/updateQtyReceivedInTblItemMaster", checkAuthentication, WBSDB.updateQtyReceivedInTblItemMaster);
 
+
+
+// ---- item-Re-Allocation APIS Start ----
+
+router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsReallocation);
+
 export default router;

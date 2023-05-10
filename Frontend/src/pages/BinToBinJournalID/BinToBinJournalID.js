@@ -15,7 +15,7 @@ const BinToBinJournalID = () => {
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
-  
+  const [binlocation, setBinLocation] = useState('');
 
 
   const handleChangeValue = (e) => {
@@ -38,8 +38,26 @@ const BinToBinJournalID = () => {
         console.error(error);
         setIsLoading(false)
       });
+
   }
 
+  const handleBinLocation = (e) => {
+    e.preventDefault();
+    userRequest.put('/updateTblMappedBarcodeBinLocation', {
+      headers: {
+        'oldbinlocation': data[0].BinLocation,
+        'newbinlocation': binlocation
+      }
+    })
+    .then((response) => {
+      console.log(response);
+      alert('done')
+    })
+    .catch((error) => {
+      console.log(error);
+      alert(error)
+    });
+  }
 
   return (
     <>
@@ -154,13 +172,15 @@ const BinToBinJournalID = () => {
                 </table>
               </div>
             </div>
-
+            
+            <form onSubmit={handleBinLocation}>
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="enterscan"
                 className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Enter/Scan Location"
+                    placeholder="Enter/Scan Location"
+                      onChange={(e) => setBinLocation(e.target.value)}
               />
             </div >
 
@@ -169,7 +189,7 @@ const BinToBinJournalID = () => {
                   <div>
                   <button
                     type='submit'
-                      className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
                     <span className='flex justify-center items-center'>
                       <p>Save</p>
                     </span>
@@ -187,6 +207,7 @@ const BinToBinJournalID = () => {
                 </div>
                   
               </div>
+            </form>
           </div>
         </div>
       </div>

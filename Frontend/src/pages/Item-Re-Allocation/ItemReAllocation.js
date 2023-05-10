@@ -111,7 +111,7 @@ const handleBinLocation = (e) => {
     .catch((error) => {
       console.log(error);
       setError(error.response?.data?.message);
-      // alert(error)
+      //  alert(error)
     });
 };
 

@@ -8,6 +8,7 @@ import "./BinToBinJournalID.css";
 // import back from "../../images/back.png"
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const BinToBinJournalID = () => {
   const navigate = useNavigate();
@@ -16,6 +17,13 @@ const BinToBinJournalID = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [binlocation, setBinLocation] = useState('');
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+  const resetSnakeBarMessages = () => {
+    setError(null);
+    setMessage(null);
+
+  };
 
 
   const handleChangeValue = (e) => {
@@ -32,20 +40,26 @@ const BinToBinJournalID = () => {
 
         setData(response?.data ?? []);
         setIsLoading(false)
+        setMessage(response?.data?.message ?? 'Show All data');
+  
       })
 
       .catch(error => {
         console.error(error);
         setIsLoading(false)
+        setError(error?.data?.message ?? 'Wrong Journal ID');
+     
       });
 
   }
+
 
   const handleBinLocation = (e) => {
     e.preventDefault();
     console.log(data[0].BinLocation)
     console.log(binlocation)
-    userRequest.put('/updateTblMappedBarcodeBinLocation', {
+
+    userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
       headers: {
         'oldbinlocation': data[0].BinLocation,
         'newbinlocation': binlocation
@@ -53,17 +67,23 @@ const BinToBinJournalID = () => {
     })
     .then((response) => {
       console.log(response);
-      alert('done')
+      setMessage(response?.data?.message);
+      // alert('done')
     })
     .catch((error) => {
       console.log(error);
-      alert(error)
+      setError(error.response?.data?.message);
+      // alert(error)
     });
-  }
+}
+
 
   return (
     <>
-      
+      {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
+
       {isLoading &&
 
       <div className='loading-spinner-background'
@@ -204,6 +224,7 @@ const BinToBinJournalID = () => {
                         id="totals"
                         className="bg-gray-50 font-semibold text-center placeholder:text-[#00006A] border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Totals"
+                        value={data.length}
                       />
                   </div>
                 </div>

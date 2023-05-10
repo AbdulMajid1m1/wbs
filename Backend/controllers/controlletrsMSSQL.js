@@ -3503,6 +3503,63 @@ const WBSDB = {
   },
 
 
+  async manageInventory(req, res, next) {
+    const { selectionType, serialnum, stockQty, itemId, ...recordData } = req.body;
+
+    if (!selectionType || !serialnum || !stockQty || !itemId) {
+      return res.status(400).send({ message: 'Selection type, serial number, stock quantity, and item id are required.' });
+    }
+
+    const request = pool2.request();
+    request.input('serialnum', sql.NVarChar(255), serialnum);
+
+    // Check if the serial number exists in the shipment received table
+    let result = await request.query(`SELECT * FROM tbl_ShipmentReceived_CL WHERE SERIALNUM = @serialnum`);
+
+    if (result.recordset.length === 0) {
+      return res.status(400).send({ message: 'Serial number not found in shipment received.' });
+    }
+
+    if (selectionType.toLowerCase() === 'allocation') {
+      // Check if the serial number exists in the mapped barcodes table
+      result = await request.query(`SELECT * FROM tbl_MappedBarcode WHERE SERIALNUM = @serialnum`);
+
+      if (result.recordset.length > 0) {
+        return res.status(400).send({ message: 'Serial number already found in stock.' });
+      }
+
+      // Insert into the mapped barcodes table
+      let query = `INSERT INTO tbl_MappedBarcode (ItemCode, ItemDesc, GTIN, Remarks, User, Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans) VALUES (@ItemCode, @ItemDesc, @GTIN, @Remarks, @User, @Classification, @MainLocation, @BinLocation, @IntCode, @ItemSerialNo, @MapDate, @PalletCode, @Reference, @SID, @CID, @PO, @Trans)`;
+      for (const field in recordData) {
+        request.input(field, sql.NVarChar(255), recordData[field]);
+      }
+
+      await request.query(query);
+
+      // Update the stock master table
+      await request.query(`UPDATE dbo.[tbl_Stock_Master] SET STOCKQTY = STOCKQTY + @stockQty WHERE ITEMID = @itemId`);
+    } else if (selectionType.toLowerCase() === 'picking') {
+      // Check if the serial number exists in the mapped barcodes table
+      result = await request.query(`SELECT * FROM tbl_MappedBarcode WHERE SERIALNUM = @serialnum`);
+
+      if (result.recordset.length === 0) {
+        return res.status(400).send({ message: 'Serial number not found in stock.' });
+      }
+
+      // Delete from the mapped barcodes table
+      await request.query(`DELETE FROM tbl_MappedBarcode WHERE SERIALNUM = @serialnum`);
+
+      // Update the stock master table
+      await request.query(`UPDATE dbo.[tbl_Stock_Master] SET STOCKQTY = STOCKQTY - @stockQty WHERE ITEMID = @itemId`);
+    } else {
+      return res.status(400).send({ message: 'Invalid selection type. Please select either "allocation" or "picking".' });
+    }
+
+    res.status(200).send({ message: 'Operation completed successfully.' });
+  }
+
+
+
 
 
 

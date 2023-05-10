@@ -3,9 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import "./TransferID.css";
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const TransferID = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
+    // to reset snakebar messages
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+
+    };
 
     // retrieve data from session storage
       const storedData = sessionStorage.getItem('transferData');
@@ -14,6 +23,10 @@ const TransferID = () => {
 
   return (
     <>
+
+        {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+        {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">

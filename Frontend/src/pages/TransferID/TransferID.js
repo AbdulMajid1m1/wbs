@@ -55,7 +55,7 @@ const TransferID = () => {
     e.preventDefault();
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
-      getShipmentRecievedCLDataByPalletCode
+      // getShipmentRecievedCLDataByPalletCode
       
       userRequest.post("/getmapBarcodeDataByItemCode", {},
         {

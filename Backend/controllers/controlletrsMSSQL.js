@@ -3050,38 +3050,38 @@ const WBSDB = {
     }
   },
 
-  
+
   async updateTblMappedBarcodeBinLocation(req, res, next) {
     try {
-        const { oldbinlocation, newbinlocation } = req.headers;
+      const { oldbinlocation, newbinlocation } = req.headers;
 
-        if (!oldbinlocation || !newbinlocation) {
-            return res.status(400).send({ message: 'Both oldbinlocation and newbinlocation are required.' });
-        }
+      if (!oldbinlocation || !newbinlocation) {
+        return res.status(400).send({ message: 'Both oldbinlocation and newbinlocation are required.' });
+      }
 
-        let query = `
+      let query = `
             UPDATE dbo.tblMappedBarcodes
             SET BinLocation = @newbinlocation
             OUTPUT INSERTED.*
             WHERE BinLocation = @oldbinlocation
         `;
 
-        const request = pool2.request();
-        request.input('oldbinlocation', sql.VarChar(100), oldbinlocation);
-        request.input('newbinlocation', sql.VarChar(100), newbinlocation);
+      const request = pool2.request();
+      request.input('oldbinlocation', sql.VarChar(100), oldbinlocation);
+      request.input('newbinlocation', sql.VarChar(100), newbinlocation);
 
-        const result = await request.query(query);
+      const result = await request.query(query);
 
-        if (result.rowsAffected[0] === 0) {
-            return res.status(404).send({ message: 'Data not found.' });
-        }
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
 
-        res.status(200).send({ message: 'Data updated successfully.', data: result.recordset });
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset });
     } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
+      console.log(error);
+      res.status(500).send({ message: error.message });
     }
-},
+  },
 
 
 
@@ -3362,8 +3362,145 @@ const WBSDB = {
 
 
 
+  // -------------- tbl_TransferJournal_CL START --------------
+
+  async getTransferJournalCLByJournalId(req, res, next) {
+    try {
+      const { JournalID } = req.query
+      let query = `
+        SELECT * FROM dbo.tbl_TransferJournal_CL
+        WHERE JournalID = @JournalID
+      `;
+      let request = pool2.request();
+      request.input('JournalID', sql.NVarChar(50), JournalID);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
+
+
+  // ------ tbl_TransferJournal_CL END ------
+
+
+
+  // -------------- tbl_Item-Master CONTROLLERS START --------------
+
+
+  async updateTblItemMaster(req, res, next) {
+    try {
+      const fieldTypes = {
+        SHIPMENTID: sql.NVarChar(255),
+        CONTAINERID: sql.NVarChar(255),
+        ARRIVALWAREHOUSE: sql.NVarChar(255),
+        ITEMNAME: sql.NVarChar(255),
+        ITEMID: sql.NVarChar(255),
+        PURCHID: sql.NVarChar(255),
+        CLASSIFICATION: sql.Float,
+        SERIALNUM: sql.VarChar(100),
+        RCVDCONFIGID: sql.VarChar(50),
+        RCVD_DATE: sql.Date,
+        GTIN: sql.VarChar(50),
+        RZONE: sql.VarChar(50),
+        PALLET_DATE: sql.Date,
+        PALLETCODE: sql.VarChar(50),
+        BIN: sql.VarChar(50),
+        REMARKS: sql.NVarChar(255),
+        POQTY: sql.Numeric(18, 0),
+        RCVQTY: sql.Numeric(18, 0),
+        REMAININGQTY: sql.Numeric(18, 0),
+        USERID: sql.NChar(20),
+        TRXDATETIME: sql.DateTime,
+        TRANSFERID: sql.NVarChar(20),
+        TRANSFERSTATUS: sql.Int,
+        INVENTLOCATIONIDFROM: sql.NVarChar(10),
+        INVENTLOCATIONIDTO: sql.NVarChar(10),
+        QTYTRANSFER: sql.Numeric(18, 0),
+        QTYRECEIVED: sql.Numeric(18, 0),
+        CREATEDDATETIME: sql.DateTime,
+        SELECTTYPE: sql.NVarChar(50)
+      };
+
+      const { itemid, ...fieldsToUpdate } = req.body;
+
+      if (!itemid) {
+        return res.status(400).send({ message: 'ITEMID is required.' });
+      }
+
+      let query = `UPDATE dbo.[tbl_Item_Master] SET `;
+      const updateFields = [];
+      const request = pool2.request();
+
+      for (const field in fieldsToUpdate) {
+        if (fieldsToUpdate[field] !== undefined && fieldTypes[field]) {
+          updateFields.push(`${field} = @${field}`);
+          request.input(field, fieldTypes[field], fieldsToUpdate[field]);
+        }
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += ` OUTPUT INSERTED.* WHERE ITEMID = @itemid`;
+      request.input('itemid', sql.NVarChar(255), itemid);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset[0] });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateQtyReceivedInTblItemMaster(req, res, next) {
+    try {
+      const { itemid, qty } = req.body;
+
+      if (!itemid) {
+        return res.status(400).send({ message: 'ITEMID is required.' });
+      }
+      if (qty === undefined) {
+        return res.status(400).send({ message: 'qty is required.' });
+      }
+
+      const query = `
+        UPDATE dbo.[tbl_Item_Master]
+        SET QTYRECEIVED = QTYRECEIVED + @qty
+        OUTPUT INSERTED.*
+        WHERE ITEMID = @itemid
+      `;
+
+      const request = pool2.request();
+      request.input('itemid', sql.NVarChar(255), itemid);
+      request.input('qty', sql.Numeric(18, 0), qty);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset[0] });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

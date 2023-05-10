@@ -16,7 +16,7 @@ const ItemReAllocation = () => {
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
-  const [binlocation, setBinLocation] = useState('');
+  const [serialnum, setSerialNum] = useState('');
   const [selectionType, setSelectionType] = useState('allocation');
   // const [selectedOption, setSelectedOption] = useState('');
   const [error, setError] = useState(null);
@@ -62,6 +62,58 @@ const ItemReAllocation = () => {
       });
 
   }
+
+
+
+const responseData = [  
+  {    
+    "selectionType": "allocation",
+      "serialnum": "11",
+      "stockQty": 50, 
+      "itemId": "ITEMID2",    
+      "ItemCode": "CODE1",    
+      "ItemDesc": "Item Description 1",    
+      "GTIN": "GTIN001",    
+      "Remarks": "Remark 1",    
+      "User": "User1",    
+      "Classification": "Class1",    
+      "MainLocation": "Location1",    
+      "BinLocation": "Bin1",    
+      "IntCode": "CODE1",    
+      "MapDate": "2023-06-01",    
+      "PalletCode": "PALLET001",    
+      "Reference": "REF1",    
+      "SID": "SID1",    
+      "CID": "CID1",    
+      "PO": "PO1",    
+      "Trans": 12  
+    },  
+    
+    {    
+      "selectionType": "picking",    
+      "serialnum": "11",    
+      "stockQty": 2,    
+      "itemId": "item002"
+    }
+    
+  ];
+
+const handleBinLocation = (e) => {
+  e.preventDefault();
+
+  userRequest.post('/manageItemsReallocation', responseData)
+    .then((response) => {
+      console.log(response);
+
+      setMessage(response?.data?.message);
+      // alert('done')
+    })
+    .catch((error) => {
+      console.log(error);
+      setError(error.response?.data?.message);
+      // alert(error)
+    });
+};
 
 
   return (
@@ -212,15 +264,15 @@ const ItemReAllocation = () => {
               </div>
             </div>
 
-            {/* onSubmit={handleBinLocation} */}
-            <form >
+
+            <form onSubmit={handleBinLocation}>
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="enterscan"
                   className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Enter/Scan Location"
-                      onChange={(e) => setBinLocation(e.target.value)}
+                      onChange={(e) => setSerialNum(e.target.value)}
               />
             </div >
 

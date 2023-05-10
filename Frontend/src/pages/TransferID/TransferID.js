@@ -6,26 +6,120 @@ import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const TransferID = () => {
-    const navigate = useNavigate();
-    const [error, setError] = useState(false);
-    const [message, setMessage] = useState("");
-    // to reset snakebar messages
-    const resetSnakeBarMessages = () => {
-        setError(null);
-        setMessage(null);
+  const navigate = useNavigate();
+  const [location, setLocation] = useState([])
+  const [scanInputValue, setScanInputValue] = useState('');
+  const [selectionType, setSelectionType] = useState('Pallet');
+  const [tableData, setTableData] = useState([]);
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState("");
+  // to reset snakebar messages
+  const resetSnakeBarMessages = () => {
+    setError(null);
+    setMessage(null);
 
-    };
+  };
 
-    // retrieve data from session storage
-      const storedData = sessionStorage.getItem('transferData');
-         const parsedData = JSON.parse(storedData);
-         console.log(parsedData)
+  // retrieve data from session storage
+  const storedData = sessionStorage.getItem('transferData');
+  const parsedData = JSON.parse(storedData);
+  console.log(parsedData)
+
+  useEffect(() => {
+    const getLocationData = async () => {
+      try {
+        const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
+          {
+            headers: {
+              itemcode: parsedData.ITEMID,
+              // itemcode: "IC1233",
+            }
+          })
+        console.log(res?.data)
+        setLocation(res?.data[0]?.BinLocation ?? "")
+      }
+      catch (error) {
+        console.log(error)
+        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+      }
+    }
+
+    getLocationData();
+
+  }, [parsedData.ITEMID])
+
+
+  const handleScan = (e) => {
+    console.log("woking")
+    e.preventDefault();
+    if (selectionType === 'Pallet') {
+      //  check if the scanned value is already in the table
+      getShipmentRecievedCLDataByPalletCode
+      
+      userRequest.post("/getmapBarcodeDataByItemCode", {},
+        {
+          headers: {
+            itemcode: scanInputValue
+          }
+
+        }
+      )
+        .then(response => {
+          console.log(response?.data)
+          // Append the new data to the existing data
+          setTableData(prevData => [...prevData, ...response?.data])
+
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+        })
+    }
+    else if (selectionType === 'Serial') {
+      userRequest.get(`/getShipmentRecievedCLDataCBySerialNumber?SERIALNUM=${scanInputValue}`)
+        .then(response => {
+          console.log(response?.data)
+          // Append the new data to the existing data
+          setTableData(prevData => [...prevData, ...response?.data])
+
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+        })
+    }
+
+    else {
+      return;
+    }
+
+  }
+
+
+
+
+
+  // const handleSaveBtnClick = () => {
+  //   userRequest.post("/insertTblTransferBinToBinCL", {
+  //     parsedData,
+  //     tableData,
+  //    { SELECTTYPE: selectionType },
+  //   })
+
+
+
+
+
+
 
   return (
     <>
 
-        {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
-        {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+      {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
@@ -42,18 +136,20 @@ const TransferID = () => {
                 </div>
                 <span className='text-white -mt-7'>TRANSFER ID#:</span>
                 <input
-                  value={parsedData.TRANSFERID} 
+                  value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
-                     readOnly
-               />
-                
+                  disabled
+                />
+
                 <div className='flex gap-2 justify-center items-center'>
-                    <span className='text-white'>FROM:</span>
-                    <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
+                  <span className='text-white'>FROM:</span>
+                  <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Location Reference"
-                    />
-                  </div>
+                    value={location}
+                    disabled
+                  />
+                </div>
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
@@ -63,117 +159,133 @@ const TransferID = () => {
                 </div>
 
                 <div className='text-[#FFFFFF]'>
-                    <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span>
+                  <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span>
                 </div>
               </div>
-              
+
               <div>
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
-                    <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                        <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                        <span>{parsedData.QTYTRANSFER}</span>
-                    </div>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                    <span>{parsedData.QTYTRANSFER}</span>
+                  </div>
 
-                    <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                        <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                        <span>0</span>
-                    </div>
-                    </div>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                    <span>0</span>
+                  </div>
                 </div>
+              </div>
 
 
-            <div class="text-center">
+              <div class="text-center">
                 <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                    flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                  flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
                 >
-                    <label className="inline-flex items-center mt-1">
-                        <input type="checkbox" className="form-checkbox h-4 w-4 text-[#00006A] border-gray-300 rounded-md" />
-                        <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                    </label>
-                    <label className="inline-flex items-center mt-1">
-                        <input type="checkbox" className="form-checkbox h-4 w-4 text-[#00006A] border-gray-300 rounded-md" />
-                        <span className="ml-2 text-[#00006A]">BY SERIAL</span>
-                    </label>
+                  <label className="inline-flex items-center mt-1">
+                    <input
+                      type="radio"
+                      name="selectionType"
+                      value="pallet"
+                      checked={selectionType === 'Pallet'}
+                      onChange={e => setSelectionType(e.target.value)}
+                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    />
+                    <span className="ml-2 text-[#00006A]">BY PALLETE</span>
+                  </label>
+                  <label className="inline-flex items-center mt-1">
+                    <input
+                      type="radio"
+                      name="selectionType"
+                      value="Serial"
+                      checked={selectionType === 'Serial'}
+                      onChange={e => setSelectionType(e.target.value)}
+                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    />
+                    <span className="ml-2 text-[#00006A]">BY SERIAL</span>
+                  </label>
                 </div>
-            </div>
+              </div>
 
             </div>
-            
+
             <form
             //   onSubmit={handleFormSubmit}
             >
               <div className="mb-6">
-                <label htmlFor='scan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Pallete#<span className='text-[#FF0404]'>*</span></label>
+                <label htmlFor='scan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}#<span className='text-[#FF0404]'>*</span></label>
                 <input
                   id="scan"
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Enter Scan/Pallete Number"
-              />
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder={`Enter Scan/${selectionType} Number`}
+
+                  // submit when focus removed
+                  onChange={e => setScanInputValue(e.target.value)}
+                  onBlur={handleScan}
+                />
               </div>
 
               <div className='mb-6'>
-              {/* // creae excel like Tables  */}
-              <div className="table-location-generate1">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>TransferID</th>
-                      <th>Config</th>
-                      <th>InventoryLocationIDFrom</th>
-                      <th>InventoryLocationIDTo</th>
-                      <th>Item ID </th>
-                      <th>InventDIMID</th>
-                      <th>Qty.Transfer</th>
-                      <th>Qty.RemainRecieve </th>
-                      <th>Created DateTime</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* {serialNumbers.map((serialNumber, index) => (
-                      <tr key={index}>
-                        <td>{serialNumber}</td>
+                {/* // creae excel like Tables  */}
+                <div className="table-location-generate1">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Shipment ID</th>
+                        <th>Container ID</th>
+                        <th>Arrival Warehouse</th>
+                        <th>Item Name</th>
+                        <th>Item ID</th>
+                        <th>Purch ID</th>
+                        <th>Classification</th>
+                        <th>Serial Num</th>
+                        <th>RCVD Config ID</th>
+                        <th>RCVD Date</th>
+                        <th>GTIN</th>
+                        <th>RZONE</th>
+                        <th>Pallet Date</th>
+                        <th>Pallet Code</th>
+                        <th>Bin</th>
+                        <th>Remarks</th>
+                        <th>PO Qty</th>
+                        <th>RCVD Qty</th>
+                        <th>Remaining Qty</th>
+                        <th>User ID</th>
+                        <th>TRX Date Time</th>
                       </tr>
-                    ))} */}
-                    <tr>
-                        <td>1</td>
-                        <td>IRT-00398365</td>
-                        <td>G</td>
-                        <td>RMW01</td>
-                        <td>RSR01</td>
-                        <td>SF-P110XAV 2206 WH</td>
-                        <td>ID00000000003</td>
-                        <td>1.000000000000</td>
-                        <td>1.000000000000</td>
-                        <td>2023-04-28 12:04:13.000</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>IRT-00398365</td>
-                        <td>G</td>
-                        <td>RMW01</td>
-                        <td>RSR01</td>
-                        <td>SF-P110XAV 2206 WH</td>
-                        <td>ID00000000003</td>
-                        <td>1.000000000000</td>
-                        <td>1.000000000000</td>
-                        <td>2023-04-28 12:04:13.000</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>IRT-00398365</td>
-                        <td>G</td>
-                        <td>RMW01</td>
-                        <td>RSR01</td>
-                        <td>SF-P110XAV 2206 WH</td>
-                        <td>ID00000000003</td>
-                        <td>1.000000000000</td>
-                        <td>1.000000000000</td>
-                        <td>2023-04-28 12:04:13.000</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {tableData.map((data, index) => (
+                        <tr key={"tranidRow" + index}>
+                          <td>{data.SHIPMENTID}</td>
+                          <td>{data.CONTAINERID}</td>
+                          <td>{data.ARRIVALWAREHOUSE}</td>
+                          <td>{data.ITEMNAME}</td>
+                          <td>{data.ITEMID}</td>
+                          <td>{data.PURCHID}</td>
+                          <td>{data.CLASSIFICATION}</td>
+                          <td>{data.SERIALNUM}</td>
+                          <td>{data.RCVDCONFIGID}</td>
+                          <td>{data.RCVD_DATE}</td>
+                          <td>{data.GTIN}</td>
+                          <td>{data.RZONE}</td>
+                          <td>{data.PALLET_DATE}</td>
+                          <td>{data.PALLETCODE}</td>
+                          <td>{data.BIN}</td>
+                          <td>{data.REMARKS}</td>
+                          <td>{data.POQTY}</td>
+                          <td>{data.RCVQTY}</td>
+                          <td>{data.REMAININGQTY}</td>
+                          <td>{data.USERID.trim()}</td>
+                          <td>{data.TRXDATETIME}</td>
+                        </tr>
+                      ))}
+
+
+                    </tbody>
+                  </table>
+                </div>
+
 
               </div >
 
@@ -187,16 +299,18 @@ const TransferID = () => {
                 placeholder="Enter/Scan Location"
               />
             </div >
-            
-              <div className='mb-6 flex justify-center items-center'>
+
+            <div className='mb-6 flex justify-center items-center'>
               <button
-                    type='submit'
-                      className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
-                    <span className='flex justify-center items-center'>
-                      <p>Save</p>
-                    </span>
-                  </button>
-              </div>
+                type='button'
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
+                <span className='flex justify-center items-center'
+                  onClick={handleSaveBtnClick}
+                >
+                  <p>Save</p>
+                </span>
+              </button>
+            </div>
           </div>
         </div >
       </div >

@@ -91,6 +91,7 @@ const App = () => {
         <Route path="/palletscreen2" element={<PutAwayScreen2 />} />
         <Route path="/palletscreen3" element={<PutAwayScreen3 />} />
         <Route path="/putaway" element={<PutAwayLastScreen />} />
+        
         <Route path="/bintobin" element={<BinToBinInternal />} />
         <Route path="/bintobin2" element={<BinToBinJournalID />} />
 

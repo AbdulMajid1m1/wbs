@@ -10,6 +10,7 @@ const TransferID = () => {
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
   const [selectionType, setSelectionType] = useState('Pallet');
+  const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
@@ -51,19 +52,19 @@ const TransferID = () => {
 
 
   const handleScan = (e) => {
-    console.log("woking")
     e.preventDefault();
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
-      // getShipmentRecievedCLDataByPalletCode
-      
-      userRequest.post("/getmapBarcodeDataByItemCode", {},
-        {
-          headers: {
-            itemcode: scanInputValue
-          }
+      const isAlreadyInTable = tableData.some(item => item.PALLETCODE === scanInputValue);
+      if (isAlreadyInTable) {
+        setError('This pallet is already in the table');
+        return;
+      }
 
-        }
+
+
+
+      userRequest.post(`/getShipmentRecievedCLDataByPalletCode?PalletCode=${scanInputValue}`
       )
         .then(response => {
           console.log(response?.data)
@@ -78,6 +79,13 @@ const TransferID = () => {
         })
     }
     else if (selectionType === 'Serial') {
+      //  check if the scanned value is already in the table
+      const isAlreadyInTable = tableData.some(item => item.SERIALNUM === scanInputValue);
+
+      if (isAlreadyInTable) {
+        setError('This serial is already in the table');
+        return;
+      }
       userRequest.get(`/getShipmentRecievedCLDataCBySerialNumber?SERIALNUM=${scanInputValue}`)
         .then(response => {
           console.log(response?.data)
@@ -102,12 +110,38 @@ const TransferID = () => {
 
 
 
-  // const handleSaveBtnClick = () => {
-  //   userRequest.post("/insertTblTransferBinToBinCL", {
-  //     parsedData,
-  //     tableData,
-  //    { SELECTTYPE: selectionType },
-  //   })
+  const handleSaveBtnClick = () => {
+    // Create a new array
+
+    const dataForAPI = tableData.map(row => {
+      // Return a new object for each row of the table
+      return {
+        ...row, // Spread the fields from the current row of the table
+        BIN: locationInputValue, // Replace the Bin value with the value from locationInputValue state
+        ...parsedData, // Spread the fields from parsedData
+        SELECTTYPE: selectionType // Add the SELECTTYPE field
+      };
+    });
+    console.log(dataForAPI);
+
+    // Now, you can send dataForAPI to the API endpoint
+    userRequest.post("/insertTblTransferBinToBinCL", dataForAPI)
+      .then(response => {
+        console.log(response);
+        setMessage("Data inserted successfully");
+        // clear the table
+        setTableData([]);
+        // clear the location input
+        setLocationInputValue('');
+        // clear the scan input
+        setScanInputValue('');
+
+      })
+      .catch(error => {
+        console.log(error);
+        setError(error?.response?.data?.message ?? 'Cannot insert data');
+      });
+  }
 
 
 
@@ -295,6 +329,8 @@ const TransferID = () => {
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="enterscan"
+                value={locationInputValue}
+                onChange={e => setLocationInputValue(e.target.value)}
                 className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter/Scan Location"
               />

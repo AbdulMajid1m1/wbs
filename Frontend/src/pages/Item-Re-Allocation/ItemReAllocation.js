@@ -3,20 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
-import "./BinToBinInternal.css";
+import "./ItemReAllocation.css";
 // import CustomSnakebar from '../../utils/CustomSnakebar';
 // import back from "../../images/back.png"
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 
-const BinToBinInternal = () => {
+const ItemReAllocation = () => {
   const navigate = useNavigate();
 
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
-  const [binlocation, setBinLocation] = useState('');
+  const [serialnum, setSerialNum] = useState('');
+  const [selectionType, setSelectionType] = useState('allocation');
+  // const [selectedOption, setSelectedOption] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const resetSnakeBarMessages = () => {
@@ -24,6 +26,11 @@ const BinToBinInternal = () => {
     setMessage(null);
 
   };
+
+
+  // const handleOptionChange = (event) => {
+  //   setSelectedOption(event.target.value);
+  // }
 
 
   const handleChangeValue = (e) => {
@@ -34,7 +41,11 @@ const BinToBinInternal = () => {
     e.preventDefault();
     setIsLoading(true)
 
-    userRequest.get(`/getmapBarcodeDataByBinLocation?BinLocation=${transferTag}`)
+    userRequest.post(`/getItemInfoByPalletCode`,{} , {
+      headers: {
+        'palletcode': transferTag,
+      }
+    })
       .then(response => {
         console.log(response?.data);
 
@@ -54,28 +65,55 @@ const BinToBinInternal = () => {
 
 
 
-  const handleBinLocation = (e) => {
-    e.preventDefault();
-    console.log(data[0].BinLocation)
-    console.log(binlocation)
+const responseData = [  
+  {    
+    "selectionType": "allocation",
+      "serialnum": "11",
+      "stockQty": 50, 
+      "itemId": "ITEMID2",    
+      "ItemCode": "CODE1",    
+      "ItemDesc": "Item Description 1",    
+      "GTIN": "GTIN001",    
+      "Remarks": "Remark 1",    
+      "User": "User1",    
+      "Classification": "Class1",    
+      "MainLocation": "Location1",    
+      "BinLocation": "Bin1",    
+      "IntCode": "CODE1",    
+      "MapDate": "2023-06-01",    
+      "PalletCode": "PALLET001",    
+      "Reference": "REF1",    
+      "SID": "SID1",    
+      "CID": "CID1",    
+      "PO": "PO1",    
+      "Trans": 12  
+    },  
+    
+    {    
+      "selectionType": "picking",    
+      "serialnum": "11",    
+      "stockQty": 2,    
+      "itemId": "item002"
+    }
+    
+  ];
 
-    userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
-      headers: {
-        'oldbinlocation': data[0].BinLocation,
-        'newbinlocation': binlocation
-      }
-    })
+const handleBinLocation = (e) => {
+  e.preventDefault();
+
+  userRequest.post('/manageItemsReallocation', responseData)
     .then((response) => {
       console.log(response);
+
       setMessage(response?.data?.message);
       // alert('done')
     })
     .catch((error) => {
       console.log(error);
       setError(error.response?.data?.message);
-      // alert(error)
+      //  alert(error)
     });
-}
+};
 
 
   return (
@@ -116,7 +154,7 @@ const BinToBinInternal = () => {
                     </span>
                   </button>
 
-                   <h2 className='text-center text-[#fff]'>BIN to BIN TRANSFER</h2> 
+                   <h2 className='text-center text-[#fff]'>Items Re-Allocation</h2> 
                 
                   <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                     <span>
@@ -126,14 +164,35 @@ const BinToBinInternal = () => {
               </div>
             </div>
 
-            <div className=''>
-                <h2 className='text-[#00006A] text-center font-semibold'>Internal<span className='text-[#FF0404]'>*</span></h2>
+            <div className='flex justify-center items-center gap-5'>
+                  <label className="inline-flexitems-center mt-1">
+                      <input
+                      type="radio"
+                      name="selectionType"
+                      value="allocation"
+                      checked={selectionType === 'allocation'}
+                      onChange={e => setSelectionType(e.target.value)}
+                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    />
+                    <span className="ml-2 text-[#00006A]">Allocation</span>
+                  </label>
+                  <label className="inline-flex items-center mt-1">
+                    <input
+                      type="radio"
+                      name="selectionType"
+                      value="picking"
+                      checked={selectionType === 'picking'}
+                      onChange={e => setSelectionType(e.target.value)}
+                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    />
+                    <span className="ml-2 text-[#00006A]">Picking</span>
+                  </label>
             </div>
 
             <form onSubmit={handleForm}>
             <div className='mb-6'>
               <label htmlFor='transfer' 
-                className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Bin (FROM)<span className='text-[#FF0404]'>*</span></label>
+                className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter/Scan PalletID<span className='text-[#FF0404]'>*</span></label>
               <div className='w-full flex'>
               <input 
                   id="transfer" 
@@ -153,7 +212,7 @@ const BinToBinInternal = () => {
             </form>
 
             <div className='mb-6'>
-              <label className='text-[#00006A] font-semibold'>Items On Bin<span className='text-[#FF0404]'>*</span></label>
+              <label className='text-[#00006A] font-semibold'>List of Items on Pallets<span className='text-[#FF0404]'>*</span></label>
               {/* // creae excel like Tables  */}
               <div className="table-location-generate1">
                 <table>
@@ -205,6 +264,7 @@ const BinToBinInternal = () => {
               </div>
             </div>
 
+
             <form onSubmit={handleBinLocation}>
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
@@ -212,7 +272,7 @@ const BinToBinInternal = () => {
                 id="enterscan"
                   className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Enter/Scan Location"
-                      onChange={(e) => setBinLocation(e.target.value)}
+                      onChange={(e) => setSerialNum(e.target.value)}
               />
             </div >
 
@@ -248,4 +308,4 @@ const BinToBinInternal = () => {
   )
 }
 
-export default BinToBinInternal
+export default ItemReAllocation

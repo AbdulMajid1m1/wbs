@@ -186,6 +186,11 @@ const FigmaSidebar = () => {
                         <img src={dispatch} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Bin To Bin (Journal)</p>
                     </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/itemallocation')}>
+                        <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Item Re Allocation</p>
+                    </div>
                     
                     <div className='main-images-container'>
                         <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />

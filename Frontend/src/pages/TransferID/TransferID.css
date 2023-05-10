@@ -36,15 +36,6 @@
     text-transform: uppercase;
   }
   
-  /* .table-location-generate1 table tbody tr td {
-    color: black;
-    text-align: center;
-    height: 25px;
-    padding: 12px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-  } */
-  
   /* change table row background */
   .table-location-generate1 table tbody tr:nth-child(even) {
     /* background-color: rgb(242, 242, 221); */
@@ -81,27 +72,36 @@
     height: 25px;
   }
 
-  .table-location-generate1 table tbody tr td:nth-child(2) {
-    max-width: 180px;
+  .table-location-generate1 table thead tr th:nth-child(1),
+  .table-location-generate1 table thead tr th:nth-child(2),
+  .table-location-generate1 table thead tr th:nth-child(3),
+  .table-location-generate1 table thead tr th:nth-child(4),
+  .table-location-generate1 table thead tr th:nth-child(5),
+  .table-location-generate1 table thead tr th:nth-child(6),
+  .table-location-generate1 table thead tr th:nth-child(7),
+  .table-location-generate1 table thead tr th:nth-child(8),
+  .table-location-generate1 table thead tr th:nth-child(9) {
+    max-width: 280px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .table-location-generate1 table tbody tr td:nth-child(6) {
-    max-width: 180px;
+  .table-location-generate1 table tbody tr td:nth-child(1),
+  .table-location-generate1 table tbody tr td:nth-child(2),
+  .table-location-generate1 table tbody tr td:nth-child(3),
+  .table-location-generate1 table tbody tr td:nth-child(4),
+  .table-location-generate1 table tbody tr td:nth-child(5),
+  .table-location-generate1 table tbody tr td:nth-child(6),
+  .table-location-generate1 table tbody tr td:nth-child(7),
+  .table-location-generate1 table tbody tr td:nth-child(8),
+  .table-location-generate1 table tbody tr td:nth-child(9) {
+    max-width: 280px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   
-  .table-location-generate1 table tbody tr td:nth-child(10) {
-    max-width: 180px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
   /* change table row background */
   .table-location-generate1 table tbody tr:nth-child(even) {
     background-color: rgb(242, 242, 221);

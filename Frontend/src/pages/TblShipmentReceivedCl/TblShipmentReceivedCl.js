@@ -48,6 +48,7 @@ const TblShipmentReceivedCl = () => {
         ShipmentIdSearchEnable={true}
         actionColumnVisibility={true}
         emailButton={true}
+        printButton={true}
 
       />
 

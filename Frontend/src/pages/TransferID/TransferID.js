@@ -1,14 +1,32 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "./TransferID.css";
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const TransferID = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
+    // to reset snakebar messages
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+
+    };
+
+    // retrieve data from session storage
+      const storedData = sessionStorage.getItem('transferData');
+         const parsedData = JSON.parse(storedData);
+         console.log(parsedData)
 
   return (
     <>
+
+        {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+        {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
@@ -23,9 +41,12 @@ const TransferID = () => {
                   </button>
                 </div>
                 <span className='text-white -mt-7'>TRANSFER ID#:</span>
-                <input className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                  block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
-                />
+                <input
+                  value={parsedData.TRANSFERID} 
+                  className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
+                     readOnly
+               />
                 
                 <div className='flex gap-2 justify-center items-center'>
                     <span className='text-white'>FROM:</span>
@@ -38,11 +59,11 @@ const TransferID = () => {
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
-                  <span>ITEM-0001</span>
+                  <span>{parsedData.ITEMID}</span>
                 </div>
 
                 <div className='text-[#FFFFFF]'>
-                    <span>CLASS G</span>
+                    <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span>
                 </div>
               </div>
               
@@ -50,12 +71,12 @@ const TransferID = () => {
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                         <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                        <span>67</span>
+                        <span>{parsedData.QTYTRANSFER}</span>
                     </div>
 
                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                         <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                        <span>4567</span>
+                        <span>0</span>
                     </div>
                     </div>
                 </div>

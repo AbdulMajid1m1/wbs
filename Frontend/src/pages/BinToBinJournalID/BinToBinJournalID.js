@@ -239,3 +239,5 @@ const BinToBinJournalID = () => {
 }
 
 export default BinToBinJournalID
+
+

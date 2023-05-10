@@ -3050,38 +3050,38 @@ const WBSDB = {
     }
   },
 
-  
+
   async updateTblMappedBarcodeBinLocation(req, res, next) {
     try {
-        const { oldbinlocation, newbinlocation } = req.headers;
+      const { oldbinlocation, newbinlocation } = req.headers;
 
-        if (!oldbinlocation || !newbinlocation) {
-            return res.status(400).send({ message: 'Both oldbinlocation and newbinlocation are required.' });
-        }
+      if (!oldbinlocation || !newbinlocation) {
+        return res.status(400).send({ message: 'Both oldbinlocation and newbinlocation are required.' });
+      }
 
-        let query = `
+      let query = `
             UPDATE dbo.tblMappedBarcodes
             SET BinLocation = @newbinlocation
             OUTPUT INSERTED.*
             WHERE BinLocation = @oldbinlocation
         `;
 
-        const request = pool2.request();
-        request.input('oldbinlocation', sql.VarChar(100), oldbinlocation);
-        request.input('newbinlocation', sql.VarChar(100), newbinlocation);
+      const request = pool2.request();
+      request.input('oldbinlocation', sql.VarChar(100), oldbinlocation);
+      request.input('newbinlocation', sql.VarChar(100), newbinlocation);
 
-        const result = await request.query(query);
+      const result = await request.query(query);
 
-        if (result.rowsAffected[0] === 0) {
-            return res.status(404).send({ message: 'Data not found.' });
-        }
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
 
-        res.status(200).send({ message: 'Data updated successfully.', data: result.recordset });
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset });
     } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
+      console.log(error);
+      res.status(500).send({ message: error.message });
     }
-},
+  },
 
 
 
@@ -3362,8 +3362,421 @@ const WBSDB = {
 
 
 
+  // -------------- tbl_TransferJournal_CL START --------------
+
+  async getTransferJournalCLByJournalId(req, res, next) {
+    try {
+      const { JournalID } = req.query
+      let query = `
+        SELECT * FROM dbo.tbl_TransferJournal_CL
+        WHERE JournalID = @JournalID
+      `;
+      let request = pool2.request();
+      request.input('JournalID', sql.NVarChar(50), JournalID);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
+
+
+  // ------ tbl_TransferJournal_CL END ------
+
+
+
+  // -------------- tbl_Item-Master CONTROLLERS START --------------
+
+
+  async updateTblItemMaster(req, res, next) {
+    try {
+      const fieldTypes = {
+        SHIPMENTID: sql.NVarChar(255),
+        CONTAINERID: sql.NVarChar(255),
+        ARRIVALWAREHOUSE: sql.NVarChar(255),
+        ITEMNAME: sql.NVarChar(255),
+        ITEMID: sql.NVarChar(255),
+        PURCHID: sql.NVarChar(255),
+        CLASSIFICATION: sql.Float,
+        SERIALNUM: sql.VarChar(100),
+        RCVDCONFIGID: sql.VarChar(50),
+        RCVD_DATE: sql.Date,
+        GTIN: sql.VarChar(50),
+        RZONE: sql.VarChar(50),
+        PALLET_DATE: sql.Date,
+        PALLETCODE: sql.VarChar(50),
+        BIN: sql.VarChar(50),
+        REMARKS: sql.NVarChar(255),
+        POQTY: sql.Numeric(18, 0),
+        RCVQTY: sql.Numeric(18, 0),
+        REMAININGQTY: sql.Numeric(18, 0),
+        USERID: sql.NChar(20),
+        TRXDATETIME: sql.DateTime,
+        TRANSFERID: sql.NVarChar(20),
+        TRANSFERSTATUS: sql.Int,
+        INVENTLOCATIONIDFROM: sql.NVarChar(10),
+        INVENTLOCATIONIDTO: sql.NVarChar(10),
+        QTYTRANSFER: sql.Numeric(18, 0),
+        QTYRECEIVED: sql.Numeric(18, 0),
+        CREATEDDATETIME: sql.DateTime,
+        SELECTTYPE: sql.NVarChar(50)
+      };
+
+      const { itemid, ...fieldsToUpdate } = req.body;
+
+      if (!itemid) {
+        return res.status(400).send({ message: 'ITEMID is required.' });
+      }
+
+      let query = `UPDATE dbo.[tbl_Item_Master] SET `;
+      const updateFields = [];
+      const request = pool2.request();
+
+      for (const field in fieldsToUpdate) {
+        if (fieldsToUpdate[field] !== undefined && fieldTypes[field]) {
+          updateFields.push(`${field} = @${field}`);
+          request.input(field, fieldTypes[field], fieldsToUpdate[field]);
+        }
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += ` OUTPUT INSERTED.* WHERE ITEMID = @itemid`;
+      request.input('itemid', sql.NVarChar(255), itemid);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset[0] });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateQtyReceivedInTblItemMaster(req, res, next) {
+    try {
+      const { itemid, qty } = req.body;
+
+      if (!itemid) {
+        return res.status(400).send({ message: 'ITEMID is required.' });
+      }
+      if (qty === undefined) {
+        return res.status(400).send({ message: 'qty is required.' });
+      }
+
+      const query = `
+        UPDATE dbo.[tbl_Item_Master]
+        SET QTYRECEIVED = QTYRECEIVED + @qty
+        OUTPUT INSERTED.*
+        WHERE ITEMID = @itemid
+      `;
+
+      const request = pool2.request();
+      request.input('itemid', sql.NVarChar(255), itemid);
+      request.input('qty', sql.Numeric(18, 0), qty);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset[0] });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  // async manageItemsReallocation(req, res, next) {
+  //   try {
+  //     const { selectionType, serialnum, stockQty, itemId, ...recordData } = req.body;
+
+  //     if (!selectionType || !serialnum || !stockQty || !itemId) {
+  //       return res.status(400).send({ message: 'Selection type, serial number, stock quantity, and item id are required.' });
+  //     }
+
+  //     const request = pool2.request();
+  //     request.input('serialnum', sql.NVarChar(255), serialnum);
+
+  //     // Check if the serial number exists in the shipment received table
+  //     let result = await request.query(`SELECT * FROM tbl_Shipment_Received_CL WHERE SERIALNUM = @serialnum`);
+
+  //     if (result.recordset.length === 0) {
+  //       return res.status(400).send({ message: 'Serial number not found in shipment received.' });
+  //     }
+
+  //     if (selectionType.toLowerCase() === 'allocation') {
+  //       // Check if the serial number exists in the mapped barcodes table
+  //       result = await request.query(`SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+
+  //       if (result.recordset.length > 0) {
+  //         return res.status(400).send({ message: 'Serial number already found in stock.' });
+  //       }
+
+  //       // Check if any field is undefined in recordData
+  //       for (const field in recordData) {
+  //         if (typeof recordData[field] === 'undefined') {
+  //           return res.status(400).send({ message: `Field "${field}" is required.` });
+  //         }
+  //         request.input(field, sql.NVarChar(255), recordData[field]);
+  //       }
+
+  //       // Insert into the mapped barcodes table
+  //       let query = `INSERT INTO tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans) VALUES (@ItemCode, @ItemDesc, @GTIN, @Remarks, @User, @Classification, @MainLocation, @BinLocation, @IntCode, @ItemSerialNo, @MapDate, @PalletCode, @Reference, @SID, @CID, @PO, @Trans)`;
+
+  //       await request.query(query);
+
+  //       // Update the stock master table
+  //       await request.query(`UPDATE dbo.[tbl_Stock_Master] SET STOCKQTY = STOCKQTY + @stockQty WHERE ITEMID = @itemId`);
+  //     } else if (selectionType.toLowerCase() === 'picking') {
+  //       // Check if the serial number exists in the mapped barcodes table
+  //       result = await request.query(`SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+
+  //       if (result.recordset.length === 0) {
+  //         return res.status(400).send({ message: 'Serial number not found in stock.' });
+  //       }
+
+  //       // Delete from the mapped barcodes table
+  //       await request.query(`DELETE FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+  //       // Update the stock master table
+  //       await request.query(`UPDATE dbo.[tbl_Stock_Master] SET STOCKQTY = STOCKQTY - @stockQty WHERE ITEMID = @itemId`);
+  //     } else {
+  //       return res.status(400).send({ message: 'Invalid selection type. Please select either "allocation" or "picking".' });
+  //     }
+
+  //     res.status(200).send({ message: 'Operation completed successfully.' });
+  //   }
+  //   catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+
+  // },
+
+
+  // async manageItemsReallocation(req, res, next) {
+  //   try {
+  //     const { selectionType, serialnum, stockQty, itemId, ...recordData } = req.body;
+
+  //     if (!selectionType || !serialnum || !stockQty || !itemId) {
+  //       return res.status(400).send({ message: 'Selection type, serial number, stock quantity, and item id are required.' });
+  //     }
+
+  //     const request = pool2.request();
+  //     request.input('serialnum', sql.NVarChar(255), serialnum);
+  //     request.input('stockQty', sql.Numeric(18, 0), stockQty);
+  //     request.input('itemId', sql.NVarChar(255), itemId);
+
+  //     // Check if the serial number exists in the shipment received table
+  //     let result = await request.query(`SELECT * FROM tbl_Shipment_Received_CL WHERE SERIALNUM = @serialnum`);
+
+  //     if (result.recordset.length === 0) {
+  //       return res.status(400).send({ message: 'Serial number not found in shipment received.' });
+  //     }
+
+  //     if (selectionType.toLowerCase() === 'allocation') {
+  //       // Check if the serial number exists in the mapped barcodes table
+  //       result = await request.query(`SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+
+  //       if (result.recordset.length > 0) {
+  //         return res.status(400).send({ message: 'Serial number already found in stock.' });
+  //       }
+
+  //       // Check if any field is undefined in recordData
+  //       for (const field in recordData) {
+  //         if (typeof recordData[field] === 'undefined') {
+  //           return res.status(400).send({ message: `Field "${field}" is required.` });
+  //         }
+
+  //         switch (field) {
+  //           case "ItemCode":
+  //           case "GTIN":
+  //           case "Remarks":
+  //           case "[User]":
+  //           case "Classification":
+  //           case "MainLocation":
+  //           case "BinLocation":
+  //           case "IntCode":
+
+  //           case "PalletCode":
+  //           case "SID":
+  //           case "CID":
+  //           case "PO":
+  //             request.input(field, sql.VarChar(255), recordData[field]);
+  //             break;
+  //           case "ItemDesc":
+  //             request.input(field, sql.NVarChar(255), recordData[field]);
+  //             break;
+  //           case "MapDate":
+  //             request.input(field, sql.Date, new Date(recordData[field]));
+  //             break;
+  //           case "Trans":
+  //             request.input(field, sql.Numeric(10, 0), recordData[field]);
+  //             break;
+  //           default:
+  //             request.input(field, sql.VarChar(255), recordData[field]);
+  //             break;
+  //         }
+  //       }
+
+  //       //  case "ItemSerialNo":
+
+  //       // take item serial no out of the loop and add it to the query below from above
+  //       request.input('ItemSerialNo', sql.NVarChar(255), serialnum);
+
+  //       // Insert into the mapped barcodes table
+  //       let query = `INSERT INTO tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans) VALUES
+  //       (@ItemCode, @ItemDesc, @GTIN, @Remarks, @User, @Classification, @MainLocation, @BinLocation, @IntCode, @ItemSerialNo, @MapDate, @PalletCode, @Reference, @SID, @CID, @PO, @Trans)`;
+  //       await request.query(query);
+
+
+  //       // Update the stock master table
+  //       await request.query(`UPDATE dbo.[tbl_Stock_Master] SET STOCKQTY = STOCKQTY + @stockQty WHERE ITEMID = @itemId`);
+  //     } else if (selectionType.toLowerCase() === 'picking') {
+  //       // Check if the serial number exists in the mapped barcodes table
+  //       result = await request.query(`SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+
+  //       if (result.recordset.length === 0) {
+  //         return res.status(400).send({ message: 'Serial number not found in stock.' });
+  //       }
+
+  //       // Delete from the mapped barcodes table
+  //       await request.query(`DELETE FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+  //       // Update the stock master table
+  //       await request.query(`UPDATE dbo.[tbl_Stock_Master] SET STOCKQTY = STOCKQTY - @stockQty WHERE ITEMID = @itemId`);
+  //     } else {
+  //       return res.status(400).send({ message: 'Invalid selection type. Please select either "allocation" or "picking".' });
+  //     }
+
+  //     return res.status(200).send({ message: 'Operation completed successfully.' });
+  //   }
+  //   catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+
+  // },
+
+
+
+  async manageItemsReallocation(req, res, next) {
+    try {
+      for (const item of req.body) {
+        const { selectionType, serialnum, stockQty, itemId, ...recordData } = item;
+
+        if (!selectionType || !serialnum || !stockQty || !itemId) {
+          return res.status(400).send({ message: 'Selection type, serial number, stock quantity, and item id are required.' });
+        }
+
+        const request = pool2.request();
+        request.input('serialnum', sql.NVarChar(255), serialnum);
+        request.input('stockQty', sql.Numeric(18, 0), stockQty);
+        request.input('itemId', sql.NVarChar(255), itemId);
+
+        // Check if the serial number exists in the shipment received table
+        let result = await request.query(`SELECT * FROM tbl_Shipment_Received_CL WHERE SERIALNUM = @serialnum`);
+
+        if (result.recordset.length === 0) {
+          return res.status(400).send({ message: 'Serial number not found in shipment received.' });
+        }
+
+        if (selectionType.toLowerCase() === 'allocation') {
+          // Check if the serial number exists in the mapped barcodes table
+          result = await request.query(`SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+
+          if (result.recordset.length > 0) {
+            return res.status(400).send({ message: 'Serial number already found in stock.' });
+          }
+
+          // Check if any field is undefined in recordData
+          for (const field in recordData) {
+            if (typeof recordData[field] === 'undefined') {
+              return res.status(400).send({ message: `Field "${field}" is required.` });
+            }
+
+            switch (field) {
+              case "ItemCode":
+              case "GTIN":
+              case "Remarks":
+              case "[User]":
+              case "Classification":
+              case "MainLocation":
+              case "BinLocation":
+              case "IntCode":
+
+              case "PalletCode":
+              case "SID":
+              case "CID":
+              case "PO":
+                request.input(field, sql.VarChar(255), recordData[field]);
+                break;
+              case "ItemDesc":
+                request.input(field, sql.NVarChar(255), recordData[field]);
+                break;
+              case "MapDate":
+                request.input(field, sql.Date, new Date(recordData[field]));
+                break;
+              case "Trans":
+                request.input(field, sql.Numeric(10, 0), recordData[field]);
+                break;
+              default:
+                request.input(field, sql.VarChar(255), recordData[field]);
+                break;
+            }
+          }
+          // Take item serial no out of the loop and add it to the query below from above
+          request.input('ItemSerialNo', sql.NVarChar(255), serialnum);
+
+          // Insert into the mapped barcodes table
+          let query = `INSERT INTO tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans) VALUES
+          (@ItemCode, @ItemDesc, @GTIN, @Remarks, @User, @Classification, @MainLocation, @BinLocation, @IntCode, @ItemSerialNo, @MapDate, @PalletCode, @Reference, @SID, @CID, @PO, @Trans)`;
+          await request.query(query);
+
+          // Update the stock master table
+          await request.query(`UPDATE dbo.[tbl_Stock_Master] SET STOCKQTY = STOCKQTY + @stockQty WHERE ITEMID = @itemId`);
+        } else if (selectionType.toLowerCase() === 'picking') {
+          //... the same code as before for picking ...
+
+
+
+          // Check if the serial number exists in the mapped barcodes table
+          result = await request.query(`SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+
+          if (result.recordset.length === 0) {
+            return res.status(400).send({ message: 'Serial number not found in stock.' });
+          }
+
+          // Delete from the mapped barcodes table
+          await request.query(`DELETE FROM tblMappedBarcodes WHERE ItemSerialNo = @serialnum`);
+          // Update the stock master table
+          await request.query(`UPDATE dbo.[tbl_Stock_Master] SET STOCKQTY = STOCKQTY - @stockQty WHERE ITEMID = @itemId`);
+        } else {
+          return res.status(400).send({ message: 'Invalid selection type. Please select either "allocation" or "picking".' });
+        }
+      }
+      return res.status(200).send({ message: 'Operation completed successfully.' });
+    }
+    catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

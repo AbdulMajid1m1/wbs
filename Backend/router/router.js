@@ -271,5 +271,26 @@ router.post('/sendEmail', upload.array('attachments'), WBSDB.sendEmail);
 router.post("/insertTblTransferBinToBinCL", checkAuthentication, WBSDB.insertTblTransferBinToBinCL);
 
 
+// ----------------- tbl_TransferBinToBin_CL APIS End -----------------
+
+
+// ----------------- tbl_TransferJournal_CL APIS Start -----------------
+
+router.get("/getTransferJournalCLByJournalId", checkAuthentication, WBSDB.getTransferJournalCLByJournalId);
+
+
+// ----------------- tbl_TransferJournal_CL APIS End -----------------
+
+//-------- tbl_Item-Master APIS Start -----------
+
+router.put("/updateTblItemMaster", checkAuthentication, WBSDB.updateTblItemMaster);
+
+router.put("/updateQtyReceivedInTblItemMaster", checkAuthentication, WBSDB.updateQtyReceivedInTblItemMaster);
+
+
+
+// ---- item-Re-Allocation APIS Start ----
+
+router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsReallocation);
 
 export default router;

@@ -17,6 +17,8 @@ const ItemReAllocation = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [binlocation, setBinLocation] = useState('');
+  const [selectionType, setSelectionType] = useState('allocation');
+  // const [selectedOption, setSelectedOption] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const resetSnakeBarMessages = () => {
@@ -24,6 +26,11 @@ const ItemReAllocation = () => {
     setMessage(null);
 
   };
+
+
+  // const handleOptionChange = (event) => {
+  //   setSelectedOption(event.target.value);
+  // }
 
 
   const handleChangeValue = (e) => {
@@ -105,21 +112,29 @@ const ItemReAllocation = () => {
               </div>
             </div>
 
-            <div className=''>
-            <div class="flex items-center justify-center">
-                <div class="mr-4">
-                  <label class="inline-flex items-center">
-                    <input type="radio" class="form-radio text-indigo-600" name="allocation" value="option1" />
-                    <span class="ml-2 text-gray-700">Allocation</span>
+            <div className='flex justify-center items-center gap-5'>
+                  <label className="inline-flexitems-center mt-1">
+                      <input
+                      type="radio"
+                      name="selectionType"
+                      value="allocation"
+                      checked={selectionType === 'allocation'}
+                      onChange={e => setSelectionType(e.target.value)}
+                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    />
+                    <span className="ml-2 text-[#00006A]">Allocation</span>
                   </label>
-                </div>
-                <div>
-                  <label class="inline-flex items-center">
-                    <input type="radio" class="form-radio text-indigo-600" name="picking" value="option2" />
-                    <span class="ml-2 text-gray-700">Picking</span>
+                  <label className="inline-flex items-center mt-1">
+                    <input
+                      type="radio"
+                      name="selectionType"
+                      value="picking"
+                      checked={selectionType === 'picking'}
+                      onChange={e => setSelectionType(e.target.value)}
+                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    />
+                    <span className="ml-2 text-[#00006A]">Picking</span>
                   </label>
-                </div>
-              </div>                
             </div>
 
             <form onSubmit={handleForm}>

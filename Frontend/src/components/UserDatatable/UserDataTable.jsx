@@ -7,6 +7,9 @@ import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import Barcode from "react-barcode";
+import { QRCodeSVG } from "qrcode.react";
+import logo from "../../images/alessalogo2.png"
 
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
@@ -24,11 +27,15 @@ const UserDataTable = ({
   ContainerIdSearchEnable,
   buttonVisibility,
   addNewNavigation,
+  printButton,
   emailButton,
   detectAddRole
 
 }) => {
   const navigate = useNavigate();
+  const [qrcodeValue, setQRCodeValue] = useState('');
+  const [selectedRow, setSelectedRow] = useState([]);
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [record, setRecord] = useState([]);
   const [shipmentIdSearch, setShipmentIdSearch] = useState("");
   const [containerIdSearch, setContainerIdSearch] = useState("");
@@ -85,6 +92,79 @@ const UserDataTable = ({
     });
   };
 
+
+   
+  const handlePrint = () => {
+    // Open a new window/tab with only the QR code
+    const printWindow = window.open('', 'Print Window', 'height=400,width=800');
+    const html = '<html><head><title>Shipment Received</title>' +
+      '<style>' +
+      '@page { size: 4in 6in; margin: 0; }' +
+      'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
+      '#header { display: flex; justify-content: space-between; padding: 10px;}' +
+       '#imglogo {height: 40px; width: 100px;}'+ 
+       '#inside-heading { display: flex; justify-content: space-between; align-items: center; padding: 25px; margin-top: -30px; font-weight: 500; font-family: AwanZaman Regular;}' +
+       '#first-QRCode { padding: 10px;}' +
+       '#inside-header-second { display: flex; justify-content: space-between; align-items: center; padding: 25px; margin-top: -60px; font-weight: 500; font-family: AwanZaman Regular;}' +
+       '#inside-header-third { padding: 25px; gap: 5px; margin-top: -50px; font-weight: 500; font-family: AwanZaman Regular;}' +
+       '#inside-body { display: flex; justify-content: space-between; padding: 15px;}' +
+       '#inside-QRCode { display: flex; justify-content: center; align-items: center; padding: 5px;}' +
+       '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;}' +
+      
+    //    '#from { padding: 25px; margin-top: -50px; font-weight: 500; font-family: AwanZaman Regular;}' +
+       '#paragh { font-size: 15px; font-weight: 600; }' +
+       '#paragh-header { display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: 600; }' +
+       '#paragh-body { font-size: 21px; font-weight: 600; margin-top: -4px;}' +
+      '</style>' +
+      '</head><body>' +
+      '<div style="">' +
+      '</div>' +
+      '<div style="">' +
+      '<div id="barcode"></div>' +
+      '</div>' +
+      '<div id="qrcode"></div>' +
+      '<p id="parag"></p>' +
+      '</body></html>';
+
+    printWindow.document.write(html);
+    const barcodeContainer = printWindow.document.getElementById('barcode');
+    const barcode = document.getElementById('barcode').cloneNode(true);
+    barcodeContainer.appendChild(barcode);
+
+    
+    // Add logo image to document
+    const logoImg = new Image();
+    logoImg.src = logo;
+
+    logoImg.onload = function () {
+    printWindow.document.getElementById('imglogo').src = logoImg.src;
+
+      printWindow.print();
+      printWindow.close();
+  };
+}
+
+
+const handleRowClick = (item) => {
+  const index = item.id;
+  // Set the value of qrcodeValue to the data of the clicked row
+  setQRCodeValue(JSON.stringify(item));
+  setSelectedRow(data[index]);
+  setSelectedRowIndex(index);
+  console.log(item);
+
+  // Check if the row is already selected
+  const selectedIndex = selectedRow.findIndex(selectedItem => selectedItem.index === index);
+  if (selectedIndex > -1) {
+    // If the row is already selected, remove it from the selectedRows array
+    const newSelectedRows = [...selectedRow];
+    newSelectedRows.splice(selectedIndex, 1);
+    setSelectedRow(newSelectedRows);
+  } else {
+    // If the row is not selected, add it to the selectedRows array
+    setSelectedRow([...selectedRow, { data: item, index }]);
+  }
+};
 
 
 
@@ -557,7 +637,7 @@ const UserDataTable = ({
               <button onClick={() => handleExport(false)}>Export to Excel</button>
               <button onClick={() => handlePdfExport(false)}
               >Export to Pdf</button>
-
+              {printButton && <button onClick={handlePrint}>Print Shipment</button>}
             </span>
             }
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
@@ -583,6 +663,10 @@ const UserDataTable = ({
 
           filterModel={filterModel}
           onFilterModelChange={handleFilterModelChange}
+          onRowClick={(params, rowIdx) => {
+            // call your handle function and pass the row data as a parameter
+            handleRowClick(params.row, rowIdx);
+          }}
         />
 
 
@@ -648,6 +732,70 @@ const UserDataTable = ({
           </div>
         )}
 
+      {selectedRow.length > 0 && (
+        <div id="barcode">
+            {selectedRow.map((selectedRow, index) => (
+              <div id="barcode" className='hidden' key={index}>
+                <div id='header'>
+                    <div>
+                        <img src={logo} id='imglogo' alt='' />
+                    </div>
+                    <div id='first-QRCode'>
+                        <QRCodeSVG width={20} height={20}/>
+                    </div>
+                </div>
+                <div id='inside-heading'>
+                    <div>
+                        <p>PO NUMBER</p>
+                        <p id='paragh'>{selectedRow.data.PURCHID}</p>
+                    </div>
+                    <div>
+                        <p>SKU</p>
+                        <p id='paragh'>{selectedRow.data.ITEMID}</p>
+                    </div>
+                </div>
+                
+                <div id='inside-header-second'>
+                    <div>
+                        <p>BATCH/LOT</p>
+                        <p id='paragh'>Batch</p>
+                    </div>
+                    <div>
+                        <p>COUNT</p>
+                        <p id='paragh'>{selectedRow.data.USERID}</p>
+                    </div>
+                    <div>
+                        <p>PROD DATE</p>
+                        <p id='paragh'>{selectedRow.data.PALLET_DATE}</p>
+                    </div>
+                </div>
+
+                <div id='inside-header-third'>
+                    <p>SSCC</p>
+                    <p id='paragh-header'>{selectedRow.data.PALLETCODE}</p>
+                </div>
+                <hr />
+                
+                <div id='inside-body'>
+                    <div>
+                        <p id='paragh-body'>{selectedRow.data.SHIPMENTID}</p>
+                        <p id='paragh'>{selectedRow.data.ITEMID}</p>
+                        <br />
+                        <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
+                    </div>
+                    <div id='inside-QRCode'>
+                        <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40}/>
+                    </div>
+                </div>
+                <hr />
+
+                <div id='inside-BRCode'>
+                    <Barcode value={selectedRow.data.PALLETCODE} width={2.3} height={100}/>
+                </div>
+              </div>
+            ))} 
+          </div>
+        )}
       </div>
     </>
 

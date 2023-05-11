@@ -22,145 +22,186 @@ const BinToBinJournalSaveScreen = () => {
   };
 
   // retrieve data from session storage
-//   const storedData = sessionStorage.getItem('transferData');
-//   const parsedData = JSON.parse(storedData);
-//   console.log(parsedData)
+  const storedData = sessionStorage.getItem('journalRowData');
+  const parsedData = JSON.parse(storedData);
+  //   console.log(parsedData)
 
-//   useEffect(() => {
-//     const getLocationData = async () => {
-//       try {
-//         const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
-//           {
-//             headers: {
-//               itemcode: parsedData.ITEMID,
-//               // itemcode: "IC1233",
-//             }
-//           })
-//         console.log(res?.data)
-//         setLocation(res?.data[0]?.BinLocation ?? "")
-//       }
-//       catch (error) {
-//         console.log(error)
-//         setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+  //   useEffect(() => {
+  //     const getLocationData = async () => {
+  //       try {
+  //         const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
+  //           {
+  //             headers: {
+  //               itemcode: parsedData.ITEMID,
+  //               // itemcode: "IC1233",
+  //             }
+  //           })
+  //         console.log(res?.data)
+  //         setLocation(res?.data[0]?.BinLocation ?? "")
+  //       }
+  //       catch (error) {
+  //         console.log(error)
+  //         setError(error?.response?.data?.message ?? 'Cannot fetch location data');
 
-//       }
-//     }
+  //       }
+  //     }
 
-//     getLocationData();
+  //     getLocationData();
 
-//   }, [parsedData.ITEMID])
-
-
-//   const handleScan = (e) => {
-//     e.preventDefault();
-//     if (selectionType === 'Pallet') {
-//       //  check if the scanned value is already in the table
-//       const isAlreadyInTable = tableData.some(item => item.PALLETCODE === scanInputValue);
-//       if (isAlreadyInTable) {
-//         setError('This pallet is already in the table');
-//         return;
-//       }
+  //   }, [parsedData.ITEMID])
 
 
-
-
-//       userRequest.post(`/getShipmentRecievedCLDataByPalletCode?PalletCode=${scanInputValue}`
-//       )
-//         .then(response => {
-//           console.log(response?.data)
-//           // Append the new data to the existing data
-//           setTableData(prevData => [...prevData, ...response?.data])
-
-//         })
-//         .catch(error => {
-//           console.log(error)
-//           setError(error?.response?.data?.message ?? 'Cannot fetch location data');
-
-//         })
-//     }
-//     else if (selectionType === 'Serial') {
-//       //  check if the scanned value is already in the table
-//       const isAlreadyInTable = tableData.some(item => item.SERIALNUM === scanInputValue);
-
-//       if (isAlreadyInTable) {
-//         setError('This serial is already in the table');
-//         return;
-//       }
-//       userRequest.get(`/getShipmentRecievedCLDataCBySerialNumber?SERIALNUM=${scanInputValue}`)
-//         .then(response => {
-//           console.log(response?.data)
-//           // Append the new data to the existing data
-//           setTableData(prevData => [...prevData, ...response?.data])
-
-//         })
-//         .catch(error => {
-//           console.log(error)
-//           setError(error?.response?.data?.message ?? 'Cannot fetch location data');
-
-//         })
-//     }
-
-//     else {
-//       return;
-//     }
-
-//   }
+  const handleScan = (e) => {
+    e.preventDefault();
+    if (selectionType === 'Pallet') {
+      //  check if the scanned value is already in the table
+      const isAlreadyInTable = tableData.some(item => item.PALLETCODE === scanInputValue);
+      if (isAlreadyInTable) {
+        setError('This pallet is already in the table');
+        return;
+      }
 
 
 
 
+      userRequest.post("/getItemInfoByPalletCode", {}, {
+        headers: {
+          palletcode: scanInputValue
+        }
+      }
+      )
+        .then(response => {
+          console.log(response?.data)
+          // Append the new data to the existing data
+          setTableData(prevData => [...prevData, ...response?.data])
 
-//   const handleSaveBtnClick = () => {
-//     // Create a new array
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
 
-//     const dataForAPI = tableData.map(row => {
-//       // Return a new object for each row of the table
-//       return {
-//         ...row, // Spread the fields from the current row of the table
-//         BIN: locationInputValue, // Replace the Bin value with the value from locationInputValue state
-//         ...parsedData, // Spread the fields from parsedData
-//         SELECTTYPE: selectionType // Add the SELECTTYPE field
-//       };
-//     });
-//     console.log(dataForAPI);
+        })
+    }
+    else if (selectionType === 'Serial') {
+      //  check if the scanned value is already in the table
+      const isAlreadyInTable = tableData.some(item => item.SERIALNUM === scanInputValue);
 
-//     // Now, you can send dataForAPI to the API endpoint
-//     userRequest.post("/insertTblTransferBinToBinCL", dataForAPI)
-//       .then(response => {
-//         console.log(response);
-//         setMessage("Data inserted successfully");
-//         // clear the table
+      if (isAlreadyInTable) {
+        setError('This serial is already in the table');
+        return;
+      }
+      userRequest.post("/getItemInfoByItemSerialNo", {}, { headers: { itemserialno: scanInputValue } })
+        .then(response => {
+          console.log(response?.data)
+          // Append the new data to the existing data
+          setTableData(prevData => [...prevData, ...response?.data])
 
-//         // call the update api to 
-//         userRequest.put("/updateQtyReceivedInTblItemMaster", {
-//           itemid: parsedData.ITEMID,
-//           qty: dataForAPI.length
-//         })
-//           .then(response => {
-//             console.log(response);
-//             setMessage("Data updated successfully");
-//             // clear the table
-//             setTableData([]);
-//             // clear the location input
-//             setLocationInputValue('');
-//             // clear the scan input
-//             setScanInputValue('');
-//             // clear the selection type
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+        })
+    }
+
+    else {
+      return;
+    }
+
+  }
+
+  const handleBinUpdate = (e) => {
+
+    e.preventDefault();
+    if (tableData.length === 0) {
+      setError('Please scan some items first');
+      return;
+    }
+    if (locationInputValue === '') {
+      setError('Please enter a bin location');
+      return;
+    }
+    userRequest.put('/updateTblMappedBarcodeBinLocationWithSelectionType', {}, {
+      headers: {
+        'oldbinlocation': parsedData?.BinLocation,
+        'newbinlocation': locationInputValue,
+        selectiontype: selectionType,
+        selectiontypevalue: scanInputValue
+
+      }
+    })
+      .then((response) => {
+        console.log(response);
+        setMessage(response?.data?.message ?? 'Bin location updated successfully');
+        // alert('done')
+        // clear the table
+        setTableData([]);
+        // clear the location input
+        setLocationInputValue('');
+        // clear the scan input
+        setScanInputValue('');
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error.response?.data?.message ?? 'Cannot update bin location');
+        // alert(error)
+      });
+  }
 
 
-//           })
-//           .catch(error => {
-//             console.log(error);
-//             setError(error?.response?.data?.message ?? 'Cannot insert data');
-//           });
 
 
-//       })
-//       .catch(error => {
-//         console.log(error);
-//         setError(error?.response?.data?.message ?? 'Cannot insert data');
-//       });
-//   }
+  //   const handleSaveBtnClick = () => {
+  //     // Create a new array
+
+  //     const dataForAPI = tableData.map(row => {
+  //       // Return a new object for each row of the table
+  //       return {
+  //         ...row, // Spread the fields from the current row of the table
+  //         BIN: locationInputValue, // Replace the Bin value with the value from locationInputValue state
+  //         ...parsedData, // Spread the fields from parsedData
+  //         SELECTTYPE: selectionType // Add the SELECTTYPE field
+  //       };
+  //     });
+  //     console.log(dataForAPI);
+
+  //     // Now, you can send dataForAPI to the API endpoint
+  //     userRequest.post("/insertTblTransferBinToBinCL", dataForAPI)
+  //       .then(response => {
+  //         console.log(response);
+  //         setMessage("Data inserted successfully");
+  //         // clear the table
+
+  //         // call the update api to 
+  //         userRequest.put("/updateQtyReceivedInTblItemMaster", {
+  //           itemid: parsedData.ITEMID,
+  //           qty: dataForAPI.length
+  //         })
+  //           .then(response => {
+  //             console.log(response);
+  //             setMessage("Data updated successfully");
+  //             // clear the table
+  //             setTableData([]);
+  //             // clear the location input
+  //             setLocationInputValue('');
+  //             // clear the scan input
+  //             setScanInputValue('');
+  //             // clear the selection type
+
+
+  //           })
+  //           .catch(error => {
+  //             console.log(error);
+  //             setError(error?.response?.data?.message ?? 'Cannot insert data');
+  //           });
+
+
+  //       })
+  //       .catch(error => {
+  //         console.log(error);
+  //         setError(error?.response?.data?.message ?? 'Cannot insert data');
+  //       });
+  //   }
 
 
 
@@ -189,9 +230,10 @@ const BinToBinJournalSaveScreen = () => {
                 </div>
                 <span className='text-white -mt-7'>Journal ID#:</span>
                 <input
-                //   value={parsedData.TRANSFERID}
+                  //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
+                  value={parsedData?.JournalID}
                   disabled
                 />
 
@@ -199,7 +241,7 @@ const BinToBinJournalSaveScreen = () => {
                   <span className='text-white'>FROM:</span>
                   <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Location Reference"
-                    value={location}
+                    value={parsedData?.BinLocation}
                     disabled
                   />
                 </div>
@@ -207,8 +249,8 @@ const BinToBinJournalSaveScreen = () => {
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                  <span>Item Code:</span>
-                  {/* <span>{parsedData.ITEMID}</span> */}
+                  <span>Item ID:</span>
+                  <span>{parsedData.ITEMID}</span>
                 </div>
 
                 <div className='text-[#FFFFFF]'>
@@ -220,7 +262,7 @@ const BinToBinJournalSaveScreen = () => {
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    {/* <span>{parsedData.QTYTRANSFER}</span> */}
+                    <span>{parsedData.QTYTRANSFER}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
@@ -239,7 +281,7 @@ const BinToBinJournalSaveScreen = () => {
                     <input
                       type="radio"
                       name="selectionType"
-                      value="pallet"
+                      value="Pallet"
                       checked={selectionType === 'Pallet'}
                       onChange={e => setSelectionType(e.target.value)}
                       className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
@@ -270,11 +312,11 @@ const BinToBinJournalSaveScreen = () => {
                 <input
                   id="scan"
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder={`Enter Scan/${selectionType} Number`}
+                  placeholder={`Enter Scan / ${selectionType} Number`}
 
                   // submit when focus removed
                   onChange={e => setScanInputValue(e.target.value)}
-                //   onBlur={handleScan}
+                  onBlur={handleScan}
                 />
               </div>
 
@@ -284,60 +326,51 @@ const BinToBinJournalSaveScreen = () => {
                   <table>
                     <thead>
                       <tr>
+                        <th>Item Code</th>
+                        <th>Item Description</th>
+                        <th>GTIN</th>
+                        <th>Remarks</th>
+                        <th>User</th>
+                        <th>Classification</th>
+                        <th>Main Location</th>
+                        <th>Bin Location</th>
+                        <th>Internal Code</th>
+                        <th>Item Serial Number</th>
+                        <th>Map Date</th>
+                        <th>Pallet Code</th>
+                        <th>Reference</th>
                         <th>Shipment ID</th>
                         <th>Container ID</th>
-                        <th>Arrival Warehouse</th>
-                        <th>Item Name</th>
-                        <th>Item ID</th>
-                        <th>Purch ID</th>
-                        <th>Classification</th>
-                        <th>Serial Num</th>
-                        <th>RCVD Config ID</th>
-                        <th>RCVD Date</th>
-                        <th>GTIN</th>
-                        <th>RZONE</th>
-                        <th>Pallet Date</th>
-                        <th>Pallet Code</th>
-                        <th>Bin</th>
-                        <th>Remarks</th>
-                        <th>PO Qty</th>
-                        <th>RCVD Qty</th>
-                        <th>Remaining Qty</th>
-                        <th>User ID</th>
-                        <th>TRX Date Time</th>
+                        <th>PO</th>
+                        <th>Transaction</th>
                       </tr>
                     </thead>
                     <tbody>
                       {tableData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
-                          <td>{data.SHIPMENTID}</td>
-                          <td>{data.CONTAINERID}</td>
-                          <td>{data.ARRIVALWAREHOUSE}</td>
-                          <td>{data.ITEMNAME}</td>
-                          <td>{data.ITEMID}</td>
-                          <td>{data.PURCHID}</td>
-                          <td>{data.CLASSIFICATION}</td>
-                          <td>{data.SERIALNUM}</td>
-                          <td>{data.RCVDCONFIGID}</td>
-                          <td>{data.RCVD_DATE}</td>
+                          <td>{data.ItemCode}</td>
+                          <td>{data.ItemDesc}</td>
                           <td>{data.GTIN}</td>
-                          <td>{data.RZONE}</td>
-                          <td>{data.PALLET_DATE}</td>
-                          <td>{data.PALLETCODE}</td>
-                          <td>{data.BIN}</td>
-                          <td>{data.REMARKS}</td>
-                          <td>{data.POQTY}</td>
-                          <td>{data.RCVQTY}</td>
-                          <td>{data.REMAININGQTY}</td>
-                          <td>{data.USERID.trim()}</td>
-                          <td>{data.TRXDATETIME}</td>
+                          <td>{data.Remarks}</td>
+                          <td>{data.User}</td>
+                          <td>{data.Classification}</td>
+                          <td>{data.MainLocation}</td>
+                          <td>{data.BinLocation}</td>
+                          <td>{data.IntCode}</td>
+                          <td>{data.ItemSerialNo}</td>
+                          <td>{new Date(data.MapDate).toLocaleDateString()}</td>
+                          <td>{data.PalletCode}</td>
+                          <td>{data.Reference}</td>
+                          <td>{data.SID}</td>
+                          <td>{data.CID}</td>
+                          <td>{data.PO}</td>
+                          <td>{data.Trans}</td>
                         </tr>
                       ))}
-
-
                     </tbody>
                   </table>
                 </div>
+
 
 
               </div >
@@ -360,7 +393,7 @@ const BinToBinJournalSaveScreen = () => {
                 type='button'
                 className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
                 <span className='flex justify-center items-center'
-                //   onClick={handleSaveBtnClick}
+                  onClick={handleBinUpdate}
                 >
                   <p>Save</p>
                 </span>

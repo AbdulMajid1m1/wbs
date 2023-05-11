@@ -158,33 +158,29 @@ const handleRowClick = (item) => {
   userRequest.get('/getStockMasterDataByItemId?ITEMID=23CHP130')
   .then((response) => {
       itemGroup = response.data[0].ITEMGROUP
-
-       // Set the value of qrcodeValue to the data of the clicked row
-      setQRCodeValue(JSON.stringify(item));
-      setSelectedRow(data[index]);
-      // setSelectedRow(() => {
-      //   return 
-      // })
-      setSelectedRowIndex(index);
-      console.log(item);
-
-      // Check if the row is already selected
-      const selectedIndex = selectedRow.findIndex(selectedItem => selectedItem.index === index);
-      if (selectedIndex > -1) {
-        // If the row is already selected, remove it from the selectedRows array
-        const newSelectedRows = [...selectedRow];
-        newSelectedRows.splice(selectedIndex, 1);
-        setSelectedRow(newSelectedRows);
-      } else {
-        // If the row is not selected, add it to the selectedRows array
-        setSelectedRow([...selectedRow, { data: item, index }]);
-      }
+        
   })
   .catch(err => {
     console.log(err)
   })
 
- 
+  // Set the value of qrcodeValue to the data of the clicked row
+  setQRCodeValue(JSON.stringify(item));
+  setSelectedRow(data[index]);
+  setSelectedRowIndex(index);
+  console.log(item);
+
+  // Check if the row is already selected
+  const selectedIndex = selectedRow.findIndex(selectedItem => selectedItem.index === index);
+  if (selectedIndex > -1) {
+    // If the row is already selected, remove it from the selectedRows array
+    const newSelectedRows = [...selectedRow];
+    newSelectedRows.splice(selectedIndex, 1);
+    setSelectedRow(newSelectedRows);
+  } else {
+    // If the row is not selected, add it to the selectedRows array
+    setSelectedRow([...selectedRow, { data: item, index }]);
+  }
 };
 
 
@@ -772,7 +768,7 @@ const handleRowClick = (item) => {
                     </div>
                     <div>
                         <p>SKU</p>
-                        <p id='paragh'>{selectedRow.data.ITEMGROUP}</p>
+                        <p id='paragh'>{selectedRow.data.ITEMID}</p>
                     </div>
                 </div>
                 

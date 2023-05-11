@@ -56,6 +56,7 @@ import BinToBinJournalID from './pages/BinToBinJournalID/BinToBinJournalID'
 import TransferID from './pages/TransferID/TransferID'
 import TransferIDPage from './pages/TransferID/TransferIDPage1'
 import ItemReAllocation from './pages/Item-Re-Allocation/ItemReAllocation'
+import BinToBinJournalSaveScreen from './pages/BinToBinJournalID/BinToBinJournalSaveScreen'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -95,6 +96,7 @@ const App = () => {
         
         <Route path="/bintobin" element={<BinToBinInternal />} />
         <Route path="/bintobin2" element={<BinToBinJournalID />} />
+        <Route path="/bintobinsave" element={<BinToBinJournalSaveScreen />} />
         <Route path="/itemallocation" element={<ItemReAllocation />} />
 
         <Route

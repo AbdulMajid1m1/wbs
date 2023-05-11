@@ -95,6 +95,11 @@ const UserDataTable = ({
 
    
   const handlePrint = () => {
+    if (selectedRow.length === 0) {
+      // If no row is selected, show an alert message
+      alert('Please select a row to print.');
+      return;
+    }
     // Open a new window/tab with only the QR code
     const printWindow = window.open('', 'Print Window', 'height=400,width=800');
     const html = '<html><head><title>Shipment Received</title>' +

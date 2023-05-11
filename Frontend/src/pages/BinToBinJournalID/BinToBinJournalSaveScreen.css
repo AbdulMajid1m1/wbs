@@ -1,0 +1,109 @@
+.table-location-generate1 {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    /* // give width accourding to colums and then make it scoll  */
+    /* height: 120px; */
+    display: block;
+    max-height: 600px;
+    min-height: 180px;
+    overflow-x: auto;
+    overflow-y: auto;
+    border: 1.5px solid #00006A;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-location-generate1 table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10px;
+  }
+  
+  .table-location-generate1 table thead {
+    background-color: #F98E1A;
+    background-color: #3f51b5;
+    color: white;
+  }
+  .table-location-generate1 table thead tr th {
+    padding: 12px;
+    border: 1px solid #ccc;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  /* change table row background */
+  .table-location-generate1 table tbody tr:nth-child(even) {
+    /* background-color: rgb(242, 242, 221); */
+    background-color: #f3f3f3;
+  }
+  
+  .table-location-generate1 table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+    font-size: 10px;
+  }
+  
+  .table-location-generate1 table thead {
+    background-color: #F98E1A;
+    color: white;
+  }
+  .table-location-generate1 table thead tr th {
+    padding: 10px;
+    color: #00006A;
+    font-weight: 600;
+    font-size: 12px;
+    border: 1px solid #ccc;
+  }
+  
+  .table-location-generate1 table tbody tr td {
+    font-size: 12px; /* adjust font size as desired */
+    padding: 10px;
+    border: 1px solid black;
+    /* min height should be 30 */
+    color: #00006A;
+    font-weight: 600;
+    text-align: center;
+    height: 25px;
+  }
+
+  .table-location-generate1 table thead tr th:nth-child(1),
+  .table-location-generate1 table thead tr th:nth-child(2),
+  .table-location-generate1 table thead tr th:nth-child(3),
+  .table-location-generate1 table thead tr th:nth-child(4),
+  .table-location-generate1 table thead tr th:nth-child(5),
+  .table-location-generate1 table thead tr th:nth-child(6),
+  .table-location-generate1 table thead tr th:nth-child(7),
+  .table-location-generate1 table thead tr th:nth-child(8),
+  .table-location-generate1 table thead tr th:nth-child(9) {
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .table-location-generate1 table tbody tr td:nth-child(1),
+  .table-location-generate1 table tbody tr td:nth-child(2),
+  .table-location-generate1 table tbody tr td:nth-child(3),
+  .table-location-generate1 table tbody tr td:nth-child(4),
+  .table-location-generate1 table tbody tr td:nth-child(5),
+  .table-location-generate1 table tbody tr td:nth-child(6),
+  .table-location-generate1 table tbody tr td:nth-child(7),
+  .table-location-generate1 table tbody tr td:nth-child(8),
+  .table-location-generate1 table tbody tr td:nth-child(9) {
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* change table row background */
+  .table-location-generate1 table tbody tr:nth-child(even) {
+    background-color: rgb(242, 242, 221);
+  }
+  

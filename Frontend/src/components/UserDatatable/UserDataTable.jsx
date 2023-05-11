@@ -97,7 +97,8 @@ const UserDataTable = ({
   const handlePrint = () => {
     if (selectedRow.length === 0) {
       // If no row is selected, show an alert message
-      alert('Please select a row to print.');
+      // alert('Please select a row to print.');
+      setError('Please select a row to print.');
       return;
     }
     // Open a new window/tab with only the QR code
@@ -746,7 +747,7 @@ const handleRowClick = (item) => {
                         <img src={logo} id='imglogo' alt='' />
                     </div>
                     <div id='first-QRCode'>
-                        <QRCodeSVG width={20} height={20}/>
+                        <QRCodeSVG value="http://localhost:3006/" width={20} height={20}/>
                     </div>
                 </div>
                 <div id='inside-heading'>

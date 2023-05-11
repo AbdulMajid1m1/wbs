@@ -299,4 +299,12 @@ router.put("/updateQtyReceivedInTblItemMaster", checkAuthentication, WBSDB.updat
 
 router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsReallocation);
 
+
+// ---- item-Re-Allocation APIS End ----
+
+
+// ------- tbl_Stock_Master APIS Start --------
+
+router.get("/getStockMasterDataByItemId", checkAuthentication, WBSDB.getStockMasterDataByItemId);
+
 export default router;

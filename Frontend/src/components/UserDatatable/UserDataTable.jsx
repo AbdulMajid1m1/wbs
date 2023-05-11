@@ -153,6 +153,17 @@ const UserDataTable = ({
 
 const handleRowClick = (item) => {
   const index = item.id;
+  let itemGroup; 
+
+  userRequest.get('/getStockMasterDataByItemId?ITEMID=23CHP130')
+  .then((response) => {
+      itemGroup = response.data[0].ITEMGROUP
+        
+  })
+  .catch(err => {
+    console.log(err)
+  })
+
   // Set the value of qrcodeValue to the data of the clicked row
   setQRCodeValue(JSON.stringify(item));
   setSelectedRow(data[index]);

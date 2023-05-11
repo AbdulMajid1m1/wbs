@@ -94,7 +94,8 @@ const BinToBinJournalSaveScreen = () => {
         setError('This serial is already in the table');
         return;
       }
-      userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, { headers: { itemserialno: scanInputValue, binlocation: parsedData.BinLocation } })
+      // userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, { headers: { itemserialno: scanInputValue, binlocation: parsedData.BinLocation } })
+      userRequest.post("/getMappedBarcodedsByItemCodeAndBinLocation", {}, { headers: { itemcode: scanInputValue, binlocation: parsedData.BinLocation } })
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
@@ -144,6 +145,15 @@ const BinToBinJournalSaveScreen = () => {
         setLocationInputValue('');
         // clear the scan input
         setScanInputValue('');
+        // remove the specfic item from the list in allJournalRows in session storage on the basis of ITEMID
+        const allJournalRows = JSON.parse(sessionStorage.getItem('allJournalRows'));
+        const updatedJournalRows = allJournalRows.filter(item => item.ITEMID !== parsedData.ITEMID);
+        sessionStorage.setItem('allJournalRows', JSON.stringify(updatedJournalRows));
+        setTimeout(() => {
+          navigate("/bintobin2");
+        }
+          , 1000);
+
       })
       .catch((error) => {
         console.log(error);

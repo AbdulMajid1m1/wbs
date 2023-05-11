@@ -223,6 +223,8 @@ router.post("/getItemInfoByPalletCode", checkAuthentication, WBSDB.getItemInfoBy
 
 router.post("/getMappedBarcodedsByPalletCodeAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByPalletCodeAndBinLocation);
 
+router.post("/getMappedBarcodedsByItemCodeAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByItemCodeAndBinLocation);
+
 router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, WBSDB.deleteTblMappedBarcodesDataByItemCode);
 
 

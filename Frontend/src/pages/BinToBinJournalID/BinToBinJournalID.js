@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
@@ -15,7 +15,7 @@ const BinToBinJournalID = () => {
 
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('allJournalRows')) || []);
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -39,6 +39,7 @@ const BinToBinJournalID = () => {
         console.log(response?.data);
 
         setData(response?.data ?? []);
+        sessionStorage.setItem('allJournalRows', JSON.stringify(response?.data ?? []));
         setIsLoading(false)
         setMessage(response?.data?.message ?? 'Show All data');
 

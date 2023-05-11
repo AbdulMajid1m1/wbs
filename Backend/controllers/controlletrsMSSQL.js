@@ -3194,6 +3194,30 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+  async getMappedBarcodedsByItemCodeAndBinLocation(req, res, next) {
+    try {
+      const ItemCode = req.headers['itemcode']; // Get ItemSerialNo from headers
+      const BinLoacation = req.headers['binlocation']; // Get ItemSerialNo from headers
+      console.log(ItemCode);
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE ITEMCODE = @ItemCode
+        AND BinLocation = @BinLoacation
+
+      `;
+      let request = pool2.request();
+      request.input('ItemCode', sql.NVarChar, ItemCode);
+      request.input('BinLoacation', sql.NVarChar, BinLoacation);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
   async getItemInfoByPalletCode(req, res, next) {
     try {
@@ -3708,7 +3732,7 @@ const WBSDB = {
 
     try {
       const { ITEMID } = req.query;
-      
+
       if (!ITEMID) {
         return res.status(400).send({ message: "ITEMID is required." });
       }

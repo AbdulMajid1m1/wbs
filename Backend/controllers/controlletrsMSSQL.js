@@ -3083,6 +3083,47 @@ const WBSDB = {
     }
   },
 
+  async updateTblMappedBarcodeBinLocationWithSelectionType(req, res, next) {
+    try {
+      const { oldbinlocation, newbinlocation, selectiontype, selectiontypevalue } = req.headers;
+  
+      if (!oldbinlocation || !newbinlocation || !selectiontype || !selectiontypevalue) {
+        return res.status(400).send({ message: 'oldbinlocation, newbinlocation, selectiontype and selectiontypevalue are all required.' });
+      }
+  
+      let additionalCondition = '';
+      if (selectiontype === 'pallet') {
+        additionalCondition = 'AND PalletCode = @selectiontypevalue';
+      } else if (selectiontype === 'serial') {
+        additionalCondition = 'AND ItemSerialNo = @selectiontypevalue';
+      }
+  
+      let query = `
+            UPDATE dbo.tblMappedBarcodes
+            SET BinLocation = @newbinlocation
+            OUTPUT INSERTED.*
+            WHERE BinLocation = @oldbinlocation ${additionalCondition}
+        `;
+  
+      const request = pool2.request();
+      request.input('oldbinlocation', sql.VarChar(100), oldbinlocation);
+      request.input('newbinlocation', sql.VarChar(100), newbinlocation);
+      request.input('selectiontypevalue', sql.VarChar(100), selectiontypevalue);
+  
+      const result = await request.query(query);
+  
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Data not found.' });
+      }
+  
+      res.status(200).send({ message: 'Data updated successfully.', data: result.recordset });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  
+
 
 
   async checkBarcodeValidityByItemSerialNo(req, res, next) {

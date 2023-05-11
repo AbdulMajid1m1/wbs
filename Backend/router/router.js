@@ -209,6 +209,8 @@ router.put("/updateTblMappedBarcodeByItemCode", checkAuthentication, WBSDB.updat
 
 router.put("/updateTblMappedBarcodeBinLocation", checkAuthentication, WBSDB.updateTblMappedBarcodeBinLocation);
 
+router.put("/updateTblMappedBarcodeBinLocationWithSelectionType", checkAuthentication, WBSDB.updateTblMappedBarcodeBinLocationWithSelectionType);
+
 router.put("/updateTblMappedBarcodeByGtin", checkAuthentication, WBSDB.updateTblMappedBarcodeByGtin);
 
 router.post("/checkBarcodeValidityByItemSerialNo", checkAuthentication, WBSDB.checkBarcodeValidityByItemSerialNo);

@@ -747,7 +747,7 @@ const handleRowClick = (item) => {
                         <img src={logo} id='imglogo' alt='' />
                     </div>
                     <div id='first-QRCode'>
-                        <QRCodeSVG width={20} height={20}/>
+                        <QRCodeSVG value="http://localhost:3006/" width={20} height={20}/>
                     </div>
                 </div>
                 <div id='inside-heading'>

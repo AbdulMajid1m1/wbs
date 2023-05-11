@@ -787,12 +787,9 @@ const UserDataTable = ({
                     <p id='paragh'>{selectedRow.data.PURCHID}</p>
                   </div>
                   <div>
-                    <p>ITEM GROUP</p>
-                    <p id='paragh'>{selectedRow.itemGroup}</p>
-                  </div>
-                  <div>
                     <p>SKU</p>
-                    <p id='paragh'>{selectedRow.data.ITEMID}</p>
+                    {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
+                    <p id='paragh'>{selectedRow.itemGroup}</p>
                   </div>
                 </div>
 

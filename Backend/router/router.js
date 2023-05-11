@@ -217,7 +217,11 @@ router.post("/checkBarcodeValidityByItemSerialNo", checkAuthentication, WBSDB.ch
 
 router.post("/getItemInfoByItemSerialNo", checkAuthentication, WBSDB.getItemInfoByItemSerialNo);
 
+router.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByItemSerialNoAndBinLocation);
+
 router.post("/getItemInfoByPalletCode", checkAuthentication, WBSDB.getItemInfoByPalletCode);
+
+router.post("/getMappedBarcodedsByPalletCodeAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByPalletCodeAndBinLocation);
 
 router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, WBSDB.deleteTblMappedBarcodesDataByItemCode);
 

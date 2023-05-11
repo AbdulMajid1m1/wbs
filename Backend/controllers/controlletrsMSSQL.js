@@ -3086,43 +3086,43 @@ const WBSDB = {
   async updateTblMappedBarcodeBinLocationWithSelectionType(req, res, next) {
     try {
       const { oldbinlocation, newbinlocation, selectiontype, selectiontypevalue } = req.headers;
-  
+
       if (!oldbinlocation || !newbinlocation || !selectiontype || !selectiontypevalue) {
         return res.status(400).send({ message: 'oldbinlocation, newbinlocation, selectiontype and selectiontypevalue are all required.' });
       }
-  
+
       let additionalCondition = '';
       if (selectiontype === 'pallet') {
         additionalCondition = 'AND PalletCode = @selectiontypevalue';
       } else if (selectiontype === 'serial') {
         additionalCondition = 'AND ItemSerialNo = @selectiontypevalue';
       }
-  
+
       let query = `
             UPDATE dbo.tblMappedBarcodes
             SET BinLocation = @newbinlocation
             OUTPUT INSERTED.*
             WHERE BinLocation = @oldbinlocation ${additionalCondition}
         `;
-  
+
       const request = pool2.request();
       request.input('oldbinlocation', sql.VarChar(100), oldbinlocation);
       request.input('newbinlocation', sql.VarChar(100), newbinlocation);
       request.input('selectiontypevalue', sql.VarChar(100), selectiontypevalue);
-  
+
       const result = await request.query(query);
-  
+
       if (result.rowsAffected[0] === 0) {
         return res.status(404).send({ message: 'Data not found.' });
       }
-  
+
       res.status(200).send({ message: 'Data updated successfully.', data: result.recordset });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
-  
+
 
 
 
@@ -3168,6 +3168,31 @@ const WBSDB = {
     }
   },
 
+  async getMappedBarcodedsByItemSerialNoAndBinLocation(req, res, next) {
+    try {
+      const ItemSerialNo = req.headers['itemserialno']; // Get ItemSerialNo from headers
+      const BinLoacation = req.headers['binlocation']; // Get ItemSerialNo from headers
+      console.log(ItemSerialNo);
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE ItemSerialNo = @ItemSerialNo
+        AND BinLocation = @BinLoacation
+
+      `;
+      let request = pool2.request();
+      request.input('ItemSerialNo', sql.NVarChar(100), ItemSerialNo);
+      request.input('BinLoacation', sql.NVarChar, BinLoacation);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
   async getItemInfoByPalletCode(req, res, next) {
     try {
       const PalletCode = req.headers['palletcode']; // Get ItemSerialNo from headers
@@ -3189,7 +3214,29 @@ const WBSDB = {
     }
   },
 
+  async getMappedBarcodedsByPalletCodeAndBinLocation(req, res, next) {
+    try {
+      const PalletCode = req.headers['palletcode']; // Get ItemSerialNo from headers
+      const BinLoacation = req.headers['binlocation']; // Get ItemSerialNo from headers
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE PalletCode = @PalletCode
+        AND BinLocation = @BinLoacation
 
+      `;
+      let request = pool2.request();
+      request.input('PalletCode', sql.NVarChar(100), PalletCode);
+      request.input('BinLoacation', sql.NVarChar, BinLoacation);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
   async deleteTblMappedBarcodesDataByItemCode(req, res, next) {

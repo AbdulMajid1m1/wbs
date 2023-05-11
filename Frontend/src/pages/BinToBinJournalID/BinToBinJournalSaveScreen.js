@@ -53,6 +53,9 @@ const BinToBinJournalSaveScreen = () => {
 
   const handleScan = (e) => {
     e.preventDefault();
+    if (scanInputValue === '') {
+      return;
+    }
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
       const isAlreadyInTable = tableData.some(item => item.PALLETCODE === scanInputValue);
@@ -64,9 +67,10 @@ const BinToBinJournalSaveScreen = () => {
 
 
 
-      userRequest.post("/getItemInfoByPalletCode", {}, {
+      userRequest.post("/getMappedBarcodedsByPalletCodeAndBinLocation", {}, {
         headers: {
-          palletcode: scanInputValue
+          palletcode: scanInputValue,
+          binlocation: parsedData.BinLocation,
         }
       }
       )
@@ -90,7 +94,7 @@ const BinToBinJournalSaveScreen = () => {
         setError('This serial is already in the table');
         return;
       }
-      userRequest.post("/getItemInfoByItemSerialNo", {}, { headers: { itemserialno: scanInputValue } })
+      userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, { headers: { itemserialno: scanInputValue, binlocation: parsedData.BinLocation } })
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data

@@ -204,7 +204,7 @@ const BinToBinJournalID = () => {
             </div>
 
             <form onSubmit={handleBinLocation}>
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
                 <input
                   id="enterscan"
@@ -212,7 +212,7 @@ const BinToBinJournalID = () => {
                   placeholder="Enter/Scan Location"
                   onChange={(e) => setBinLocation(e.target.value)}
                 />
-              </div >
+              </div > */}
 
               <div className='mt-6'>
                 <div className='w-full flex justify-between place-items-end'>

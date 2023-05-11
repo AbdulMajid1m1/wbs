@@ -65,38 +65,7 @@ const ItemReAllocation = () => {
 
 
 
-  const responseData = [
-    {
-      "selectionType": "allocation",
-      "serialnum": "11",
-      "stockQty": 50,
-      "itemId": "ITEMID2",
-      "ItemCode": "CODE1",
-      "ItemDesc": "Item Description 1",
-      "GTIN": "GTIN001",
-      "Remarks": "Remark 1",
-      "User": "User1",
-      "Classification": "Class1",
-      "MainLocation": "Location1",
-      "BinLocation": "Bin1",
-      "IntCode": "CODE1",
-      "MapDate": "2023-06-01",
-      "PalletCode": "PALLET001",
-      "Reference": "REF1",
-      "SID": "SID1",
-      "CID": "CID1",
-      "PO": "PO1",
-      "Trans": 12
-    },
 
-    {
-      "selectionType": "picking",
-      "serialnum": "11",
-      "stockQty": 2,
-      "itemId": "item002"
-    }
-
-  ];
 
   const handleBinLocation = (e) => {
     e.preventDefault();

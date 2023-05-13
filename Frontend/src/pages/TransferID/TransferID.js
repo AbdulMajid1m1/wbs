@@ -32,7 +32,7 @@ const TransferID = () => {
         const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
           {
             headers: {
-              itemcode: parsedData.ITEMID,
+              itemcode: parsedData?.ITEMID,
               // itemcode: "IC1233",
             }
           })
@@ -48,14 +48,14 @@ const TransferID = () => {
 
     getLocationData();
 
-  }, [parsedData.ITEMID])
+  }, [parsedData?.ITEMID])
 
 
   const handleScan = (e) => {
     e.preventDefault();
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
-      const isAlreadyInTable = tableData.some(item => item.PALLETCODE === scanInputValue);
+      const isAlreadyInTable = tableData.some(item => item?.PALLETCODE === scanInputValue);
       if (isAlreadyInTable) {
         setError('This pallet is already in the table');
         return;
@@ -133,7 +133,7 @@ const TransferID = () => {
 
         // call the update api to 
         userRequest.put("/updateQtyReceivedInTblItemMaster", {
-          itemid: parsedData.ITEMID,
+          itemid: parsedData?.ITEMID,
           qty: dataForAPI.length
         })
           .then(response => {
@@ -189,7 +189,7 @@ const TransferID = () => {
                 </div>
                 <span className='text-white -mt-7'>TRANSFER ID#:</span>
                 <input
-                  value={parsedData.TRANSFERID}
+                  value={parsedData?.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
                   disabled
@@ -208,11 +208,11 @@ const TransferID = () => {
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
-                  <span>{parsedData.ITEMID}</span>
+                  <span>{parsedData?.ITEMID}</span>
                 </div>
 
                 <div className='text-[#FFFFFF]'>
-                  <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span>
+                  <span>CLASS {parsedData?.INVENTLOCATIONIDFROM}</span>
                 </div>
               </div>
 
@@ -220,7 +220,7 @@ const TransferID = () => {
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.QTYTRANSFER}</span>
+                    <span>{parsedData?.QTYTRANSFER}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
@@ -239,7 +239,7 @@ const TransferID = () => {
                     <input
                       type="radio"
                       name="selectionType"
-                      value="pallet"
+                      value="Pallet"
                       checked={selectionType === 'Pallet'}
                       onChange={e => setSelectionType(e.target.value)}
                       className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
@@ -310,27 +310,27 @@ const TransferID = () => {
                     <tbody>
                       {tableData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
-                          <td>{data.SHIPMENTID}</td>
-                          <td>{data.CONTAINERID}</td>
-                          <td>{data.ARRIVALWAREHOUSE}</td>
-                          <td>{data.ITEMNAME}</td>
-                          <td>{data.ITEMID}</td>
-                          <td>{data.PURCHID}</td>
-                          <td>{data.CLASSIFICATION}</td>
-                          <td>{data.SERIALNUM}</td>
-                          <td>{data.RCVDCONFIGID}</td>
-                          <td>{data.RCVD_DATE}</td>
-                          <td>{data.GTIN}</td>
-                          <td>{data.RZONE}</td>
-                          <td>{data.PALLET_DATE}</td>
-                          <td>{data.PALLETCODE}</td>
-                          <td>{data.BIN}</td>
-                          <td>{data.REMARKS}</td>
-                          <td>{data.POQTY}</td>
-                          <td>{data.RCVQTY}</td>
-                          <td>{data.REMAININGQTY}</td>
-                          <td>{data.USERID.trim()}</td>
-                          <td>{data.TRXDATETIME}</td>
+                          <td>{data?.SHIPMENTID}</td>
+                          <td>{data?.CONTAINERID}</td>
+                          <td>{data?.ARRIVALWAREHOUSE}</td>
+                          <td>{data?.ITEMNAME}</td>
+                          <td>{data?.ITEMID}</td>
+                          <td>{data?.PURCHID}</td>
+                          <td>{data?.CLASSIFICATION}</td>
+                          <td>{data?.SERIALNUM}</td>
+                          <td>{data?.RCVDCONFIGID}</td>
+                          <td>{data?.RCVD_DATE}</td>
+                          <td>{data?.GTIN}</td>
+                          <td>{data?.RZONE}</td>
+                          <td>{data?.PALLET_DATE}</td>
+                          <td>{data?.PALLETCODE}</td>
+                          <td>{data?.BIN}</td>
+                          <td>{data?.REMARKS}</td>
+                          <td>{data?.POQTY}</td>
+                          <td>{data?.RCVQTY}</td>
+                          <td>{data?.REMAININGQTY}</td>
+                          <td>{data?.USERID?.trim()}</td>
+                          <td>{data?.TRXDATETIME}</td>
                         </tr>
                       ))}
 

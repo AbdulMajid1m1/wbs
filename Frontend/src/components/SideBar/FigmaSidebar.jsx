@@ -174,7 +174,7 @@ const FigmaSidebar = () => {
 
                     <div className='main-images-container' onClick={() => navigate('/transferpage1')}>
                         <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Internal Transfer Order</p>
+                        <p className='sidebar-text'>Bin To Bin (Axapta)</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/bintobin')}>

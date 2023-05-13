@@ -197,11 +197,14 @@ const TransferID = () => {
 
                 <div className='flex gap-2 justify-center items-center'>
                   <span className='text-white'>FROM:</span>
-                  <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
-                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Location Reference"
-                    value={location}
-                    disabled
-                  />
+                    <select className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
+                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                    >
+                      <option>123</option>
+                      <option>123</option>
+                      <option>123</option>
+                      <option>123</option>
+                    </select>
                 </div>
               </div>
 
@@ -211,8 +214,15 @@ const TransferID = () => {
                   <span>{parsedData.ITEMID}</span>
                 </div>
 
-                <div className='text-[#FFFFFF]'>
-                  <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span>
+                <div className='flex flex-col gap-2'>
+                    <div className='text-[#FFFFFF]'>
+                      <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span>
+                    </div>
+
+                    
+                    <div className='text-[#FFFFFF]'>
+                      <span>Group ID  {12345}</span>
+                    </div>
                 </div>
               </div>
 

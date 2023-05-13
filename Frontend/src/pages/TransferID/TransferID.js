@@ -124,7 +124,7 @@ const TransferID = () => {
       // Return a new object for each row of the table
       return {
         ...row, // Spread the fields from the current row of the table
-        BIN: locationInputValue, // Replace the Bin value with the value from locationInputValue state
+        BIN: locationInputValue, 
         ...parsedData, // Spread the fields from parsedData
         SELECTTYPE: selectionType // Add the SELECTTYPE field
       };

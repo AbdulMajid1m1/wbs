@@ -61,17 +61,18 @@ const UserDataTable = ({
   };
 
   const operatorFunctions = {
-    contains: (cellValue, value) => cellValue.toString().includes(value),
-    notContains: (cellValue, value) => !cellValue.toString().includes(value),
-    equals: (cellValue, value) => cellValue.toString() === value,
-    notEqual: (cellValue, value) => cellValue.toString() !== value,
-    greaterThan: (cellValue, value) => cellValue > value,
-    greaterThanOrEqual: (cellValue, value) => cellValue >= value,
-    lessThan: (cellValue, value) => cellValue < value,
-    lessThanOrEqual: (cellValue, value) => cellValue <= value,
-    startsWith: (cellValue, value) => cellValue.toString().startsWith(value),
-    endsWith: (cellValue, value) => cellValue.toString().endsWith(value),
+    contains: (cellValue, value) => cellValue !== null && cellValue.toString().includes(value),
+    notContains: (cellValue, value) => cellValue !== null && !cellValue.toString().includes(value),
+    equals: (cellValue, value) => cellValue !== null ? cellValue.toString() === value : cellValue === value,
+    notEqual: (cellValue, value) => cellValue !== null ? cellValue.toString() !== value : cellValue !== value,
+    greaterThan: (cellValue, value) => cellValue !== null && cellValue > value,
+    greaterThanOrEqual: (cellValue, value) => cellValue !== null && cellValue >= value,
+    lessThan: (cellValue, value) => cellValue !== null && cellValue < value,
+    lessThanOrEqual: (cellValue, value) => cellValue !== null && cellValue <= value,
+    startsWith: (cellValue, value) => cellValue !== null && cellValue.toString().startsWith(value),
+    endsWith: (cellValue, value) => cellValue !== null && cellValue.toString().endsWith(value),
   };
+
 
   const applyFiltering = (filteredData, filterModel) => {
     if (!filterModel || !filterModel.items || filterModel.items.length === 0) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "./TransferID.css";
 import userRequest from '../../utils/userRequest';
@@ -21,11 +21,21 @@ const TransferID = () => {
     setMessage(null);
 
   };
+  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const resetAutocomplete = () => {
+    setLocationInputValue(''); // Clear the location input value
+    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  };
+
+
+
+
 
   const [selectedOption, setSelectedOption] = useState("");
 
-  const handleFromSelect = (event) => {
-    setSelectedOption(event.target.value);
+  const handleFromSelect = (event, value) => {
+    setSelectedOption(value || "");
   }
 
 
@@ -102,8 +112,8 @@ const TransferID = () => {
         setError('This serial is already in the table');
         return;
       }
-      // userRequest.get(`/getShipmentRecievedCLDataCBySerialNumber?SERIALNUM=${scanInputValue}`)
-      userRequest.get(`/getShipmentRecievedCLDataBySerialNumberAndBinLocation?SERIALNUM=${scanInputValue}&binLocation=${selectedOption}`)
+      console.log("scan" + scanInputValue + "bin" + selectedOption)
+      userRequest.get(`/getShipmentRecievedCLDataBySerialNumberAndBinLocation?serialNumber=${scanInputValue}&binLocation=${selectedOption}`)
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
@@ -145,31 +155,17 @@ const TransferID = () => {
     userRequest.post("/insertTblTransferBinToBinCL", dataForAPI)
       .then(response => {
         console.log(response);
-        setMessage("Data inserted successfully");
         // clear the table
-
-        // call the update api to 
-        userRequest.put("/updateQtyReceivedInTblStockMaster", {
-          itemid: parsedData?.ITEMID,
-          qty: dataForAPI.length
-        })
-          .then(response => {
-            console.log(response);
-            setMessage("Data updated successfully");
-            // clear the table
-            setTableData([]);
-            // clear the location input
-            setLocationInputValue('');
-            // clear the scan input
-            setScanInputValue('');
-            // clear the selection type
-
-
-          })
-          .catch(error => {
-            console.log(error);
-            setError(error?.response?.data?.message ?? 'Cannot insert data');
-          });
+        setTableData([]);
+        // clear the location input
+        setLocationInputValue('');
+        // clear the scan input
+        setScanInputValue('');
+        // clear the selected option
+        setSelectedOption('');
+        // reset the autocomplete
+        resetAutocomplete();
+        setMessage("Data inserted successfully");
 
 
       })
@@ -230,9 +226,13 @@ const TransferID = () => {
                   </select> */}
                   <div className='w-full'>
                     <Autocomplete
-                      id="zone"
-                      options={location.filter(item => item.BinLocation)}
-                      getOptionLabel={(option) => option.BinLocation}
+                      ref={autocompleteRef}
+                      key={autocompleteKey}
+                      id="location"
+                      // options={location.filter(item => item.BinLocation)}
+                      // getOptionLabel={(option) => option.BinLocation}
+                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
+                      getOptionLabel={(option) => option}
                       onChange={handleFromSelect}
 
                       // onChange={(event, value) => {
@@ -321,7 +321,7 @@ const TransferID = () => {
                       <input
                         type="radio"
                         name="selectionType"
-                        value="pallet"
+                        value="Pallet"
                         checked={selectionType === 'Pallet'}
                         onChange={e => setSelectionType(e.target.value)}
                         className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
@@ -355,6 +355,7 @@ const TransferID = () => {
                   placeholder={`Enter Scan/${selectionType} Number`}
 
                   // submit when focus removed
+                  value={scanInputValue}
                   onChange={e => setScanInputValue(e.target.value)}
                   onBlur={handleScan}
                 />

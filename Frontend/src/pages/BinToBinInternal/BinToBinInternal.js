@@ -79,25 +79,69 @@ const BinToBinInternal = () => {
 
   const handleBinLocation = (e) => {
     e.preventDefault();
-    console.log(data[0].BinLocation)
-    console.log(binlocation)
+    // console.log(data[0].BinLocation)
+    // console.log(binlocation)
 
-    userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
-      headers: {
-        'oldbinlocation': data[0].BinLocation,
-        'newbinlocation': binlocation
-      }
-    })
-    .then((response) => {
-      console.log(response);
-      setMessage(response?.data?.message);
-      // alert('done')
-    })
-    .catch((error) => {
-      console.log(error);
-      setError(error.response?.data?.message);
-      // alert(error)
-    });
+    // userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
+    //   headers: {
+    //     'oldbinlocation': data[0].BinLocation,
+    //     'newbinlocation': binlocation
+    //   }
+    // })
+    // .then((response) => {
+    //   console.log(response);
+    //   setMessage(response?.data?.message);
+    //   // alert('done')
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    //   setError(error.response?.data?.message);
+    //   // alert(error)
+    // });
+
+
+    
+    if (selectionType === 'Pallet') {
+
+      userRequest.put('/updateMappedBarcodesBinLocationByPalletCode', {
+        "oldBinLocation": data[0].BinLocation,
+        "newBinLocation": binlocation,
+        "serialNumber": selectionType
+      })
+        .then(response => {
+          console.log(response?.data)
+          // Append the new data to the existing data
+          setFilteredData(response?.data ?? [])
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+        })
+    }
+    else if (selectionType === 'Serial') {
+    
+      userRequest.put('/updateMappedBarcodesBinLocationBySerialNo',{
+        "oldBinLocation": data[0].BinLocation,
+        "newBinLocation": binlocation,
+        "serialNumber": selectionType
+      })
+        .then(response => {
+          console.log(response?.data)
+          
+          setFilteredData(response?.data)
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+        })
+    }
+
+    else {
+      return;
+    }
+
 }
 
 
@@ -280,7 +324,7 @@ const handleInputUser = (e) => {
                 </div>
 
             <div className="mb-6">
-              <label htmlFor='scanpallet' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}:<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='scanpallet' className="sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}:<span className='text-[#FF0404]'>*</span></label>
               
               <input
                 id="scanpallet"
@@ -288,6 +332,7 @@ const handleInputUser = (e) => {
                    placeholder={`Scan ${selectionType}`}
                     //  value={userInput}
                       onBlur={handleInputUser}
+
               />
 
                  {/* // creae excel like Tables  */}

@@ -26,6 +26,7 @@ const BinToBinInternal = () => {
   };
   const [selectionType, setSelectionType] = useState('Pallet');
   const [userInput, setUserInput] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
 
   const handleChangeValue = (e) => {
@@ -53,6 +54,26 @@ const BinToBinInternal = () => {
       });
 
   }
+
+
+   // define the function to filter data based on user input and selection type
+   const filterData = () => {
+    const filtered = data.filter((item) => {
+      if (selectionType === 'Pallet') {
+        return item.PalletCode === userInput;
+      } else if (selectionType === 'Serial') {
+        return item.ItemSerialNo === userInput;
+      } else {
+        return true;
+      }
+    });
+    setFilteredData(filtered); // update the filtered data state variable
+  };
+
+  // use useEffect to trigger the filtering of data whenever the user input changes
+  useEffect(() => {
+    filterData();
+  }, [userInput]);
 
 
 
@@ -295,7 +316,7 @@ const handleInputUser = (e) => {
                   </thead>
                   <tbody>
                     {/*  {data.filter((item) => item.PalletCode === userInput) */}
-                    {data.filter((item) => {
+                    {/* {data.filter((item) => {
                         if (selectionType === 'Pallet') {
                           return item.PalletCode === userInput;
                         } else if (selectionType === 'Serial') {
@@ -323,8 +344,28 @@ const handleInputUser = (e) => {
                           <td>{item.PO}</td>
                           <td>{item.Trans}</td>
                         </tr>
-                      ))}
-
+                      ))} */}
+                       {filteredData.map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.ItemCode}</td>
+                            <td>{item.ItemDesc}</td>
+                            <td>{item.GTIN}</td>
+                            <td>{item.Remarks}</td>
+                            <td>{item.User}</td>
+                            <td>{item.Classification}</td>
+                            <td>{item.MainLocation}</td>
+                            <td>{item.BinLocation}</td>
+                            <td>{item.IntCode}</td>
+                            <td>{item.ItemSerialNo}</td>
+                            <td>{item.MapDate}</td>
+                            <td>{item.PalletCode}</td>
+                            <td>{item.Reference}</td>
+                            <td>{item.SID}</td>
+                            <td>{item.CID}</td>
+                            <td>{item.PO}</td>
+                            <td>{item.Trans}</td>
+                          </tr>
+                        ))}
                   </tbody>
                 </table>
               </div>

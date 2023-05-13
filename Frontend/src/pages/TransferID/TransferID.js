@@ -22,10 +22,10 @@ const TransferID = () => {
 
   };
 
-  const [fromSelected, setFromSelected] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
 
   const handleFromSelect = (event) => {
-    setFromSelected(true);
+    setSelectedOption(event.target.value);
   }
 
 
@@ -40,12 +40,14 @@ const TransferID = () => {
         const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
           {
             headers: {
-              itemcode: parsedData.ITEMID,
+              itemcode: parsedData?.ITEMID,
               // itemcode: "IC1233",
             }
           })
         console.log(res?.data)
-        setLocation(res?.data[0]?.BinLocation ?? "")
+        setLocation(res?.data)
+
+
       }
       catch (error) {
         console.log(error)
@@ -56,14 +58,20 @@ const TransferID = () => {
 
     getLocationData();
 
-  }, [parsedData.ITEMID])
+  }, [parsedData?.ITEMID])
 
 
   const handleScan = (e) => {
     e.preventDefault();
+    // check if selectedOption is empty
+    if (!selectedOption) {
+      setError("Please select an option for Bin/Location");
+      return;
+    }
+
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
-      const isAlreadyInTable = tableData.some(item => item.PALLETCODE === scanInputValue);
+      const isAlreadyInTable = tableData.some(item => item?.PALLETCODE === scanInputValue);
       if (isAlreadyInTable) {
         setError('This pallet is already in the table');
         return;
@@ -72,8 +80,8 @@ const TransferID = () => {
 
 
 
-      userRequest.post(`/getShipmentRecievedCLDataByPalletCode?PalletCode=${scanInputValue}`
-      )
+      userRequest.get(`/getShipmentRecievedCLDataByPalletCodeAndBinLocation?palletCode=${scanInputValue}&binLocation=${selectedOption}`)
+
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
@@ -94,7 +102,8 @@ const TransferID = () => {
         setError('This serial is already in the table');
         return;
       }
-      userRequest.get(`/getShipmentRecievedCLDataCBySerialNumber?SERIALNUM=${scanInputValue}`)
+      // userRequest.get(`/getShipmentRecievedCLDataCBySerialNumber?SERIALNUM=${scanInputValue}`)
+      userRequest.get(`/getShipmentRecievedCLDataBySerialNumberAndBinLocation?SERIALNUM=${scanInputValue}&binLocation=${selectedOption}`)
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
@@ -125,7 +134,7 @@ const TransferID = () => {
       // Return a new object for each row of the table
       return {
         ...row, // Spread the fields from the current row of the table
-        BIN: locationInputValue, // Replace the Bin value with the value from locationInputValue state
+        BIN: locationInputValue,
         ...parsedData, // Spread the fields from parsedData
         SELECTTYPE: selectionType // Add the SELECTTYPE field
       };
@@ -140,8 +149,8 @@ const TransferID = () => {
         // clear the table
 
         // call the update api to 
-        userRequest.put("/updateQtyReceivedInTblItemMaster", {
-          itemid: parsedData.ITEMID,
+        userRequest.put("/updateQtyReceivedInTblStockMaster", {
+          itemid: parsedData?.ITEMID,
           qty: dataForAPI.length
         })
           .then(response => {
@@ -171,18 +180,7 @@ const TransferID = () => {
   }
 
 
-  const [dataList, setDataList] = useState([]);
-  useEffect(() => {
-    userRequest.get('/getAllTblRZones')
-      .then(response => {
-        console.log(response?.data);
-        setDataList(response?.data ?? []);
-      })
-      .catch(error => {
-        console.error(error);
-      });
 
-  }, []);
 
 
 
@@ -209,7 +207,7 @@ const TransferID = () => {
                 </div>
                 <span className='text-white -mt-7'>TRANSFER ID#:</span>
                 <input
-                  value={parsedData.TRANSFERID}
+                  value={parsedData?.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
                   disabled
@@ -217,43 +215,56 @@ const TransferID = () => {
 
                 <div className='flex gap-2 justify-start items-center'>
                   <span className='text-white'>FROM:</span>
-                <div className='w-full'>
-                <Autocomplete
-                  id="zone"
-                  options={dataList}
-                  getOptionLabel={(option) => option.RZONE}
-                  onChange={handleFromSelect}
-                  
-                  // onChange={(event, value) => {
-                  //   if (value) {
-                  //     console.log(`Selected: ${value}`);
-                  
-                  //   }
-                  // }}
-                  onInputChange={(event, value) => {
-                    if (!value) {
-                      // perform operation when input is cleared
-                      console.log("Input cleared");
+                  {/* <select
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
+                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                    onChange={handleFromSelect}
+                    defaultValue=""
+                  >
+                    <option value="" disabled hidden>Select an option</option>
+                    {location
+                      .filter(item => item.BinLocation) // this will filter out items where BinLocation is null, undefined or an empty string
+                      .map((item, index) => {
+                        return <option key={index} value={item.BinLocation}>{item.BinLocation}</option>
+                      })}
+                  </select> */}
+                  <div className='w-full'>
+                    <Autocomplete
+                      id="zone"
+                      options={location.filter(item => item.BinLocation)}
+                      getOptionLabel={(option) => option.BinLocation}
+                      onChange={handleFromSelect}
 
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        className: "text-white",
+                      // onChange={(event, value) => {
+                      //   if (value) {
+                      //     console.log(`Selected: ${value}`);
+
+                      //   }
+                      // }}
+                      onInputChange={(event, value) => {
+                        if (!value) {
+                          // perform operation when input is cleared
+                          console.log("Input cleared");
+
+                        }
                       }}
-                      InputLabelProps={{
-                        ...params.InputLabelProps,
-                        style: { color: "white" },
-                      }}
-                      
-                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          InputProps={{
+                            ...params.InputProps,
+                            className: "text-white",
+                          }}
+                          InputLabelProps={{
+                            ...params.InputLabelProps,
+                            style: { color: "white" },
+                          }}
+
+                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                       p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                      placeholder="FROM"
-                      required
-                      />
+                          placeholder="FROM"
+                          required
+                        />
                       )}
                       classes={{
                         endAdornment: "text-white",
@@ -263,27 +274,27 @@ const TransferID = () => {
                           color: 'white',
                         },
                       }}
-                      />
+                    />
 
-                      </div>
+                  </div>
                 </div>
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
-                  <span>{parsedData.ITEMID}</span>
+                  <span>{parsedData?.ITEMID}</span>
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    <div className='text-[#FFFFFF]'>
-                      <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span>
-                    </div>
+                  <div className='text-[#FFFFFF]'>
+                    <span>CLASS {parsedData?.INVENTLOCATIONIDFROM}</span>
+                  </div>
 
-                    
-                    <div className='text-[#FFFFFF]'>
-                      <span>GROUPID {parsedData.GROUPID}</span>
-                    </div>
+
+                  <div className='text-[#FFFFFF]'>
+                    <span>GROUPID {parsedData.GROUPID}</span>
+                  </div>
                 </div>
               </div>
 
@@ -291,7 +302,7 @@ const TransferID = () => {
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.QTYTRANSFER}</span>
+                    <span>{parsedData?.QTYTRANSFER}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
@@ -301,7 +312,7 @@ const TransferID = () => {
                 </div>
               </div>
 
-              {fromSelected &&
+              {selectedOption !== "" &&
                 <div class="text-center">
                   <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
@@ -331,7 +342,7 @@ const TransferID = () => {
                   </div>
                 </div>
               }
-            </div>  
+            </div>
 
             <form
             //   onSubmit={handleFormSubmit}
@@ -381,27 +392,27 @@ const TransferID = () => {
                     <tbody>
                       {tableData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
-                          <td>{data.SHIPMENTID}</td>
-                          <td>{data.CONTAINERID}</td>
-                          <td>{data.ARRIVALWAREHOUSE}</td>
-                          <td>{data.ITEMNAME}</td>
-                          <td>{data.ITEMID}</td>
-                          <td>{data.PURCHID}</td>
-                          <td>{data.CLASSIFICATION}</td>
-                          <td>{data.SERIALNUM}</td>
-                          <td>{data.RCVDCONFIGID}</td>
-                          <td>{data.RCVD_DATE}</td>
-                          <td>{data.GTIN}</td>
-                          <td>{data.RZONE}</td>
-                          <td>{data.PALLET_DATE}</td>
-                          <td>{data.PALLETCODE}</td>
-                          <td>{data.BIN}</td>
-                          <td>{data.REMARKS}</td>
-                          <td>{data.POQTY}</td>
-                          <td>{data.RCVQTY}</td>
-                          <td>{data.REMAININGQTY}</td>
-                          <td>{data.USERID.trim()}</td>
-                          <td>{data.TRXDATETIME}</td>
+                          <td>{data?.SHIPMENTID}</td>
+                          <td>{data?.CONTAINERID}</td>
+                          <td>{data?.ARRIVALWAREHOUSE}</td>
+                          <td>{data?.ITEMNAME}</td>
+                          <td>{data?.ITEMID}</td>
+                          <td>{data?.PURCHID}</td>
+                          <td>{data?.CLASSIFICATION}</td>
+                          <td>{data?.SERIALNUM}</td>
+                          <td>{data?.RCVDCONFIGID}</td>
+                          <td>{data?.RCVD_DATE}</td>
+                          <td>{data?.GTIN}</td>
+                          <td>{data?.RZONE}</td>
+                          <td>{data?.PALLET_DATE}</td>
+                          <td>{data?.PALLETCODE}</td>
+                          <td>{data?.BIN}</td>
+                          <td>{data?.REMARKS}</td>
+                          <td>{data?.POQTY}</td>
+                          <td>{data?.RCVQTY}</td>
+                          <td>{data?.REMAININGQTY}</td>
+                          <td>{data?.USERID?.trim()}</td>
+                          <td>{data?.TRXDATETIME}</td>
                         </tr>
                       ))}
 

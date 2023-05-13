@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
@@ -15,7 +15,7 @@ const BinToBinJournalID = () => {
 
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('allJournalRows')) || []);
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -39,6 +39,7 @@ const BinToBinJournalID = () => {
         console.log(response?.data);
 
         setData(response?.data ?? []);
+        sessionStorage.setItem('allJournalRows', JSON.stringify(response?.data ?? []));
         setIsLoading(false)
         setMessage(response?.data?.message ?? 'Show All data');
 
@@ -203,16 +204,8 @@ const BinToBinJournalID = () => {
               </div>
             </div>
 
-            <form onSubmit={handleBinLocation}>
-              {/* <div className="mb-6">
-                <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-                <input
-                  id="enterscan"
-                  className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Enter/Scan Location"
-                  onChange={(e) => setBinLocation(e.target.value)}
-                />
-              </div > */}
+            <form >
+              
 
               <div className='mt-6'>
                 <div className='w-full flex justify-between place-items-end'>

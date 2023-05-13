@@ -3275,6 +3275,58 @@ const WBSDB = {
     }
   },
 
+  // Controller 1 - Update bin location based on Serial Number
+  async updateMappedBarcodesBinLocationBySerialNo(req, res, next) {
+    try {
+      const { oldBinLocation, newBinLocation, serialNumber } = req.body;
+
+      // Your validation logic here
+
+      let request = pool2.request();
+      request.input('oldBinLocation', sql.NVarChar, oldBinLocation);
+      request.input('newBinLocation', sql.NVarChar, newBinLocation);
+      request.input('serialNumber', sql.NVarChar, serialNumber);
+
+      // Update bin location
+      await request.query(`
+          UPDATE dbo.tblMappedBarcodes
+          SET BinLocation = @newBinLocation
+          WHERE BinLocation = @oldBinLocation AND ItemSerialNo = @serialNumber
+      `);
+
+      res.status(200).send({ message: 'Bin location updated successfully.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  // Controller 2 - Update bin location based on Pallet Code
+  async updateMappedBarcodesBinLocationByPalletCode(req, res, next) {
+    try {
+      const { oldBinLocation, newBinLocation, palletCode } = req.body;
+
+      // Your validation logic here
+
+      let request = pool2.request();
+      request.input('oldBinLocation', sql.NVarChar, oldBinLocation);
+      request.input('newBinLocation', sql.NVarChar, newBinLocation);
+      request.input('palletCode', sql.NVarChar, palletCode);
+
+      // Update bin location
+      await request.query(`
+          UPDATE dbo.tblMappedBarcodes
+          SET BinLocation = @newBinLocation
+          WHERE BinLocation = @oldBinLocation AND PalletCode = @palletCode
+      `);
+
+      res.status(200).send({ message: 'Bin location updated successfully.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: error.message });
+    }
+  }
+  ,
   async getItemInfoByPalletCode(req, res, next) {
     try {
       const PalletCode = req.headers['palletcode']; // Get ItemSerialNo from headers

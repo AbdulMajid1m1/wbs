@@ -21,6 +21,13 @@ const TransferID = () => {
 
   };
 
+  const [fromSelected, setFromSelected] = useState(false);
+
+  const handleFromSelect = (event) => {
+    setFromSelected(true);
+  }
+
+
   // retrieve data from session storage
   const storedData = sessionStorage.getItem('transferData');
   const parsedData = JSON.parse(storedData);
@@ -199,6 +206,7 @@ const TransferID = () => {
                   <span className='text-white'>FROM:</span>
                     <select className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                       block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      onChange={handleFromSelect}
                     >
                       <option>123</option>
                       <option>123</option>
@@ -208,7 +216,7 @@ const TransferID = () => {
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
+              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
                   <span>{parsedData.ITEMID}</span>
@@ -240,37 +248,37 @@ const TransferID = () => {
                 </div>
               </div>
 
-
-              <div class="text-center">
-                <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                  flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                >
-                  <label className="inline-flex items-center mt-1">
-                    <input
-                      type="radio"
-                      name="selectionType"
-                      value="pallet"
-                      checked={selectionType === 'Pallet'}
-                      onChange={e => setSelectionType(e.target.value)}
-                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    />
-                    <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                  </label>
-                  <label className="inline-flex items-center mt-1">
-                    <input
-                      type="radio"
-                      name="selectionType"
-                      value="Serial"
-                      checked={selectionType === 'Serial'}
-                      onChange={e => setSelectionType(e.target.value)}
-                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    />
-                    <span className="ml-2 text-[#00006A]">BY SERIAL</span>
-                  </label>
+              {fromSelected &&
+                <div class="text-center">
+                  <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                    flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                  >
+                    <label className="inline-flex items-center mt-1">
+                      <input
+                        type="radio"
+                        name="selectionType"
+                        value="pallet"
+                        checked={selectionType === 'Pallet'}
+                        onChange={e => setSelectionType(e.target.value)}
+                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                      />
+                      <span className="ml-2 text-[#00006A]">BY PALLETE</span>
+                    </label>
+                    <label className="inline-flex items-center mt-1">
+                      <input
+                        type="radio"
+                        name="selectionType"
+                        value="Serial"
+                        checked={selectionType === 'Serial'}
+                        onChange={e => setSelectionType(e.target.value)}
+                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                      />
+                      <span className="ml-2 text-[#00006A]">BY SERIAL</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-
-            </div>
+              }
+            </div>  
 
             <form
             //   onSubmit={handleFormSubmit}

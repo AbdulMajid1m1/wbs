@@ -221,7 +221,7 @@ const TransferID = () => {
 
                     
                     <div className='text-[#FFFFFF]'>
-                      <span>Group ID  {12345}</span>
+                      <span>GROUPID {parsedData.GROUPID}</span>
                     </div>
                 </div>
               </div>

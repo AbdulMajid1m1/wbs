@@ -26,6 +26,7 @@ const BinToBinInternal = () => {
   };
   const [selectionType, setSelectionType] = useState('Pallet');
   const [userInput, setUserInput] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
 
   const handleChangeValue = (e) => {
@@ -55,29 +56,100 @@ const BinToBinInternal = () => {
   }
 
 
+   // define the function to filter data based on user input and selection type
+   const filterData = () => {
+    const filtered = data.filter((item) => {
+      if (selectionType === 'Pallet') {
+        return item.PalletCode === userInput;
+      } else if (selectionType === 'Serial') {
+        return item.ItemSerialNo === userInput;
+      } else {
+        return true;
+      }
+    });
+    setFilteredData(filtered); // update the filtered data state variable
+  };
+
+  // use useEffect to trigger the filtering of data whenever the user input changes
+  useEffect(() => {
+    filterData();
+  }, [userInput]);
+
+
 
   const handleBinLocation = (e) => {
     e.preventDefault();
-    console.log(data[0].BinLocation)
-    console.log(binlocation)
+    // console.log(data[0].BinLocation)
+    // console.log(binlocation)
 
-    userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
-      headers: {
-        'oldbinlocation': data[0].BinLocation,
-        'newbinlocation': binlocation
-      }
-    })
-    .then((response) => {
-      console.log(response);
-      setMessage(response?.data?.message);
-      // alert('done')
-    })
-    .catch((error) => {
-      console.log(error);
-      setError(error.response?.data?.message);
-      // alert(error)
-    });
+    // userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
+    //   headers: {
+    //     'oldbinlocation': data[0].BinLocation,
+    //     'newbinlocation': binlocation
+    //   }
+    // })
+    // .then((response) => {
+    //   console.log(response);
+    //   setMessage(response?.data?.message);
+    //   // alert('done')
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    //   setError(error.response?.data?.message);
+    //   // alert(error)
+    // });
+
+
+    
+    if (selectionType === 'Pallet') {
+
+      userRequest.put('/updateMappedBarcodesBinLocationByPalletCode', {
+        "oldBinLocation": data[0].BinLocation,
+        "newBinLocation": binlocation,
+        "serialNumber": selectionType
+      })
+        .then(response => {
+          console.log(response?.data)
+          // Append the new data to the existing data
+          setFilteredData(response?.data ?? [])
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+        })
+    }
+    else if (selectionType === 'Serial') {
+    
+      userRequest.put('/updateMappedBarcodesBinLocationBySerialNo',{
+        "oldBinLocation": data[0].BinLocation,
+        "newBinLocation": binlocation,
+        "serialNumber": selectionType
+      })
+        .then(response => {
+          console.log(response?.data)
+          
+          setFilteredData(response?.data)
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+        })
+    }
+
+    else {
+      return;
+    }
+
 }
+
+
+
+const handleInputUser = (e) => {
+  setUserInput(e.target.value)
+}
+
 
 
   return (
@@ -252,14 +324,15 @@ const BinToBinInternal = () => {
                 </div>
 
             <div className="mb-6">
-              <label htmlFor='scanpallet' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}:<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='scanpallet' className="sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}:<span className='text-[#FF0404]'>*</span></label>
               
               <input
                 id="scanpallet"
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                    placeholder={`Scan ${selectionType}`}
-                     value={userInput}
-                      onChange={(e) => setUserInput(e.target.value)}
+                    //  value={userInput}
+                      onBlur={handleInputUser}
+
               />
 
                  {/* // creae excel like Tables  */}
@@ -287,7 +360,16 @@ const BinToBinInternal = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.filter((item) => item.PalletCode === userInput).map((item, index) => (
+                    {/*  {data.filter((item) => item.PalletCode === userInput) */}
+                    {/* {data.filter((item) => {
+                        if (selectionType === 'Pallet') {
+                          return item.PalletCode === userInput;
+                        } else if (selectionType === 'Serial') {
+                          return item.ItemSerialNo === userInput;
+                        } else {
+                          return true;
+                        }
+                      }).map((item, index) => (
                         <tr key={index}>
                           <td>{item.ItemCode}</td>
                           <td>{item.ItemDesc}</td>
@@ -307,8 +389,28 @@ const BinToBinInternal = () => {
                           <td>{item.PO}</td>
                           <td>{item.Trans}</td>
                         </tr>
-                      ))}
-
+                      ))} */}
+                       {filteredData.map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.ItemCode}</td>
+                            <td>{item.ItemDesc}</td>
+                            <td>{item.GTIN}</td>
+                            <td>{item.Remarks}</td>
+                            <td>{item.User}</td>
+                            <td>{item.Classification}</td>
+                            <td>{item.MainLocation}</td>
+                            <td>{item.BinLocation}</td>
+                            <td>{item.IntCode}</td>
+                            <td>{item.ItemSerialNo}</td>
+                            <td>{item.MapDate}</td>
+                            <td>{item.PalletCode}</td>
+                            <td>{item.Reference}</td>
+                            <td>{item.SID}</td>
+                            <td>{item.CID}</td>
+                            <td>{item.PO}</td>
+                            <td>{item.Trans}</td>
+                          </tr>
+                        ))}
                   </tbody>
                 </table>
               </div>

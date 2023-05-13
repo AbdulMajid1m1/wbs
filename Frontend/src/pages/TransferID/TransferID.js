@@ -4,6 +4,7 @@ import "./TransferID.css";
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { Autocomplete, TextField } from '@mui/material';
 
 const TransferID = () => {
   const navigate = useNavigate();
@@ -170,6 +171,18 @@ const TransferID = () => {
   }
 
 
+  const [dataList, setDataList] = useState([]);
+  useEffect(() => {
+    userRequest.get('/getAllTblRZones')
+      .then(response => {
+        console.log(response?.data);
+        setDataList(response?.data ?? []);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+  }, []);
 
 
 
@@ -202,17 +215,57 @@ const TransferID = () => {
                   disabled
                 />
 
-                <div className='flex gap-2 justify-center items-center'>
+                <div className='flex gap-2 justify-start items-center'>
                   <span className='text-white'>FROM:</span>
-                    <select className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
-                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                      onChange={handleFromSelect}
-                    >
-                      <option>123</option>
-                      <option>123</option>
-                      <option>123</option>
-                      <option>123</option>
-                    </select>
+                <div className='w-full'>
+                <Autocomplete
+                  id="zone"
+                  options={dataList}
+                  getOptionLabel={(option) => option.RZONE}
+                  onChange={handleFromSelect}
+                  
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+                  
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+                      
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="FROM"
+                      required
+                      />
+                      )}
+                      classes={{
+                        endAdornment: "text-white",
+                      }}
+                      sx={{
+                        '& .MuiAutocomplete-endAdornment': {
+                          color: 'white',
+                        },
+                      }}
+                      />
+
+                      </div>
                 </div>
               </div>
 

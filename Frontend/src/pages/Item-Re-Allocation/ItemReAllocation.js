@@ -21,6 +21,7 @@ const ItemReAllocation = () => {
   // const [selectedOption, setSelectedOption] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [availablePallet, setAvailablePallet] = useState('');
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -51,7 +52,8 @@ const ItemReAllocation = () => {
 
         setData(response?.data ?? []);
         setIsLoading(false)
-        setMessage(response?.data?.message ?? 'Data Displayed');
+        setAvailablePallet(transferTag)
+
       })
 
       .catch(error => {
@@ -69,19 +71,27 @@ const ItemReAllocation = () => {
 
   const handleBinLocation = (e) => {
     e.preventDefault();
-    const dataForAPI = data.map(row => {
-      // Return a new object for each row of the table
-      return {
-        ...row, // Spread the fields from the current row of the table
-        serialnum: serialnum,
-        selectionType: selectionType,
+    // const dataForAPI = data.map(row => {
+    //   // Return a new object for each row of the table
+    //   return {
+    //     ...row, // Spread the fields from the current row of the table
+    //     serialnum: serialnum,
+    //     selectionType: selectionType,
 
 
-      };
+    //   };
+
+    const dataForAPI = {
+      availablePallet: availablePallet,
+      serialnum: serialnum,
+      selectionType: selectionType,
+    }
+
+    
 
 
 
-    });
+
     console.log(dataForAPI);
     userRequest.post('/manageItemsReallocation', dataForAPI)
       .then((response) => {

@@ -81,30 +81,32 @@ const ItemReAllocation = () => {
 
     //   };
 
-    const dataForAPI = {
+
+    userRequest.post('/manageItemsReallocation', {
       availablePallet: availablePallet,
-      serialnum: serialnum,
+      serialNumber: serialnum,  // change this from serialnum to serialNumber
       selectionType: selectionType,
-    }
-
-    
-
-
-
-
-    console.log(dataForAPI);
-    userRequest.post('/manageItemsReallocation', dataForAPI)
+    })
       .then((response) => {
         console.log(response);
-
         setMessage(response?.data?.message ?? 'Data Saved Successfully');
-        // alert('done')
+        // append the updated data to the table
+        // if  slecetion type is allocation then append the data to the table otherwise remove the data from the table
+        if (selectionType === 'allocation') {
+          setData([...data, response?.data?.updatedRecord]);
+        } else {
+          setData(data.filter((row) => row.ItemSerialNo !== serialnum));
+        }
+
+        setSerialNum('');
+
+
       })
       .catch((error) => {
         console.log(error);
         setError(error.response?.data?.message ?? 'Error Occured');
-        //  alert(error)
       });
+
   };
 
 
@@ -265,6 +267,7 @@ const ItemReAllocation = () => {
                   className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Enter/Scan Serial"
                   onChange={(e) => setSerialNum(e.target.value)}
+                  value={serialnum}
                 />
               </div >
 

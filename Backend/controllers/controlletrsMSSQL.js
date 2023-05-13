@@ -3903,6 +3903,7 @@ const WBSDB = {
 
       const request = pool2.request();
       request.input('serialNumber', sql.NVarChar(255), serialNumber);
+      request.input('availablePallet', sql.NVarChar(255), availablePallet); // Declare availablePallet
 
       let result;
 
@@ -3924,7 +3925,7 @@ const WBSDB = {
         return res.status(200).send({ message: 'Allocation updated successfully.', updatedRecord: result.recordset[0] });
       }
 
-      if (selectionType.toLowerCase() === 'serial') {
+      if (selectionType.toLowerCase() === 'picking') {
         // Check if the serial number exists in the mapped barcodes table
         result = await request.query(`SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialNumber`);
 

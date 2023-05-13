@@ -4,6 +4,7 @@ import "./TransferID.css";
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { Autocomplete, TextField } from '@mui/material';
 
 const TransferID = () => {
   const navigate = useNavigate();
@@ -133,7 +134,7 @@ const TransferID = () => {
       // Return a new object for each row of the table
       return {
         ...row, // Spread the fields from the current row of the table
-        BIN: locationInputValue, // Replace the Bin value with the value from locationInputValue state
+        BIN: locationInputValue,
         ...parsedData, // Spread the fields from parsedData
         SELECTTYPE: selectionType // Add the SELECTTYPE field
       };
@@ -184,6 +185,7 @@ const TransferID = () => {
 
 
 
+
   return (
     <>
 
@@ -211,9 +213,9 @@ const TransferID = () => {
                   disabled
                 />
 
-                <div className='flex gap-2 justify-center items-center'>
+                <div className='flex gap-2 justify-start items-center'>
                   <span className='text-white'>FROM:</span>
-                  <select
+                  {/* <select
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                       block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
                     onChange={handleFromSelect}
@@ -225,7 +227,56 @@ const TransferID = () => {
                       .map((item, index) => {
                         return <option key={index} value={item.BinLocation}>{item.BinLocation}</option>
                       })}
-                  </select>
+                  </select> */}
+                  <div className='w-full'>
+                    <Autocomplete
+                      id="zone"
+                      options={location.filter(item => item.BinLocation)}
+                      getOptionLabel={(option) => option.BinLocation}
+                      onChange={handleFromSelect}
+
+                      // onChange={(event, value) => {
+                      //   if (value) {
+                      //     console.log(`Selected: ${value}`);
+
+                      //   }
+                      // }}
+                      onInputChange={(event, value) => {
+                        if (!value) {
+                          // perform operation when input is cleared
+                          console.log("Input cleared");
+
+                        }
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          InputProps={{
+                            ...params.InputProps,
+                            className: "text-white",
+                          }}
+                          InputLabelProps={{
+                            ...params.InputLabelProps,
+                            style: { color: "white" },
+                          }}
+
+                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                          placeholder="FROM"
+                          required
+                        />
+                      )}
+                      classes={{
+                        endAdornment: "text-white",
+                      }}
+                      sx={{
+                        '& .MuiAutocomplete-endAdornment': {
+                          color: 'white',
+                        },
+                      }}
+                    />
+
+                  </div>
                 </div>
               </div>
 

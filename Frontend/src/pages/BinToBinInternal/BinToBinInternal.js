@@ -80,6 +80,13 @@ const BinToBinInternal = () => {
 }
 
 
+
+const handleInputUser = (e) => {
+  setUserInput(e.target.value)
+}
+
+
+
   return (
     <>
     
@@ -258,8 +265,8 @@ const BinToBinInternal = () => {
                 id="scanpallet"
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                    placeholder={`Scan ${selectionType}`}
-                     value={userInput}
-                      onChange={(e) => setUserInput(e.target.value)}
+                    //  value={userInput}
+                      onBlur={handleInputUser}
               />
 
                  {/* // creae excel like Tables  */}
@@ -287,7 +294,16 @@ const BinToBinInternal = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.filter((item) => item.PalletCode === userInput).map((item, index) => (
+                    {/*  {data.filter((item) => item.PalletCode === userInput) */}
+                    {data.filter((item) => {
+                        if (selectionType === 'Pallet') {
+                          return item.PalletCode === userInput;
+                        } else if (selectionType === 'Serial') {
+                          return item.ItemSerialNo === userInput;
+                        } else {
+                          return true;
+                        }
+                      }).map((item, index) => (
                         <tr key={index}>
                           <td>{item.ItemCode}</td>
                           <td>{item.ItemDesc}</td>

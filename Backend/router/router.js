@@ -106,6 +106,12 @@ router.get("/getShipmentRecievedCLDataCBySerialNumber", checkAuthentication, WBS
 
 router.post("/getShipmentRecievedCLDataByPalletCode", checkAuthentication, WBSDB.getShipmentRecievedCLDataByPalletCode)
 
+router.get("/getShipmentRecievedCLDataByPalletCodeAndBinLocation", checkAuthentication, WBSDB.getShipmentRecievedCLDataByPalletCodeAndBinLocation)
+
+router.get("/getShipmentRecievedCLDataBySerialNumberAndBinLocation", checkAuthentication, WBSDB.getShipmentRecievedCLDataBySerialNumberAndBinLocation)
+
+
+
 router.post("/insertShipmentRecievedDataCL", checkAuthentication, WBSDB.insertShipmentRecievedDataCL);
 
 router.delete("/deleteShipmentRecievedDataCL", checkAuthentication, WBSDB.deleteShipmentRecievedDataCL);
@@ -293,7 +299,6 @@ router.get("/getTransferJournalCLByJournalId", checkAuthentication, WBSDB.getTra
 
 router.put("/updateTblItemMaster", checkAuthentication, WBSDB.updateTblItemMaster);
 
-router.put("/updateQtyReceivedInTblItemMaster", checkAuthentication, WBSDB.updateQtyReceivedInTblItemMaster);
 
 
 
@@ -308,5 +313,8 @@ router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsRe
 // ------- tbl_Stock_Master APIS Start --------
 
 router.get("/getStockMasterDataByItemId", checkAuthentication, WBSDB.getStockMasterDataByItemId);
+
+router.put("/updateQtyReceivedInTblStockMaster", checkAuthentication, WBSDB.updateQtyReceivedInTblStockMaster);
+
 
 export default router;

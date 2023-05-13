@@ -21,6 +21,13 @@ const TransferID = () => {
 
   };
 
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleFromSelect = (event) => {
+    setSelectedOption(event.target.value);
+  }
+
+
   // retrieve data from session storage
   const storedData = sessionStorage.getItem('transferData');
   const parsedData = JSON.parse(storedData);
@@ -37,7 +44,9 @@ const TransferID = () => {
             }
           })
         console.log(res?.data)
-        setLocation(res?.data[0]?.BinLocation ?? "")
+        setLocation(res?.data)
+
+
       }
       catch (error) {
         console.log(error)
@@ -53,6 +62,12 @@ const TransferID = () => {
 
   const handleScan = (e) => {
     e.preventDefault();
+    // check if selectedOption is empty
+    if (!selectedOption) {
+      setError("Please select an option for Bin/Location");
+      return;
+    }
+
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
       const isAlreadyInTable = tableData.some(item => item?.PALLETCODE === scanInputValue);
@@ -64,8 +79,8 @@ const TransferID = () => {
 
 
 
-      userRequest.post(`/getShipmentRecievedCLDataByPalletCode?PalletCode=${scanInputValue}`
-      )
+      userRequest.get(`/getShipmentRecievedCLDataByPalletCodeAndBinLocation?palletCode=${scanInputValue}&binLocation=${selectedOption}`)
+
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
@@ -86,7 +101,8 @@ const TransferID = () => {
         setError('This serial is already in the table');
         return;
       }
-      userRequest.get(`/getShipmentRecievedCLDataCBySerialNumber?SERIALNUM=${scanInputValue}`)
+      // userRequest.get(`/getShipmentRecievedCLDataCBySerialNumber?SERIALNUM=${scanInputValue}`)
+      userRequest.get(`/getShipmentRecievedCLDataBySerialNumberAndBinLocation?SERIALNUM=${scanInputValue}&binLocation=${selectedOption}`)
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
@@ -132,7 +148,7 @@ const TransferID = () => {
         // clear the table
 
         // call the update api to 
-        userRequest.put("/updateQtyReceivedInTblItemMaster", {
+        userRequest.put("/updateQtyReceivedInTblStockMaster", {
           itemid: parsedData?.ITEMID,
           qty: dataForAPI.length
         })
@@ -197,32 +213,37 @@ const TransferID = () => {
 
                 <div className='flex gap-2 justify-center items-center'>
                   <span className='text-white'>FROM:</span>
-                    <select className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
+                  <select
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                       block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                    >
-                      <option>123</option>
-                      <option>123</option>
-                      <option>123</option>
-                      <option>123</option>
-                    </select>
+                    onChange={handleFromSelect}
+                    defaultValue=""
+                  >
+                    <option value="" disabled hidden>Select an option</option>
+                    {location
+                      .filter(item => item.BinLocation) // this will filter out items where BinLocation is null, undefined or an empty string
+                      .map((item, index) => {
+                        return <option key={index} value={item.BinLocation}>{item.BinLocation}</option>
+                      })}
+                  </select>
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
+              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
                   <span>{parsedData?.ITEMID}</span>
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    <div className='text-[#FFFFFF]'>
-                      <span>CLASS {parsedData?.INVENTLOCATIONIDFROM}</span>
-                    </div>
+                  <div className='text-[#FFFFFF]'>
+                    <span>CLASS {parsedData?.INVENTLOCATIONIDFROM}</span>
+                  </div>
 
-                    
-                    <div className='text-[#FFFFFF]'>
-                      <span>Group ID  {12345}</span>
-                    </div>
+
+                  <div className='text-[#FFFFFF]'>
+                    <span>GROUPID {parsedData.GROUPID}</span>
+                  </div>
                 </div>
               </div>
 
@@ -240,36 +261,36 @@ const TransferID = () => {
                 </div>
               </div>
 
-
-              <div class="text-center">
-                <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                  flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                >
-                  <label className="inline-flex items-center mt-1">
-                    <input
-                      type="radio"
-                      name="selectionType"
-                      value="Pallet"
-                      checked={selectionType === 'Pallet'}
-                      onChange={e => setSelectionType(e.target.value)}
-                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    />
-                    <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                  </label>
-                  <label className="inline-flex items-center mt-1">
-                    <input
-                      type="radio"
-                      name="selectionType"
-                      value="Serial"
-                      checked={selectionType === 'Serial'}
-                      onChange={e => setSelectionType(e.target.value)}
-                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    />
-                    <span className="ml-2 text-[#00006A]">BY SERIAL</span>
-                  </label>
+              {selectedOption !== "" &&
+                <div class="text-center">
+                  <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                    flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                  >
+                    <label className="inline-flex items-center mt-1">
+                      <input
+                        type="radio"
+                        name="selectionType"
+                        value="pallet"
+                        checked={selectionType === 'Pallet'}
+                        onChange={e => setSelectionType(e.target.value)}
+                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                      />
+                      <span className="ml-2 text-[#00006A]">BY PALLETE</span>
+                    </label>
+                    <label className="inline-flex items-center mt-1">
+                      <input
+                        type="radio"
+                        name="selectionType"
+                        value="Serial"
+                        checked={selectionType === 'Serial'}
+                        onChange={e => setSelectionType(e.target.value)}
+                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                      />
+                      <span className="ml-2 text-[#00006A]">BY SERIAL</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-
+              }
             </div>
 
             <form

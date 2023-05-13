@@ -1206,6 +1206,62 @@ const WBSDB = {
     }
   },
 
+  async getShipmentRecievedCLDataBySerialNumberAndBinLocation(req, res, next) {
+    try {
+      const { serialNumber, binLocation } = req.query;
+
+      if (!serialNumber || !binLocation) {
+        return res.status(400).send({ message: "SERIALNUM and bin location are required." });
+      }
+
+      const query = `
+        SELECT * FROM dbo.tbl_Shipment_Received_CL
+        WHERE SERIALNUM = @SERIALNUM AND BIN = @BinLocation
+      `;
+      let request = pool2.request();
+      request.input('SERIALNUM', sql.NVarChar(100), serialNumber);
+      request.input('BinLocation', sql.NVarChar(255), binLocation);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "Data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async getShipmentRecievedCLDataByPalletCodeAndBinLocation(req, res, next) {
+    try {
+      const { palletCode, binLocation } = req.query;
+
+      if (!palletCode || !binLocation) {
+        return res.status(400).send({ message: "PalletCode and bin location are required." });
+      }
+
+      const query = `
+        SELECT * FROM dbo.tbl_Shipment_Received_CL
+        WHERE PalletCode = @PalletCode AND BIN = @BinLocation
+      `;
+      let request = pool2.request();
+      request.input('PalletCode', sql.NVarChar(255), palletCode);
+      request.input('BinLocation', sql.NVarChar(255), binLocation);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "Data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
   async deleteShipmentRecievedDataCL(req, res, next) {
     try {
       const { SERIALNUM } = req.query;
@@ -3581,7 +3637,42 @@ const WBSDB = {
     }
   },
 
-  async updateQtyReceivedInTblItemMaster(req, res, next) {
+  // async updateQtyReceivedInTblItemMaster(req, res, next) {
+  //   try {
+  //     const { itemid, qty } = req.body;
+
+  //     if (!itemid) {
+  //       return res.status(400).send({ message: 'ITEMID is required.' });
+  //     }
+  //     if (qty === undefined) {
+  //       return res.status(400).send({ message: 'qty is required.' });
+  //     }
+
+  //     const query = `
+  //       UPDATE dbo.[tbl_Item_Master]
+  //       SET QTYRECEIVED = QTYRECEIVED + @qty
+  //       OUTPUT INSERTED.*
+  //       WHERE ITEMID = @itemid
+  //     `;
+
+  //     const request = pool2.request();
+  //     request.input('itemid', sql.NVarChar(255), itemid);
+  //     request.input('qty', sql.Numeric(18, 0), qty);
+
+  //     const result = await request.query(query);
+
+  //     if (result.rowsAffected[0] === 0) {
+  //       return res.status(404).send({ message: 'Data not found.' });
+  //     }
+
+  //     res.status(200).send({ message: 'Data updated successfully.', data: result.recordset[0] });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // },
+
+  async updateQtyReceivedInTblStockMaster(req, res, next) {
     try {
       const { itemid, qty } = req.body;
 
@@ -3593,8 +3684,8 @@ const WBSDB = {
       }
 
       const query = `
-        UPDATE dbo.[tbl_Item_Master]
-        SET QTYRECEIVED = QTYRECEIVED + @qty
+        UPDATE dbo.[tbl_Stock_Master]
+        SET STOCKQTY = STOCKQTY + @qty
         OUTPUT INSERTED.*
         WHERE ITEMID = @itemid
       `;
@@ -3615,8 +3706,6 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-
-
 
 
 

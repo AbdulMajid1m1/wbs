@@ -321,7 +321,7 @@ const TransferID = () => {
                       <input
                         type="radio"
                         name="selectionType"
-                        value="pallet"
+                        value="Pallet"
                         checked={selectionType === 'Pallet'}
                         onChange={e => setSelectionType(e.target.value)}
                         className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"

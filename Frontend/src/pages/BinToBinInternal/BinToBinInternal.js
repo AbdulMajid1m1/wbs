@@ -287,27 +287,6 @@ const BinToBinInternal = () => {
                     </tr>
                   </thead>
                   <tbody>
-                  {/* {data.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.ItemCode}</td>
-                        <td>{item.ItemDesc}</td>
-                        <td>{item.GTIN}</td>
-                        <td>{item.Remarks}</td>
-                        <td>{item.User}</td>
-                        <td>{item.Classification}</td>
-                        <td>{item.MainLocation}</td>
-                        <td>{item.BinLocation}</td>
-                        <td>{item.IntCode}</td>
-                        <td>{item.ItemSerialNo}</td>
-                        <td>{item.MapDate}</td>
-                        <td>{item.PalletCode}</td>
-                        <td>{item.Reference}</td>
-                        <td>{item.SID}</td>
-                        <td>{item.CID}</td>
-                        <td>{item.PO}</td>
-                        <td>{item.Trans}</td>
-                      </tr>
-                    ))} */}
                     {data.filter((item) => item.PalletCode === userInput).map((item, index) => (
                         <tr key={index}>
                           <td>{item.ItemCode}</td>

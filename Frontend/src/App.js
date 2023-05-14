@@ -57,6 +57,8 @@ import TransferID from './pages/TransferID/TransferID'
 import TransferIDPage from './pages/TransferID/TransferIDPage1'
 import ItemReAllocation from './pages/Item-Re-Allocation/ItemReAllocation'
 import BinToBinJournalSaveScreen from './pages/BinToBinJournalID/BinToBinJournalSaveScreen'
+import ReallocationPicked from './pages/RealloactionPicked/ReallocationPicked'
+import BinToBinCL from './pages/BinToBinCL/BinToBinCL'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -147,6 +149,8 @@ const App = () => {
                 <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data" />} />
 
                 <Route path='/kpireceiving' element={<KPIDashboardReceiving />}/>
+                <Route path='/reallocation' element={<ReallocationPicked />}/>
+                <Route path='/bintobincl' element={<BinToBinCL />}/>
               </Routes>
             </MainLayout>
           } />

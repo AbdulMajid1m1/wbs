@@ -1136,3 +1136,276 @@ export const PalletizingByTransferIdColumn = [
 ]
 
 
+
+export const SideBarTableColumn = [
+  {
+    field: "ItemCode",
+    headerName: "ITEM CODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "ITEM DESCRIPTION",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+  {
+    field: "Remarks",
+    headerName: "REMARKS",
+    width: 180,
+
+  },
+  {
+    field: "User",
+    headerName: "USER",
+    width: 180,
+
+  },
+  {
+    field: "Classification",
+    headerName: "CLASSIFICATION",
+    width: 180,
+
+  },
+  {
+    field: "MainLocation",
+    headerName: "MAIN LOCATION",
+    width: 180,
+
+  },
+  {
+    field: "BinLocation",
+    headerName: "BIN LOCATION",
+    width: 180,
+
+  },
+  {
+    field: "IntCode",
+    headerName: "INT CODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemSerialNo",
+    headerName: "ITEM SERIAL NO",
+    width: 180,
+
+  },
+  {
+    field: "MapDate",
+    headerName: "MAP DATE",
+    width: 180,
+
+  },
+  {
+    field: "PalletCode",
+    headerName: "PALLET CODE",
+    width: 180,
+
+  },
+  {
+    field: "Reference",
+    headerName: "REFERENCE",
+    width: 180,
+
+  },
+  {
+    field: "SID",
+    headerName: "SID",
+    width: 180,
+
+  },
+  {
+    field: "CID",
+    headerName: "MAP DATE",
+    width: 180,
+
+  },
+  {
+    field: "PO",
+    headerName: "MAP DATE",
+    width: 180,
+
+  },
+  {
+    field: "Trans",
+    headerName: "TRANS",
+    width: 180,
+
+  },
+
+
+
+]
+
+
+
+export const BinToBinCLColumn = [
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "TRANSFERID",
+    headerName: "TRANSFER ID",
+    width: 180,
+
+  },
+  {
+    field: "TRANSFERSTATUS",
+    headerName: "TRANSFER STATUS",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONIDFROM",
+    headerName: "INVENT LOCATION ID FROM",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONIDTO",
+    headerName: "INVENT LOCATION ID TO",
+    width: 180,
+
+  },
+  {
+    field: "QTYTRANSFER",
+    headerName: "QTY TRANSFER",
+    width: 180,
+
+  },
+  {
+    field: "QTYRECEIVED",
+    headerName: "QTY RECEIVED",
+    width: 180,
+
+  },
+  {
+    field: "CREATEDDATETIME",
+    headerName: "CREATED DATE TIME",
+    width: 180,
+
+  },
+  {
+    field: "ItemCode",
+    headerName: "Item Code",
+    width: 180,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "Item Desc",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+  {
+    field: "Remarks",
+    headerName: "Remarks",
+    width: 180,
+
+  },
+  {
+    field: "User",
+    headerName: "User",
+    width: 180,
+
+  },
+  {
+    field: "Classification",
+    headerName: "CLASSIFICATION",
+    width: 180,
+
+  },
+  {
+    field: "MainLocation",
+    headerName: "MAIN LOCATION",
+    width: 180,
+
+  },
+  {
+    field: "BinLocation",
+    headerName: "BIN LOCATION",
+    width: 180,
+
+  },
+  {
+    field: "IntCode",
+    headerName: "INT CODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemSerialNo",
+    headerName: "ITEM SERIAL NO",
+    width: 180,
+
+  },
+  {
+    field: "MapDate",
+    headerName: "MAP DATE",
+    width: 180,
+
+  },
+  {
+    field: "PalletCode",
+    headerName: "PALLET CODE",
+    width: 180,
+
+  },
+  {
+    field: "Reference",
+    headerName: "REFERENCE",
+    width: 180,
+
+  },
+  {
+    field: "SID",
+    headerName: "SID",
+    width: 180,
+
+  },
+  {
+    field: "CID",
+    headerName: "CID",
+    width: 180,
+
+  },
+  {
+    field: "PO",
+    headerName: "PO",
+    width: 180,
+
+  },
+  {
+    field: "Trans",
+    headerName: "TRANS",
+    width: 180,
+
+  },
+  {
+    field: "SELECTTYPE",
+    headerName: "SELECT TYPE",
+    width: 180,
+
+  },
+
+
+
+]
+

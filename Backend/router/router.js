@@ -225,6 +225,10 @@ router.post("/getItemInfoByItemSerialNo", checkAuthentication, WBSDB.getItemInfo
 
 router.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByItemSerialNoAndBinLocation);
 
+router.put("/updateMappedBarcodesBinLocationBySerialNo", checkAuthentication, WBSDB.updateMappedBarcodesBinLocationBySerialNo);
+
+router.put("/updateMappedBarcodesBinLocationByPalletCode", checkAuthentication, WBSDB.updateMappedBarcodesBinLocationByPalletCode);
+
 router.post("/getItemInfoByPalletCode", checkAuthentication, WBSDB.getItemInfoByPalletCode);
 
 router.post("/getMappedBarcodedsByPalletCodeAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByPalletCodeAndBinLocation);

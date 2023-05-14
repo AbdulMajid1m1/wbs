@@ -387,7 +387,7 @@ const BinToBinInternal = () => {
               </div >
 
               <div className='mt-6'>
-                <div className='w-full flex justify-center place-items-end'>
+                <div className='w-full flex justify-between place-items-end'>
                   <div>
                     <button
                       type='submit'

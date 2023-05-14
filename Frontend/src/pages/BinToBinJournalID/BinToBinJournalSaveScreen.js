@@ -58,9 +58,11 @@ const BinToBinJournalSaveScreen = () => {
     }
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
-      const isAlreadyInTable = tableData.some(item => item.PALLETCODE === scanInputValue);
+      const isAlreadyInTable = tableData.some(item => item.PalletCode === scanInputValue);
       if (isAlreadyInTable) {
-        setError('This pallet is already in the table');
+        setTimeout(() => {
+          setError('This pallet is already in the table');
+        }, 400);
         return;
       }
 

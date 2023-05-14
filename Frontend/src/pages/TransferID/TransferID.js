@@ -127,8 +127,12 @@ const TransferID = () => {
         })
         .catch(error => {
           console.log(error)
-          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
-
+          // setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error?.response?.data?.message ?? 'Cannot fetch location data',
+          })  
         })
     }
 

@@ -212,6 +212,17 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Palletizing</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/reallocation')}>
+                        <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>1 Realloaction Picked</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/bintobincl')}>
+                        <img src={dispatch} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>2  Bin To Bin CL</p>
+                    </div>
+
+
                     <div className='main-images-container'>
                         <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Return RMA</p>

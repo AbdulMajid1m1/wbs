@@ -443,7 +443,7 @@ const TransferID = () => {
               />
             </div >
 
-            <div className='mb-6 flex justify-center items-center'>
+            <div className='mb-6 flex justify-between items-center'>
               <button
                 type='button'
                 className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
@@ -453,6 +453,16 @@ const TransferID = () => {
                   <p>Save</p>
                 </span>
               </button>
+
+                <div className='flex justify-end items-center'>
+                  <label htmlFor='totals' className="mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                    <input
+                      id="totals"
+                      className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Totals"
+                      value={tableData.length}
+                      />
+                  </div>
             </div>
           </div>
         </div >

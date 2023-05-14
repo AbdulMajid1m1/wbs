@@ -209,7 +209,11 @@ const TransferID = () => {
       })
       .catch(error => {
         console.log(error);
-        setError(error?.response?.data?.message ?? 'Cannot insert data');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error?.response?.data?.message ?? 'Cannot insert data',
+        })
       });
   }
 

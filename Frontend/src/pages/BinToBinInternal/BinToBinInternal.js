@@ -77,6 +77,29 @@ const BinToBinInternal = () => {
   }, [userInputSubmit, selectionType]);
 
 
+  // reset function
+  const resetDataOnUPdate = () => {
+    // remove the filtered data from the data state variable
+    const newData = data.filter((item) => {
+      if (selectionType === 'Pallet') {
+        return item.PalletCode !== userInput;
+      } else if (selectionType === 'Serial') {
+        return item.ItemSerialNo !== userInput;
+      } else {
+        return true;
+      }
+    });
+    setData(newData);
+    // reset the user input state variable
+    setUserInput("");
+    // trigger the filtering of data
+    setUserInputSubmit(!userInputSubmit);
+    // reset the scan location state variable
+    setBinLocation("");
+
+
+  };
+
 
   const handleBinLocation = (e) => {
     e.preventDefault();
@@ -91,12 +114,13 @@ const BinToBinInternal = () => {
         .then(response => {
           console.log(response?.data)
           setMessage(response?.data?.message ?? 'Updated Successfully')
-          // reset the user input state variable
-          setUserInput("");
-          // trigger the filtering of data
-          setUserInputSubmit(!userInputSubmit);
 
-          
+          resetDataOnUPdate();
+
+
+
+
+
         })
         .catch(error => {
           console.log(error)
@@ -114,6 +138,7 @@ const BinToBinInternal = () => {
         .then(response => {
           console.log(response?.data)
           setMessage(response?.data?.message ?? 'Updated Successfully')
+          resetDataOnUPdate();
         })
         .catch(error => {
           console.log(error)
@@ -216,11 +241,11 @@ const BinToBinInternal = () => {
                   <label className='text-[#00006A] font-semibold'>Items On Bin<span className='text-[#FF0404]'>*</span></label>
                 </div>
 
-                <div className='flex justify-end items-center'>
+                <div className='flex justify-end items-center gap-2'>
                   <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                   <input
                     id="totals"
-                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[50%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[45%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Totals"
                     value={data.length}
                   />
@@ -382,6 +407,7 @@ const BinToBinInternal = () => {
                   id="enterscan"
                   className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Enter/Scan Location"
+                  value={binlocation}
                   onChange={(e) => setBinLocation(e.target.value)}
                 />
               </div >
@@ -400,12 +426,12 @@ const BinToBinInternal = () => {
 
                   <div>
                     <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                      <input
-                        id="totals"
-                        className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Totals"
-                        value={filteredData.length}
-                        />
+                    <input
+                      id="totals"
+                      className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Totals"
+                      value={filteredData.length}
+                    />
                   </div>
                 </div>
 

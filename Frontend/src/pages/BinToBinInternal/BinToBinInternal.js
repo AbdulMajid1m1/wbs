@@ -241,11 +241,11 @@ const BinToBinInternal = () => {
                   <label className='text-[#00006A] font-semibold'>Items On Bin<span className='text-[#FF0404]'>*</span></label>
                 </div>
 
-                <div className='flex justify-end items-center'>
+                <div className='flex justify-end items-center gap-2'>
                   <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                   <input
                     id="totals"
-                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[50%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[45%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Totals"
                     value={data.length}
                   />

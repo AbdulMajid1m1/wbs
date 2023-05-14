@@ -78,24 +78,44 @@ const TransferID = () => {
       setError("Please select an option for Bin/Location");
       return;
     }
+    
+    // Check if serial number is already in the table
+    const isSerialAlreadyInTable = tableData.some(item => item.ItemSerialNo === scanInputValue);
+
+    if (isSerialAlreadyInTable) {
+      setError('This serial is already in the table');
+      return;
+    }
+
+    // Check if pallet code is already in the table
+    const isPalletAlreadyInTable = tableData.some(item => item?.PalletCode === scanInputValue);
+
+    if (isPalletAlreadyInTable) {
+      setError('This pallet is already in the table');
+      return;
+    }
+
+
+
 
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
-      const isAlreadyInTable = tableData.some(item => item?.PALLETCODE === scanInputValue);
-      if (isAlreadyInTable) {
-        setError('This pallet is already in the table');
-        return;
-      }
 
 
 
 
-      userRequest.get(`/getShipmentRecievedCLDataByPalletCodeAndBinLocation?palletCode=${scanInputValue}&binLocation=${selectedOption}`)
-
+      // userRequest.get(`/getShipmentRecievedCLDataByPalletCodeAndBinLocation?palletCode=${scanInputValue}&binLocation=${selectedOption}`)
+      userRequest.post("/getMappedBarcodedsByPalletCodeAndBinLocation", {}, {
+        headers: {
+          palletcode: scanInputValue,
+          binlocation: selectedOption
+        }
+      })
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
           setTableData(prevData => [...prevData, ...response?.data])
+          setScanInputValue('');
 
         })
         .catch(error => {
@@ -106,18 +126,20 @@ const TransferID = () => {
     }
     else if (selectionType === 'Serial') {
       //  check if the scanned value is already in the table
-      const isAlreadyInTable = tableData.some(item => item.SERIALNUM === scanInputValue);
 
-      if (isAlreadyInTable) {
-        setError('This serial is already in the table');
-        return;
-      }
       console.log("scan" + scanInputValue + "bin" + selectedOption)
-      userRequest.get(`/getShipmentRecievedCLDataBySerialNumberAndBinLocation?serialNumber=${scanInputValue}&binLocation=${selectedOption}`)
+      // userRequest.get(`/getShipmentRecievedCLDataBySerialNumberAndBinLocation?serialNumber=${scanInputValue}&binLocation=${selectedOption}`)
+      userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, {
+        headers: {
+          itemserialno: scanInputValue,
+          binlocation: selectedOption
+        }
+      })
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
           setTableData(prevData => [...prevData, ...response?.data])
+          setScanInputValue('');
 
         })
         .catch(error => {
@@ -367,59 +389,50 @@ const TransferID = () => {
                   <table>
                     <thead>
                       <tr>
+                        <th>Item Code</th>
+                        <th>Item Description</th>
+                        <th>GTIN</th>
+                        <th>Remarks</th>
+                        <th>User</th>
+                        <th>Classification</th>
+                        <th>Main Location</th>
+                        <th>Bin Location</th>
+                        <th>Internal Code</th>
+                        <th>Item Serial Number</th>
+                        <th>Map Date</th>
+                        <th>Pallet Code</th>
+                        <th>Reference</th>
                         <th>Shipment ID</th>
                         <th>Container ID</th>
-                        <th>Arrival Warehouse</th>
-                        <th>Item Name</th>
-                        <th>Item ID</th>
-                        <th>Purch ID</th>
-                        <th>Classification</th>
-                        <th>Serial Num</th>
-                        <th>RCVD Config ID</th>
-                        <th>RCVD Date</th>
-                        <th>GTIN</th>
-                        <th>RZONE</th>
-                        <th>Pallet Date</th>
-                        <th>Pallet Code</th>
-                        <th>Bin</th>
-                        <th>Remarks</th>
-                        <th>PO Qty</th>
-                        <th>RCVD Qty</th>
-                        <th>Remaining Qty</th>
-                        <th>User ID</th>
-                        <th>TRX Date Time</th>
+                        <th>Purchase Order</th>
+                        <th>Transaction</th>
                       </tr>
                     </thead>
                     <tbody>
                       {tableData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
-                          <td>{data?.SHIPMENTID}</td>
-                          <td>{data?.CONTAINERID}</td>
-                          <td>{data?.ARRIVALWAREHOUSE}</td>
-                          <td>{data?.ITEMNAME}</td>
-                          <td>{data?.ITEMID}</td>
-                          <td>{data?.PURCHID}</td>
-                          <td>{data?.CLASSIFICATION}</td>
-                          <td>{data?.SERIALNUM}</td>
-                          <td>{data?.RCVDCONFIGID}</td>
-                          <td>{data?.RCVD_DATE}</td>
+                          <td>{data?.ItemCode}</td>
+                          <td>{data?.ItemDesc}</td>
                           <td>{data?.GTIN}</td>
-                          <td>{data?.RZONE}</td>
-                          <td>{data?.PALLET_DATE}</td>
-                          <td>{data?.PALLETCODE}</td>
-                          <td>{data?.BIN}</td>
-                          <td>{data?.REMARKS}</td>
-                          <td>{data?.POQTY}</td>
-                          <td>{data?.RCVQTY}</td>
-                          <td>{data?.REMAININGQTY}</td>
-                          <td>{data?.USERID?.trim()}</td>
-                          <td>{data?.TRXDATETIME}</td>
+                          <td>{data?.Remarks}</td>
+                          <td>{data?.User}</td>
+                          <td>{data?.Classification}</td>
+                          <td>{data?.MainLocation}</td>
+                          <td>{data?.BinLocation}</td>
+                          <td>{data?.IntCode}</td>
+                          <td>{data?.ItemSerialNo}</td>
+                          <td>{data?.MapDate}</td>
+                          <td>{data?.PalletCode}</td>
+                          <td>{data?.Reference}</td>
+                          <td>{data?.SID}</td>
+                          <td>{data?.CID}</td>
+                          <td>{data?.PO}</td>
+                          <td>{data?.Trans}</td>
                         </tr>
                       ))}
-
-
                     </tbody>
                   </table>
+
                 </div>
 
 

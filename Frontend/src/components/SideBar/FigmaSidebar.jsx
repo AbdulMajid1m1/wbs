@@ -214,7 +214,7 @@ const FigmaSidebar = () => {
 
                     <div className='main-images-container' onClick={() => navigate('/reallocation')}>
                         <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>1 Realloaction Picked</p>
+                        <p className='sidebar-text'>1 Reallocation Picked</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/bintobincl')}>

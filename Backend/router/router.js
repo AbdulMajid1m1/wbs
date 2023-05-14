@@ -320,5 +320,14 @@ router.get("/getStockMasterDataByItemId", checkAuthentication, WBSDB.getStockMas
 
 router.put("/updateQtyReceivedInTblStockMaster", checkAuthentication, WBSDB.updateQtyReceivedInTblStockMaster);
 
+// --- tbl_ItemsReAllocationPicked APIS Start ---
+router.get("/getAllItemsReAllocationPicked", checkAuthentication, WBSDB.getAllItemsReAllocationPicked);
+
+
+// --- tbl_ItemsReAllocationPicked APIS End ---
+
+
+/// ----- tbl_TransferBinToBin_CL APIS Start -----
+router.get("/getAllTransferBinToBinCL", checkAuthentication, WBSDB.getAllTransferBinToBinCL);
 
 export default router;

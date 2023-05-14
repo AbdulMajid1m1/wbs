@@ -79,43 +79,21 @@ const BinToBinInternal = () => {
 
   const handleBinLocation = (e) => {
     e.preventDefault();
-    // console.log(data[0].BinLocation)
-    // console.log(binlocation)
-
-    // userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
-    //   headers: {
-    //     'oldbinlocation': data[0].BinLocation,
-    //     'newbinlocation': binlocation
-    //   }
-    // })
-    // .then((response) => {
-    //   console.log(response);
-    //   setMessage(response?.data?.message);
-    //   // alert('done')
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    //   setError(error.response?.data?.message);
-    //   // alert(error)
-    // });
-
-
     
     if (selectionType === 'Pallet') {
 
       userRequest.put('/updateMappedBarcodesBinLocationByPalletCode', {
         "oldBinLocation": data[0].BinLocation,
         "newBinLocation": binlocation,
-        "serialNumber": selectionType
+        "serialNumber": userInput
       })
         .then(response => {
           console.log(response?.data)
-          // Append the new data to the existing data
-          setFilteredData(response?.data ?? [])
+          setMessage(response?.data?.message ?? 'Updated Successfully')
         })
         .catch(error => {
           console.log(error)
-          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+          setError(error?.response?.data?.message ?? 'Cannot Update Pallete data');
 
         })
     }
@@ -124,16 +102,15 @@ const BinToBinInternal = () => {
       userRequest.put('/updateMappedBarcodesBinLocationBySerialNo',{
         "oldBinLocation": data[0].BinLocation,
         "newBinLocation": binlocation,
-        "serialNumber": selectionType
+        "serialNumber": userInput
       })
         .then(response => {
           console.log(response?.data)
-          
-          setFilteredData(response?.data)
+          setMessage(response?.data?.message ?? 'Updated Successfully')
         })
         .catch(error => {
           console.log(error)
-          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+          setError(error?.response?.data?.message ?? 'Cannot Update Serial data');
 
         })
     }
@@ -361,35 +338,6 @@ const handleInputUser = (e) => {
                   </thead>
                   <tbody>
                     {/*  {data.filter((item) => item.PalletCode === userInput) */}
-                    {/* {data.filter((item) => {
-                        if (selectionType === 'Pallet') {
-                          return item.PalletCode === userInput;
-                        } else if (selectionType === 'Serial') {
-                          return item.ItemSerialNo === userInput;
-                        } else {
-                          return true;
-                        }
-                      }).map((item, index) => (
-                        <tr key={index}>
-                          <td>{item.ItemCode}</td>
-                          <td>{item.ItemDesc}</td>
-                          <td>{item.GTIN}</td>
-                          <td>{item.Remarks}</td>
-                          <td>{item.User}</td>
-                          <td>{item.Classification}</td>
-                          <td>{item.MainLocation}</td>
-                          <td>{item.BinLocation}</td>
-                          <td>{item.IntCode}</td>
-                          <td>{item.ItemSerialNo}</td>
-                          <td>{item.MapDate}</td>
-                          <td>{item.PalletCode}</td>
-                          <td>{item.Reference}</td>
-                          <td>{item.SID}</td>
-                          <td>{item.CID}</td>
-                          <td>{item.PO}</td>
-                          <td>{item.Trans}</td>
-                        </tr>
-                      ))} */}
                        {filteredData.map((item, index) => (
                           <tr key={index}>
                             <td>{item.ItemCode}</td>

@@ -19,6 +19,7 @@ const BinToBinInternal = () => {
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [userInputSubmit, setUserInputSubmit] = useState(false);
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -43,21 +44,21 @@ const BinToBinInternal = () => {
 
         setData(response?.data ?? []);
         setIsLoading(false)
-         setMessage(response?.data?.message ?? 'Data Displayed');
+        setMessage(response?.data?.message ?? 'Data Displayed');
       })
 
       .catch(error => {
         console.error(error);
         setIsLoading(false)
         setError(error?.response.data?.message ?? 'Wrong Bin Scan');
-     
+
       });
 
   }
 
 
-   // define the function to filter data based on user input and selection type
-   const filterData = () => {
+  // define the function to filter data based on user input and selection type
+  const filterData = () => {
     const filtered = data.filter((item) => {
       if (selectionType === 'Pallet') {
         return item.PalletCode === userInput;
@@ -73,33 +74,39 @@ const BinToBinInternal = () => {
   // use useEffect to trigger the filtering of data whenever the user input changes
   useEffect(() => {
     filterData();
-  }, [userInput]);
+  }, [userInputSubmit, selectionType]);
 
 
 
   const handleBinLocation = (e) => {
     e.preventDefault();
-    
+
     if (selectionType === 'Pallet') {
 
       userRequest.put('/updateMappedBarcodesBinLocationByPalletCode', {
         "oldBinLocation": data[0].BinLocation,
         "newBinLocation": binlocation,
-        "serialNumber": userInput
+        "palletCode": userInput
       })
         .then(response => {
           console.log(response?.data)
           setMessage(response?.data?.message ?? 'Updated Successfully')
+          // reset the user input state variable
+          setUserInput("");
+          // trigger the filtering of data
+          setUserInputSubmit(!userInputSubmit);
+
+          
         })
         .catch(error => {
           console.log(error)
-          setError(error?.response?.data?.message ?? 'Cannot Update Pallete data');
+          setError(error?.response?.data?.message ?? 'Update failed');
 
         })
     }
     else if (selectionType === 'Serial') {
-    
-      userRequest.put('/updateMappedBarcodesBinLocationBySerialNo',{
+
+      userRequest.put('/updateMappedBarcodesBinLocationBySerialNo', {
         "oldBinLocation": data[0].BinLocation,
         "newBinLocation": binlocation,
         "serialNumber": userInput
@@ -110,7 +117,7 @@ const BinToBinInternal = () => {
         })
         .catch(error => {
           console.log(error)
-          setError(error?.response?.data?.message ?? 'Cannot Update Serial data');
+          setError(error?.response?.data?.message ?? 'Update failed');
 
         })
     }
@@ -119,41 +126,41 @@ const BinToBinInternal = () => {
       return;
     }
 
-}
+  }
 
 
 
-const handleInputUser = (e) => {
-  setUserInput(e.target.value)
-}
+  const handleInputUser = (e) => {
+    setUserInputSubmit(!userInputSubmit);
+  }
 
 
 
   return (
     <>
-    
+
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
       {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
       {isLoading &&
 
-      <div className='loading-spinner-background'
+        <div className='loading-spinner-background'
           style={{
-              zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
-              display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+            zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
 
 
           }}
-      >
-            <SyncLoader
+        >
+          <SyncLoader
 
-                size={18}
-                color={"#FFA500"}
-                // height={4}
-                loading={isLoading}
-            />
+            size={18}
+            color={"#FFA500"}
+            // height={4}
+            loading={isLoading}
+          />
         </div>
-        }
+      }
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
@@ -161,64 +168,64 @@ const handleInputUser = (e) => {
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
               <div className='flex justify-between items-center gap-2 text-xs sm:text-xl'>
-                  <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
-                    <span>
-                      <img src={undo} className='h-auto w-8 object-contain' alt='' />
-                    </span>
-                  </button>
+                <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
+                  <span>
+                    <img src={undo} className='h-auto w-8 object-contain' alt='' />
+                  </span>
+                </button>
 
-                   <h2 className='text-center text-[#fff]'>BIN to BIN TRANSFER</h2> 
-                
-                  <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
-                    <span>
-                      <img src={icon} className='h-auto w-8 object-contain' alt='' />
-                    </span>
-                  </button>
+                <h2 className='text-center text-[#fff]'>BIN to BIN TRANSFER</h2>
+
+                <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
+                  <span>
+                    <img src={icon} className='h-auto w-8 object-contain' alt='' />
+                  </span>
+                </button>
               </div>
             </div>
 
             <div className=''>
-                <h2 className='text-[#00006A] text-center font-semibold'>Internal<span className='text-[#FF0404]'>*</span></h2>
+              <h2 className='text-[#00006A] text-center font-semibold'>Internal<span className='text-[#FF0404]'>*</span></h2>
             </div>
 
             <form onSubmit={handleForm}>
-            <div className='mb-6'>
-              <label htmlFor='transfer' 
-                className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Bin (FROM)<span className='text-[#FF0404]'>*</span></label>
-              <div className='w-full flex'>
-              <input 
-                  id="transfer" 
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5" 
-                      placeholder="Scan Bin From"
-                        onChange={handleChangeValue}
+              <div className='mb-6'>
+                <label htmlFor='transfer'
+                  className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Bin (FROM)<span className='text-[#FF0404]'>*</span></label>
+                <div className='w-full flex'>
+                  <input
+                    id="transfer"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                    placeholder="Scan Bin From"
+                    onChange={handleChangeValue}
                   />
-                <button
-                  type='submit' 
+                  <button
+                    type='submit'
                     className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm'
-                    >
-                      FIND
-                </button>
-                  
-                  </div> 
-            </div>
+                  >
+                    FIND
+                  </button>
+
+                </div>
+              </div>
             </form>
 
             <div className='mb-6'>
-                <div className='flex justify-between'>
-                  <div>
-                    <label className='text-[#00006A] font-semibold'>Items On Bin<span className='text-[#FF0404]'>*</span></label>
-                  </div>
+              <div className='flex justify-between'>
+                <div>
+                  <label className='text-[#00006A] font-semibold'>Items On Bin<span className='text-[#FF0404]'>*</span></label>
+                </div>
 
-                  <div className='flex justify-end items-center'>
-                    <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                      <input
-                        id="totals"
-                        className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[50%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Totals"
-                        value={data.length}
-                        />
-                     </div>
-               </div>
+                <div className='flex justify-end items-center'>
+                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                  <input
+                    id="totals"
+                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[50%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Totals"
+                    value={data.length}
+                  />
+                </div>
+              </div>
 
               {/* // creae excel like Tables  */}
               <div className="table-location-generate1">
@@ -245,7 +252,7 @@ const handleInputUser = (e) => {
                     </tr>
                   </thead>
                   <tbody>
-                  {data.map((item, index) => (
+                    {data.map((item, index) => (
                       <tr key={index}>
                         <td>{item.ItemCode}</td>
                         <td>{item.ItemDesc}</td>
@@ -270,50 +277,51 @@ const handleInputUser = (e) => {
                 </table>
               </div>
             </div>
-            
-                <div className="mb-6">
-                  <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+
+            <div className="mb-6">
+              <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                  >
-                    <label className="inline-flex items-center mt-1">
-                      <input
-                        type="radio"
-                        name="selectionType"
-                        value="Pallet"
-                        checked={selectionType === 'Pallet'}
-                        onChange={e => setSelectionType(e.target.value)}
-                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                      />
-                      <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                    </label>
-                    <label className="inline-flex items-center mt-1">
-                      <input
-                        type="radio"
-                        name="selectionType"
-                        value="Serial"
-                        checked={selectionType === 'Serial'}
-                        onChange={e => setSelectionType(e.target.value)}
-                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                      />
-                      <span className="ml-2 text-[#00006A]">BY SERIAL</span>
-                    </label>
-                  </div>
-                </div>
+              >
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="Pallet"
+                    checked={selectionType === 'Pallet'}
+                    onChange={e => setSelectionType(e.target.value)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                  />
+                  <span className="ml-2 text-[#00006A]">BY PALLETE</span>
+                </label>
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="Serial"
+                    checked={selectionType === 'Serial'}
+                    onChange={e => setSelectionType(e.target.value)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                  />
+                  <span className="ml-2 text-[#00006A]">BY SERIAL</span>
+                </label>
+              </div>
+            </div>
 
             <div className="mb-6">
               <label htmlFor='scanpallet' className="sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}:<span className='text-[#FF0404]'>*</span></label>
-              
+
               <input
                 id="scanpallet"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                   placeholder={`Scan ${selectionType}`}
-                    //  value={userInput}
-                      onBlur={handleInputUser}
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder={`Scan ${selectionType}`}
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                onBlur={handleInputUser}
 
               />
 
-                 {/* // creae excel like Tables  */}
-                 <div className="table-location-generate1">
+              {/* // creae excel like Tables  */}
+              <div className="table-location-generate1">
                 <table>
                   <thead>
                     <tr>
@@ -338,27 +346,27 @@ const handleInputUser = (e) => {
                   </thead>
                   <tbody>
                     {/*  {data.filter((item) => item.PalletCode === userInput) */}
-                       {filteredData.map((item, index) => (
-                          <tr key={index}>
-                            <td>{item.ItemCode}</td>
-                            <td>{item.ItemDesc}</td>
-                            <td>{item.GTIN}</td>
-                            <td>{item.Remarks}</td>
-                            <td>{item.User}</td>
-                            <td>{item.Classification}</td>
-                            <td>{item.MainLocation}</td>
-                            <td>{item.BinLocation}</td>
-                            <td>{item.IntCode}</td>
-                            <td>{item.ItemSerialNo}</td>
-                            <td>{item.MapDate}</td>
-                            <td>{item.PalletCode}</td>
-                            <td>{item.Reference}</td>
-                            <td>{item.SID}</td>
-                            <td>{item.CID}</td>
-                            <td>{item.PO}</td>
-                            <td>{item.Trans}</td>
-                          </tr>
-                        ))}
+                    {filteredData.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.ItemCode}</td>
+                        <td>{item.ItemDesc}</td>
+                        <td>{item.GTIN}</td>
+                        <td>{item.Remarks}</td>
+                        <td>{item.User}</td>
+                        <td>{item.Classification}</td>
+                        <td>{item.MainLocation}</td>
+                        <td>{item.BinLocation}</td>
+                        <td>{item.IntCode}</td>
+                        <td>{item.ItemSerialNo}</td>
+                        <td>{item.MapDate}</td>
+                        <td>{item.PalletCode}</td>
+                        <td>{item.Reference}</td>
+                        <td>{item.SID}</td>
+                        <td>{item.CID}</td>
+                        <td>{item.PO}</td>
+                        <td>{item.Trans}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -368,39 +376,39 @@ const handleInputUser = (e) => {
 
 
             <form onSubmit={handleBinLocation}>
-            <div className="mb-6">
-              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-              <input
-                id="enterscan"
+              <div className="mb-6">
+                <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="enterscan"
                   className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Enter/Scan Location"
-                      onChange={(e) => setBinLocation(e.target.value)}
-              />
-            </div >
+                  placeholder="Enter/Scan Location"
+                  onChange={(e) => setBinLocation(e.target.value)}
+                />
+              </div >
 
-            <div className='mt-6'>
-              <div className='w-full flex justify-center place-items-end'>
+              <div className='mt-6'>
+                <div className='w-full flex justify-center place-items-end'>
                   <div>
-                  <button
-                    type='submit'
+                    <button
+                      type='submit'
                       className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-10 rounded-sm w-full'>
-                    <span className='flex justify-center items-center'>
-                      <p>Save</p>
-                    </span>
-                  </button>
+                      <span className='flex justify-center items-center'>
+                        <p>Save</p>
+                      </span>
+                    </button>
                   </div>
 
-                  {/* <div>
+                  <div>
                     <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                       <input
                         id="totals"
                         className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Totals"
-                        value={data.length}
+                        value={filteredData.length}
                         />
-                  </div> */}
+                  </div>
                 </div>
-                  
+
               </div>
             </form>
           </div>

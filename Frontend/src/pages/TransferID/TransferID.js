@@ -79,12 +79,17 @@ const TransferID = () => {
       setError("Please select an option for Bin/Location");
       return;
     }
-    
+    if (!scanInputValue) return;
+
+
     // Check if serial number is already in the table
     const isSerialAlreadyInTable = tableData.some(item => item.ItemSerialNo === scanInputValue);
 
     if (isSerialAlreadyInTable) {
-      setError('This serial is already in the table');
+
+      setTimeout(() => {
+        setError('This serial is already in the table');
+      }, 400);
       return;
     }
 
@@ -92,7 +97,10 @@ const TransferID = () => {
     const isPalletAlreadyInTable = tableData.some(item => item?.PalletCode === scanInputValue);
 
     if (isPalletAlreadyInTable) {
-      setError('This pallet is already in the table');
+
+      setTimeout(() => {
+        setError('This pallet is already in the table');
+      }, 400);
       return;
     }
 
@@ -149,8 +157,11 @@ const TransferID = () => {
         })
         .catch(error => {
           console.log(error)
-          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
-
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error?.response?.data?.message ?? 'Cannot fetch location data',
+          })
         })
     }
 
@@ -171,7 +182,7 @@ const TransferID = () => {
       // Return a new object for each row of the table
       return {
         ...row, // Spread the fields from the current row of the table
-        BIN: locationInputValue,
+        BinLocation: locationInputValue,
         ...parsedData, // Spread the fields from parsedData
         SELECTTYPE: selectionType // Add the SELECTTYPE field
       };
@@ -467,15 +478,15 @@ const TransferID = () => {
                 </span>
               </button>
 
-                <div className='flex justify-end items-center'>
-                  <label htmlFor='totals' className="mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                    <input
-                      id="totals"
-                      className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Totals"
-                      value={tableData.length}
-                      />
-                  </div>
+              <div className='flex justify-end items-center'>
+                <label htmlFor='totals' className="mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="totals"
+                  className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Totals"
+                  value={tableData.length}
+                />
+              </div>
             </div>
           </div>
         </div >

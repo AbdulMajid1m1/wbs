@@ -14,7 +14,7 @@ const JournalList = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllTransferBinToBinCL")
+                userRequest.get("/getAllTransferJournal")
                     .then(response => {
                         console.log(response?.data);
                         setData(response?.data ?? [])

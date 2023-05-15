@@ -164,48 +164,43 @@ const BinToBinJournalID = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>TransferID</th>
-                      <th>InventoryLocationIDFrom</th>
-                      <th>InventoryLocationIDTo</th>
-                      <th>Item ID </th>
-                      <th>InventDIMID</th>
-                      <th>Qty.Transfer</th>
-                      <th>Qty.RemainRecieve </th>
-                      <th>Created DateTime</th>
-                      <th>JournalID</th>
-                      <th>BinLocation</th>
-                      <th>DateTimeTransaction</th>
-                      <th>CONFIG</th>
-                      <th>USERID</th>
+                      <th>JOURNALID</th>
+                      <th>ITEMID</th>
+                      <th>QTY</th>
+                      <th>CONFIGID</th>
+                      <th>INVENTLOCATIONID</th>
+                      <th>WMSLOCATIONID</th>
+                      <th>INVENTSITEID</th>
+                      <th>TOCONFIGID</th>
+                      <th>TOINVENTLOCATIONID</th>
+                      <th>TOWMSLOCATIONID</th>
+                      <th>TOINVENTSITEID</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.map((item, index) => (
-                      <tr key={index}
-                        onClick={() => handleRowClick(item, index)}
-                      >
-                        <td>{item.TRANSFERID}</td>
-                        <td>{item.TRANSFERSTATUS}</td>
-                        <td>{item.INVENTLOCATIONIDFROM}</td>
-                        <td>{item.INVENTLOCATIONIDTO}</td>
+                      <tr key={index} onClick={() => handleRowClick(item, index)}>
+                        <td>{item.JOURNALID}</td>
                         <td>{item.ITEMID}</td>
-                        <td>{item.QTYTRANSFER}</td>
-                        <td>{item.QTYRECEIVED}</td>
-                        <td>{item.CREATEDDATETIME}</td>
-                        <td>{item.JournalID}</td>
-                        <td>{item.BinLocation}</td>
-                        <td>{item.DateTimeTransaction}</td>
-                        <td>{item.CONFIG}</td>
-                        <td>{item.USERID}</td>
+                        <td>{item.QTY}</td>
+                        <td>{item.CONFIGID}</td>
+                        <td>{item.INVENTLOCATIONID}</td>
+                        <td>{item.WMSLOCATIONID}</td>
+                        <td>{item.INVENTSITEID}</td>
+                        <td>{item.TOCONFIGID}</td>
+                        <td>{item.TOINVENTLOCATIONID}</td>
+                        <td>{item.TOWMSLOCATIONID}</td>
+                        <td>{item.TOINVENTSITEID}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+
               </div>
             </div>
 
             <form >
-              
+
 
               <div className='mt-6'>
                 <div className='w-full flex justify-between place-items-end'>

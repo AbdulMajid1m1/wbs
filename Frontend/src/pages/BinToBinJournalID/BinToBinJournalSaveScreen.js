@@ -24,32 +24,6 @@ const BinToBinJournalSaveScreen = () => {
   // retrieve data from session storage
   const storedData = sessionStorage.getItem('journalRowData');
   const parsedData = JSON.parse(storedData);
-  //   console.log(parsedData)
-
-  //   useEffect(() => {
-  //     const getLocationData = async () => {
-  //       try {
-  //         const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
-  //           {
-  //             headers: {
-  //               itemcode: parsedData.ITEMID,
-  //               // itemcode: "IC1233",
-  //             }
-  //           })
-  //         console.log(res?.data)
-  //         setLocation(res?.data[0]?.BinLocation ?? "")
-  //       }
-  //       catch (error) {
-  //         console.log(error)
-  //         setError(error?.response?.data?.message ?? 'Cannot fetch location data');
-
-  //       }
-  //     }
-
-  //     getLocationData();
-
-  //   }, [parsedData.ITEMID])
-
 
   const handleScan = (e) => {
     e.preventDefault();
@@ -72,7 +46,7 @@ const BinToBinJournalSaveScreen = () => {
       userRequest.post("/getMappedBarcodedsByPalletCodeAndBinLocation", {}, {
         headers: {
           palletcode: scanInputValue,
-          binlocation: parsedData.BinLocation,
+          binlocation: parsedData.WMSLOCATIONID,
         }
       }
       )
@@ -96,8 +70,8 @@ const BinToBinJournalSaveScreen = () => {
         setError('This serial is already in the table');
         return;
       }
-      // userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, { headers: { itemserialno: scanInputValue, binlocation: parsedData.BinLocation } })
-      userRequest.post("/getMappedBarcodedsByItemCodeAndBinLocation", {}, { headers: { itemcode: scanInputValue, binlocation: parsedData.BinLocation } })
+      // userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, { headers: { itemserialno: scanInputValue, binlocation: parsedData.WMSLOCATIONID } })
+      userRequest.post("/getMappedBarcodedsByItemCodeAndBinLocation", {}, { headers: { itemcode: scanInputValue, binlocation: parsedData.WMSLOCATIONID } })
         .then(response => {
           console.log(response?.data)
           // Append the new data to the existing data
@@ -130,7 +104,7 @@ const BinToBinJournalSaveScreen = () => {
     }
     userRequest.put('/updateTblMappedBarcodeBinLocationWithSelectionType', {}, {
       headers: {
-        'oldbinlocation': parsedData?.BinLocation,
+        'oldbinlocation': parsedData?.WMSLOCATIONID,
         'newbinlocation': locationInputValue,
         selectiontype: selectionType,
         selectiontypevalue: scanInputValue
@@ -165,66 +139,6 @@ const BinToBinJournalSaveScreen = () => {
   }
 
 
-
-
-  //   const handleSaveBtnClick = () => {
-  //     // Create a new array
-
-  //     const dataForAPI = tableData.map(row => {
-  //       // Return a new object for each row of the table
-  //       return {
-  //         ...row, // Spread the fields from the current row of the table
-  //         BIN: locationInputValue, // Replace the Bin value with the value from locationInputValue state
-  //         ...parsedData, // Spread the fields from parsedData
-  //         SELECTTYPE: selectionType // Add the SELECTTYPE field
-  //       };
-  //     });
-  //     console.log(dataForAPI);
-
-  //     // Now, you can send dataForAPI to the API endpoint
-  //     userRequest.post("/insertTblTransferBinToBinCL", dataForAPI)
-  //       .then(response => {
-  //         console.log(response);
-  //         setMessage("Data inserted successfully");
-  //         // clear the table
-
-  //         // call the update api to 
-  //         userRequest.put("/updateQtyReceivedInTblItemMaster", {
-  //           itemid: parsedData.ITEMID,
-  //           qty: dataForAPI.length
-  //         })
-  //           .then(response => {
-  //             console.log(response);
-  //             setMessage("Data updated successfully");
-  //             // clear the table
-  //             setTableData([]);
-  //             // clear the location input
-  //             setLocationInputValue('');
-  //             // clear the scan input
-  //             setScanInputValue('');
-  //             // clear the selection type
-
-
-  //           })
-  //           .catch(error => {
-  //             console.log(error);
-  //             setError(error?.response?.data?.message ?? 'Cannot insert data');
-  //           });
-
-
-  //       })
-  //       .catch(error => {
-  //         console.log(error);
-  //         setError(error?.response?.data?.message ?? 'Cannot insert data');
-  //       });
-  //   }
-
-
-
-
-
-
-
   return (
     <>
 
@@ -249,7 +163,7 @@ const BinToBinJournalSaveScreen = () => {
                   //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
-                  value={parsedData?.JournalID}
+                  value={parsedData?.JOURNALID}
                   disabled
                 />
 
@@ -257,7 +171,7 @@ const BinToBinJournalSaveScreen = () => {
                   <span className='text-white'>FROM:</span>
                   <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Location Reference"
-                    value={parsedData?.BinLocation}
+                    value={parsedData?.WMSLOCATIONID}
                     disabled
                   />
                 </div>
@@ -278,12 +192,12 @@ const BinToBinJournalSaveScreen = () => {
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.QTYTRANSFER}</span>
+                    <span>{parsedData.QTY}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    <span>0</span>
+                    <span>{tableData.length}</span>
                   </div>
                 </div>
               </div>

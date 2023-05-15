@@ -100,7 +100,7 @@ const UserDataTable = ({
       const newRows = await Promise.all(selectedRow.map(async (row) => {
         try {
           const response = await userRequest.get(`/getStockMasterDataByItemId?ITEMID=${row.data.ITEMID}`);
-          const itemGroup = response?.data[0]?.ITEMGROUP; // add optional chaining
+          const itemGroup = response?.data[0]?.GROUPNAME; // add optional chaining
           return { ...row, itemGroup: itemGroup || '' }; // add a fallback value for itemGroup
         } catch (error) {
           console.log(error);
@@ -788,7 +788,7 @@ const UserDataTable = ({
                     <p id='paragh'>{selectedRow.data.PURCHID}</p>
                   </div>
                   <div>
-                    <p>GROUPID</p>
+                    <p>GROUP NAME</p>
                     {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
                     <p id='paragh'>{selectedRow.itemGroup}</p>
                   </div>

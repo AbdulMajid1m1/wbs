@@ -337,6 +337,12 @@ export const AllItems = [
     width: 180,
 
   },
+  {
+    field: "GROUPNAME",
+    headerName: "GROUP NAME",
+    width: 180,
+
+  },
 ]
 
 

@@ -221,12 +221,12 @@ const WBSDB = {
 
     try {
       let query = `
-      SELECT * FROM dbo.tbl_Items
+      SELECT * FROM dbo.InventTableWMS
       `;
       let request = pool1.request();
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
-        return res.status(404).send({ message: "No data found." });
+        return res.status(404).send({ message: "No Item available." });
       }
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {
@@ -3634,10 +3634,10 @@ const WBSDB = {
     try {
       const { JournalID } = req.query
       let query = `
-        SELECT * FROM dbo.tbl_TransferJournal_CL
-        WHERE JournalID = @JournalID
+        SELECT * FROM dbo.Transfer_journal
+        WHERE JOURNALID = @JournalID
       `;
-      let request = pool2.request();
+      let request = pool1.request();
       request.input('JournalID', sql.NVarChar(50), JournalID);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
@@ -3984,7 +3984,7 @@ const WBSDB = {
       }
 
       const query = `
-        SELECT * FROM dbo.tbl_Stock_Master
+        SELECT * FROM dbo.InventTableWMS
         WHERE ITEMID = @ITEMID
       `;
       let request = pool2.request();
@@ -4011,7 +4011,7 @@ const WBSDB = {
 
   async getAllItemsReAllocationPicked(req, res, next) {
     try {
-    
+
       const query = `
       SELECT * from tbl_ItemsReAllocationPicked`;
       let request = pool2.request();
@@ -4030,7 +4030,7 @@ const WBSDB = {
 
   async getAllTransferBinToBinCL(req, res, next) {
     try {
-    
+
       const query = `
       SELECT *
       FROM tbl_TransferBinToBin_CL

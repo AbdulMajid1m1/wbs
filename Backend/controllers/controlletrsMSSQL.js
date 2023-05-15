@@ -294,7 +294,7 @@ const WBSDB = {
       // `;
       let query = `
         SELECT * 
-          FROM dbo.expectedTransferOrderTable
+          FROM dbo.expectedTransferOrder
           WHERE TRANSFERID = @TRANSFERID
       `;
 

@@ -59,6 +59,7 @@ import ItemReAllocation from './pages/Item-Re-Allocation/ItemReAllocation'
 import BinToBinJournalSaveScreen from './pages/BinToBinJournalID/BinToBinJournalSaveScreen'
 import ReallocationPicked from './pages/RealloactionPicked/ReallocationPicked'
 import BinToBinCL from './pages/BinToBinCL/BinToBinCL'
+import JournalList from './pages/JournalList/JournalList'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -151,6 +152,7 @@ const App = () => {
                 <Route path='/kpireceiving' element={<KPIDashboardReceiving />}/>
                 <Route path='/reallocation' element={<ReallocationPicked />}/>
                 <Route path='/bintobincl' element={<BinToBinCL />}/>
+                <Route path='/journallist' element={<JournalList />}/>
               </Routes>
             </MainLayout>
           } />

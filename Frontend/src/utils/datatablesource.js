@@ -1415,3 +1415,78 @@ export const BinToBinCLColumn = [
 
 ]
 
+
+
+
+
+export const journalListColumn = [
+  {
+    field: "JOURNALID",
+    headerName: "JOURNAL ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTSITEID",
+    headerName: "INVENT SITE ID",
+    width: 180,
+
+  },
+  {
+    field: "TOCONFIGID",
+    headerName: "TO CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "TOINVENTLOCATIONID",
+    headerName: "TO INVENT LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "TOWMSLOCATIONID",
+    headerName: "TO WMS LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "TOINVENTSITEID",
+    headerName: "TO INVENT SITE ID",
+    width: 180,
+
+  },
+
+
+
+]

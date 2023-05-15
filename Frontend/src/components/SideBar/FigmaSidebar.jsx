@@ -157,6 +157,10 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Packing Slip</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/journallist')}>
+                        <img src={inventory} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Journal List</p>
+                    </div>
                 </div>
             )}
 

@@ -24,11 +24,11 @@ const Login = () => {
         Cookies.set("accessToken", response?.data?.token);
         navigate("/dashboard");
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Welcome To Warehouse Dashboard',
-        })
+        // Swal.fire({
+        //   icon: 'success',
+        //   title: 'Success',
+        //   text: 'Welcome To Warehouse Dashboard',
+        // })
 
       })
       .catch((error) => {

@@ -292,9 +292,11 @@ router.post("/insertTblTransferBinToBinCL", checkAuthentication, WBSDB.insertTbl
 // ----------------- tbl_TransferBinToBin_CL APIS End -----------------
 
 
-// ----------------- tbl_TransferJournal_CL APIS Start -----------------
+// ----------------- tbl_TransferJournal APIS Start -----------------
 
 router.get("/getTransferJournalCLByJournalId", checkAuthentication, WBSDB.getTransferJournalCLByJournalId);
+
+router.get("/getAllTransferJournal", checkAuthentication, WBSDB.getAllTransferJournal);
 
 
 // ----------------- tbl_TransferJournal_CL APIS End -----------------

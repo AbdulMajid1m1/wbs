@@ -3628,7 +3628,26 @@ const WBSDB = {
 
 
 
-  // -------------- tbl_TransferJournal_CL START --------------
+  // -------------- tbl_TransferJournal START --------------
+
+  async getAllTransferJournal(req, res, next) {
+    try {
+
+      const query = `
+      SELECT * from dbo.Transfer_journal`;
+      let request = pool1.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "no Item found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
 
   async getTransferJournalCLByJournalId(req, res, next) {
     try {
@@ -4008,7 +4027,6 @@ const WBSDB = {
 
 
   // ---------tbl_ItemsReAllocationPicked ------------
-
   async getAllItemsReAllocationPicked(req, res, next) {
     try {
 

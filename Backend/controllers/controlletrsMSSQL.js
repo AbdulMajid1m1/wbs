@@ -3987,7 +3987,7 @@ const WBSDB = {
         SELECT * FROM dbo.InventTableWMS
         WHERE ITEMID = @ITEMID
       `;
-      let request = pool2.request();
+      let request = pool1.request();
       request.input('ITEMID', sql.NVarChar, ITEMID);
 
       const data = await request.query(query);

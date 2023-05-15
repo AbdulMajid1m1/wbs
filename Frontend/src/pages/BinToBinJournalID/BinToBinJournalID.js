@@ -16,6 +16,7 @@ const BinToBinJournalID = () => {
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(JSON.parse(sessionStorage.getItem('allJournalRows')) || []);
+  const [journalRowIndex, setJournalRowIndex] = useState(JSON.parse(sessionStorage.getItem('journalRowIndex')) || '');
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -56,7 +57,9 @@ const BinToBinJournalID = () => {
 
   const handleRowClick = (item, index) => {
     // save data in session storage
+
     sessionStorage.setItem('journalRowData', JSON.stringify(item));
+    sessionStorage.setItem('journalRowIndex', index);
     navigate('/bintobinsave')
   }
 
@@ -179,7 +182,11 @@ const BinToBinJournalID = () => {
                   </thead>
                   <tbody>
                     {data.map((item, index) => (
-                      <tr key={index} onClick={() => handleRowClick(item, index)}>
+                      <tr key={index} onClick={() => handleRowClick(item, index)}
+
+                        style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
+
+                      >
                         <td>{item.JOURNALID}</td>
                         <td>{item.ITEMID}</td>
                         <td>{item.QTY}</td>

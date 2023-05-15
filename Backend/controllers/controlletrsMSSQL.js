@@ -4004,6 +4004,53 @@ const WBSDB = {
 
 
 
+
+
+
+  // ---------tbl_ItemsReAllocationPicked ------------
+
+  async getAllItemsReAllocationPicked(req, res, next) {
+    try {
+    
+      const query = `
+      SELECT * from tbl_ItemsReAllocationPicked`;
+      let request = pool2.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "no Item found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+  async getAllTransferBinToBinCL(req, res, next) {
+    try {
+    
+      const query = `
+      SELECT *
+      FROM tbl_TransferBinToBin_CL
+      `;
+      let request = pool2.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "no Item found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
 };
 
 export default WBSDB;

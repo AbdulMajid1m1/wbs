@@ -4067,6 +4067,142 @@ const WBSDB = {
   },
 
 
+  // ----- WMS_Sales_PickingList_CL Controller Start  -----
+  // from Alessia Table
+  async getAllWmsSalesPickingListClFromAlessia(req, res, next) {
+
+    try {
+      let query = `
+      SELECT * FROM dbo.WMS_Sales_PickingList
+      `;
+      let request = pool1.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record available" });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+
+  // from WBS Table
+  async getAllWmsSalesPickingListClFromWBS(req, res, next) {
+
+    try {
+      let query = `
+      SELECT * FROM dbo.WMS_Sales_PickingList_CL
+      `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record available" });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+  // to inert into wbs
+  async insertPickingListDataCLIntoWBS(req, res, next) {
+    try {
+      const pickingListDataArray = req.body;
+
+      for (let i = 0; i < pickingListDataArray.length; i++) {
+        const {
+          PICKINGROUTEID,
+          INVENTLOCATIONID,
+          CONFIGID,
+          ITEMID,
+          ITEMNAME,
+          QTY,
+          CUSTOMER,
+          DLVDATE,
+          TRANSREFID,
+          EXPEDITIONSTATUS,
+          DATETIMEASSIGNED,
+          ASSIGNEDTOUSERID,
+          PICKSTATUS,
+        } = pickingListDataArray[i];
+
+        // Check if a record already exists
+        let checkQuery = `
+          SELECT * FROM [WBSSQL].[dbo].[WMS_Sales_PickingList_CL] 
+          WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID = @ASSIGNEDTOUSERID
+        `;
+        let checkRequest = pool1.request();
+        checkRequest.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+        checkRequest.input('ASSIGNEDTOUSERID', sql.NVarChar, ASSIGNEDTOUSERID);
+        let checkData = await checkRequest.query(checkQuery);
+
+        if (checkData.recordsets[0].length > 0) {
+          throw new Error(`Record already exists for PICKINGROUTEID: ${PICKINGROUTEID}, ASSIGNEDTOUSERID: ${ASSIGNEDTOUSERID}`);
+        }
+
+        // Dynamic SQL query construction
+        let fields = [
+          "PICKINGROUTEID",
+          "ITEMID",
+          "QTY",
+          "CUSTOMER",
+          ...(INVENTLOCATIONID ? ['INVENTLOCATIONID'] : []),
+          ...(CONFIGID ? ['CONFIGID'] : []),
+          ...(ITEMNAME ? ['ITEMNAME'] : []),
+          ...(DLVDATE ? ['DLVDATE'] : []),
+          ...(TRANSREFID ? ['TRANSREFID'] : []),
+          ...(EXPEDITIONSTATUS !== undefined ? ['EXPEDITIONSTATUS'] : []),
+          ...(DATETIMEASSIGNED ? ['DATETIMEASSIGNED'] : []),
+          ...(ASSIGNEDTOUSERID ? ['ASSIGNEDTOUSERID'] : []),
+          ...(PICKSTATUS ? ['PICKSTATUS'] : []),
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+          INSERT INTO [WBSSQL].[dbo].[WMS_Sales_PickingList_CL]
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool1.request();
+        request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+        request.input('ITEMID', sql.NVarChar, ITEMID);
+        request.input('QTY', sql.Float, QTY);
+        request.input('CUSTOMER', sql.NVarChar, CUSTOMER);
+        if (INVENTLOCATIONID) request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
+        if (CONFIGID) request.input('CONFIGID', sql.NVarChar, CONFIGID);
+        if (ITEMNAME) request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+        if (DLVDATE) request.input('DLVDATE', sql.Date, new Date(DLVDATE));
+        if (TRANSREFID) request.input('TRANSREFID', sql.NVarChar, TRANSREFID);
+        if (EXPEDITIONSTATUS !== undefined) request.input('EXPEDITIONSTATUS', sql.Int, EXPEDITIONSTATUS);
+        if (DATETIMEASSIGNED) request.input('DATETIMEASSIGNED', sql.DateTime, new Date(DATETIMEASSIGNED));
+        if (ASSIGNEDTOUSERID) request.input('ASSIGNEDTOUSERID', sql.NVarChar, ASSIGNEDTOUSERID);
+        if (PICKSTATUS) request.input('PICKSTATUS', sql.NVarChar, PICKSTATUS);
+
+        await request.query(query);
+      }
+      res.status(201).send({ message: 'Data inserted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
+
+
+
 
 
 };

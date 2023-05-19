@@ -41,7 +41,7 @@ const PickingListLastForm = () => {
 
 
   // retrieve data from session storage
-  const storedData = sessionStorage.getItem('selectedData');
+  const storedData = sessionStorage.getItem('pickingRowdata');
   const parsedData = JSON.parse(storedData);
   console.log(parsedData)
 

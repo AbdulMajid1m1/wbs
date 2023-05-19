@@ -1,9 +1,8 @@
 import React, { useContext, useState } from 'react'
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import userRequest from "../../utils/userRequest"
 import "./PickingListForm.css";
-// import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 import { TblReceiptsManagementColumn } from '../../utils/datatablesource';
 import PickingListTable from '../../components/PickingListTable/PickingListTable';
 
@@ -12,12 +11,8 @@ const Pickinglistform = () => {
 
   const navigate = useNavigate();
   const [data , setData] = useState([]);
-//   const { statedata, updateData } = useContext(ReceiptsContext);
   const [shipmentTag, setShipmentTag] = useState('');
-//   const [data, setData] = useState(
-//     JSON.parse(sessionStorage.getItem('receiptsData')) ?? []
 
-//   );
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState(0);
 
@@ -28,9 +23,9 @@ const Pickinglistform = () => {
     // updateData(rowData); // update context data
   };
 
-//   useEffect(() => {
-//     console.log('Updated data:', statedata);
-//   }, [statedata]);
+  // useEffect(() => {
+  //   console.log('Updated data:', statedata);
+  // }, [statedata]);
 
 
 
@@ -48,7 +43,7 @@ const Pickinglistform = () => {
         setData(response?.data ?? []);
         setSelectedRow(response?.data[0] ?? []);
         // save data in session storage
-        sessionStorage.setItem('receiptsData', JSON.stringify(response?.data ?? []));
+        sessionStorage.setItem('pickingListdata', JSON.stringify(response?.data ?? []));
      
       })
 
@@ -96,9 +91,15 @@ const Pickinglistform = () => {
 
               <div className="mb-6">
 
-                <PickingListTable data={data} title={"Items"} columnsName={TblReceiptsManagementColumn}
-                  uniqueId=""
+                {/* <PickingListTable data={data} title={"Items"} columnsName={TblReceiptsManagementColumn}
+                  uniqueId="pickinglistfrom"
+                /> */}
 
+                <PickingListTable
+                  data={data}
+                  title={"Items"}
+                  columnsName={TblReceiptsManagementColumn}
+                  uniqueId="pickinglistfrom"
                 />
               </div >
 

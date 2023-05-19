@@ -80,17 +80,20 @@ const PickingListTable = ({
 
 
     const handleRowClick = (rowData, idx) => {
-        if (uniqueId === "pustawayScreen1") {
-            console.log("rowData", rowData);
-            sessionStorage.setItem("selectedPutAwayData", JSON.stringify(rowData));
-            navigate("/palletscreen2");
+        if (uniqueId === "pickinglistfrom") {
+          console.log("rowData", rowData);
+          sessionStorage.setItem("pickingRowdata", JSON.stringify(rowData));
+          navigate("/pickinglistlast");
+        } else {
+          return;
         }
-        else {
-            return
-        }
-
-    };
-
+      };
+    
+      const handleRowClickInternal = (params, rowIdx) => {
+        handleRowClick(params.row, rowIdx);
+      };
+      
+ 
     return (
         <>
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -123,7 +126,7 @@ const PickingListTable = ({
                     checkboxSelection={false}
                     onRowClick={(params, rowIdx) => {
                         // call your handle function and pass the row data as a parameter
-                        handleRowClick(params.row, rowIdx);
+                        handleRowClickInternal(params.row, rowIdx);
                     }}
 
                 />

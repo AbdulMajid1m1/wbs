@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "./PickingListLastForm.css";
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { Autocomplete, TextField } from '@mui/material';
 
 const PickingListLastForm = () => {
   const navigate = useNavigate();
@@ -21,9 +22,28 @@ const PickingListLastForm = () => {
 
   };
 
+  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const resetAutocomplete = () => {
+    setLocationInputValue(''); // Clear the location input value
+    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  };
+
+
+
+
+
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleFromSelect = (event, value) => {
+    setSelectedOption(value || "");
+  }
+
+
   // retrieve data from session storage
-  const storedData = sessionStorage.getItem('journalRowData');
+  const storedData = sessionStorage.getItem('selectedData');
   const parsedData = JSON.parse(storedData);
+  console.log(parsedData)
 
   const handleScan = (e) => {
     e.preventDefault();
@@ -168,11 +188,59 @@ const PickingListLastForm = () => {
 
                 <div className='flex gap-2 justify-center items-center'>
                   <span className='text-white'>FROM:</span>
-                  <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
-                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Location Reference"
-                    value={parsedData?.WMSLOCATIONID}
-                    disabled
-                  />
+                  <div className='w-full'>
+                    <Autocomplete
+                      ref={autocompleteRef}
+                      key={autocompleteKey}
+                      id="location"
+                      // options={location.filter(item => item.BinLocation)}
+                      // getOptionLabel={(option) => option.BinLocation}
+                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
+                      getOptionLabel={(option) => option}
+                      onChange={handleFromSelect}
+
+                      // onChange={(event, value) => {
+                      //   if (value) {
+                      //     console.log(`Selected: ${value}`);
+
+                      //   }
+                      // }}
+                      onInputChange={(event, value) => {
+                        if (!value) {
+                          // perform operation when input is cleared
+                          console.log("Input cleared");
+
+                        }
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          InputProps={{
+                            ...params.InputProps,
+                            className: "text-white",
+                          }}
+                          InputLabelProps={{
+                            ...params.InputLabelProps,
+                            style: { color: "white" },
+                          }}
+
+                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                          placeholder="FROM"
+                          required
+                        />
+                      )}
+                      classes={{
+                        endAdornment: "text-white",
+                      }}
+                      sx={{
+                        '& .MuiAutocomplete-endAdornment': {
+                          color: 'white',
+                        },
+                      }}
+                    />
+
+                  </div>
                 </div>
               </div>
 

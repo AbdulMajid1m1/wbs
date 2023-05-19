@@ -232,6 +232,11 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Palletizing</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/dispatchingslip')}>
+                        <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Dispatching Picking Slip</p>
+                    </div>
+
                     <div className='main-images-container'>
                         <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Return RMA</p>

@@ -40,8 +40,8 @@ const PickingListLastForm = () => {
   }
 
 
-  // retrieve data from session storage
-  const storedData = sessionStorage.getItem('pickingRowdata');
+  // retrieve data from session storage   pickingRowdata
+  const storedData = sessionStorage.getItem('');
   const parsedData = JSON.parse(storedData);
   console.log(parsedData)
 
@@ -167,107 +167,130 @@ const PickingListLastForm = () => {
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
-            <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
+          <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
-              <div className='flex flex-col gap-2 text-xs sm:text-xl'>
-                <div className='w-full flex justify-end'>
-                  <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
-                    <span>
-                      <img src={icon} className='h-auto w-8 object-contain' alt='' />
-                    </span>
-                  </button>
-                </div>
-                <span className='text-white -mt-7'>Packing Route ID</span>
-                <input
-                  //   value={parsedData.TRANSFERID}
-                  className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
-                  // value={parsedData?.JOURNALID}
-                  disabled
-                />
+            <div className='flex flex-col gap-2 text-xs sm:text-xl'>
+              <div className='w-full flex justify-end'>
+                <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
+                  <span>
+                    <img src={icon} className='h-auto w-8 object-contain' alt='' />
+                  </span>
+                </button>
+              </div>
+              <span className='text-white -mt-7'>TRANSFER ID#:</span>
+              <input
+                // value={parsedData?.TRANSFERID}
+                className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                  block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
+                disabled
+              />
 
-                <div className='flex gap-2 justify-center items-center'>
-                  <span className='text-white'>FROM:</span>
-                  <div className='w-full'>
-                    <Autocomplete
-                      ref={autocompleteRef}
-                      key={autocompleteKey}
-                      id="location"
-                      // options={location.filter(item => item.BinLocation)}
-                      // getOptionLabel={(option) => option.BinLocation}
-                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
-                      getOptionLabel={(option) => option}
-                      onChange={handleFromSelect}
+              <div className='flex gap-2 justify-start items-center'>
+                <span className='text-white'>FROM:</span>
+                {/* <select
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
+                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                  onChange={handleFromSelect}
+                  defaultValue=""
+                >
+                  <option value="" disabled hidden>Select an option</option>
+                  {location
+                    .filter(item => item.BinLocation) // this will filter out items where BinLocation is null, undefined or an empty string
+                    .map((item, index) => {
+                      return <option key={index} value={item.BinLocation}>{item.BinLocation}</option>
+                    })}
+                </select> */}
+                <div className='w-full'>
+                  <Autocomplete
+                    ref={autocompleteRef}
+                    key={autocompleteKey}
+                    id="location"
+                    // options={location.filter(item => item.BinLocation)}
+                    // getOptionLabel={(option) => option.BinLocation}
+                    options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
+                    getOptionLabel={(option) => option}
+                    onChange={handleFromSelect}
 
-                      // onChange={(event, value) => {
-                      //   if (value) {
-                      //     console.log(`Selected: ${value}`);
+                    // onChange={(event, value) => {
+                    //   if (value) {
+                    //     console.log(`Selected: ${value}`);
 
-                      //   }
-                      // }}
-                      onInputChange={(event, value) => {
-                        if (!value) {
-                          // perform operation when input is cleared
-                          console.log("Input cleared");
+                    //   }
+                    // }}
+                    onInputChange={(event, value) => {
+                      if (!value) {
+                        // perform operation when input is cleared
+                        console.log("Input cleared");
 
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          InputProps={{
-                            ...params.InputProps,
-                            className: "text-white",
-                          }}
-                          InputLabelProps={{
-                            ...params.InputLabelProps,
-                            style: { color: "white" },
-                          }}
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          className: "text-white",
+                        }}
+                        InputLabelProps={{
+                          ...params.InputLabelProps,
+                          style: { color: "white" },
+                        }}
 
-                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                          placeholder="FROM"
-                          required
-                        />
-                      )}
-                      classes={{
-                        endAdornment: "text-white",
-                      }}
-                      sx={{
-                        '& .MuiAutocomplete-endAdornment': {
-                          color: 'white',
-                        },
-                      }}
-                    />
+                        className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                    p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                        placeholder="FROM"
+                        required
+                      />
+                    )}
+                    classes={{
+                      endAdornment: "text-white",
+                    }}
+                    sx={{
+                      '& .MuiAutocomplete-endAdornment': {
+                        color: 'white',
+                      },
+                    }}
+                  />
 
-                  </div>
                 </div>
               </div>
+            </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                  <span>Item ID:</span>
-                  {/* <span>{parsedData.ITEMID}</span> */}
+            <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
+              <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                <span>Item Code:</span>
+                {/* <span>{parsedData?.ITEMID}</span> */}
+                <span>ITEMID</span>
+              </div>
+
+              <div className='flex flex-col gap-2'>
+                <div className='text-[#FFFFFF]'>
+                  {/* <span>CLASS {parsedData?.INVENTLOCATIONIDFROM}</span> */}
+                  <span>CLASS 90</span>
                 </div>
+
 
                 <div className='text-[#FFFFFF]'>
-                  {/* <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span> */}
+                  {/* <span>GROUPID {parsedData.GROUPID}</span> */}
+                  <span>GROUPID 0</span>
                 </div>
               </div>
+            </div>
 
-              <div>
-                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    {/* <span>{parsedData.QTY}</span> */}
-                  </div>
+            <div>
+              <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
+                <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                  {/* <span>{parsedData?.QTYTRANSFER}</span> */}
+                  <span>0</span>
+                </div>
 
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    {/* <span>{tableData.length}</span> */}
-                  </div>
+                <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                  <span>0</span>
                 </div>
               </div>
+            </div>
 
             </div>
             

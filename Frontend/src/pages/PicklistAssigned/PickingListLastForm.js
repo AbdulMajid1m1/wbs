@@ -182,7 +182,7 @@ const PickingListLastForm = () => {
                   //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
-                  value={parsedData?.JOURNALID}
+                  // value={parsedData?.JOURNALID}
                   disabled
                 />
 

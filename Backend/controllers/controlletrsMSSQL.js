@@ -4110,6 +4110,37 @@ const WBSDB = {
 
     }
   },
+  //PICKINGROUTEID
+  async getAllWmsSalesPickingListClFromWBSByPickingRouteId(req, res, next) {
+    try {
+      const { PICKINGROUTEID } = req.query;
+      if (!PICKINGROUTEID) {
+        return res.status(400).send({ message: "PICKINGROUTEID is required." });
+      }
+
+      let query = `
+      SELECT * FROM dbo.WMS_Sales_PickingList_CL
+      WHERE PICKINGROUTEID = @PICKINGROUTEID
+      `;
+
+      let request = pool2.request();
+      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID)
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record available" });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+
+
 
   // to inert into wbs
   async insertPickingListDataCLIntoWBS(req, res, next) {
@@ -4128,7 +4159,6 @@ const WBSDB = {
           DLVDATE,
           TRANSREFID,
           EXPEDITIONSTATUS,
-          DATETIMEASSIGNED,
           ASSIGNEDTOUSERID,
           PICKSTATUS,
         } = pickingListDataArray[i];
@@ -4159,9 +4189,9 @@ const WBSDB = {
           ...(DLVDATE ? ['DLVDATE'] : []),
           ...(TRANSREFID ? ['TRANSREFID'] : []),
           ...(EXPEDITIONSTATUS !== undefined ? ['EXPEDITIONSTATUS'] : []),
-          ...(DATETIMEASSIGNED ? ['DATETIMEASSIGNED'] : []),
           ...(ASSIGNEDTOUSERID ? ['ASSIGNEDTOUSERID'] : []),
           ...(PICKSTATUS ? ['PICKSTATUS'] : []),
+          "DATETIMEASSIGNED"
         ];
 
         let values = fields.map((field) => "@" + field);
@@ -4184,9 +4214,12 @@ const WBSDB = {
         if (DLVDATE) request.input('DLVDATE', sql.Date, new Date(DLVDATE));
         if (TRANSREFID) request.input('TRANSREFID', sql.NVarChar, TRANSREFID);
         if (EXPEDITIONSTATUS !== undefined) request.input('EXPEDITIONSTATUS', sql.Int, EXPEDITIONSTATUS);
-        if (DATETIMEASSIGNED) request.input('DATETIMEASSIGNED', sql.DateTime, new Date(DATETIMEASSIGNED));
         if (ASSIGNEDTOUSERID) request.input('ASSIGNEDTOUSERID', sql.NVarChar, ASSIGNEDTOUSERID);
         if (PICKSTATUS) request.input('PICKSTATUS', sql.NVarChar, PICKSTATUS);
+
+        // Add the current date and time to the input parameters.
+        const currentDateTime = new Date();
+        request.input('DATETIMEASSIGNED', sql.DateTime, currentDateTime);
 
         await request.query(query);
       }

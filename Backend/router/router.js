@@ -340,6 +340,6 @@ router.get("/getAllWmsSalesPickingListClFromWBS", checkAuthentication, WBSDB.get
 
 router.post("/insertPickingListDataCLIntoWBS", checkAuthentication, WBSDB.insertPickingListDataCLIntoWBS);
 
-
+router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentication, WBSDB.getAllWmsSalesPickingListClFromWBSByPickingRouteId);
 
 export default router;

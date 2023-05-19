@@ -29,7 +29,8 @@ const UserDataTable = ({
   addNewNavigation,
   printButton,
   emailButton,
-  detectAddRole
+  detectAddRole,
+  AddUser
 
 }) => {
   const navigate = useNavigate();
@@ -604,7 +605,9 @@ const UserDataTable = ({
 
 
   const [isOpen, setIsOpen] = useState(false);
+  const [addUser, setAddUser] = useState(false);
   const [email, setEmail] = useState("");
+  const [username, setUserName] = useState("");
   const [subject, setSubject] = useState("");
   const [sendTo, setSendTo] = useState("");
   const [remarks, setRemarks] = useState("");
@@ -619,9 +622,32 @@ const UserDataTable = ({
 
 
 
+  const handleAddUserPopup = () => {
+    setAddUser(true);
+  };
 
 
+  const handleAddUserClose = () => {
+    setAddUser(false);
+  };
 
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setUserName('');
+    handleAddUserClose();
+    
+    // Make the API request
+    userRequest.post('/insertPickingListDataCLIntoWBS', username)
+      .then(response => {
+        // Handle the response from the API if needed
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Handle any errors that occur during the request
+        console.error(error);
+      });
+  };
 
   return (
     <>
@@ -675,6 +701,7 @@ const UserDataTable = ({
               <button onClick={() => handleExport(false)}>Export to Excel</button>
               <button onClick={() => handlePdfExport(false)}
               >Export to Pdf</button>
+              {AddUser && <button onClick={handleAddUserPopup}>Add User</button>}
               {printButton && <button onClick={handlePrint}>Print Shipment</button>}
             </span>
             }
@@ -769,6 +796,36 @@ const UserDataTable = ({
             </div>
           </div>
         )}
+
+
+
+     {/* Add User */}
+     {addUser && (
+        <div className="popup-container">
+          <div className="popup">
+            <div className="header">
+              <h2>Add User</h2>
+            </div>
+            <form onSubmit={handleFormSubmit}>
+              <label htmlFor="UserName">Name:</label>
+              <input
+                type="text"
+                id="UserName"
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+                required
+                placeholder="User Name"
+              />
+
+              <div className="flex gap-3">
+                <button className="close-btn" type="button" onClick={handleAddUserClose}>CANCEL</button>
+                <button type="submit">SEND</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
 
         {updatedRows.length > 0 && (
           <div id="barcode">

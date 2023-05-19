@@ -46,7 +46,7 @@ const PicklistAssigned = () => {
             backButton={true}
             uniqueId=""
             addNewNavigation="/pickinglistfrom"
- 
+            AddUser={true}
       />    
 
             {isLoading &&

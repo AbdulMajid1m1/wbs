@@ -60,6 +60,9 @@ import BinToBinJournalSaveScreen from './pages/BinToBinJournalID/BinToBinJournal
 import ReallocationPicked from './pages/RealloactionPicked/ReallocationPicked'
 import BinToBinCL from './pages/BinToBinCL/BinToBinCL'
 import JournalList from './pages/JournalList/JournalList'
+import PicklistAssigned from './pages/PicklistAssigned/PicklistAssigned'
+import Pickinglistform from './pages/PicklistAssigned/PickingListForm'
+import PickingListLastForm from './pages/PicklistAssigned/PickingListLastForm'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -101,6 +104,9 @@ const App = () => {
         <Route path="/bintobin2" element={<BinToBinJournalID />} />
         <Route path="/bintobinsave" element={<BinToBinJournalSaveScreen />} />
         <Route path="/itemallocation" element={<ItemReAllocation />} />
+
+        <Route path="/pickinglistfrom" element={<Pickinglistform />} />
+        <Route path="/pickinglistlast" element={<PickingListLastForm />} />
 
         <Route
           path="/*"
@@ -153,6 +159,8 @@ const App = () => {
                 <Route path='/reallocation' element={<ReallocationPicked />}/>
                 <Route path='/bintobincl' element={<BinToBinCL />}/>
                 <Route path='/journallist' element={<JournalList />}/>
+                
+                <Route path='/Picklistassign' element={<PicklistAssigned />}/>
               </Routes>
             </MainLayout>
           } />

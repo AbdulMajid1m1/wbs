@@ -97,6 +97,11 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>2  Bin To Bin CL</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/Picklistassign')}>
+                        <img src={internal} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Picklist Assigned</p>
+                    </div>
+
                     <div className='main-images-container'>
                         <img src={inventory} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>RMA</p>
@@ -161,6 +166,7 @@ const FigmaSidebar = () => {
                         <img src={inventory} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Journal List</p>
                     </div>
+
                 </div>
             )}
 

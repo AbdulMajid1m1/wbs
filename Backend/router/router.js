@@ -344,6 +344,13 @@ router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentic
 
 
 // packingsliptable_CL APIS Start -----
-router.post("/insertIntoPackingSlipTableCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableCl); 
+router.post("/insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl);
+
+router.post("/insertIntoPackingSlipTableCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableCl);
+
+
+// packingsliptable APIS Start -----
+
+router.get("/getPackingSlipTableByPackingSlipId", checkAuthentication, WBSDB.getPackingSlipTableByPackingSlipId);
 
 export default router;

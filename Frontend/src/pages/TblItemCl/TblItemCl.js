@@ -11,7 +11,8 @@ const TblItemCl = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-
+ 
+    
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {

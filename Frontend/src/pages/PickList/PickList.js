@@ -14,9 +14,10 @@ const PickList = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllPickingList")
-                    // axios.get("http://localhost:7008/api/getAllTblItems")
-                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
+                // userRequest.get("/getAllPickingList")
+                // axios.get("http://localhost:7008/api/getAllTblItems")
+                // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
+                userRequest.get("/getAllWmsSalesPickingListClFromAlessia")
                     .then(response => {
                         // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);

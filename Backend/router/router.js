@@ -318,6 +318,9 @@ router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsRe
 
 // ------- tbl_Stock_Master APIS Start --------
 
+
+router.get("/getAllTblStockMaster", checkAuthentication, WBSDB.getAllTblStockMaster);
+
 router.get("/getStockMasterDataByItemId", checkAuthentication, WBSDB.getStockMasterDataByItemId);
 
 router.put("/updateQtyReceivedInTblStockMaster", checkAuthentication, WBSDB.updateQtyReceivedInTblStockMaster);
@@ -344,6 +347,13 @@ router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentic
 
 
 // packingsliptable_CL APIS Start -----
-router.post("/insertIntoPackingSlipTableCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableCl); 
+router.post("/insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl);
+
+router.post("/insertIntoPackingSlipTableCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableCl);
+
+
+// packingsliptable APIS Start -----
+
+router.get("/getPackingSlipTableByPackingSlipId", checkAuthentication, WBSDB.getPackingSlipTableByPackingSlipId);
 
 export default router;

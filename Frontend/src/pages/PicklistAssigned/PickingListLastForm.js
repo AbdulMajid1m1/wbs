@@ -36,8 +36,8 @@ const PickingListLastForm = () => {
         const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
           {
             headers: {
-              // itemcode: parsedData?.ITEMID,
-              itemcode: "CV-950H SS220 BK",
+              itemcode: parsedData?.ITEMID,
+              // itemcode: "CV-950H SS220 BK",
               // itemcode: "IC1233",
             }
           })
@@ -56,23 +56,18 @@ const PickingListLastForm = () => {
     getLocationData();
 
   }, [parsedData?.ITEMID])
-  
-  
-
-  
-  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
-  const [autocompleteKey, setAutocompleteKey] = useState(0);
-  const resetAutocomplete = () => {
-    setLocationInputValue(''); // Clear the location input value
-    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
-  };
 
 
 
-  const handleFromSelect = (event, value) => {
-    setSelectedValue(value);
-    fetchData(value);
-  };
+  // First Table Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const headers = {
+          // itemcode: 'IC1233',
+          itemcode: "CV-950H SS220 BK",
+          binlocation: parsedData?.ITEMID
+        };
 
 
   const fetchData = async (selectedValue) => {
@@ -289,15 +284,15 @@ const PickingListLastForm = () => {
                   //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                     placeholder="Picking Route ID"
-                       value={parsedData?.PICKINGROUTEID}
-                        disabled
+                  placeholder="Picking Route ID"
+                  value={parsedData?.PICKINGROUTEID}
+                  disabled
                 />
 
                 <div className='flex gap-2 justify-center items-center'>
                   <span className='text-white'>FROM:</span>
-                  
-                   <div className='w-full'>
+
+                  <div className='w-full'>
                     <Autocomplete
                       ref={autocompleteRef}
                       key={autocompleteKey}
@@ -354,125 +349,125 @@ const PickingListLastForm = () => {
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
-               <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                 <span>Item Code:</span>
-                 <span>{parsedData?.ITEMID}</span>
-               </div>
-
-               <div className='flex flex-col gap-2'>
-                 <div className='text-[#FFFFFF]'>
-                   <span>CLASS {parsedData?.ASSIGNEDTOUSERID}</span>
-                 </div>
-
-
-                 <div className='text-[#FFFFFF]'>
-                   <span>GROUPID {parsedData.EXPEDITIONSTATUS}</span>
-                 </div>
-               </div>
-             </div>
-
-             <div>
-               <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
-                 <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                   <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                     <span>{parsedData.QTY}</span> 
-                 </div>
-
-                 <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                   <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                   <span>{tableData.length}</span>
-                 </div>
-               </div>
-             </div>
-
-            </div>
-            
-            <div className='mb-6'>
-                {/* // creae excel like Tables  */}
-                <div className="table-location-generate1">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>BinLocation</th>
-                        <th>CID</th>
-                        <th>Classification</th>
-                        <th>GTIN</th>
-                        <th>IntCode</th>
-                        <th>ItemCode</th>
-                        <th>ItemDesc</th>
-                        <th>ItemSerialNo</th>
-                        <th>MainLocation</th>
-                        <th>MapDate</th>
-                        <th>PO</th>
-                        <th>PalletCode</th>
-                        <th>Reference</th>
-                        <th>Remarks</th>
-                        <th>SID</th>
-                        <th>Trans</th>
-                        <th>User</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {newTableData.map((data, index) => (
-                        <tr key={"tranidRow" + index}>
-                          <td>{data.BinLocation}</td>
-                          <td>{data.CID}</td>
-                          <td>{data.Classification}</td>
-                          <td>{data.GTIN}</td>
-                          <td>{data.IntCode}</td>
-                          <td>{data.ItemCode}</td>
-                          <td>{data.ItemDesc}</td>
-                          <td>{data.ItemSerialNo}</td>
-                          <td>{data.MainLocation}</td>
-                          <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                          <td>{data.PO}</td>
-                          <td>{data.PalletCode}</td>
-                          <td>{data.Reference}</td>
-                          <td>{data.Remarks}</td>
-                          <td>{data.SID}</td>
-                          <td>{data.Trans}</td>
-                          <td>{data.User}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Item Code:</span>
+                  <span>{parsedData?.ITEMID}</span>
                 </div>
 
+                <div className='flex flex-col gap-2'>
+                  <div className='text-[#FFFFFF]'>
+                    <span>CLASS {parsedData?.ASSIGNEDTOUSERID}</span>
+                  </div>
 
 
-              </div >
+                  <div className='text-[#FFFFFF]'>
+                    <span>GROUPID {parsedData.EXPEDITIONSTATUS}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                    <span>{parsedData.QTY}</span>
+                  </div>
+
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                    <span>{tableData.length}</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div className='mb-6'>
+              {/* // creae excel like Tables  */}
+              <div className="table-location-generate1">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>BinLocation</th>
+                      <th>CID</th>
+                      <th>Classification</th>
+                      <th>GTIN</th>
+                      <th>IntCode</th>
+                      <th>ItemCode</th>
+                      <th>ItemDesc</th>
+                      <th>ItemSerialNo</th>
+                      <th>MainLocation</th>
+                      <th>MapDate</th>
+                      <th>PO</th>
+                      <th>PalletCode</th>
+                      <th>Reference</th>
+                      <th>Remarks</th>
+                      <th>SID</th>
+                      <th>Trans</th>
+                      <th>User</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {newTableData.map((data, index) => (
+                      <tr key={"tranidRow" + index}>
+                        <td>{data.BinLocation}</td>
+                        <td>{data.CID}</td>
+                        <td>{data.Classification}</td>
+                        <td>{data.GTIN}</td>
+                        <td>{data.IntCode}</td>
+                        <td>{data.ItemCode}</td>
+                        <td>{data.ItemDesc}</td>
+                        <td>{data.ItemSerialNo}</td>
+                        <td>{data.MainLocation}</td>
+                        <td>{new Date(data.MapDate).toLocaleDateString()}</td>
+                        <td>{data.PO}</td>
+                        <td>{data.PalletCode}</td>
+                        <td>{data.Reference}</td>
+                        <td>{data.Remarks}</td>
+                        <td>{data.SID}</td>
+                        <td>{data.Trans}</td>
+                        <td>{data.User}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+
+
+            </div >
 
 
             <div class="text-center mb-6">
-                <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+              <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                   flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                >
-                  <label className="inline-flex items-center mt-1">
-                    <input
-                      type="radio"
-                      name="selectionType"
-                      value="Pallet"
-                      checked={selectionType === 'Pallet'}
-                      onChange={e => setSelectionType(e.target.value)}
-                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    />
-                    <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                  </label>
-                  <label className="inline-flex items-center mt-1">
-                    <input
-                      type="radio"
-                      name="selectionType"
-                      value="Serial"
-                      checked={selectionType === 'Serial'}
-                      onChange={e => setSelectionType(e.target.value)}
-                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    />
-                    <span className="ml-2 text-[#00006A]">BY SERIAL</span>
-                  </label>
-                </div>
+              >
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="Pallet"
+                    checked={selectionType === 'Pallet'}
+                    onChange={e => setSelectionType(e.target.value)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                  />
+                  <span className="ml-2 text-[#00006A]">BY PALLETE</span>
+                </label>
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="Serial"
+                    checked={selectionType === 'Serial'}
+                    onChange={e => setSelectionType(e.target.value)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                  />
+                  <span className="ml-2 text-[#00006A]">BY SERIAL</span>
+                </label>
               </div>
-            
-            
+            </div>
+
+
             <form
             //   onSubmit={handleFormSubmit}
             >

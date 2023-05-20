@@ -332,4 +332,14 @@ router.get("/getAllItemsReAllocationPicked", checkAuthentication, WBSDB.getAllIt
 /// ----- tbl_TransferBinToBin_CL APIS Start -----
 router.get("/getAllTransferBinToBinCL", checkAuthentication, WBSDB.getAllTransferBinToBinCL);
 
+// ----- WMS_Sales_PickingList_CL APIS Start -----
+
+router.get("/getAllWmsSalesPickingListClFromAlessia", checkAuthentication, WBSDB.getAllWmsSalesPickingListClFromAlessia);
+
+router.get("/getAllWmsSalesPickingListClFromWBS", checkAuthentication, WBSDB.getAllWmsSalesPickingListClFromWBS);
+
+router.post("/insertPickingListDataCLIntoWBS", checkAuthentication, WBSDB.insertPickingListDataCLIntoWBS);
+
+router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentication, WBSDB.getAllWmsSalesPickingListClFromWBSByPickingRouteId);
+
 export default router;

@@ -318,6 +318,50 @@ export const TblReceiptsManagementColumn = [
 
 ];
 
+
+export const TblPackingSlipTableColumn = [
+  {
+    field: "SALESID",
+    headerName: "SALES ID",
+    width: 180,
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+  },
+  {
+    field: "NAME",
+    headerName: "NAME",
+    width: 180,
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 180,
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+  },
+  {
+    field: "ORDERED",
+    headerName: "ORDERED",
+    width: 180,
+  },
+  {
+    field: "PACKINGSLIPID",
+    headerName: "PACKING SLIP ID",
+    width: 180,
+  },
+  {
+    field: "VEHICLESHIPPLATENUMBER",
+    headerName: "VEHICLE SHIP PLATE NUMBER",
+    width: 180,
+  },
+];
+
 export const AllItems = [
   {
     field: "ITEMID",
@@ -517,6 +561,7 @@ export const PackingSlipColumn = [
 ]
 
 
+// TODO: reomve these AllItemsDispatchColumn
 
 export const AllItemsDispatchColumn = [
   {
@@ -585,6 +630,49 @@ export const AllItemsDispatchColumn = [
   },
 
 ]
+
+export const PackingSlipTableColumn = [
+  {
+    field: "PACKINGSLIPID",
+    headerName: "PACKING SLIP ID",
+    width: 150,
+  },
+  {
+    field: "VEHICLESHIPPLATENUMBER",
+    headerName: "VEHICLE SHIP PLATE NUMBER",
+    width: 180,
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 220,
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+  },
+  {
+    field: "ORDERED",
+    headerName: "ORDERED",
+    width: 150,
+  },
+  {
+    field: "NAME",
+    headerName: "NAME",
+    width: 180,
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+  },
+  {
+    field: "SALESID",
+    headerName: "SALES ID",
+    width: 180,
+  },
+];
 
 
 
@@ -764,52 +852,106 @@ export const ExpectedTranferOrderColumn = [
 
 
 
+// export const PickListColumn = [
+//   {
+//     field: "PICKINGROUTEID",
+//     headerName: "PICKING ROUTE ID",
+//     width: 180,
+
+//   },
+//   {
+//     field: "INVENTLOCATIONID",
+//     headerName: "INVENT LOCATION ID",
+//     width: 180,
+
+//   },
+//   {
+//     field: "ITEMID",
+//     headerName: "ITEM ID",
+//     width: 180,
+
+//   },
+//   {
+//     field: "CONFIGID",
+//     headerName: "CONFIG ID",
+//     width: 180,
+
+//   },
+//   {
+//     field: "ITEMNAME",
+//     headerName: "ITEM NAME",
+//     width: 180,
+
+//   },
+//   {
+//     field: "QTY",
+//     headerName: "QTY",
+//     width: 180,
+
+//   },
+//   {
+//     field: "EXPEDITIONSTATUS",
+//     headerName: "EXPEDITION STATUS",
+//     width: 220,
+
+//   },
+
+
+// ]
+
 export const PickListColumn = [
   {
     field: "PICKINGROUTEID",
     headerName: "PICKING ROUTE ID",
     width: 180,
-
   },
   {
     field: "INVENTLOCATIONID",
     headerName: "INVENT LOCATION ID",
     width: 180,
-
-  },
-  {
-    field: "ITEMID",
-    headerName: "ITEM ID",
-    width: 180,
-
   },
   {
     field: "CONFIGID",
     headerName: "CONFIG ID",
     width: 180,
-
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
   },
   {
     field: "ITEMNAME",
     headerName: "ITEM NAME",
     width: 180,
-
   },
   {
     field: "QTY",
     headerName: "QTY",
     width: 180,
-
+  },
+  {
+    field: "CUSTOMER",
+    headerName: "CUSTOMER",
+    width: 180,
+  },
+  {
+    field: "DLVDATE",
+    headerName: "DELIVERY DATE",
+    width: 180,
+  },
+  {
+    field: "TRANSREFID",
+    headerName: "TRANSACTION REF ID",
+    width: 180,
   },
   {
     field: "EXPEDITIONSTATUS",
     headerName: "EXPEDITION STATUS",
     width: 220,
-
   },
+];
 
-
-]
 
 
 

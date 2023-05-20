@@ -318,6 +318,9 @@ router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsRe
 
 // ------- tbl_Stock_Master APIS Start --------
 
+
+router.get("/getAllTblStockMaster", checkAuthentication, WBSDB.getAllTblStockMaster);
+
 router.get("/getStockMasterDataByItemId", checkAuthentication, WBSDB.getStockMasterDataByItemId);
 
 router.put("/updateQtyReceivedInTblStockMaster", checkAuthentication, WBSDB.updateQtyReceivedInTblStockMaster);

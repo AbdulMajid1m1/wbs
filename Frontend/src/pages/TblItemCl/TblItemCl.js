@@ -11,11 +11,12 @@ const TblItemCl = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-
+ 
+    
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
-
+                // tbl_Stock_Master 
                 userRequest.get("/getAllTblItemsCL")
                     // axios.get("http://localhost:7008/api/getAllTblItems")
                     // axios.get("http://37.224.47.116:7474/api/getAllTblItems")

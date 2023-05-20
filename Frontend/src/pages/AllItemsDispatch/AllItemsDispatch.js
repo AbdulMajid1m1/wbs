@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { AllItemsDispatchColumn } from '../../utils/datatablesource'
+import { PackingSlipTableColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
@@ -14,9 +14,8 @@ const AllItemsDispatch = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllTblDispatchingData")
-                    // axios.get("http://localhost:7008/api/getAllTblItems")
-                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
+                // userRequest.get("/getAllTblDispatchingData")
+                userRequest.get("/getAllPackingSlips")
                     .then(response => {
                         console.log(response?.data);
 
@@ -25,7 +24,6 @@ const AllItemsDispatch = () => {
 
                     })
                     .catch(error => {
-                        // handleUserError(error)
                         console.error(error);
                         setIsLoading(false)
 
@@ -45,7 +43,7 @@ const AllItemsDispatch = () => {
             {/* <SideBar /> */}
             {/* <SideBar2 /> */}
 
-            <UserDataTable data={alldata} title="Items For Dispatch" columnsName={AllItemsDispatchColumn} backButton={true}
+            <UserDataTable data={alldata} title="Items For Dispatch" columnsName={PackingSlipTableColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             />

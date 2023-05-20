@@ -4243,7 +4243,7 @@ const WBSDB = {
     try {
 
       const packingSlipArray = req.body;
-      if (pickingsSlipArray.length === 0) {
+      if (packingSlipArray.length === 0) {
         return res.status(400).send({ message: "No data available" });
       }
 

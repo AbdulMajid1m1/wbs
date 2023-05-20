@@ -14,7 +14,6 @@ const PickingListLastForm = () => {
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [newTableData, setNewTableData] = useState([]);
-  const [selectedValue, setSelectedValue] = useState(null);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   // to reset snakebar messages
@@ -25,10 +24,26 @@ const PickingListLastForm = () => {
   };
 
   // retrieve data from session storage
-  const storedData = sessionStorage.getItem('PickingRowData');
+  const storedData = sessionStorage.getItem('journalRowData');
   const parsedData = JSON.parse(storedData);
 
-  
+
+  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const resetAutocomplete = () => {
+    setLocationInputValue(''); // Clear the location input value
+    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  };
+
+
+
+
+
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleFromSelect = (event, value) => {
+    setSelectedOption(value || "");
+  }
 
   useEffect(() => {
     const getLocationData = async () => {
@@ -65,198 +80,140 @@ const PickingListLastForm = () => {
       try {
         const headers = {
           // itemcode: 'IC1233',
-          itemcode: "CV-950H SS220 BK",
+          itemcode: parsedData?.ITEMID,
           binlocation: parsedData?.ITEMID
         };
 
+        const response = await userRequest.post('/getMappedBarcodedsByItemCodeAndBinLocation', { headers });
 
-  const fetchData = async (selectedValue) => {
-    try {
-      const response = await userRequest.post(
-        "/getMappedBarcodedsByItemCodeAndBinLocation",
-        {},
-        {
-          headers: {
-            itemcode: "CV-950H SS220 BK",
-            binlocation: selectedValue
-          }
-        }
-      );
-      const responseData = response.data;
-      setNewTableData(responseData);
-    } catch (error) {
-      console.error(error);
+        // Handle the response data
+        const responseData = response.data;
+        setNewTableData(responseData);
+      } catch (error) {
+        // Handle errors
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
+
+
+
+  const handleScan = (e) => {
+    e.preventDefault();
+    if (scanInputValue === '') {
+      return;
     }
-  };
-  
-
-  // const [selectionType, setSelectionType] = useState('Pallet');
-  const [data, setData] = useState([]);
-  const [userInput, setUserInput] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
-  const [userInputSubmit, setUserInputSubmit] = useState(false);
-  
-   // define the function to filter data based on user input and selection type
-   const filterData = () => {
-    const filtered = data.filter((item) => {
-      if (selectionType === 'Pallet') {
-        return item.PalletCode === userInput;
-      } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo === userInput;
-      } else {
-        return true;
+    if (selectionType === 'Pallet') {
+      //  check if the scanned value is already in the table
+      const isAlreadyInTable = tableData.some(item => item.PalletCode === scanInputValue);
+      if (isAlreadyInTable) {
+        setTimeout(() => {
+          setError('This pallet is already in the table');
+        }, 400);
+        return;
       }
-    });
-    setFilteredData(filtered); // update the filtered data state variable
-  };
-
-  // use useEffect to trigger the filtering of data whenever the user input changes
-  useEffect(() => {
-    filterData();
-  }, [userInputSubmit, selectionType]);
 
 
-  // reset function
-  const resetDataOnUPdate = () => {
-    // remove the filtered data from the data state variable
-    const newData = data.filter((item) => {
-      if (selectionType === 'Pallet') {
-        return item.PalletCode !== userInput;
-      } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo !== userInput;
-      } else {
-        return true;
+
+
+      userRequest.post("/getMappedBarcodedsByPalletCodeAndBinLocation", {}, {
+        headers: {
+          palletcode: scanInputValue,
+          binlocation: parsedData.WMSLOCATIONID,
+        }
       }
-    });
-    setData(newData);
-    // reset the user input state variable
-    setUserInput("");
-    // trigger the filtering of data
-    setUserInputSubmit(!userInputSubmit);
-    // reset the scan location state variable
-    // setBinLocation("");
+      )
+        .then(response => {
+          console.log(response?.data)
+          // Append the new data to the existing data
+          setTableData(prevData => [...prevData, ...response?.data])
 
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
 
-  };
+        })
+    }
+    else if (selectionType === 'Serial') {
+      //  check if the scanned value is already in the table
+      const isAlreadyInTable = tableData.some(item => item.SERIALNUM === scanInputValue);
 
+      if (isAlreadyInTable) {
+        setError('This serial is already in the table');
+        return;
+      }
+      // userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, { headers: { itemserialno: scanInputValue, binlocation: parsedData.WMSLOCATIONID } })
+      userRequest.post("/getMappedBarcodedsByItemCodeAndBinLocation", {}, { headers: { itemcode: scanInputValue, binlocation: parsedData.WMSLOCATIONID } })
+        .then(response => {
+          console.log(response?.data)
+          // Append the new data to the existing data
+          setTableData(prevData => [...prevData, ...response?.data])
 
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error?.response?.data?.message ?? 'Cannot fetch location data');
 
-  // const handleScan = (e) => {
-  //   e.preventDefault();
-  //   if (scanInputValue === '') {
-  //     return;
-  //   }
-  //   if (selectionType === 'Pallet') {
-  //     //  check if the scanned value is already in the table
-  //     const isAlreadyInTable = tableData.some(item => item.PalletCode === scanInputValue);
-  //     if (isAlreadyInTable) {
-  //       setTimeout(() => {
-  //         setError('This pallet is already in the table');
-  //       }, 400);
-  //       return;
-  //     }
+        })
+    }
 
+    else {
+      return;
+    }
 
+  }
 
+  const handleBinUpdate = (e) => {
 
-  //     userRequest.post("/getMappedBarcodedsByPalletCodeAndBinLocation", {}, {
-  //       headers: {
-  //         palletcode: scanInputValue,
-  //         binlocation: parsedData.WMSLOCATIONID,
-  //       }
-  //     }
-  //     )
-  //       .then(response => {
-  //         console.log(response?.data)
-  //         // Append the new data to the existing data
-  //         setTableData(prevData => [...prevData, ...response?.data])
+    e.preventDefault();
+    if (tableData.length === 0) {
+      setError('Please scan some items first');
+      return;
+    }
+    if (locationInputValue === '') {
+      setError('Please enter a bin location');
+      return;
+    }
+    userRequest.put('/updateTblMappedBarcodeBinLocationWithSelectionType', {}, {
+      headers: {
+        'oldbinlocation': parsedData?.WMSLOCATIONID,
+        'newbinlocation': locationInputValue,
+        selectiontype: selectionType,
+        selectiontypevalue: scanInputValue
 
-  //       })
-  //       .catch(error => {
-  //         console.log(error)
-  //         setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+      }
+    })
+      .then((response) => {
+        console.log(response);
+        setMessage(response?.data?.message ?? 'Bin location updated successfully');
+        // alert('done')
+        // clear the table
+        setTableData([]);
+        // clear the location input
+        setLocationInputValue('');
+        // clear the scan input
+        setScanInputValue('');
+        // remove the specfic item from the list in allJournalRows in session storage on the basis of ITEMID
+        const allJournalRows = JSON.parse(sessionStorage.getItem('allJournalRows'));
+        const updatedJournalRows = allJournalRows.filter(item => item.ITEMID !== parsedData.ITEMID);
+        sessionStorage.setItem('allJournalRows', JSON.stringify(updatedJournalRows));
+        setTimeout(() => {
+          navigate("/pickinglistfrom");
+        }
+          , 1000);
 
-  //       })
-  //   }
-  //   else if (selectionType === 'Serial') {
-  //     //  check if the scanned value is already in the table
-  //     const isAlreadyInTable = tableData.some(item => item.SERIALNUM === scanInputValue);
-
-  //     if (isAlreadyInTable) {
-  //       setError('This serial is already in the table');
-  //       return;
-  //     }
-  //     // userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, { headers: { itemserialno: scanInputValue, binlocation: parsedData.WMSLOCATIONID } })
-  //     userRequest.post("/getMappedBarcodedsByItemCodeAndBinLocation", {}, { headers: { itemcode: scanInputValue, binlocation: parsedData.WMSLOCATIONID } })
-  //       .then(response => {
-  //         console.log(response?.data)
-  //         // Append the new data to the existing data
-  //         setTableData(prevData => [...prevData, ...response?.data])
-
-  //       })
-  //       .catch(error => {
-  //         console.log(error)
-  //         setError(error?.response?.data?.message ?? 'Cannot fetch location data');
-
-  //       })
-  //   }
-
-  //   else {
-  //     return;
-  //   }
-
-  // }
-
-  // const handleBinUpdate = (e) => {
-
-  //   e.preventDefault();
-  //   if (tableData.length === 0) {
-  //     setError('Please scan some items first');
-  //     return;
-  //   }
-  //   if (locationInputValue === '') {
-  //     setError('Please enter a bin location');
-  //     return;
-  //   }
-  //   userRequest.put('/updateTblMappedBarcodeBinLocationWithSelectionType', {}, {
-  //     headers: {
-  //       'oldbinlocation': parsedData?.WMSLOCATIONID,
-  //       'newbinlocation': locationInputValue,
-  //       selectiontype: selectionType,
-  //       selectiontypevalue: scanInputValue
-
-  //     }
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //       setMessage(response?.data?.message ?? 'Bin location updated successfully');
-  //       // alert('done')
-  //       // clear the table
-  //       setTableData([]);
-  //       // clear the location input
-  //       setLocationInputValue('');
-  //       // clear the scan input
-  //       setScanInputValue('');
-  //       // remove the specfic item from the list in allJournalRows in session storage on the basis of ITEMID
-  //       const allJournalRows = JSON.parse(sessionStorage.getItem('allJournalRows'));
-  //       const updatedJournalRows = allJournalRows.filter(item => item.ITEMID !== parsedData.ITEMID);
-  //       sessionStorage.setItem('allJournalRows', JSON.stringify(updatedJournalRows));
-  //       setTimeout(() => {
-  //         navigate("/pickinglistfrom");
-  //       }
-  //         , 1000);
-
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       setError(error.response?.data?.message ?? 'Cannot update bin location');
-  //       // alert(error)
-  //     });
-  // }
-
-  
-  const handleInputUser = (e) => {
-    setUserInputSubmit(!userInputSubmit);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error.response?.data?.message ?? 'Cannot update bin location');
+        // alert(error)
+      });
   }
 
 
@@ -347,6 +304,28 @@ const PickingListLastForm = () => {
                   </div>
                 </div>
               </div>
+
+              {/* <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
+                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Item Code:</span>
+                  <span>{parsedData.ITEMID}</span>
+                </div>
+
+              </div>
+
+              <div>
+                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                    <span>{parsedData.QTY}</span>
+                  </div>
+
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                    <span>{tableData.length}</span>
+                  </div>
+                </div>
+              </div> */}
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
@@ -473,16 +452,15 @@ const PickingListLastForm = () => {
             >
               <div className="mb-6">
                 <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}#<span className='text-[#FF0404]'>*</span></label>
-                
                 <input
-                id="scanpallet"
-                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder={`Scan ${selectionType}`}
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                onBlur={handleInputUser}
+                  id="scan"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder={`Enter Scan / ${selectionType} Number`}
 
-              />
+                  // submit when focus removed
+                  onChange={e => setScanInputValue(e.target.value)}
+                  onBlur={handleScan}
+                />
               </div>
 
               <div className='mb-6'>
@@ -490,28 +468,28 @@ const PickingListLastForm = () => {
                 <div className="table-location-generate1">
                   <table>
                     <thead>
-                    <tr>
-                        <th>BinLocation</th>
-                        <th>CID</th>
-                        <th>Classification</th>
+                      <tr>
+                        <th>Item Code</th>
+                        <th>Item Description</th>
                         <th>GTIN</th>
-                        <th>IntCode</th>
-                        <th>ItemCode</th>
-                        <th>ItemDesc</th>
-                        <th>ItemSerialNo</th>
-                        <th>MainLocation</th>
-                        <th>MapDate</th>
-                        <th>PO</th>
-                        <th>PalletCode</th>
-                        <th>Reference</th>
                         <th>Remarks</th>
-                        <th>SID</th>
-                        <th>Trans</th>
                         <th>User</th>
+                        <th>Classification</th>
+                        <th>Main Location</th>
+                        <th>Bin Location</th>
+                        <th>Internal Code</th>
+                        <th>Item Serial Number</th>
+                        <th>Map Date</th>
+                        <th>Pallet Code</th>
+                        <th>Reference</th>
+                        <th>Shipment ID</th>
+                        <th>Container ID</th>
+                        <th>PO</th>
+                        <th>Transaction</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredData.map((data, index) => (
+                      {tableData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
                           <td>{data.ItemCode}</td>
                           <td>{data.ItemDesc}</td>
@@ -558,7 +536,7 @@ const PickingListLastForm = () => {
                 type='button'
                 className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
                 <span className='flex justify-center items-center'
-                  // onClick={handleBinUpdate}
+                  onClick={handleBinUpdate}
                 >
                   <p>Save</p>
                 </span>

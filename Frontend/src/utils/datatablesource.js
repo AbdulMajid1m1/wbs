@@ -1490,3 +1490,72 @@ export const journalListColumn = [
 
 
 ]
+
+
+
+
+export const PicklistAssignedColumn = [
+  {
+    field: "PICKINGROUTEID",
+    headerName: "PICKING ROUTE ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEM NAME",
+    width: 180,
+
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 180,
+
+  },
+  {
+    field: "CUSTOMER",
+    headerName: "CUSTOMER",
+    width: 180,
+
+  },
+  {
+    field: "DLVDATE",
+    headerName: "DLVDATE",
+    width: 180,
+
+  },
+  {
+    field: "TRANSREFID",
+    headerName: "TRANSREFID",
+    width: 180,
+
+  },
+  {
+    field: "EXPEDITIONSTATUS",
+    headerName: "EXPEDITION STATUS",
+    width: 180,
+
+  },
+
+
+
+]

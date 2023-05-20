@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { PickListColumn } from '../../utils/datatablesource'
+import { PickListColumn, PicklistAssignedColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
@@ -14,7 +14,7 @@ const PicklistAssigned = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllPickingList")
+                userRequest.get("/getAllWmsSalesPickingListClFromAlessia")
                     .then(response => {
                         // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
@@ -42,11 +42,11 @@ const PicklistAssigned = () => {
         <div>
 
 
-        <UserDataTable data={alldata} title="Pick List Assigned" columnsName={PickListColumn}
+        <UserDataTable data={alldata} title="Pick List Assigned" columnsName={PicklistAssignedColumn}
             backButton={true}
             uniqueId=""
             addNewNavigation="/pickinglistfrom"
- 
+            AddUser={true}
       />    
 
             {isLoading &&

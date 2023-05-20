@@ -13,6 +13,7 @@ const PickingListLastForm = () => {
   const [selectionType, setSelectionType] = useState('Pallet');
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [newTableData, setNewTableData] = useState([]);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   // to reset snakebar messages
@@ -21,6 +22,11 @@ const PickingListLastForm = () => {
     setMessage(null);
 
   };
+
+  // retrieve data from session storage
+  const storedData = sessionStorage.getItem('journalRowData');
+  const parsedData = JSON.parse(storedData);
+
 
   const autocompleteRef = useRef(); // Ref to access the Autocomplete component
   const [autocompleteKey, setAutocompleteKey] = useState(0);
@@ -39,11 +45,63 @@ const PickingListLastForm = () => {
     setSelectedOption(value || "");
   }
 
+  useEffect(() => {
+    const getLocationData = async () => {
+      try {
+        const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
+          {
+            headers: {
+              // itemcode: parsedData?.ITEMID,
+              itemcode: "CV-950H SS220 BK",
+              // itemcode: "IC1233",
+            }
+          })
+        console.log(res?.data)
+        setLocation(res?.data)
 
-  // retrieve data from session storage
-  const storedData = sessionStorage.getItem('pickingRowdata');
-  const parsedData = JSON.parse(storedData);
-  console.log(parsedData)
+
+      }
+      catch (error) {
+        console.log(error)
+        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+      }
+    }
+
+    getLocationData();
+
+  }, [parsedData?.ITEMID])
+  
+  
+
+  // First Table Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const headers = {
+          // itemcode: 'IC1233',
+          itemcode: "CV-950H SS220 BK",
+          binlocation: parsedData?.ITEMID
+        };
+
+        const response = await userRequest.post('/getMappedBarcodedsByItemCodeAndBinLocation', { headers });
+
+        // Handle the response data
+        const responseData = response.data;
+        setNewTableData(responseData);
+      } catch (error) {
+        // Handle errors
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
+
+
 
   const handleScan = (e) => {
     e.preventDefault();
@@ -90,6 +148,7 @@ const PickingListLastForm = () => {
         setError('This serial is already in the table');
         return;
       }
+      // userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, { headers: { itemserialno: scanInputValue, binlocation: parsedData.WMSLOCATIONID } })
       userRequest.post("/getMappedBarcodedsByItemCodeAndBinLocation", {}, { headers: { itemcode: scanInputValue, binlocation: parsedData.WMSLOCATIONID } })
         .then(response => {
           console.log(response?.data)
@@ -145,7 +204,7 @@ const PickingListLastForm = () => {
         const updatedJournalRows = allJournalRows.filter(item => item.ITEMID !== parsedData.ITEMID);
         sessionStorage.setItem('allJournalRows', JSON.stringify(updatedJournalRows));
         setTimeout(() => {
-          navigate("/bintobin2");
+          navigate("/pickinglistfrom");
         }
           , 1000);
 
@@ -177,18 +236,20 @@ const PickingListLastForm = () => {
                     </span>
                   </button>
                 </div>
-                <span className='text-white -mt-7'>Packing Route ID</span>
+                <span className='text-white -mt-7'>Picking Route ID:</span>
                 <input
                   //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Transfer ID Number"
-                  // value={parsedData?.JOURNALID}
-                  disabled
+                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                     placeholder="Picking Route ID"
+                       value={parsedData?.PICKINGROUTEID}
+                        disabled
                 />
 
                 <div className='flex gap-2 justify-center items-center'>
                   <span className='text-white'>FROM:</span>
-                  <div className='w-full'>
+                  
+                   <div className='w-full'>
                     <Autocomplete
                       ref={autocompleteRef}
                       key={autocompleteKey}
@@ -244,79 +305,107 @@ const PickingListLastForm = () => {
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
+              {/* <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                  <span>Item ID:</span>
-                  {/* <span>{parsedData.ITEMID}</span> */}
+                  <span>Item Code:</span>
+                  <span>{parsedData.ITEMID}</span>
                 </div>
 
-                <div className='text-[#FFFFFF]'>
-                  {/* <span>CLASS {parsedData.INVENTLOCATIONIDFROM}</span> */}
-                </div>
               </div>
 
               <div>
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    {/* <span>{parsedData.QTY}</span> */}
+                    <span>{parsedData.QTY}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    {/* <span>{tableData.length}</span> */}
+                    <span>{tableData.length}</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
+
+              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
+               <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                 <span>Item Code:</span>
+                 <span>{parsedData?.ITEMID}</span>
+               </div>
+
+               <div className='flex flex-col gap-2'>
+                 <div className='text-[#FFFFFF]'>
+                   <span>CLASS {parsedData?.ASSIGNEDTOUSERID}</span>
+                 </div>
+
+
+                 <div className='text-[#FFFFFF]'>
+                   <span>GROUPID {parsedData.EXPEDITIONSTATUS}</span>
+                 </div>
+               </div>
+             </div>
+
+             <div>
+               <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
+                 <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                   <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                     <span>{parsedData.QTY}</span> 
+                 </div>
+
+                 <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                   <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                   <span>{tableData.length}</span>
+                 </div>
+               </div>
+             </div>
 
             </div>
             
-            {/*  */}
             <div className='mb-6'>
                 {/* // creae excel like Tables  */}
                 <div className="table-location-generate1">
                   <table>
                     <thead>
                       <tr>
-                        <th>Item Code</th>
-                        <th>Item Description</th>
-                        <th>GTIN</th>
-                        <th>Remarks</th>
-                        <th>User</th>
+                        <th>BinLocation</th>
+                        <th>CID</th>
                         <th>Classification</th>
-                        <th>Main Location</th>
-                        <th>Bin Location</th>
-                        <th>Internal Code</th>
-                        <th>Item Serial Number</th>
-                        <th>Map Date</th>
-                        <th>Pallet Code</th>
-                        <th>Reference</th>
-                        <th>Shipment ID</th>
-                        <th>Container ID</th>
+                        <th>GTIN</th>
+                        <th>IntCode</th>
+                        <th>ItemCode</th>
+                        <th>ItemDesc</th>
+                        <th>ItemSerialNo</th>
+                        <th>MainLocation</th>
+                        <th>MapDate</th>
                         <th>PO</th>
-                        <th>Transaction</th>
+                        <th>PalletCode</th>
+                        <th>Reference</th>
+                        <th>Remarks</th>
+                        <th>SID</th>
+                        <th>Trans</th>
+                        <th>User</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {tableData.map((data, index) => (
+                      {newTableData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
+                          <td>{data.BinLocation}</td>
+                          <td>{data.CID}</td>
+                          <td>{data.Classification}</td>
+                          <td>{data.GTIN}</td>
+                          <td>{data.IntCode}</td>
                           <td>{data.ItemCode}</td>
                           <td>{data.ItemDesc}</td>
-                          <td>{data.GTIN}</td>
-                          <td>{data.Remarks}</td>
-                          <td>{data.User}</td>
-                          <td>{data.Classification}</td>
-                          <td>{data.MainLocation}</td>
-                          <td>{data.BinLocation}</td>
-                          <td>{data.IntCode}</td>
                           <td>{data.ItemSerialNo}</td>
+                          <td>{data.MainLocation}</td>
                           <td>{new Date(data.MapDate).toLocaleDateString()}</td>
+                          <td>{data.PO}</td>
                           <td>{data.PalletCode}</td>
                           <td>{data.Reference}</td>
+                          <td>{data.Remarks}</td>
                           <td>{data.SID}</td>
-                          <td>{data.CID}</td>
-                          <td>{data.PO}</td>
                           <td>{data.Trans}</td>
+                          <td>{data.User}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -327,8 +416,8 @@ const PickingListLastForm = () => {
 
               </div >
 
-              
-              <div class="text-center">
+
+            <div class="text-center mb-6">
                 <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                   flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
                 >
@@ -356,14 +445,13 @@ const PickingListLastForm = () => {
                   </label>
                 </div>
               </div>
-
-
-
+            
+            
             <form
             //   onSubmit={handleFormSubmit}
             >
               <div className="mb-6">
-                <label htmlFor='scan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}#<span className='text-[#FF0404]'>*</span></label>
+                <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}#<span className='text-[#FF0404]'>*</span></label>
                 <input
                   id="scan"
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -448,7 +536,7 @@ const PickingListLastForm = () => {
                 type='button'
                 className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
                 <span className='flex justify-center items-center'
-                //   onClick={handleBinUpdate}
+                  onClick={handleBinUpdate}
                 >
                   <p>Save</p>
                 </span>

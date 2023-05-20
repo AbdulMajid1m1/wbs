@@ -172,8 +172,10 @@ const UserDataTable = ({
     };
   }
 
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
-  const handleRowClick = (item) => {
+
+  const handleRowClick = (item, rowData) => {
     const index = item.id;
     let itemGroup;
 
@@ -203,6 +205,8 @@ const UserDataTable = ({
       // If the row is not selected, add it to the selectedRows array
       setSelectedRow([...selectedRow, { data: item, index }]);
     }
+
+    setSelectedRowData(rowData);
   };
 
 
@@ -622,7 +626,16 @@ const UserDataTable = ({
 
 
 
+  // const handleAddUserPopup = () => {
+  //   setAddUser(true);
+  // };
+  
   const handleAddUserPopup = () => {
+    if (selectedRowData) {
+      setUserName(selectedRowData.name); // Assuming the name property exists in the selected row data
+    } else {
+      setUserName('');
+    }
     setAddUser(true);
   };
 
@@ -642,10 +655,12 @@ const UserDataTable = ({
       .then(response => {
         // Handle the response from the API if needed
         console.log(response.data);
+        setMessage('User Id Added Successfully');
       })
       .catch(error => {
         // Handle any errors that occur during the request
         console.error(error);
+        setError('User Id Not Added');
       });
   };
 
@@ -806,6 +821,23 @@ const UserDataTable = ({
             <div className="header">
               <h2>Add User</h2>
             </div>
+            {/* <form onSubmit={handleFormSubmit}>
+              <label htmlFor="UserName">Name:</label>
+              <input
+                type="text"
+                id="UserName"
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+                required
+                placeholder="User Name"
+              />
+
+              <div className="flex gap-3">
+                <button className="close-btn" type="button" onClick={handleAddUserClose}>CANCEL</button>
+                <button type="submit">SEND</button>
+              </div>
+            </form> */}
+
             <form onSubmit={handleFormSubmit}>
               <label htmlFor="UserName">Name:</label>
               <input
@@ -822,6 +854,7 @@ const UserDataTable = ({
                 <button type="submit">SEND</button>
               </div>
             </form>
+
           </div>
         </div>
       )}

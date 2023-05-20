@@ -4115,7 +4115,7 @@ const WBSDB = {
     try {
       const { PICKINGROUTEID } = req.query;
       if (!PICKINGROUTEID) {
-        return res.status(400).send({ message: "PICKINGROUTEID is required." });
+        return res.status(400).send({ message: "Please provide data to insert" });
       }
 
       let query = `
@@ -4146,6 +4146,9 @@ const WBSDB = {
   async insertPickingListDataCLIntoWBS(req, res, next) {
     try {
       const pickingListDataArray = req.body;
+      if (pickingListDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
 
       for (let i = 0; i < pickingListDataArray.length; i++) {
         const {
@@ -4203,7 +4206,7 @@ const WBSDB = {
             (${values.join(', ')})
         `;
 
-        let request = pool1.request();
+        let request = pool2.request();
         request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
         request.input('ITEMID', sql.NVarChar, ITEMID);
         request.input('QTY', sql.Float, QTY);
@@ -4223,12 +4226,83 @@ const WBSDB = {
 
         await request.query(query);
       }
-      res.status(201).send({ message: 'Data inserted successfully.' });
+      return res.status(201).send({ message: 'Data inserted successfully.' });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
+
+
+
+
+  // packingsliptable_CL controller starts here
+
+
+  async insertIntoPackingSlipTableCl(req, res, next) {
+    try {
+
+      const packingSlipArray = req.body;
+      if (packingSlipArray.length === 0) {
+        return res.status(400).send({ message: "No data available" });
+      }
+
+      for (const packingSlip of packingSlipArray) {
+
+        const fields = [
+          "INVENTLOCATIONID",
+          "ORDERED",
+          "PACKINGSLIPID",
+          "ASSIGNEDUSERID",
+          ...(packingSlip.SALESID ? ["SALESID"] : []),
+          ...(packingSlip.ITEMID ? ["ITEMID"] : []),
+          ...(packingSlip.NAME ? ["NAME"] : []),
+          ...(packingSlip.CONFIGID ? ["CONFIGID"] : []),
+          ...(packingSlip.VEHICLESHIPPLATENUMBER ? ["VEHICLESHIPPLATENUMBER"] : []),
+          ...(packingSlip.DATETIMECREATED ? ["DATETIMECREATED"] : []),
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `INSERT  INTO packingsliptable_CL 
+        (${fields.join(', ')}) 
+        VALUES 
+          (${values.join(', ')})
+        `;
+
+
+
+        let request = pool2.request();
+
+        request.input("INVENTLOCATIONID", sql.NVarChar, packingSlip.INVENTLOCATIONID);
+        request.input("ORDERED", sql.Float, packingSlip.ORDERED);
+        request.input("PACKINGSLIPID", sql.NVarChar, packingSlip.PACKINGSLIPID);
+        request.input("ASSIGNEDUSERID", sql.NVarChar, packingSlip.ASSIGNEDUSERID);
+        if (packingSlip.SALESID) request.input("SALESID", sql.NVarChar, packingSlip.SALESID);
+        if (packingSlip.ITEMID) request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID);
+        if (packingSlip.NAME) request.input("NAME", sql.NVarChar, packingSlip.NAME);
+        if (packingSlip.CONFIGID) request.input("CONFIGID", sql.NVarChar, packingSlip.CONFIGID);
+        if (packingSlip.VEHICLESHIPPLATENUMBER) request.input("VEHICLESHIPPLATENUMBER", sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
+        if (packingSlip.DATETIMECREATED) request.input("DATETIMECREATED", sql.DateTime, new Date(packingSlip.DATETIMECREATED));
+
+        await request.query(query);
+
+
+
+      };
+
+      return res.status(201).send({ message: 'Data inserted successfully.' });
+
+    } catch (error) {
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
+
+
 
 
 

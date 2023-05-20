@@ -342,4 +342,8 @@ router.post("/insertPickingListDataCLIntoWBS", checkAuthentication, WBSDB.insert
 
 router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentication, WBSDB.getAllWmsSalesPickingListClFromWBSByPickingRouteId);
 
+
+// packingsliptable_CL APIS Start -----
+router.post("/insertIntoPackingSlipTableCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableCl); 
+
 export default router;

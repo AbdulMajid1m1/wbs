@@ -26,6 +26,12 @@ const PickingListForm = () => {
 
   };
 
+<<<<<<< HEAD
+=======
+  // retrieve data from session storage
+  const storedData = sessionStorage.getItem('PickingRowData');
+  const parsedData = JSON.parse(storedData);
+>>>>>>> Hasnain
 
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
@@ -134,6 +140,61 @@ const PickingListForm = () => {
                   </span>
                 </button>
               </div>
+
+              {/* <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
+                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Item Code:</span>
+                  <span>{parsedData.ITEMID}</span>
+                </div>
+
+              </div>
+
+              <div>
+                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                    <span>{parsedData.QTY}</span>
+                  </div>
+
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                    <span>{tableData.length}</span>
+                  </div>
+                </div>
+              </div> */}
+
+              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
+                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Item Code:</span>
+                  <span>{parsedData?.ITEMID}</span>
+                </div>
+
+                <div className='flex flex-col gap-2'>
+                  <div className='text-[#FFFFFF]'>
+                    <span>CLASS {parsedData?.ASSIGNEDTOUSERID}</span>
+                  </div>
+
+
+                  <div className='text-[#FFFFFF]'>
+                    <span>GROUPID {parsedData?.EXPEDITIONSTATUS}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                    <span>{parsedData?.QTY}</span>
+                  </div>
+
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                    <span>{tableData.length}</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
             <div className=''>

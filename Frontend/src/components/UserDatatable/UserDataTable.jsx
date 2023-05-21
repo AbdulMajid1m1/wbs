@@ -607,7 +607,7 @@ const UserDataTable = ({
   const [isOpen, setIsOpen] = useState(false);
   const [addUser, setAddUser] = useState(false);
   const [email, setEmail] = useState("");
-  const [username, setUserName] = useState("");
+  const [username, setUserName] = useState([]);
   const [subject, setSubject] = useState("");
   const [sendTo, setSendTo] = useState("");
   const [remarks, setRemarks] = useState("");
@@ -810,7 +810,7 @@ const UserDataTable = ({
 
 
         {/* Add User */}
-        {addUser && (
+        {/* {addUser && (
           <div className="popup-container">
             <div className="popup">
               <div className="header">
@@ -834,7 +834,36 @@ const UserDataTable = ({
               </form>
             </div>
           </div>
+        )} */}
+        {addUser && (
+          <div className="popup-container">
+            <div className="popup">
+              <div className="header">
+                <h2>Add User</h2>
+              </div>
+              <form onSubmit={handleFormSubmit}>
+                <label htmlFor="UserName">Name:</label>
+                <select
+                  id="UserName"
+                  value={username}
+                  onChange={(e) => setUserName(e.target.value)}
+                  required
+                >
+                  <option value="">--Select User--</option>
+                  <option value="User1">User1</option>
+                  <option value="User2">User2</option>
+                  {/* Add as many options as you have */}
+                </select>
+
+                <div className="flex gap-3">
+                  <button className="close-btn" type="button" onClick={handleAddUserClose}>CANCEL</button>
+                  <button type="submit">SEND</button>
+                </div>
+              </form>
+            </div>
+          </div>
         )}
+
 
 
         {updatedRows.length > 0 && (

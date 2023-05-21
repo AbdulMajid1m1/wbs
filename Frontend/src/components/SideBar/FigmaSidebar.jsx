@@ -157,10 +157,10 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Internal Transfer</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/picklist')}>
+                    {/* <div className='main-images-container' onClick={() => navigate('/picklist')}>
                         <img src={picklist} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Pick List</p>
-                    </div>
+                    </div> */}
 
                     {/* <div className='main-images-container' onClick={() => navigate('/packingslip')}>
                         <img src={packing} className='main-inside-image' alt='' />
@@ -174,7 +174,7 @@ const FigmaSidebar = () => {
 
                     <div className='main-images-container' onClick={() => navigate('/Picklistassign')}>
                         <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Picking Slip</p>
+                        <p className='sidebar-text'>Pick List</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/journallist')}>

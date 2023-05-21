@@ -1,543 +1,250 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import "./PickingListLastForm.css";
+import React, { useEffect, useState } from 'react'
+import { json, useNavigate } from 'react-router-dom';
+import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
+import "./PickingListForm.css";
+// import CustomSnakebar from '../../utils/CustomSnakebar';
+// import back from "../../images/back.png"
+import undo from "../../images/undo.png"
+import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
-import { Autocomplete, TextField } from '@mui/material';
-import { items } from 'fusioncharts';
 
-const PickingListLastForm = () => {
+const PickingListForm = () => {
   const navigate = useNavigate();
-  const [location, setLocation] = useState([])
-  const [scanInputValue, setScanInputValue] = useState('');
-  const [selectionType, setSelectionType] = useState('Pallet');
-  const [locationInputValue, setLocationInputValue] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [newTableData, setNewTableData] = useState([]);
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
-  // to reset snakebar messages
+
+  const [transferTag, setTransferTag] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
+  const [journalRowIndex, setJournalRowIndex] = useState(JSON.parse(sessionStorage.getItem('PickingRowIndex')) || '');
+  const [binlocation, setBinLocation] = useState('');
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
 
   };
 
-  // retrieve data from session storage
-  const storedData = sessionStorage.getItem('journalRowData');
-  const parsedData = JSON.parse(storedData);
-  console.log("parsedData")
-  console.log(parsedData)
 
+  const handleChangeValue = (e) => {
+    setTransferTag(e.target.value);
+  }
 
+  const handleForm = (e) => {
+    e.preventDefault();
+    setIsLoading(true)
 
-  useEffect(() => {
-    const getLocationData = async () => {
-      try {
-        const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
-          {
-            headers: {
-              itemcode: parsedData?.ITEMID,
-            }
-          })
-        console.log(res?.data)
-        setLocation(res?.data)
+    userRequest.get(`/getAllWmsSalesPickingListClFromWBSByPickingRouteId?PICKINGROUTEID=${transferTag}`)
+      .then(response => {
+        console.log(response?.data);
 
+        setData(response?.data ?? []);
+        sessionStorage.setItem('allJournalRows', JSON.stringify(response?.data ?? []));
+        setIsLoading(false)
+        setMessage(response?.data?.message ?? 'Show All data');
 
-      }
-      catch (error) {
-        console.log(error)
-        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+      })
 
-      }
-    }
-
-    getLocationData();
-
-  }, [parsedData?.ITEMID])
-
-
-
-
-  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
-  const [autocompleteKey, setAutocompleteKey] = useState(0);
-  const resetAutocomplete = () => {
-    setLocationInputValue(''); // Clear the location input value
-    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
-  };
-
-
-
-  const handleFromSelect = (event, value) => {
-    setSelectedValue(value);
-    fetchData(value);
-  };
-
-
-  const fetchData = async (selectedValue) => {
-    try {
-      const response = await userRequest.post(
-        "/getMappedBarcodedsByItemCodeAndBinLocation",
-        {},
-        {
-          headers: {
-            // itemcode: "CV-950H SS220 BK",
-            itemcode: parsedData?.ITEMID,
-            binlocation: selectedValue
-          }
-        }
-      );
-      const responseData = response.data;
-      setNewTableData(responseData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-
-  // const [selectionType, setSelectionType] = useState('Pallet');
-  const [data, setData] = useState([]);
-  const [userInput, setUserInput] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
-  const [userInputSubmit, setUserInputSubmit] = useState(false);
-
-  // define the function to filter data based on user input and selection type
-  const filterData = () => {
-    const filtered = newTableData.filter((item) => {
-      if (selectionType === 'Pallet') {
-        return item.PalletCode === userInput;
-      } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo === userInput;
-      } else {
-        return true;
-      }
-    });
-    setFilteredData(filtered); // update the filtered data state variable
-  };
-
-  // use useEffect to trigger the filtering of data whenever the user input changes
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const headers = {
-          // itemcode: 'IC1233',
-          itemcode: parsedData?.ITEMID,
-          binlocation: parsedData?.ITEMID
-        };
-
-        const response = await userRequest.post('/getMappedBarcodedsByItemCodeAndBinLocation', { headers });
-
-        // Handle the response data
-        const responseData = response.data;
-        setNewTableData(responseData);
-      } catch (error) {
-        // Handle errors
+      .catch(error => {
         console.error(error);
-      }
-    };
+        setIsLoading(false)
+        setError(error?.data?.message ?? 'Wrong Route ID');
 
+      });
 
-  };
+  }
 
+  const handleRowClick = (item, index) => {
+    // save data in session storage
 
-
-
-  const handleInputUser = (e) => {
-    console.log(userInput)
-    setUserInputSubmit(!userInputSubmit);
+    sessionStorage.setItem('PickingRowData', JSON.stringify(item));
+    sessionStorage.setItem('PickingRowIndex', index);
+    navigate('/pickinglistlast')
   }
 
 
-  const handleSaveBtnClick = async () => {
+  const handleBinLocation = (e) => {
+    e.preventDefault();
+    console.log(data[0].BinLocation)
+    console.log(binlocation)
 
-    console.log("filteredData")
-    console.log(filteredData)
-    console.log(locationInputValue)
-    // console.log(.TRANSREFID)
-
-    const APIData = filteredData.map((item) => {
-      return {
-        INVENTLOCATIONID: locationInputValue,
-        ORDERED: parsedData?.QTY,
-        PACKINGSLIPID: parsedData?.TRANSREFID,// comming from previous page
-        ASSIGNEDUSERID: item.ASSIGNEDTOUSERID, // comming from mapped barcode data
-        SALESID: parsedData?.PICKINGROUTEID, // comming from previous page
-        ITEMID: parsedData?.ITEMID, // comming from previous page
-        NAME: parsedData?.ITEMNAME, // comming from previous page
-        CONFIGID: parsedData?.CONFIGID, // comming from previous page
-        // VEHICLESHIPPLATENUMBER:
-        // DATETIMECREATED: new Date().toISOString().slice(0, 19).replace('T', ' '), // current date time
-        DATETIMECREATED: parsedData?.DATETIMEASSIGNED,
-
+    userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
+      headers: {
+        'oldbinlocation': data[0].BinLocation,
+        'newbinlocation': binlocation
       }
-
-
     })
-
-    console.log(APIData)
-    try {
-      const res = await userRequest.post(
-        `/insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl`,
-        APIData,
-        {
-          params: {
-            PICKINGROUTEID: parsedData?.PICKINGROUTEID,
-            ITEMID: parsedData?.ITEMID,
-            QTYPICKED: parsedData?.QTYPICKED,
-            QTY: parsedData?.QTY
-          }
-        }
-      );
-      console.log(res?.data)
-      setMessage(res?.data?.message ?? 'Data saved successfully');
-
-      // clear the filtered data and user input
-      setFilteredData([]);
-      setUserInput("");
-
-    }
-    catch (error) {
-      console.log(error)
-      setError(error?.response?.data?.message ?? 'Cannot save data');
-
-    }
+      .then((response) => {
+        console.log(response);
+        setMessage(response?.data?.message);
+        // alert('done')
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error.response?.data?.message);
+        // alert(error)
+      });
   }
-
 
 
   return (
     <>
-
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
       {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
+
+      {isLoading &&
+
+        <div className='loading-spinner-background'
+          style={{
+            zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+
+
+          }}
+        >
+          <SyncLoader
+
+            size={18}
+            color={"#FFA500"}
+            // height={4}
+            loading={isLoading}
+          />
+        </div>
+      }
+
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
-          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
+          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
-              <div className='flex flex-col gap-2 text-xs sm:text-xl'>
-                <div className='w-full flex justify-end'>
-                  <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
-                    <span>
-                      <img src={icon} className='h-auto w-8 object-contain' alt='' />
-                    </span>
-                  </button>
-                </div>
-                <span className='text-white -mt-7'>Picking Route ID:</span>
-                <input
-                  //   value={parsedData.TRANSFERID}
-                  className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                    block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                  placeholder="Picking Route ID"
-                  value={parsedData?.PICKINGROUTEID}
-                  disabled
-                />
+              <div className='flex justify-between items-center gap-2 text-xs sm:text-xl'>
+                <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
+                  <span>
+                    <img src={undo} className='h-auto w-8 object-contain' alt='' />
+                  </span>
+                </button>
 
-                <div className='flex gap-2 justify-center items-center'>
-                  <span className='text-white'>FROM:</span>
+                <h2 className='text-center text-[#fff]'>Picking List Form</h2>
 
-                  <div className='w-full'>
-                    <Autocomplete
-                      ref={autocompleteRef}
-                      key={autocompleteKey}
-                      id="location"
-                      // options={location.filter(item => item.BinLocation)}
-                      // getOptionLabel={(option) => option.BinLocation}
-                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
-                      getOptionLabel={(option) => option}
-                      onChange={handleFromSelect}
-
-                      // onChange={(event, value) => {
-                      //   if (value) {
-                      //     console.log(`Selected: ${value}`);
-
-                      //   }
-                      // }}
-                      onInputChange={(event, value) => {
-                        if (!value) {
-                          // perform operation when input is cleared
-                          console.log("Input cleared");
-
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          InputProps={{
-                            ...params.InputProps,
-                            className: "text-white",
-                          }}
-                          InputLabelProps={{
-                            ...params.InputLabelProps,
-                            style: { color: "white" },
-                          }}
-
-                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                          placeholder="FROM"
-                          required
-                        />
-                      )}
-                      classes={{
-                        endAdornment: "text-white",
-                      }}
-                      sx={{
-                        '& .MuiAutocomplete-endAdornment': {
-                          color: 'white',
-                        },
-                      }}
-                    />
-
-                  </div>
-                </div>
+                <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
+                  <span>
+                    <img src={icon} className='h-auto w-8 object-contain' alt='' />
+                  </span>
+                </button>
               </div>
-
-              {/* <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                  <span>Item Code:</span>
-                  <span>{parsedData.ITEMID}</span>
-                </div>
-
-              </div>
-
-              <div>
-                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.QTY}</span>
-                  </div>
-
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    <span>{tableData.length}</span>
-                  </div>
-                </div>
-              </div> */}
-
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
-                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                  <span>Item Code:</span>
-                  <span>{parsedData?.ITEMID}</span>
-                </div>
-
-                <div className='flex flex-col gap-2'>
-                  <div className='text-[#FFFFFF]'>
-                    <span>CLASS {parsedData?.ASSIGNEDTOUSERID}</span>
-                  </div>
-
-
-                  <div className='text-[#FFFFFF]'>
-                    <span>GROUPID {parsedData.EXPEDITIONSTATUS}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.QTY}</span>
-                  </div>
-
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    <span>{filteredData.length}</span>
-                  </div>
-                </div>
-              </div>
-
             </div>
 
+            <div className=''>
+              <h2 className='text-[#00006A] text-center font-semibold'>Route ID<span className='text-[#FF0404]'>*</span></h2>
+            </div>
+
+            <form onSubmit={handleForm}>
+              <div className='mb-6'>
+                <label htmlFor='transfer' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Route ID<span className='text-[#FF0404]'>*</span></label>
+                <div className='w-full flex'>
+                  <input
+                    id="transfer"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                    placeholder="Route ID"
+                    onChange={handleChangeValue}
+                  />
+                  <button
+                    type='submit'
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm'
+                  >
+                    FIND
+                  </button>
+                </div>
+              </div>
+            </form>
+
             <div className='mb-6'>
+              <label className='text-[#00006A] font-semibold'>List of Items on Bin<span className='text-[#FF0404]'>*</span></label>
               {/* // creae excel like Tables  */}
               <div className="table-location-generate1">
                 <table>
                   <thead>
                     <tr>
-                      <th>BinLocation</th>
-                      <th>CID</th>
-                      <th>Classification</th>
-                      <th>GTIN</th>
-                      <th>IntCode</th>
-                      <th>ItemCode</th>
-                      <th>ItemDesc</th>
-                      <th>ItemSerialNo</th>
-                      <th>MainLocation</th>
-                      <th>MapDate</th>
-                      <th>PO</th>
-                      <th>PalletCode</th>
-                      <th>Reference</th>
-                      <th>Remarks</th>
-                      <th>SID</th>
-                      <th>Trans</th>
-                      <th>User</th>
+                      <th>PICKINGROUTEID</th>
+                      <th>INVENTLOCATIONID</th>
+                      <th>CONFIGID</th>
+                      <th>ITEMID</th>
+                      <th>ITEMNAME</th>
+                      <th>QTY</th>
+                      <th>CUSTOMER</th>
+                      <th>DLVDATE</th>
+                      <th>TRANSREFID</th>
+                      <th>EXPEDITIONSTATUS</th>
+                      <th>DATETIMEASSIGNED</th>
+                      <th>ASSIGNEDTOUSERID</th>
+                      <th>PICKSTATUS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {newTableData.map((data, index) => (
-                      <tr key={"tranidRow" + index}>
-                        <td>{data.BinLocation}</td>
-                        <td>{data.CID}</td>
-                        <td>{data.Classification}</td>
-                        <td>{data.GTIN}</td>
-                        <td>{data.IntCode}</td>
-                        <td>{data.ItemCode}</td>
-                        <td>{data.ItemDesc}</td>
-                        <td>{data.ItemSerialNo}</td>
-                        <td>{data.MainLocation}</td>
-                        <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                        <td>{data.PO}</td>
-                        <td>{data.PalletCode}</td>
-                        <td>{data.Reference}</td>
-                        <td>{data.Remarks}</td>
-                        <td>{data.SID}</td>
-                        <td>{data.Trans}</td>
-                        <td>{data.User}</td>
+                    {data.map((item, index) => (
+                      <tr key={index} onClick={() => handleRowClick(item, index)}
+
+                        style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
+
+                      >
+                        <td>{item.PICKINGROUTEID}</td>
+                        <td>{item.INVENTLOCATIONID}</td>
+                        <td>{item.CONFIGID}</td>
+                        <td>{item.ITEMID}</td>
+                        <td>{item.ITEMNAME}</td>
+                        <td>{item.QTY}</td>
+                        <td>{item.CUSTOMER}</td>
+                        <td>{item.DLVDATE}</td>
+                        <td>{item.TRANSREFID}</td>
+                        <td>{item.EXPEDITIONSTATUS}</td>
+                        <td>{item.DATETIMEASSIGNED}</td>
+                        <td>{item.ASSIGNEDTOUSERID}</td>
+                        <td>{item.PICKSTATUS}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              </div>
 
-
-
-            </div >
-
-
-            <div class="text-center mb-6">
-              <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                  flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-              >
-                <label className="inline-flex items-center mt-1">
-                  <input
-                    type="radio"
-                    name="selectionType"
-                    value="Pallet"
-                    checked={selectionType === 'Pallet'}
-                    onChange={e => setSelectionType(e.target.value)}
-                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                  />
-                  <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                </label>
-                <label className="inline-flex items-center mt-1">
-                  <input
-                    type="radio"
-                    name="selectionType"
-                    value="Serial"
-                    checked={selectionType === 'Serial'}
-                    onChange={e => setSelectionType(e.target.value)}
-                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                  />
-                  <span className="ml-2 text-[#00006A]">BY SERIAL</span>
-                </label>
               </div>
             </div>
 
+            <form >
 
-            <form
-            //   onSubmit={handleFormSubmit}
-            >
-              <div className="mb-6">
-                <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}#<span className='text-[#FF0404]'>*</span></label>
 
-                <input
-                  id="scanpallet"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder={`Scan ${selectionType}`}
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  onBlur={handleInputUser}
+              <div className='mt-6'>
+                <div className='w-full flex justify-between place-items-end'>
+                  {/* <div>
+                  <button
+                    type='submit'
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
+                    <span className='flex justify-center items-center'>
+                      <p>Save</p>
+                    </span>
+                  </button>
+                  </div> */}
 
-                />
-              </div>
-
-              <div className='mb-6'>
-                {/* // creae excel like Tables  */}
-                <div className="table-location-generate1">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>BinLocation</th>
-                        <th>CID</th>
-                        <th>Classification</th>
-                        <th>GTIN</th>
-                        <th>Remarks</th>
-                        <th>User</th>
-                        <th>Classification</th>
-                        <th>Main Location</th>
-                        <th>Bin Location</th>
-                        <th>Internal Code</th>
-                        <th>Item Serial Number</th>
-                        <th>Map Date</th>
-                        <th>Pallet Code</th>
-                        <th>Reference</th>
-                        <th>Shipment ID</th>
-                        <th>Container ID</th>
-                        <th>PO</th>
-                        <th>Transaction</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {tableData.map((data, index) => (
-                        <tr key={"tranidRow" + index}>
-                          <td>{data.ItemCode}</td>
-                          <td>{data.ItemDesc}</td>
-                          <td>{data.GTIN}</td>
-                          <td>{data.Remarks}</td>
-                          <td>{data.User}</td>
-                          <td>{data.Classification}</td>
-                          <td>{data.MainLocation}</td>
-                          <td>{data.BinLocation}</td>
-                          <td>{data.IntCode}</td>
-                          <td>{data.ItemSerialNo}</td>
-                          <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                          <td>{data.PalletCode}</td>
-                          <td>{data.Reference}</td>
-                          <td>{data.SID}</td>
-                          <td>{data.CID}</td>
-                          <td>{data.PO}</td>
-                          <td>{data.Trans}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <div>
+                    <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                    <input
+                      id="totals"
+                      className="bg-gray-50 font-semibold text-center placeholder:text-[#00006A] border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Totals"
+                      value={data.length}
+                    />
+                  </div>
                 </div>
 
-
-
-              </div >
-
+              </div>
             </form>
-
-            <div className="mb-6">
-              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-              <input
-                id="enterscan"
-                value={locationInputValue}
-                onChange={e => setLocationInputValue(e.target.value)}
-                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Enter/Scan Location"
-              />
-            </div >
-
-            <div className='mb-6 flex justify-center items-center'>
-              <button
-                type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
-                <span className='flex justify-center items-center'
-                  onClick={handleSaveBtnClick}
-                >
-                  <p>Save</p>
-                </span>
-              </button>
-            </div>
           </div>
-        </div >
-      </div >
+        </div>
+      </div>
     </>
   )
 }
 
-export default PickingListLastForm
+export default PickingListForm
+
+

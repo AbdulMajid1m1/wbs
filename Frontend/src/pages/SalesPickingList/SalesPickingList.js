@@ -40,7 +40,7 @@ const SalesPickingList = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} title="Sales Picking List" columnsName={SalesPickingListColumn} backButton={true} uniqueId="itemTableId"
+            <UserDataTable data={alldata} title="Pick List Assigned" columnsName={SalesPickingListColumn} backButton={true} uniqueId="itemTableId"
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             />

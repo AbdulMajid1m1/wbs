@@ -44,7 +44,7 @@ const AllItemsAddNew = ({ inputs, title,
             const queryParameters = new URLSearchParams(data).toString();
 
             userRequest.post(
-                `/insertTblItemsCLData?${queryParameters}`)
+                `/insertStockMasterData?${queryParameters}`)
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);

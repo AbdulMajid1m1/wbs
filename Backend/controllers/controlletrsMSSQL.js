@@ -4182,14 +4182,16 @@ const WBSDB = {
       if (!PICKINGROUTEID) {
         return res.status(400).send({ message: "Please provide data to insert" });
       }
+      console.log(req?.token)
 
       let query = `
       SELECT * FROM dbo.WMS_Sales_PickingList_CL
-      WHERE PICKINGROUTEID = @PICKINGROUTEID
+      WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID =@userId
       `;
 
       let request = pool2.request();
       request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID)
+      request.input('userId', sql.NVarChar, req.token?.UserID)
 
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
@@ -4412,7 +4414,7 @@ const WBSDB = {
   async insertIntoPackingSlipTableCl(req, res, next) {
     try {
       const packingSlipArray = req.body;
-      console.log(req.payload)
+      console.log(req?.token);
 
       // Get VEHICLESHIPPLATENUMBER from query parameters
       const { vehicleShipPlateNumber } = req.query;
@@ -4458,7 +4460,7 @@ const WBSDB = {
         request.input("INVENTLOCATIONID", sql.NVarChar, packingSlip.INVENTLOCATIONID);
         request.input("ORDERED", sql.Float, packingSlip.ORDERED);
         request.input("PACKINGSLIPID", sql.NVarChar, packingSlip.PACKINGSLIPID);
-        request.input("ASSIGNEDUSERID", sql.NVarChar, req?.payload?.UserID);
+        request.input("ASSIGNEDUSERID", sql.NVarChar, req?.token?.UserID);
         if (packingSlip.SALESID) request.input("SALESID", sql.NVarChar, packingSlip.SALESID);
         if (packingSlip.ITEMID) request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID);
         if (packingSlip.NAME) request.input("NAME", sql.NVarChar, packingSlip.NAME);

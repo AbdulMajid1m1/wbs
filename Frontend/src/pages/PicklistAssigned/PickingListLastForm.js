@@ -57,7 +57,7 @@ const PickingListForm = () => {
 
   const handleRowClick = (item, index) => {
     // save data in session storage
-
+    console.log("clicked")
     sessionStorage.setItem('PickingRowData', JSON.stringify(item));
     sessionStorage.setItem('PickingRowIndex', index);
     navigate('/pickinglistlast')
@@ -110,7 +110,7 @@ const PickingListForm = () => {
             color={"#FFA500"}
             // height={4}
             loading={isLoading}
-        />
+          />
         </div>
       }
 

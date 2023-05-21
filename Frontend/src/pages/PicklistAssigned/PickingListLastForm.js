@@ -197,7 +197,7 @@ const PickingListLastForm = () => {
       );
       console.log(res?.data)
       setMessage(res?.data?.message ?? 'Data saved successfully');
-     
+
       // clear the filtered data and user input
       setFilteredData([]);
       setUserInput("");

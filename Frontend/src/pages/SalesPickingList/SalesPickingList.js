@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { AllItems, SalesPickingListColumn } from '../../utils/datatablesource'
+import { PicklistAssignedColumn, SalesPickingListColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
 
@@ -40,7 +40,7 @@ const SalesPickingList = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} title="Pick List Assigned" columnsName={SalesPickingListColumn} backButton={true} uniqueId="itemTableId"
+            <UserDataTable data={alldata} title="Pick List Assigned" columnsName={PicklistAssignedColumn} backButton={true} uniqueId="itemTableId"
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             />

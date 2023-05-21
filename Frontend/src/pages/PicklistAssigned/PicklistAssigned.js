@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { PickListColumn, PicklistAssignedColumn } from '../../utils/datatablesource'
+import { PickListColumn, PicklistAssignedColumn, SalesPickingListColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
@@ -42,13 +42,12 @@ const PicklistAssigned = () => {
         <div>
 
 
-        <UserDataTable data={alldata} title="Picking Slip" columnsName={PicklistAssignedColumn}
-
-            backButton={true}
-            uniqueId="pickingSlipId"
-            // addNewNavigation="/pickinglistfrom"
-            AddUser={true}
-      />    
+            <UserDataTable data={alldata} title="Picking Slip" columnsName={SalesPickingListColumn}
+                backButton={true}
+                uniqueId="pickingSlipId"
+                // addNewNavigation="/pickinglistfrom"
+                AddUser={true}
+            />
 
             {isLoading &&
 

@@ -4234,15 +4234,16 @@ const WBSDB = {
         // Check if a record already exists
         let checkQuery = `
           SELECT * FROM [WBSSQL].[dbo].[WMS_Sales_PickingList_CL] 
-          WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID = @ASSIGNEDTOUSERID
+          WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID = @ASSIGNEDTOUSERID AND ITEMID =@ITEMID
         `;
         let checkRequest = pool1.request();
         checkRequest.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
         checkRequest.input('ASSIGNEDTOUSERID', sql.NVarChar, ASSIGNEDTOUSERID);
+        checkRequest.input('ITEMID', sql.NVarChar, ITEMID);
         let checkData = await checkRequest.query(checkQuery);
 
         if (checkData.recordsets[0].length > 0) {
-          throw new Error(`Record already exists for PICKINGROUTEID: ${PICKINGROUTEID}, ASSIGNEDTOUSERID: ${ASSIGNEDTOUSERID}`);
+          return res.status(400).send({ message: `Record already exists for PICKINGROUTEID: ${PICKINGROUTEID}, ASSIGNEDTOUSERID: ${ASSIGNEDTOUSERID} and ITEMID: ${ITEMID}` })
         }
 
         // Dynamic SQL query construction
@@ -4291,7 +4292,7 @@ const WBSDB = {
 
         await request.query(query);
       }
-      return res.status(201).send({ message: 'Data inserted successfully.' });
+      return res.status(201).send({ message: 'Picklist assigned to user successfully' });
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error.message });

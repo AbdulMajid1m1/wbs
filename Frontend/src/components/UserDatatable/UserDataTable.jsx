@@ -667,7 +667,7 @@ const UserDataTable = ({
       .then(response => {
         // Handle the response from the API if needed
         console.log(response.data);
-        setMessage(response?.data?.message || 'Assigned successfully')
+        setMessage(response?.data?.message || 'Picklist assigned to user successfully')
       })
       .catch(error => {
         // Handle any errors that occur during the request

@@ -11,7 +11,7 @@ const PickingListLastForm = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
-  const [selectionType, setSelectionType] = useState('Pallet');
+  const [selectionType, setSelectionType] = useState('Serial');
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [newTableData, setNewTableData] = useState([]);

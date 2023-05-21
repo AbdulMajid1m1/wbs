@@ -42,12 +42,16 @@ const PicklistAssigned = () => {
         <div>
 
 
-            <UserDataTable data={alldata} title="Picking Slip" columnsName={SalesPickingListColumn}
-                backButton={true}
-                uniqueId="pickingSlipId"
-                // addNewNavigation="/pickinglistfrom"
-                AddUser={true}
-            />
+        <UserDataTable data={alldata} title="Picking Slip" columnsName={PicklistAssignedColumn}
+            backButton={true}
+            uniqueId="pickingSlipId"
+            addNewNavigation="/pickinglistfrom"
+            AddUser={true}
+      />    
+              {/* <UserDataTable data={alldata} title="" columnsName={PicklistAssignedColumn} backButton={true} uniqueId="itemTableId"
+                actionColumnVisibility={false}
+                buttonVisibility={false}
+            /> */}
 
             {isLoading &&
 

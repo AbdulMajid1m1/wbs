@@ -604,10 +604,13 @@ const UserDataTable = ({
 
 
 
+
+
   const [isOpen, setIsOpen] = useState(false);
   const [addUser, setAddUser] = useState(false);
   const [email, setEmail] = useState("");
-  const [username, setUserName] = useState([]);
+  const [username, setUserName] = useState('');
+  const [usersList, setUsersList] = useState([]);
   const [subject, setSubject] = useState("");
   const [sendTo, setSendTo] = useState("");
   const [remarks, setRemarks] = useState("");
@@ -623,9 +626,20 @@ const UserDataTable = ({
 
 
 
-  const handleAddUserPopup = () => {
+  const handleAddUserPopup = async () => {
     setAddUser(true);
+    try {
+      const res = await userRequest.get('/getAllTblUsers');
+      setUsersList(res.data);
+      console.log(res.data);
+      console.log("wokf")
+    } catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message || 'Something went wrong')
+
+    };
   };
+
 
 
   const handleAddUserClose = () => {
@@ -635,8 +649,12 @@ const UserDataTable = ({
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setUserName('');
+    if (username === '') {
+      setError('Please select a user');
+      return;
+    }
     handleAddUserClose();
+    setUserName('');
 
     let newData = selectedRow.map(singleRowData => ({
       ...singleRowData.data,
@@ -836,33 +854,38 @@ const UserDataTable = ({
           </div>
         )} */}
         {addUser && (
-          <div className="popup-container">
-            <div className="popup">
-              <div className="header">
+          <div className="popup-container fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
+            <div className="popup bg-white rounded-lg shadow-xl overflow-hidden max-w-md m-4">
+              <div className="header bg-blue-500 text-white font-bold py-4 px-6">
                 <h2>Add User</h2>
               </div>
-              <form onSubmit={handleFormSubmit}>
-                <label htmlFor="UserName">Name:</label>
+              <form onSubmit={handleFormSubmit} className="p-6">
+                <label htmlFor="UserName" className="block mb-2 text-gray-700 text-sm">Name:</label>
                 <select
                   id="UserName"
                   value={username}
                   onChange={(e) => setUserName(e.target.value)}
                   required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                 >
                   <option value="">--Select User--</option>
-                  <option value="User1">User1</option>
-                  <option value="User2">User2</option>
-                  {/* Add as many options as you have */}
+                  {usersList.map((user) => (
+                    <option key={user.UserID} value={user.UserID}>
+                      {user.Fullname}
+                    </option>
+                  ))}
                 </select>
 
-                <div className="flex gap-3">
-                  <button className="close-btn" type="button" onClick={handleAddUserClose}>CANCEL</button>
-                  <button type="submit">SEND</button>
+                <div className="flex justify-end gap-3 mt-6">
+                  <button className="close-btn text-white bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2" type="button" onClick={handleAddUserClose}>CANCEL</button>
+                  <button className="text-white bg-blue-500 hover:bg-blue-600 rounded-lg px-6 py-2" type="submit">SEND</button>
                 </div>
               </form>
             </div>
           </div>
         )}
+
+
 
 
 

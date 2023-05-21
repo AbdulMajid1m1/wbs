@@ -95,13 +95,13 @@ const App = () => {
         <Route path="/receiptsecond" element={<ReceiptsProvider><ReceiptsSecond /></ReceiptsProvider>} />
         <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
         {/* <Route path='/putaway' element={<PutAway />}/> */}
-        <Route path='/transferpage1' element={<TransferIDPage />}/>
-        <Route path='/transferid' element={<TransferID />}/>
+        <Route path='/transferpage1' element={<TransferIDPage />} />
+        <Route path='/transferid' element={<TransferID />} />
         <Route path="/palletscreen1" element={<PutAwayScreen1 />} />
         <Route path="/palletscreen2" element={<PutAwayScreen2 />} />
         <Route path="/palletscreen3" element={<PutAwayScreen3 />} />
         <Route path="/putaway" element={<PutAwayLastScreen />} />
-        
+
         <Route path="/bintobin" element={<BinToBinInternal />} />
         <Route path="/bintobin2" element={<BinToBinJournalID />} />
         <Route path="/bintobinsave" element={<BinToBinJournalSaveScreen />} />
@@ -109,7 +109,7 @@ const App = () => {
 
         <Route path="/pickinglistfrom" element={<Pickinglistform />} />
         <Route path="/pickinglistlast" element={<PickingListLastForm />} />
-        
+
         <Route path="/dispatchingslip" element={<DispatchingPickingSlip />} />
 
         <Route
@@ -159,14 +159,14 @@ const App = () => {
                 <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing" />} />
                 <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data" />} />
 
-                <Route path='/kpireceiving' element={<KPIDashboardReceiving />}/>
-                <Route path='/reallocation' element={<ReallocationPicked />}/>
-                <Route path='/bintobincl' element={<BinToBinCL />}/>
-                <Route path='/journallist' element={<JournalList />}/>
-                
-                <Route path='/Picklistassign' element={<PicklistAssigned />}/>
+                <Route path='/kpireceiving' element={<KPIDashboardReceiving />} />
+                <Route path='/reallocation' element={<ReallocationPicked />} />
+                <Route path='/bintobincl' element={<BinToBinCL />} />
+                <Route path='/journallist' element={<JournalList />} />
 
-                <Route path='/pickingsales' element={<SalesPickingList />}/>
+                <Route path='/Picklistassign' element={<PicklistAssigned />} />
+
+                <Route path='/pickingsales' element={<SalesPickingList />} />
               </Routes>
             </MainLayout>
           } />

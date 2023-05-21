@@ -42,7 +42,7 @@ const PicklistAssigned = () => {
         <div>
 
 
-        <UserDataTable data={alldata} title="Pick List Assigned" columnsName={PicklistAssignedColumn}
+        <UserDataTable data={alldata} title="Picking Slip" columnsName={PicklistAssignedColumn}
             backButton={true}
             uniqueId=""
             // addNewNavigation="/pickinglistfrom"

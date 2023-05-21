@@ -97,9 +97,14 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>2  Bin To Bin CL</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/Picklistassign')}>
+                    {/* <div className='main-images-container' onClick={() => navigate('/Picklistassign')}>
                         <img src={internal} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Picklist Assigned</p>
+                    </div> */}
+
+                    <div className='main-images-container' onClick={() => navigate('/packingslip')}>
+                        <img src={packing} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Packing Slip</p>
                     </div>
 
                     <div className='main-images-container'>
@@ -157,9 +162,14 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Pick List</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/packingslip')}>
+                    {/* <div className='main-images-container' onClick={() => navigate('/packingslip')}>
                         <img src={packing} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Packing Slip</p>
+                    </div> */}
+
+                    <div className='main-images-container' onClick={() => navigate('/Picklistassign')}>
+                        <img src={packing} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Picklist Assigned</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/journallist')}>

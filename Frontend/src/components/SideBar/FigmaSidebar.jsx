@@ -167,6 +167,11 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Journal List</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/pickingsales')}>
+                        <img src={items} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Sales Picking List</p>
+                    </div>
+
                 </div>
             )}
 
@@ -234,7 +239,12 @@ const FigmaSidebar = () => {
 
                     <div className='main-images-container' onClick={() => navigate('/dispatchingslip')}>
                         <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Dispatching Picking Slip</p>
+                        <p className='sidebar-text'>Dispatching</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/pickinglistfrom')}>
+                        <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Picking Slip</p>
                     </div>
 
                     <div className='main-images-container'>

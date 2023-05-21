@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { PickListColumn, PicklistAssignedColumn } from '../../utils/datatablesource'
+import { AllItems, SalesPickingListColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
-import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 
-const PicklistAssigned = () => {
+const SalesPickingList = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -14,7 +13,7 @@ const PicklistAssigned = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllWmsSalesPickingListClFromAlessia")
+                userRequest.get("/getAllWmsSalesPickingListClFromWBS")
                     .then(response => {
                         // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
@@ -41,13 +40,10 @@ const PicklistAssigned = () => {
     return (
         <div>
 
-
-        <UserDataTable data={alldata} title="Pick List Assigned" columnsName={PicklistAssignedColumn}
-            backButton={true}
-            uniqueId=""
-            // addNewNavigation="/pickinglistfrom"
-            AddUser={true}
-      />    
+            <UserDataTable data={alldata} title="Sales Picking List" columnsName={SalesPickingListColumn} backButton={true} uniqueId="itemTableId"
+                actionColumnVisibility={false}
+                buttonVisibility={false}
+            />
 
             {isLoading &&
 
@@ -73,4 +69,4 @@ const PicklistAssigned = () => {
     )
 }
 
-export default PicklistAssigned
+export default SalesPickingList

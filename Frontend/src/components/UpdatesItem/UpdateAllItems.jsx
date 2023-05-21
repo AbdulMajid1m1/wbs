@@ -46,46 +46,90 @@ const UpdateAllItems = ({ inputs, title,
     event.preventDefault();
     setIsLoading(true);
 
+    // try {
+    //     const updatedData = {};
+
+    //     for (const input of updateAllItemsInput) {
+    //         const inputName = input.name;
+    //         if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
+    //             updatedData[inputName] = formData[inputName];
+    //         }
+    //     }
+
+    //     updatedData["ITEMID"] = id;
+
+    //     if (Object.keys(updatedData).length <= 1) {
+    //         setError("No changes detected.");
+    //         setIsLoading(false);
+    //         return;
+    //     }
+
+    //     const queryParameters = new URLSearchParams(updatedData).toString();
+
+    //     userRequest
+    //         .put(`/updateStockMasterData?${queryParameters}`)
+    //         .then((response) => {
+    //             setIsLoading(false);
+    //             console.log(response.data);
+    //             setMessage("Successfully Updated");
+    //             setTimeout(() => {
+    //                 navigate(-1);
+    //             }, 1000);
+    //         })
+    //         .catch((error) => {
+    //             setIsLoading(false);
+    //             console.log(error);
+    //             setError(error?.response?.data?.message ?? "Failed to Update");
+    //         });
+    // } catch (error) {
+    //     setIsLoading(false);
+    //     console.log(error);
+    //     setError("Failed to Update");
+    // }
+
     try {
         const updatedData = {};
-
+    
         for (const input of updateAllItemsInput) {
-            const inputName = input.name;
-            if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
-                updatedData[inputName] = formData[inputName];
-            }
+          const inputName = input.name;
+          if (
+            formData[inputName] !== undefined &&
+            formData[inputName] !== rowdata[inputName]
+          ) {
+            updatedData[inputName] = formData[inputName];
+          }
         }
-
+    
         updatedData["ITEMID"] = id;
-
+    
         if (Object.keys(updatedData).length <= 1) {
-            setError("No changes detected.");
-            setIsLoading(false);
-            return;
+          setError("No changes detected.");
+          setIsLoading(false);
+          return;
         }
-
-        const queryParameters = new URLSearchParams(updatedData).toString();
-
+    
         userRequest
-            .put(`/updateStockMasterData?${queryParameters}`)
-            .then((response) => {
-                setIsLoading(false);
-                console.log(response.data);
-                setMessage("Successfully Updated");
-                setTimeout(() => {
-                    navigate(-1);
-                }, 1000);
-            })
-            .catch((error) => {
-                setIsLoading(false);
-                console.log(error);
-                setError(error?.response?.data?.message ?? "Failed to Update");
-            });
-    } catch (error) {
+          .put("/updateStockMasterData", updatedData)
+          .then((response) => {
+            setIsLoading(false);
+            console.log(response.data);
+            setMessage("Successfully Updated");
+            setTimeout(() => {
+              navigate(-1);
+            }, 1000);
+          })
+          .catch((error) => {
+            setIsLoading(false);
+            console.log(error);
+            setError(
+              error?.response?.data?.message ?? "Failed to Update"
+            );
+          });
+      } catch (error) {
         setIsLoading(false);
         console.log(error);
         setError("Failed to Update");
-    }
+      }
 };
     return (
         <>

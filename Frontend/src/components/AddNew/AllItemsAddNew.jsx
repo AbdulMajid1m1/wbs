@@ -37,6 +37,7 @@ const AllItemsAddNew = ({ inputs, title,
                 ITEMNAME: event.target.ITEMNAME.value,
                 ITEMID: event.target.ITEMID.value,
                 ITEMGROUPID: event.target.ITEMGROUPID.value,
+                GROUPNAME: event.target.GROUPNAME.value,
             };
             
             console.log(data);

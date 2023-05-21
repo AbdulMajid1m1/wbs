@@ -64,6 +64,7 @@ import PicklistAssigned from './pages/PicklistAssigned/PicklistAssigned'
 import Pickinglistform from './pages/PicklistAssigned/PickingListForm'
 import PickingListLastForm from './pages/PicklistAssigned/PickingListLastForm'
 import DispatchingPickingSlip from './pages/DispatchingPickingSlip/DispatchingPickingSlip'
+import SalesPickingList from './pages/SalesPickingList/SalesPickingList'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -164,6 +165,8 @@ const App = () => {
                 <Route path='/journallist' element={<JournalList />}/>
                 
                 <Route path='/Picklistassign' element={<PicklistAssigned />}/>
+
+                <Route path='/pickingsales' element={<SalesPickingList />}/>
               </Routes>
             </MainLayout>
           } />

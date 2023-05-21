@@ -340,7 +340,7 @@ const PickingListLastForm = () => {
 
 
                   <div className='text-[#FFFFFF]'>
-                    <span>GROUPID {parsedData.EXPEDITIONSTATUS}</span>
+                    <span>GROUPID {parsedData?.EXPEDITIONSTATUS}</span>
                   </div>
                 </div>
               </div>
@@ -349,7 +349,7 @@ const PickingListLastForm = () => {
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.QTY}</span>
+                    <span>{parsedData?.QTY}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>

@@ -15,7 +15,6 @@ const PickingListLastForm = () => {
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [newTableData, setNewTableData] = useState([]);
-  const [selectedValue, setSelectedValue] = useState(null);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   // to reset snakebar messages
@@ -26,7 +25,7 @@ const PickingListLastForm = () => {
   };
 
   // retrieve data from session storage
-  const storedData = sessionStorage.getItem('PickingRowData');
+  const storedData = sessionStorage.getItem('journalRowData');
   const parsedData = JSON.parse(storedData);
   console.log("parsedData")
   console.log(parsedData)
@@ -119,29 +118,24 @@ const PickingListLastForm = () => {
 
   // use useEffect to trigger the filtering of data whenever the user input changes
   useEffect(() => {
-    filterData();
-  }, [userInputSubmit, selectionType]);
+    const fetchData = async () => {
+      try {
+        const headers = {
+          // itemcode: 'IC1233',
+          itemcode: parsedData?.ITEMID,
+          binlocation: parsedData?.ITEMID
+        };
 
+        const response = await userRequest.post('/getMappedBarcodedsByItemCodeAndBinLocation', { headers });
 
-  // reset function
-  const resetDataOnUPdate = () => {
-    // remove the filtered data from the data state variable
-    const newData = data.filter((item) => {
-      if (selectionType === 'Pallet') {
-        return item.PalletCode !== userInput;
-      } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo !== userInput;
-      } else {
-        return true;
+        // Handle the response data
+        const responseData = response.data;
+        setNewTableData(responseData);
+      } catch (error) {
+        // Handle errors
+        console.error(error);
       }
-    });
-    setData(newData);
-    // reset the user input state variable
-    setUserInput("");
-    // trigger the filtering of data
-    setUserInputSubmit(!userInputSubmit);
-    // reset the scan location state variable
-    // setBinLocation("");
+    };
 
 
   };
@@ -300,6 +294,28 @@ const PickingListLastForm = () => {
                 </div>
               </div>
 
+              {/* <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
+                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Item Code:</span>
+                  <span>{parsedData.ITEMID}</span>
+                </div>
+
+              </div>
+
+              <div>
+                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                    <span>{parsedData.QTY}</span>
+                  </div>
+
+                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                    <span>{tableData.length}</span>
+                  </div>
+                </div>
+              </div> */}
+
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
                 <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
@@ -447,23 +463,24 @@ const PickingListLastForm = () => {
                         <th>CID</th>
                         <th>Classification</th>
                         <th>GTIN</th>
-                        <th>IntCode</th>
-                        <th>ItemCode</th>
-                        <th>ItemDesc</th>
-                        <th>ItemSerialNo</th>
-                        <th>MainLocation</th>
-                        <th>MapDate</th>
-                        <th>PO</th>
-                        <th>PalletCode</th>
-                        <th>Reference</th>
                         <th>Remarks</th>
-                        <th>SID</th>
-                        <th>Trans</th>
                         <th>User</th>
+                        <th>Classification</th>
+                        <th>Main Location</th>
+                        <th>Bin Location</th>
+                        <th>Internal Code</th>
+                        <th>Item Serial Number</th>
+                        <th>Map Date</th>
+                        <th>Pallet Code</th>
+                        <th>Reference</th>
+                        <th>Shipment ID</th>
+                        <th>Container ID</th>
+                        <th>PO</th>
+                        <th>Transaction</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredData.map((data, index) => (
+                      {tableData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
                           <td>{data.ItemCode}</td>
                           <td>{data.ItemDesc}</td>

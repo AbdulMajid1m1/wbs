@@ -67,7 +67,7 @@ const UpdateAllItems = ({ inputs, title,
         const queryParameters = new URLSearchParams(updatedData).toString();
 
         userRequest
-            .put(`/updateTblItemsCLData?${queryParameters}`)
+            .put(`/updateStockMasterData?${queryParameters}`)
             .then((response) => {
                 setIsLoading(false);
                 console.log(response.data);

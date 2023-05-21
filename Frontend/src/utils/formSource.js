@@ -381,6 +381,13 @@ export const allItemsInput = [
     type: "text",
     placeholder: "ITEM GROUP ID",
   },
+  {
+    id: "allItemsInput4",
+    label: "GROUP NAME*",
+    name: "GROUPNAME",
+    type: "text",
+    placeholder: "GROUP NAME",
+  },
 
 ];
 
@@ -405,6 +412,13 @@ export const updateAllItemsInput = [
     name: "ITEMGROUPID",
     type: "text",
     placeholder: "ITEM GROUP ID",
+  },
+  {
+    id: "allItemsInput3",
+    label: "GROUP NAME*",
+    name: "GROUPNAME",
+    type: "text",
+    placeholder: "GROUP NAME",
   },
 
 ];

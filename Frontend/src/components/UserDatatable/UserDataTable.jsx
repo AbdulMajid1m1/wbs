@@ -302,7 +302,7 @@ const UserDataTable = ({
         case "itemTableId":
           try {
             const response = await userRequest.delete(
-              "deleteTblItemsCLData?ITEMID=" + rowdata.ITEMID
+              "/deleteStockMasterDataByItemId?ITEMID=" + rowdata.ITEMID
             );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");

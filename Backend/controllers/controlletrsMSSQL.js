@@ -3847,6 +3847,157 @@ const WBSDB = {
 
     }
   },
+
+  async insertStockMasterData(req, res, next) {
+    try {
+      const stockMasterDataArray = req.body;
+      if (stockMasterDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < stockMasterDataArray.length; i++) {
+        const {
+          ITEMID,
+          ITEMNAME,
+          ITEMGROUPID,
+          GROUPNAME,
+        } = stockMasterDataArray[i];
+
+        // Check if a record already exists
+        let checkQuery = `
+          SELECT * FROM [WBSSQL].[dbo].[tbl_Stock_Master] 
+          WHERE ITEMID = @ITEMID
+        `;
+        let checkRequest = pool1.request();
+        checkRequest.input('ITEMID', sql.NVarChar, ITEMID);
+        let checkData = await checkRequest.query(checkQuery);
+
+        if (checkData.recordsets[0].length > 0) {
+          throw new Error(`Record already exists for ITEMID: ${ITEMID}`);
+        }
+
+        // Dynamic SQL query construction
+        let fields = [
+          "ITEMID",
+          "ITEMNAME",
+          "ITEMGROUPID",
+          "GROUPNAME",
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+          INSERT INTO [WBSSQL].[dbo].[tbl_Stock_Master]
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool2.request();
+        request.input('ITEMID', sql.NVarChar, ITEMID);
+        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+        request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
+        request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
+
+        await request.query(query);
+      }
+      return res.status(201).send({ message: 'Data inserted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateStockMasterData(req, res, next) {
+    try {
+      const {
+        ITEMID,
+        ITEMNAME,
+        ITEMGROUPID,
+        GROUPNAME,
+      } = req.body;
+      console.log(req.query);
+
+      if (!ITEMID) {
+        return res.status(400).send({ message: 'ITEMID is required.' });
+      }
+
+      let query = `
+      UPDATE dbo.tbl_Stock_Master
+      SET `;
+
+      const updateFields = [];
+      const request = pool2.request();
+
+      if (ITEMNAME !== undefined) {
+        updateFields.push('ITEMNAME = @ITEMNAME');
+        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+      }
+
+      if (ITEMGROUPID !== undefined) {
+        updateFields.push('ITEMGROUPID = @ITEMGROUPID');
+        request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
+      }
+
+      if (GROUPNAME !== undefined) {
+        updateFields.push('GROUPNAME = @GROUPNAME');
+        request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+      WHERE ITEMID = @ITEMID
+    `;
+
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Stock Master record not found.' });
+      }
+
+      res.status(200).send({ message: 'Stock Master data updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async deleteStockMasterDataByItemId(req, res, next) {
+    try {
+      const { ITEMID } = req.query;
+
+      if (!ITEMID) {
+        return res.status(400).send({ message: 'ITEMID is required.' });
+      }
+
+      let query = ` DELETE FROM dbo.tbl_Stock_Master WHERE ITEMID = @ITEMID `;
+      let request = pool2.request();
+
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Stock Master record not found.' });
+      }
+
+      return res.status(200).send({ message: 'Stock Master data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
   async manageItemsReallocation(req, res, next) {
     try {
       const { availablePallet, serialNumber, selectionType } = req.body;

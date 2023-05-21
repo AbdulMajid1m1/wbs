@@ -323,8 +323,14 @@ router.get("/getAllTblStockMaster", checkAuthentication, WBSDB.getAllTblStockMas
 
 router.get("/getStockMasterDataByItemId", checkAuthentication, WBSDB.getStockMasterDataByItemId);
 
+router.post("/insertStockMasterData", checkAuthentication, WBSDB.insertStockMasterData);
+
+router.put("/updateStockMasterData", checkAuthentication, WBSDB.updateStockMasterData);
+
 router.put("/updateQtyReceivedInTblStockMaster", checkAuthentication, WBSDB.updateQtyReceivedInTblStockMaster);
 
+
+router.delete("/deleteStockMasterDataByItemId", checkAuthentication, WBSDB.deleteStockMasterDataByItemId);
 // --- tbl_ItemsReAllocationPicked APIS Start ---
 router.get("/getAllItemsReAllocationPicked", checkAuthentication, WBSDB.getAllItemsReAllocationPicked);
 

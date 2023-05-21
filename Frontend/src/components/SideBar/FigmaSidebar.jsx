@@ -44,7 +44,7 @@ const FigmaSidebar = () => {
                 <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                     <div className='main-images-container' onClick={() => navigate('/itemscl')}>
                         <img src={items} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Items</p>
+                        <p className='sidebar-text'>Stock Master</p>
                     </div>
 
                     {/* <div className='main-images-container' onClick={() => navigate('/shipment')}>

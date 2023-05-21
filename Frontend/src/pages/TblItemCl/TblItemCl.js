@@ -16,8 +16,9 @@ const TblItemCl = () => {
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
-                // tbl_Stock_Master 
-                userRequest.get("/getAllTblItemsCL")
+
+                // userRequest.get("/getAllTblItemsCL")
+                userRequest.get("/getAllTblStockMaster")
                     // axios.get("http://localhost:7008/api/getAllTblItems")
                     // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
@@ -46,7 +47,7 @@ const TblItemCl = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId"
+            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="Stock Master" columnsName={AllItems} backButton={true} uniqueId="itemTableId"
 
 
             />

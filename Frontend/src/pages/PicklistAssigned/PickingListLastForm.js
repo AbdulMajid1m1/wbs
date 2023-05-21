@@ -104,25 +104,8 @@ const PickingListLastForm = () => {
   const [userInputSubmit, setUserInputSubmit] = useState(false);
 
   // define the function to filter data based on user input and selection type
+
   const filterData = () => {
-
-    if (selectionType === 'Pallet') {
-      // if the userinput not found in data then set error
-      const found = data.some(item => item.PalletCode === userInput);
-      if (!found) {
-        setError("Pallet not found")
-        return;
-      }
-    } else if (selectionType === 'Serial') {
-      // if the userinput not found in data then set error
-
-      const found = data.some(item => item.ItemSerialNo === userInput);
-      if (!found) {
-        setError("Serial not found")
-        return;
-      }
-    }
-
     // filter the data based on the user input and selection type
     const filtered = newTableData.filter((item) => {
       if (selectionType === 'Pallet') {
@@ -133,14 +116,47 @@ const PickingListLastForm = () => {
         return true;
       }
     });
-    // setFilteredData(filtered); // update the filtered data state variable
-    setFilteredData((prevData) => [...prevData, ...filtered]); // Append the filtered data to the existing state  
+
+    if (filtered.length === 0) {
+      setTimeout(() => {
+        setError("Please scan a valid barcode");
+      }, 300);
+      return;
+    }
+
+    setFilteredData((prevData) => {
+      // Filter out items that are already in prevData
+      const newItems = filtered.filter((item) => {
+        if (selectionType === 'Pallet') {
+          return !prevData.some(prevItem => prevItem.PalletCode === item.PalletCode);
+        } else if (selectionType === 'Serial') {
+          return !prevData.some(prevItem => prevItem.ItemSerialNo === item.ItemSerialNo);
+        }
+      });
+      setUserInput(""); 
+      return [...prevData, ...newItems]; // Append the new items to the existing state
+      // clear the user input state variable
+    });
+
+    // Remove the inserted records from the newTableData
+    setNewTableData((prevData) => {
+      return prevData.filter((item) => {
+        if (selectionType === 'Pallet') {
+          return !filtered.some(filteredItem => filteredItem.PalletCode === item.PalletCode);
+        } else if (selectionType === 'Serial') {
+          return !filtered.some(filteredItem => filteredItem.ItemSerialNo === item.ItemSerialNo);
+        } else {
+          return true;
+        }
+      });
+    });
   };
 
+
   // use useEffect to trigger the filtering of data whenever the user input changes
-  useEffect(() => {
-    filterData();
-  }, [userInputSubmit, selectionType]);
+  // useEffect(() => {
+  //   filterData();
+  // }, [userInputSubmit, selectionType]);
 
 
   // reset function
@@ -171,7 +187,8 @@ const PickingListLastForm = () => {
 
   const handleInputUser = (e) => {
     console.log(userInput)
-    setUserInputSubmit(!userInputSubmit);
+    // setUserInputSubmit(!userInputSubmit);
+    filterData();
   }
 
 

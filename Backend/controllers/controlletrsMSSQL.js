@@ -4422,9 +4422,9 @@ const WBSDB = {
 
 
       // Check if VEHICLESHIPPLATENUMBER is present in packingsliptable in pool1
-      const checkVehicle = pool1.request();
+      const checkVehicle = pool2.request();
       checkVehicle.input('vehicleShipPlateNumber', sql.NVarChar, vehicleShipPlateNumber)
-      const vehicleResult = await checkVehicle.query(`SELECT TOP 1 VEHICLESHIPPLATENUMBER FROM packingsliptable WHERE VEHICLESHIPPLATENUMBER =@vehicleShipPlateNumber`);
+      const vehicleResult = await checkVehicle.query(`SELECT TOP 1 PlateNo FROM WMS_TruckMaster WHERE PlateNo =@vehicleShipPlateNumber`);
 
       if (vehicleResult.recordset.length === 0) {
         return res.status(400).send({ message: 'VEHICLESHIPPLATENUMBER not found in the database' })

@@ -76,13 +76,8 @@ const PickingListLastForm = () => {
 
   // First Table Data
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const headers = {
-          // itemcode: 'IC1233',
-          itemcode: parsedData?.ITEMID,
-          binlocation: parsedData?.ITEMID
-        };
+    filterData();
+  }, [userInputSubmit, selectionType]);
 
         const response = await userRequest.post('/getMappedBarcodedsByItemCodeAndBinLocation', { headers });
 

@@ -46,7 +46,7 @@ const PackingSlip = () => {
             {/* <SideBar /> */}
             {/* <SideBar2 /> */}
 
-            <UserDataTable data={alldata} title="PackingSlip" columnsName={PackingSlipColumn} backButton={true}
+            <UserDataTable data={alldata} title="Pick List Assigned" columnsName={PackingSlipColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             />

@@ -114,7 +114,8 @@ const PickingListLastForm = () => {
         return true;
       }
     });
-    setFilteredData(filtered); // update the filtered data state variable
+    // setFilteredData(filtered); // update the filtered data state variable
+    setFilteredData((prevData) => [...prevData, ...filtered]); // Append the filtered data to the existing state  
   };
 
   // use useEffect to trigger the filtering of data whenever the user input changes
@@ -340,45 +341,45 @@ const PickingListLastForm = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>BinLocation</th>
-                      <th>CID</th>
-                      <th>Classification</th>
-                      <th>GTIN</th>
-                      <th>IntCode</th>
                       <th>ItemCode</th>
                       <th>ItemDesc</th>
-                      <th>ItemSerialNo</th>
+                      <th>GTIN</th>
+                      <th>Remarks</th>
+                      <th>User</th>
+                      <th>Classification</th>
                       <th>MainLocation</th>
+                      <th>BinLocation</th>
+                      <th>IntCode</th>
+                      <th>ItemSerialNo</th>
                       <th>MapDate</th>
-                      <th>PO</th>
                       <th>PalletCode</th>
                       <th>Reference</th>
-                      <th>Remarks</th>
                       <th>SID</th>
+                      <th>CID</th>
+                      <th>PO</th>
                       <th>Trans</th>
-                      <th>User</th>
                     </tr>
                   </thead>
                   <tbody>
                     {newTableData.map((data, index) => (
                       <tr key={"tranidRow" + index}>
-                        <td>{data.BinLocation}</td>
-                        <td>{data.CID}</td>
-                        <td>{data.Classification}</td>
-                        <td>{data.GTIN}</td>
-                        <td>{data.IntCode}</td>
                         <td>{data.ItemCode}</td>
                         <td>{data.ItemDesc}</td>
-                        <td>{data.ItemSerialNo}</td>
+                        <td>{data.GTIN}</td>
+                        <td>{data.Remarks}</td>
+                        <td>{data.User}</td>
+                        <td>{data.Classification}</td>
                         <td>{data.MainLocation}</td>
+                        <td>{data.BinLocation}</td>
+                        <td>{data.IntCode}</td>
+                        <td>{data.ItemSerialNo}</td>
                         <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                        <td>{data.PO}</td>
                         <td>{data.PalletCode}</td>
                         <td>{data.Reference}</td>
-                        <td>{data.Remarks}</td>
                         <td>{data.SID}</td>
+                        <td>{data.CID}</td>
+                        <td>{data.PO}</td>
                         <td>{data.Trans}</td>
-                        <td>{data.User}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -389,8 +390,18 @@ const PickingListLastForm = () => {
 
             </div >
 
+            <div className='mb-4 flex justify-end items-center gap-2'>
+                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                  <input
+                    id="totals"
+                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Totals"
+                    value={newTableData.length}
+                  />
+                </div>
 
-            <div class="text-center mb-6">
+
+            <div class="text-center mb-4">
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                   flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
               >
@@ -402,6 +413,7 @@ const PickingListLastForm = () => {
                     checked={selectionType === 'Pallet'}
                     onChange={e => setSelectionType(e.target.value)}
                     className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    disabled
                   />
                   <span className="ml-2 text-[#00006A]">BY PALLETE</span>
                 </label>
@@ -443,45 +455,45 @@ const PickingListLastForm = () => {
                   <table>
                     <thead>
                       <tr>
-                        <th>BinLocation</th>
-                        <th>CID</th>
-                        <th>Classification</th>
-                        <th>GTIN</th>
-                        <th>IntCode</th>
                         <th>ItemCode</th>
                         <th>ItemDesc</th>
-                        <th>ItemSerialNo</th>
+                        <th>GTIN</th>
+                        <th>Remarks</th>
+                        <th>User</th>
+                        <th>Classification</th>
                         <th>MainLocation</th>
+                        <th>BinLocation</th>
+                        <th>IntCode</th>
+                        <th>ItemSerialNo</th>
                         <th>MapDate</th>
-                        <th>PO</th>
                         <th>PalletCode</th>
                         <th>Reference</th>
-                        <th>Remarks</th>
                         <th>SID</th>
+                        <th>CID</th>
+                        <th>PO</th>
                         <th>Trans</th>
-                        <th>User</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
-                          <td>{data.ItemCode}</td>
-                          <td>{data.ItemDesc}</td>
-                          <td>{data.GTIN}</td>
-                          <td>{data.Remarks}</td>
-                          <td>{data.User}</td>
-                          <td>{data.Classification}</td>
-                          <td>{data.MainLocation}</td>
-                          <td>{data.BinLocation}</td>
-                          <td>{data.IntCode}</td>
-                          <td>{data.ItemSerialNo}</td>
-                          <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                          <td>{data.PalletCode}</td>
-                          <td>{data.Reference}</td>
-                          <td>{data.SID}</td>
-                          <td>{data.CID}</td>
-                          <td>{data.PO}</td>
-                          <td>{data.Trans}</td>
+                           <td>{data.ItemCode}</td>
+                            <td>{data.ItemDesc}</td>
+                            <td>{data.GTIN}</td>
+                            <td>{data.Remarks}</td>
+                            <td>{data.User}</td>
+                            <td>{data.Classification}</td>
+                            <td>{data.MainLocation}</td>
+                            <td>{data.BinLocation}</td>
+                            <td>{data.IntCode}</td>
+                            <td>{data.ItemSerialNo}</td>
+                            <td>{new Date(data.MapDate).toLocaleDateString()}</td>
+                            <td>{data.PalletCode}</td>
+                            <td>{data.Reference}</td>
+                            <td>{data.SID}</td>
+                            <td>{data.CID}</td>
+                            <td>{data.PO}</td>
+                            <td>{data.Trans}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -491,6 +503,16 @@ const PickingListLastForm = () => {
 
 
               </div >
+
+              <div className='flex justify-end items-center gap-2'>
+                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                  <input
+                    id="totals"
+                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Totals"
+                    value={filteredData.length}
+                  />
+                </div>
 
             </form>
 

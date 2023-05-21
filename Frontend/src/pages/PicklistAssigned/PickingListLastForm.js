@@ -105,6 +105,25 @@ const PickingListLastForm = () => {
 
   // define the function to filter data based on user input and selection type
   const filterData = () => {
+
+    if (selectionType === 'Pallet') {
+      // if the userinput not found in data then set error
+      const found = data.some(item => item.PalletCode === userInput);
+      if (!found) {
+        setError("Pallet not found")
+        return;
+      }
+    } else if (selectionType === 'Serial') {
+      // if the userinput not found in data then set error
+
+      const found = data.some(item => item.ItemSerialNo === userInput);
+      if (!found) {
+        setError("Serial not found")
+        return;
+      }
+    }
+
+    // filter the data based on the user input and selection type
     const filtered = newTableData.filter((item) => {
       if (selectionType === 'Pallet') {
         return item.PalletCode === userInput;
@@ -157,12 +176,14 @@ const PickingListLastForm = () => {
 
 
   const handleSaveBtnClick = async () => {
-
-    console.log("filteredData")
-    console.log(filteredData)
-    console.log(locationInputValue)
-    // console.log(.TRANSREFID)
-
+    if (locationInputValue === "") {
+      setError("Please select a location")
+      return;
+    }
+    if (filteredData.length === 0) {
+      setError("Please scan a barcode")
+      return;
+    }
     const APIData = filteredData.map((item) => {
       return {
         INVENTLOCATIONID: locationInputValue,
@@ -256,12 +277,6 @@ const PickingListLastForm = () => {
                       getOptionLabel={(option) => option}
                       onChange={handleFromSelect}
 
-                      // onChange={(event, value) => {
-                      //   if (value) {
-                      //     console.log(`Selected: ${value}`);
-
-                      //   }
-                      // }}
                       onInputChange={(event, value) => {
                         if (!value) {
                           // perform operation when input is cleared
@@ -391,14 +406,14 @@ const PickingListLastForm = () => {
             </div >
 
             <div className='mb-4 flex justify-end items-center gap-2'>
-                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                  <input
-                    id="totals"
-                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Totals"
-                    value={newTableData.length}
-                  />
-                </div>
+              <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+              <input
+                id="totals"
+                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Totals"
+                value={newTableData.length}
+              />
+            </div>
 
 
             <div class="text-center mb-4">
@@ -477,23 +492,23 @@ const PickingListLastForm = () => {
                     <tbody>
                       {filteredData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
-                           <td>{data.ItemCode}</td>
-                            <td>{data.ItemDesc}</td>
-                            <td>{data.GTIN}</td>
-                            <td>{data.Remarks}</td>
-                            <td>{data.User}</td>
-                            <td>{data.Classification}</td>
-                            <td>{data.MainLocation}</td>
-                            <td>{data.BinLocation}</td>
-                            <td>{data.IntCode}</td>
-                            <td>{data.ItemSerialNo}</td>
-                            <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                            <td>{data.PalletCode}</td>
-                            <td>{data.Reference}</td>
-                            <td>{data.SID}</td>
-                            <td>{data.CID}</td>
-                            <td>{data.PO}</td>
-                            <td>{data.Trans}</td>
+                          <td>{data.ItemCode}</td>
+                          <td>{data.ItemDesc}</td>
+                          <td>{data.GTIN}</td>
+                          <td>{data.Remarks}</td>
+                          <td>{data.User}</td>
+                          <td>{data.Classification}</td>
+                          <td>{data.MainLocation}</td>
+                          <td>{data.BinLocation}</td>
+                          <td>{data.IntCode}</td>
+                          <td>{data.ItemSerialNo}</td>
+                          <td>{new Date(data.MapDate).toLocaleDateString()}</td>
+                          <td>{data.PalletCode}</td>
+                          <td>{data.Reference}</td>
+                          <td>{data.SID}</td>
+                          <td>{data.CID}</td>
+                          <td>{data.PO}</td>
+                          <td>{data.Trans}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -505,14 +520,14 @@ const PickingListLastForm = () => {
               </div >
 
               <div className='flex justify-end items-center gap-2'>
-                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                  <input
-                    id="totals"
-                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Totals"
-                    value={filteredData.length}
-                  />
-                </div>
+                <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="totals"
+                  className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Totals"
+                  value={filteredData.length}
+                />
+              </div>
 
             </form>
 

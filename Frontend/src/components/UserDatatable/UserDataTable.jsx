@@ -649,7 +649,7 @@ const UserDataTable = ({
       .then(response => {
         // Handle the response from the API if needed
         console.log(response.data);
-        setMessage('User Id Added Successfully');
+        setMessage(response?.data?.message || 'Assigned successfully')
       })
       .catch(error => {
         // Handle any errors that occur during the request

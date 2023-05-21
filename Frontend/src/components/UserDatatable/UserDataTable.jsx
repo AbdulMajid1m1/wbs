@@ -172,7 +172,7 @@ const UserDataTable = ({
     };
   }
 
-  
+
   const handleRowClick = (item) => {
     const index = item.id;
     let itemGroup;
@@ -611,7 +611,7 @@ const UserDataTable = ({
   const [subject, setSubject] = useState("");
   const [sendTo, setSendTo] = useState("");
   const [remarks, setRemarks] = useState("");
-  
+
 
   const handleOpenPopup = () => {
     setIsOpen(true);
@@ -633,57 +633,17 @@ const UserDataTable = ({
   };
 
 
-  // const handleFormSubmit = (e) => {
-  //   e.preventDefault();
-  //   setUserName('');
-  //   handleAddUserClose();
-    
-  //   // Make the API request
-  //   userRequest.post('/insertPickingListDataCLIntoWBS', username)
-  //     .then(response => {
-  //       // Handle the response from the API if needed
-  //       console.log(response.data);
-  //       setMessage('User Id Added Successfully');
-  //     })
-  //     .catch(error => {
-  //       // Handle any errors that occur during the request
-  //       console.error(error);
-  //       setError('User Id Not Added');
-  //     });
-  // };
-
-
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setUserName('');
     handleAddUserClose();
-  
+
     let newData = selectedRow.map(singleRowData => ({
-      // ...singleRowData,
       ...singleRowData.data,
       ASSIGNEDTOUSERID: username
     }));
+    console.log('new Data', newData)
 
-    // let newData = selectedRow.map(singleRowData => ({
-    //   ...singleRowData,
-    //   data: {
-    //     CONFIGID: singleRowData.data.CONFIGID,
-    //     CUSTOMER: singleRowData.data.CUSTOMER,
-    //     DLVDATE: singleRowData.data.DLVDATE,
-    //     EXPEDITIONSTATUS: singleRowData.data.EXPEDITIONSTATUS,
-    //     INVENTLOCATIONID: singleRowData.data.INVENTLOCATIONID,
-    //     ITEMID: singleRowData.data.ITEMID,
-    //     ITEMNAME: singleRowData.data.ITEMNAME,
-    //     PICKINGROUTEID: singleRowData.data.PICKINGROUTEID,
-    //     QTY: singleRowData.data.QTY,
-    //     TRANSREFID: singleRowData.data.TRANSREFID
-    //   },
-    //   ASSIGNEDTOUSERID: username
-    // }));
-    
-
-    console.log('new Data' , newData)
-    
     // Make the API request
     userRequest.post('/insertPickingListDataCLIntoWBS', newData)
       .then(response => {
@@ -694,10 +654,10 @@ const UserDataTable = ({
       .catch(error => {
         // Handle any errors that occur during the request
         console.error(error);
-        setError('User Id Not Added');
+        setError(error?.response?.data?.message || 'Something went wrong')
       });
   };
-  
+
 
   return (
     <>
@@ -849,32 +809,32 @@ const UserDataTable = ({
 
 
 
-     {/* Add User */}
-     {addUser && (
-        <div className="popup-container">
-          <div className="popup">
-            <div className="header">
-              <h2>Add User</h2>
-            </div>
-            <form onSubmit={handleFormSubmit}>
-              <label htmlFor="UserName">Name:</label>
-              <input
-                type="text"
-                id="UserName"
-                value={username}
-                onChange={(e) => setUserName(e.target.value)}
-                required
-                placeholder="User Name"
-              />
-
-              <div className="flex gap-3">
-                <button className="close-btn" type="button" onClick={handleAddUserClose}>CANCEL</button>
-                <button type="submit">SEND</button>
+        {/* Add User */}
+        {addUser && (
+          <div className="popup-container">
+            <div className="popup">
+              <div className="header">
+                <h2>Add User</h2>
               </div>
-            </form>
+              <form onSubmit={handleFormSubmit}>
+                <label htmlFor="UserName">Name:</label>
+                <input
+                  type="text"
+                  id="UserName"
+                  value={username}
+                  onChange={(e) => setUserName(e.target.value)}
+                  required
+                  placeholder="User Name"
+                />
+
+                <div className="flex gap-3">
+                  <button className="close-btn" type="button" onClick={handleAddUserClose}>CANCEL</button>
+                  <button type="submit">SEND</button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
 
         {updatedRows.length > 0 && (

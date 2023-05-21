@@ -4294,7 +4294,7 @@ const WBSDB = {
       return res.status(201).send({ message: 'Data inserted successfully.' });
     } catch (error) {
       console.log(error);
-      res.status(500).send({ message: error.message });
+      return res.status(500).send({ message: error.message });
     }
   },
 

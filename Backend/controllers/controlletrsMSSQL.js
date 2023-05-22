@@ -2453,9 +2453,15 @@ const WBSDB = {
         UserLevel,
         Loc,
       };
+      let user = {
+        UserID,
+        Fullname,
+        UserLevel,
+        Loc,
+      }
       const token = jwt.sign(tokenPayload, jwtSecret, { expiresIn: jwtExpiration });
 
-      res.status(201).send({ message: 'User inserted successfully.', token });
+      res.status(201).send({ message: 'User inserted successfully.', user, token });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
@@ -4170,8 +4176,11 @@ const WBSDB = {
     try {
       let query = `
       SELECT * FROM dbo.WMS_Sales_PickingList_CL
+      WHERE ASSIGNEDTOUSERID=@ASSIGNEDTOUSERID
+      
       `;
       let request = pool2.request();
+      request.input('ASSIGNEDTOUSERID', sql.NVarChar, req?.token?.UserID);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No Record available" });

@@ -104,7 +104,9 @@ const PickingListLastForm = () => {
   const [userInputSubmit, setUserInputSubmit] = useState(false);
 
   // define the function to filter data based on user input and selection type
+
   const filterData = () => {
+    // filter the data based on the user input and selection type
     const filtered = newTableData.filter((item) => {
       if (selectionType === 'Pallet') {
         return item.PalletCode === userInput;
@@ -114,14 +116,47 @@ const PickingListLastForm = () => {
         return true;
       }
     });
-    // setFilteredData(filtered); // update the filtered data state variable
-    setFilteredData((prevData) => [...prevData, ...filtered]); // Append the filtered data to the existing state  
+
+    if (filtered.length === 0) {
+      setTimeout(() => {
+        setError("Please scan a valid barcode");
+      }, 300);
+      return;
+    }
+
+    setFilteredData((prevData) => {
+      // Filter out items that are already in prevData
+      const newItems = filtered.filter((item) => {
+        if (selectionType === 'Pallet') {
+          return !prevData.some(prevItem => prevItem.PalletCode === item.PalletCode);
+        } else if (selectionType === 'Serial') {
+          return !prevData.some(prevItem => prevItem.ItemSerialNo === item.ItemSerialNo);
+        }
+      });
+      setUserInput(""); 
+      return [...prevData, ...newItems]; // Append the new items to the existing state
+      // clear the user input state variable
+    });
+
+    // Remove the inserted records from the newTableData
+    setNewTableData((prevData) => {
+      return prevData.filter((item) => {
+        if (selectionType === 'Pallet') {
+          return !filtered.some(filteredItem => filteredItem.PalletCode === item.PalletCode);
+        } else if (selectionType === 'Serial') {
+          return !filtered.some(filteredItem => filteredItem.ItemSerialNo === item.ItemSerialNo);
+        } else {
+          return true;
+        }
+      });
+    });
   };
 
+
   // use useEffect to trigger the filtering of data whenever the user input changes
-  useEffect(() => {
-    filterData();
-  }, [userInputSubmit, selectionType]);
+  // useEffect(() => {
+  //   filterData();
+  // }, [userInputSubmit, selectionType]);
 
 
   // reset function
@@ -152,17 +187,20 @@ const PickingListLastForm = () => {
 
   const handleInputUser = (e) => {
     console.log(userInput)
-    setUserInputSubmit(!userInputSubmit);
+    // setUserInputSubmit(!userInputSubmit);
+    filterData();
   }
 
 
   const handleSaveBtnClick = async () => {
-
-    console.log("filteredData")
-    console.log(filteredData)
-    console.log(locationInputValue)
-    // console.log(.TRANSREFID)
-
+    if (locationInputValue === "") {
+      setError("Please select a location")
+      return;
+    }
+    if (filteredData.length === 0) {
+      setError("Please scan a barcode")
+      return;
+    }
     const APIData = filteredData.map((item) => {
       return {
         INVENTLOCATIONID: locationInputValue,
@@ -256,12 +294,6 @@ const PickingListLastForm = () => {
                       getOptionLabel={(option) => option}
                       onChange={handleFromSelect}
 
-                      // onChange={(event, value) => {
-                      //   if (value) {
-                      //     console.log(`Selected: ${value}`);
-
-                      //   }
-                      // }}
                       onInputChange={(event, value) => {
                         if (!value) {
                           // perform operation when input is cleared
@@ -391,14 +423,14 @@ const PickingListLastForm = () => {
             </div >
 
             <div className='mb-4 flex justify-end items-center gap-2'>
-                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                  <input
-                    id="totals"
-                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Totals"
-                    value={newTableData.length}
-                  />
-                </div>
+              <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+              <input
+                id="totals"
+                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Totals"
+                value={newTableData.length}
+              />
+            </div>
 
 
             <div class="text-center mb-4">
@@ -477,23 +509,23 @@ const PickingListLastForm = () => {
                     <tbody>
                       {filteredData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
-                           <td>{data.ItemCode}</td>
-                            <td>{data.ItemDesc}</td>
-                            <td>{data.GTIN}</td>
-                            <td>{data.Remarks}</td>
-                            <td>{data.User}</td>
-                            <td>{data.Classification}</td>
-                            <td>{data.MainLocation}</td>
-                            <td>{data.BinLocation}</td>
-                            <td>{data.IntCode}</td>
-                            <td>{data.ItemSerialNo}</td>
-                            <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                            <td>{data.PalletCode}</td>
-                            <td>{data.Reference}</td>
-                            <td>{data.SID}</td>
-                            <td>{data.CID}</td>
-                            <td>{data.PO}</td>
-                            <td>{data.Trans}</td>
+                          <td>{data.ItemCode}</td>
+                          <td>{data.ItemDesc}</td>
+                          <td>{data.GTIN}</td>
+                          <td>{data.Remarks}</td>
+                          <td>{data.User}</td>
+                          <td>{data.Classification}</td>
+                          <td>{data.MainLocation}</td>
+                          <td>{data.BinLocation}</td>
+                          <td>{data.IntCode}</td>
+                          <td>{data.ItemSerialNo}</td>
+                          <td>{new Date(data.MapDate).toLocaleDateString()}</td>
+                          <td>{data.PalletCode}</td>
+                          <td>{data.Reference}</td>
+                          <td>{data.SID}</td>
+                          <td>{data.CID}</td>
+                          <td>{data.PO}</td>
+                          <td>{data.Trans}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -505,14 +537,14 @@ const PickingListLastForm = () => {
               </div >
 
               <div className='flex justify-end items-center gap-2'>
-                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                  <input
-                    id="totals"
-                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Totals"
-                    value={filteredData.length}
-                  />
-                </div>
+                <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="totals"
+                  className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Totals"
+                  value={filteredData.length}
+                />
+              </div>
 
             </form>
 

@@ -41,6 +41,7 @@ const t = {
           error.message = err.message;
           return reject(error);
         }
+        
         console.log(info);
         return resolve(info);
       });

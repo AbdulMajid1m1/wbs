@@ -4371,6 +4371,7 @@ const WBSDB = {
       WHERE PICKINGROUTEID = @PICKINGROUTEID 
       AND ITEMID = @ITEMID`;
 
+
       let request = pool2.request();
       request.input("PICKSTATUS", sql.NVarChar, PICKSTATUS);
       request.input("PICKINGROUTEID", sql.NVarChar, PICKINGROUTEID);

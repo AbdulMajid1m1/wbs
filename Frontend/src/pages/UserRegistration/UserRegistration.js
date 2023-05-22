@@ -82,7 +82,7 @@ const Registration = () => {
 
 
       <div className="h-screen flex">
-        <div className="hidden lg:flex w-full lg:w-1/2 login_img_section
+        <div className="hidden lg:flex w-full lg:w-1/2 register_img_section
           justify-around items-center">
           <div
             className=" 

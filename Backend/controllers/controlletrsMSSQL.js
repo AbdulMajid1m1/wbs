@@ -4331,22 +4331,30 @@ const WBSDB = {
 
   async insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl(req, res, next) {
     try {
-
+      let PICKSTATUS;
       const packingSlipArray = req.body;
-      const { PICKINGROUTEID, ITEMID, QTYPICKED, QTY } = req.query;
+      const { PICKINGROUTEID, ITEMID, QTYPICKED, QTY } = req.query; // no need of this itemid now
       if (packingSlipArray.length === 0) {
         return res.status(400).send({ message: "No data available" });
       }
 
+      let updateQty = QTY;
+      let updateQtyPicked = QTYPICKED;
+
       for (const packingSlip of packingSlipArray) {
+
+        if (!packingSlip.INVENTLOCATIONID && !packingSlip.ITEMID) {
+          return res.status(400).send({ message: "Please provide INVENTLOCATIONID and ITEMID" });
+        }
+
 
         const fields = [
           "INVENTLOCATIONID",
           "ORDERED",
           "PACKINGSLIPID",
           "ASSIGNEDUSERID",
+          "ITEMID",
           ...(packingSlip.SALESID ? ["SALESID"] : []),
-          ...(packingSlip.ITEMID ? ["ITEMID"] : []),
           ...(packingSlip.NAME ? ["NAME"] : []),
           ...(packingSlip.CONFIGID ? ["CONFIGID"] : []),
           ...(packingSlip.VEHICLESHIPPLATENUMBER ? ["VEHICLESHIPPLATENUMBER"] : []),
@@ -4361,16 +4369,14 @@ const WBSDB = {
           (${values.join(', ')})
         `;
 
-
-
         let request = pool2.request();
 
         request.input("INVENTLOCATIONID", sql.NVarChar, packingSlip.INVENTLOCATIONID);
         request.input("ORDERED", sql.Float, packingSlip.ORDERED);
         request.input("PACKINGSLIPID", sql.NVarChar, packingSlip.PACKINGSLIPID);
         request.input("ASSIGNEDUSERID", sql.NVarChar, packingSlip.ASSIGNEDUSERID);
+        request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID.trim());
         if (packingSlip.SALESID) request.input("SALESID", sql.NVarChar, packingSlip.SALESID);
-        if (packingSlip.ITEMID) request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID);
         if (packingSlip.NAME) request.input("NAME", sql.NVarChar, packingSlip.NAME);
         if (packingSlip.CONFIGID) request.input("CONFIGID", sql.NVarChar, packingSlip.CONFIGID);
         if (packingSlip.VEHICLESHIPPLATENUMBER) request.input("VEHICLESHIPPLATENUMBER", sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
@@ -4380,28 +4386,102 @@ const WBSDB = {
 
 
 
+
+        PICKSTATUS = updateQty == updateQtyPicked ? 'Picked' : 'Partial';
+        // check if status is already picked
+        const check = pool2.request()
+        let checkQuery = `SELECT * FROM WMS_Sales_PickingList_CL WHERE PICKINGROUTEID = @CHECKPICKINGROUTEID AND ITEMID = @checkItemId AND PICKSTATUS = 'Picked' AND ASSIGNEDTOUSERID = @USERID`;
+        check.input("CHECKPICKINGROUTEID", sql.NVarChar, PICKINGROUTEID);
+        check.input("checkItemId", sql.NVarChar, packingSlip.ITEMID.trim());
+        check.input("USERID", sql.NVarChar, req.token?.UserID)
+        const checkResult = await check.query(checkQuery);
+        if (checkResult.recordset.length > 0) {
+          return res.status(400).send({ message: `Item with ITEMID ${packingSlip.ITEMID.trim()} is already picked` });
+        }
+
+
+
+        let checkQuery2 = `SELECT QTYPICKED, PICKSTATUS, QTY
+                  FROM WMS_Sales_PickingList_CL
+                  WHERE PICKINGROUTEID = @PICKINGROUTEID
+                  AND ITEMID = @singleitemId AND ASSIGNEDTOUSERID = @USERID`;
+
+
+        let updateQuery = `UPDATE WMS_Sales_PickingList_CL 
+                  SET PICKSTATUS = CASE
+                                    WHEN QTY = QTYPICKED THEN 'Picked'
+                                    ELSE 'Partial'
+                                  END,
+                      QTYPICKED = CASE
+                                    WHEN QTY = QTYPICKED THEN QTYPICKED
+                                    ELSE ISNULL(QTYPICKED, 0) + 1
+                                  END,
+                      QTY = CASE 
+                              WHEN QTY = QTYPICKED THEN QTY 
+                              ELSE QTY - 1
+                            END
+                  WHERE PICKINGROUTEID = @PICKINGROUTEID 
+                  AND ITEMID = @singleitemId 
+                  AND ASSIGNEDTOUSERID = @USERID`;
+
+        let request2 = pool2.request();
+        request2.input("PICKINGROUTEID", sql.NVarChar, PICKINGROUTEID);
+        request2.input("singleitemId", sql.NVarChar, packingSlip.ITEMID.trim());
+        request2.input("USERID", sql.NVarChar, req.token?.UserID);
+
+        request2.query(updateQuery, async (error, result) => {
+          if (error) {
+            // Handle the error
+            console.error(error);
+            return;
+          }
+
+          // Retrieve the updated values
+          const checkResult = await request2.query(checkQuery2);
+          const updatedQTYPICKED = checkResult.recordset[0].QTYPICKED;
+          const updatedQTY = checkResult.recordset[0].QTY;
+          console.log(checkResult.recordset[0])
+
+          // Determine the updated PICKSTATUS
+          const updatedPICKSTATUS = (updatedQTY == updatedQTYPICKED) ? 'Picked' : 'Partial';
+
+          console.log("updatedPICKSTATUS" + " " + updatedPICKSTATUS + " " + "updatedQTY" + " " + updatedQTY + " " + "updatedqtypic" + " " + updatedQTYPICKED)
+          // Update the PICKSTATUS in the database
+          let updateStatusQuery = `UPDATE WMS_Sales_PickingList_CL
+                          SET PICKSTATUS = @updatedPICKSTATUS
+                          WHERE PICKINGROUTEID = @PICKINGROUTEID
+                          AND ITEMID = @singleitemId
+                          AND ASSIGNEDTOUSERID = @USERID`;
+
+          let request3 = pool2.request();
+          request3.input("updatedPICKSTATUS", sql.NVarChar, updatedPICKSTATUS);
+          request3.input("PICKINGROUTEID", sql.NVarChar, PICKINGROUTEID);
+          request3.input("singleitemId", sql.NVarChar, packingSlip.ITEMID.trim());
+          request3.input("USERID", sql.NVarChar, req.token?.UserID);
+
+          request3.query(updateStatusQuery, (error, result) => {
+            if (error) {
+              // Handle the error
+              console.error(error);
+              return;
+            }
+
+            console.log('Update successful.');
+          });
+        });
+
+
+
+
       };
 
-      let PICKSTATUS = QTY === QTYPICKED ? 'Picked' : 'Partial';
 
-      let updateQuery = `UPDATE WMS_Sales_PickingList_CL 
-      SET PICKSTATUS = @PICKSTATUS,
-          QTYPICKED = ISNULL(QTYPICKED, 0) + 1
-      WHERE PICKINGROUTEID = @PICKINGROUTEID 
-      AND ITEMID = @ITEMID`;
-
-
-      let request = pool2.request();
-      request.input("PICKSTATUS", sql.NVarChar, PICKSTATUS);
-      request.input("PICKINGROUTEID", sql.NVarChar, PICKINGROUTEID);
-      request.input("ITEMID", sql.NVarChar, ITEMID);
-
-      await request.query(updateQuery);
 
 
       return res.status(201).send({ message: 'Data inserted successfully.' });
 
     } catch (error) {
+      console.log(error);
       return res.status(500).send({ message: error.message });
     }
   },

@@ -65,6 +65,7 @@ import Pickinglistform from './pages/PicklistAssigned/PickingListForm'
 import PickingListLastForm from './pages/PicklistAssigned/PickingListLastForm'
 import DispatchingPickingSlip from './pages/DispatchingPickingSlip/DispatchingPickingSlip'
 import SalesPickingList from './pages/SalesPickingList/SalesPickingList'
+import Registration from './pages/UserRegistration/UserRegistration'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -90,6 +91,7 @@ const App = () => {
       <Routes>
 
         <Route path="/" element={<Login />} />
+        <Route path='/registration' element={<Registration />} />
 
         <Route path="/receipts" element={<ReceiptsProvider><ReceiptsManagement /></ReceiptsProvider>} />
         <Route path="/receiptsecond" element={<ReceiptsProvider><ReceiptsSecond /></ReceiptsProvider>} />

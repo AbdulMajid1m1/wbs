@@ -102,7 +102,7 @@ const Login = () => {
               <div className="flex justify-end mt-4">
                 {/* <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all">Forgot Password ?</span> */}
 
-                <p onClick={() => navigate('/registration')} className="text-sm ml-2 underline hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all">User Register</p>
+                <p onClick={() => navigate('/registration')} className="text-sm sm:text-[17px] ml-2 underline hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all">User Register</p>
               </div>
 
             </form>

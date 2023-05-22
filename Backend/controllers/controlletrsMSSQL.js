@@ -4231,6 +4231,7 @@ const WBSDB = {
           EXPEDITIONSTATUS,
           ASSIGNEDTOUSERID,
           PICKSTATUS,
+          QTYPICKED,
         } = pickingListDataArray[i];
 
         // Check if a record already exists
@@ -4262,6 +4263,7 @@ const WBSDB = {
           ...(EXPEDITIONSTATUS !== undefined ? ['EXPEDITIONSTATUS'] : []),
           ...(ASSIGNEDTOUSERID ? ['ASSIGNEDTOUSERID'] : []),
           ...(PICKSTATUS ? ['PICKSTATUS'] : []),
+          ...(QTYPICKED ? ['QTYPICKED'] : []),
           "DATETIMEASSIGNED"
         ];
 
@@ -4287,6 +4289,7 @@ const WBSDB = {
         if (EXPEDITIONSTATUS !== undefined) request.input('EXPEDITIONSTATUS', sql.Int, EXPEDITIONSTATUS);
         if (ASSIGNEDTOUSERID) request.input('ASSIGNEDTOUSERID', sql.NVarChar, ASSIGNEDTOUSERID);
         if (PICKSTATUS) request.input('PICKSTATUS', sql.NVarChar, PICKSTATUS);
+        if (QTYPICKED) request.input('QTYPICKED', sql.Float, QTYPICKED);
 
         // Add the current date and time to the input parameters.
         const currentDateTime = new Date();
@@ -4361,7 +4364,12 @@ const WBSDB = {
       };
 
       let PICKSTATUS = QTY === QTYPICKED ? 'Picked' : 'Partial';
-      let updateQuery = `UPDATE WMS_Sales_PickingList_CL SET PICKSTATUS=@PICKSTATUS WHERE PICKINGROUTEID=@PICKINGROUTEID AND ITEMID=@ITEMID`;
+
+      let updateQuery = `UPDATE WMS_Sales_PickingList_CL 
+      SET PICKSTATUS = @PICKSTATUS,
+          QTYPICKED = ISNULL(QTYPICKED, 0) + 1
+      WHERE PICKINGROUTEID = @PICKINGROUTEID 
+      AND ITEMID = @ITEMID`;
 
       let request = pool2.request();
       request.input("PICKSTATUS", sql.NVarChar, PICKSTATUS);

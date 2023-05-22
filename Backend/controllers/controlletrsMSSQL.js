@@ -4184,7 +4184,7 @@ const WBSDB = {
 
     }
   },
-  //PICKINGROUTEID
+  //PICKINGROUTEID and userId
   async getAllWmsSalesPickingListClFromWBSByPickingRouteId(req, res, next) {
     try {
       const { PICKINGROUTEID } = req.query;
@@ -4192,6 +4192,7 @@ const WBSDB = {
         return res.status(400).send({ message: "Please provide data to insert" });
       }
       console.log(req?.token)
+      console.log(req?.token?.UserID)
 
       let query = `
       SELECT * FROM dbo.WMS_Sales_PickingList_CL

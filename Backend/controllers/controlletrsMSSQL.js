@@ -2418,6 +2418,7 @@ const WBSDB = {
 
 
   // POST request to insert user
+  // POST request to insert user
   async insertTblUsersData(req, res, next) {
     try {
       const {
@@ -2431,11 +2432,11 @@ const WBSDB = {
       const hashedPassword = await bcrypt.hash(UserPassword, saltRounds);
 
       const query = `
-          INSERT INTO dbo.tblUsers
-            (UserID, UserPassword, Fullname, UserLevel, Loc)
-          VALUES
-            (@UserID, @UserPassword, @Fullname, @UserLevel, @Loc)
-        `;
+      INSERT INTO dbo.tblUsers
+      (UserID, UserPassword, Fullname, UserLevel, Loc)
+      VALUES
+      (@UserID, @UserPassword, @Fullname, @UserLevel, @Loc)
+    `;
 
       let request = pool2.request();
       request.input('UserID', sql.VarChar(255), UserID);
@@ -2445,13 +2446,21 @@ const WBSDB = {
       request.input('Loc', sql.VarChar(255), Loc);
 
       await request.query(query);
-      res.status(201).send({ message: 'User inserted successfully.' });
+
+      // Generate token
+      const tokenPayload = {
+        UserID,
+        UserLevel,
+        Loc,
+      };
+      const token = jwt.sign(tokenPayload, jwtSecret, { expiresIn: jwtExpiration });
+
+      res.status(201).send({ message: 'User inserted successfully.', token });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
-
   // POST request to authenticate user
   async loginUser(req, res, next) {
     try {

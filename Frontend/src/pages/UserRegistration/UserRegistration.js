@@ -11,74 +11,68 @@ import { SyncLoader } from 'react-spinners'
 
 const Registration = () => {
 
-    const [UserID, setUserID] = useState('')
-    const [UserPassword, setUserPassword] = useState('')
-    const [UserName, setUserName] = useState('')
-    const [UserLevel, setUserLevel] = useState('')
-    const [UserLocation, setUserLocation] = useState('')
-    const [isLoading, setIsLoading] = useState(false);
+  const [UserID, setUserID] = useState('')
+  const [UserPassword, setUserPassword] = useState('')
+  const [UserName, setUserName] = useState('')
+  const [UserLevel, setUserLevel] = useState('')
+  const [UserLocation, setUserLocation] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setIsLoading(true)
-        userRequest
-        .post("/insertTblUsersData", null, {
-          params: {
-            UserID: UserID,
-            UserPassword: UserPassword,
-            Fullname: UserName,
-            UserLevel: UserLevel,
-            Loc: UserLocation,
-          },
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true)
+    userRequest
+      .post("/insertTblUsersData", null, {
+        params: {
+          UserID: UserID,
+          UserPassword: UserPassword,
+          Fullname: UserName,
+          UserLevel: UserLevel,
+          Loc: UserLocation,
+        },
+      })
+      .then((response) => {
+        Cookies.set("accessToken", response?.data?.token);
+        navigate("/dashboard");
+        setIsLoading(false)
+
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.message ?? 'Something went wrong!',
         })
-          .then((response) => {
-            Cookies.set("accessToken", response?.data?.token);
-            navigate("/");
-            setIsLoading(false)
+      });
+  }
 
-            // Swal.fire({
-            //   icon: 'success',
-            //   title: 'Success',
-            //   text: 'Welcome To Warehouse Dashboard',
-            // })
-    
-          })
-          .catch((error) => {
-            setIsLoading(false)
-            console.log(error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: error.response?.data?.message ?? 'Something went wrong!',
-            })
-          });
-      }
-    
   return (
     <div className='login_img_section'>
 
 
-                {isLoading &&
+      {isLoading &&
 
-                <div className='loading-spinner-background'
-                    style={{
-                        zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                        display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+        <div className='loading-spinner-background'
+          style={{
+            zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
 
 
-                    }}
-                >
-                    <SyncLoader
+          }}
+        >
+          <SyncLoader
 
-                        size={18}
-                        color={"#FFA500"}
-                        // height={4}
-                        loading={isLoading}
-                    />
-                </div>
-                }
+            size={18}
+            color={"#FFA500"}
+            // height={4}
+            loading={isLoading}
+          />
+        </div>
+      }
 
 
       <div className="h-screen flex">
@@ -110,7 +104,7 @@ const Registration = () => {
               </div>
               {/* <h1 className="text-gray-800 font-bold text-2xl mb-1">Hello Again!</h1> */}
               <p className="text-sm font-normal text-gray-600 mb-8">Welcome Back WBS</p>
-            
+
               <div className="flex items-center border-2 mb-5 py-2 px-3 rounded-2xl">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
@@ -166,11 +160,11 @@ const Registration = () => {
                 />
               </div>
 
-              <button 
-              type="submit" 
+              <button
+                type="submit"
                 className="block w-full bg-[#FFA500] mt-5 py-2 rounded-2xl hover:bg-[#7b663e] hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
-                    >Register</button>
-            
+              >Register</button>
+
             </form>
           </div>
 

@@ -17,9 +17,9 @@ import stocking from "../../images/stocking.png"
 import barcode from "../../images/barcode.png"
 import productreturn from "../../images/return.png"
 import exit from "../../images/exit.png"
+import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
-
 
 
 const FigmaSidebar = () => {
@@ -28,7 +28,15 @@ const FigmaSidebar = () => {
     const [wmsMobileApp, setWmsMobileApp] = useState(false);
     const [kpiDashboard, setKpiDashbaord] = useState(false);
 
+
     const navigate = useNavigate();
+
+    const handleLogout = () => {
+        Cookies.remove("accessToken")
+        navigate("/")
+
+    }
+
     return (
         <div className='main-sidebar'>
 
@@ -167,7 +175,7 @@ const FigmaSidebar = () => {
                         <img src={packing} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Packing Slip</p>
                     </div> */}
-                    
+
                     {/* <div className='main-images-container' onClick={() => navigate('/packingslip')}>
                         <img src={packing} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Packing Slip</p>
@@ -232,7 +240,7 @@ const FigmaSidebar = () => {
                         <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Item Re Allocation</p>
                     </div>
-                    
+
                     <div className='main-images-container'>
                         <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Physical Inventory</p>
@@ -296,7 +304,7 @@ const FigmaSidebar = () => {
                 <p className='sidebar-text'>Settings</p>
             </div>
 
-            <div className='main-images-container' onClick={() => navigate('/')}>
+            <div className='main-images-container' onClick={handleLogout}>
                 <img src={exit} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Log-Out</p>
             </div>

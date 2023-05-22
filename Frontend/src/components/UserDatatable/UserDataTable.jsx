@@ -658,7 +658,8 @@ const UserDataTable = ({
 
     let newData = selectedRow.map(singleRowData => ({
       ...singleRowData.data,
-      ASSIGNEDTOUSERID: username
+      ASSIGNEDTOUSERID: username,
+      // QTYPICKED:1,
     }));
     console.log('new Data', newData)
 

@@ -2418,6 +2418,7 @@ const WBSDB = {
 
 
   // POST request to insert user
+  // POST request to insert user
   async insertTblUsersData(req, res, next) {
     try {
       const {
@@ -2431,11 +2432,11 @@ const WBSDB = {
       const hashedPassword = await bcrypt.hash(UserPassword, saltRounds);
 
       const query = `
-          INSERT INTO dbo.tblUsers
-            (UserID, UserPassword, Fullname, UserLevel, Loc)
-          VALUES
-            (@UserID, @UserPassword, @Fullname, @UserLevel, @Loc)
-        `;
+      INSERT INTO dbo.tblUsers
+      (UserID, UserPassword, Fullname, UserLevel, Loc)
+      VALUES
+      (@UserID, @UserPassword, @Fullname, @UserLevel, @Loc)
+    `;
 
       let request = pool2.request();
       request.input('UserID', sql.VarChar(255), UserID);
@@ -2445,13 +2446,21 @@ const WBSDB = {
       request.input('Loc', sql.VarChar(255), Loc);
 
       await request.query(query);
-      res.status(201).send({ message: 'User inserted successfully.' });
+
+      // Generate token
+      const tokenPayload = {
+        UserID,
+        UserLevel,
+        Loc,
+      };
+      const token = jwt.sign(tokenPayload, jwtSecret, { expiresIn: jwtExpiration });
+
+      res.status(201).send({ message: 'User inserted successfully.', token });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
-
   // POST request to authenticate user
   async loginUser(req, res, next) {
     try {
@@ -4231,6 +4240,7 @@ const WBSDB = {
           EXPEDITIONSTATUS,
           ASSIGNEDTOUSERID,
           PICKSTATUS,
+          QTYPICKED,
         } = pickingListDataArray[i];
 
         // Check if a record already exists
@@ -4262,6 +4272,7 @@ const WBSDB = {
           ...(EXPEDITIONSTATUS !== undefined ? ['EXPEDITIONSTATUS'] : []),
           ...(ASSIGNEDTOUSERID ? ['ASSIGNEDTOUSERID'] : []),
           ...(PICKSTATUS ? ['PICKSTATUS'] : []),
+          ...(QTYPICKED ? ['QTYPICKED'] : []),
           "DATETIMEASSIGNED"
         ];
 
@@ -4287,6 +4298,7 @@ const WBSDB = {
         if (EXPEDITIONSTATUS !== undefined) request.input('EXPEDITIONSTATUS', sql.Int, EXPEDITIONSTATUS);
         if (ASSIGNEDTOUSERID) request.input('ASSIGNEDTOUSERID', sql.NVarChar, ASSIGNEDTOUSERID);
         if (PICKSTATUS) request.input('PICKSTATUS', sql.NVarChar, PICKSTATUS);
+        if (QTYPICKED) request.input('QTYPICKED', sql.Float, QTYPICKED);
 
         // Add the current date and time to the input parameters.
         const currentDateTime = new Date();
@@ -4361,7 +4373,13 @@ const WBSDB = {
       };
 
       let PICKSTATUS = QTY === QTYPICKED ? 'Picked' : 'Partial';
-      let updateQuery = `UPDATE WMS_Sales_PickingList_CL SET PICKSTATUS=@PICKSTATUS WHERE PICKINGROUTEID=@PICKINGROUTEID AND ITEMID=@ITEMID`;
+
+      let updateQuery = `UPDATE WMS_Sales_PickingList_CL 
+      SET PICKSTATUS = @PICKSTATUS,
+          QTYPICKED = ISNULL(QTYPICKED, 0) + 1
+      WHERE PICKINGROUTEID = @PICKINGROUTEID 
+      AND ITEMID = @ITEMID`;
+
 
       let request = pool2.request();
       request.input("PICKSTATUS", sql.NVarChar, PICKSTATUS);

@@ -60,7 +60,6 @@ const PickingListLastForm = () => {
 
 
 
-
   const autocompleteRef = useRef(); // Ref to access the Autocomplete component
   const [autocompleteKey, setAutocompleteKey] = useState(0);
   const resetAutocomplete = () => {
@@ -106,12 +105,13 @@ const PickingListLastForm = () => {
   // define the function to filter data based on user input and selection type
 
   const filterData = () => {
+    let trimInput = userInput.trim()
     // filter the data based on the user input and selection type
     const filtered = newTableData.filter((item) => {
       if (selectionType === 'Pallet') {
-        return item.PalletCode === userInput;
+        return item.PalletCode === trimInput;
       } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo === userInput;
+        return item.ItemSerialNo === trimInput;
       } else {
         return true;
       }
@@ -133,7 +133,7 @@ const PickingListLastForm = () => {
           return !prevData.some(prevItem => prevItem.ItemSerialNo === item.ItemSerialNo);
         }
       });
-      setUserInput(""); 
+      setUserInput("");
       return [...prevData, ...newItems]; // Append the new items to the existing state
       // clear the user input state variable
     });
@@ -153,12 +153,6 @@ const PickingListLastForm = () => {
   };
 
 
-  // use useEffect to trigger the filtering of data whenever the user input changes
-  // useEffect(() => {
-  //   filterData();
-  // }, [userInputSubmit, selectionType]);
-
-
   // reset function
   const resetDataOnUPdate = () => {
     // remove the filtered data from the data state variable
@@ -176,8 +170,6 @@ const PickingListLastForm = () => {
     setUserInput("");
     // trigger the filtering of data
     setUserInputSubmit(!userInputSubmit);
-    // reset the scan location state variable
-    // setBinLocation("");
 
 
   };
@@ -201,6 +193,10 @@ const PickingListLastForm = () => {
       setError("Please scan a barcode")
       return;
     }
+    let pickedQty;
+    if (selectionType === "Serial") {
+      pickedQty = 1;
+    }
     const APIData = filteredData.map((item) => {
       return {
         INVENTLOCATIONID: locationInputValue,
@@ -214,6 +210,7 @@ const PickingListLastForm = () => {
         // VEHICLESHIPPLATENUMBER:
         // DATETIMECREATED: new Date().toISOString().slice(0, 19).replace('T', ' '), // current date time
         DATETIMECREATED: parsedData?.DATETIMEASSIGNED,
+
 
       }
 

@@ -16,6 +16,7 @@ import receipts from "../../images/bill.png"
 import stocking from "../../images/stocking.png"
 import barcode from "../../images/barcode.png"
 import productreturn from "../../images/return.png"
+import exit from "../../images/exit.png"
 
 import { useNavigate } from 'react-router-dom'
 
@@ -293,6 +294,11 @@ const FigmaSidebar = () => {
             <div className='main-images-container'>
                 <img src={setting} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Settings</p>
+            </div>
+
+            <div className='main-images-container' onClick={() => navigate('/')}>
+                <img src={exit} className='main-inside-image' alt='' />
+                <p className='sidebar-text'>Log-Out</p>
             </div>
 
         </div>

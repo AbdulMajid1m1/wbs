@@ -210,6 +210,9 @@ const PickingListLastForm = () => {
         // VEHICLESHIPPLATENUMBER:
         // DATETIMECREATED: new Date().toISOString().slice(0, 19).replace('T', ' '), // current date time
         DATETIMECREATED: parsedData?.DATETIMEASSIGNED,
+        oldBinLocation: item?.BinLocation,
+        ItemSerialNo: item?.ItemSerialNo,
+
 
 
       }

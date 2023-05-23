@@ -4255,6 +4255,7 @@ const WBSDB = {
       let query = `
       SELECT * FROM dbo.WMS_Sales_PickingList_CL
       WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID =@userId
+      AND PICKSTATUS = 'Partial'
       `;
 
       let request = pool2.request();
@@ -4432,6 +4433,16 @@ const WBSDB = {
         if (packingSlip.DATETIMECREATED) request.input("DATETIMECREATED", sql.DateTime, new Date(packingSlip.DATETIMECREATED));
 
         await request.query(query);
+
+        let deleteQuery = `DELETE FROM tblMappedBarcodes WHERE ItemCode=@ITEMID AND BinLocation=@oldBinLocation AND ItemSerialNo = @ItemSerialNo`;
+
+        let deleteRequest = pool2.request();
+        deleteRequest.input("ITEMID", sql.NVarChar, packingSlip?.ITEMID.trim());
+        deleteRequest.input("oldBinLocation", sql.NVarChar, packingSlip?.oldBinLocation);
+        deleteRequest.input("ItemSerialNo", sql.NVarChar, packingSlip?.ItemSerialNo);
+
+        await deleteRequest.query(deleteQuery);
+
 
 
 

@@ -6,6 +6,7 @@ import baseUrl from '../../utils/config'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import Swal from 'sweetalert2';
+import { updateAccessToken } from '../../utils/userRequest'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Login = () => {
       })
       .then((response) => {
         Cookies.set("accessToken", response?.data?.token);
+        updateAccessToken(response?.data?.token);
         localStorage.setItem("currentUser", JSON.stringify(response?.data?.user));
         navigate("/dashboard");
 

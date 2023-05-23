@@ -187,6 +187,7 @@ const PickingListForm = () => {
                       <th>DATETIMEASSIGNED</th>
                       <th>ASSIGNEDTOUSERID</th>
                       <th>PICKSTATUS</th>
+                      <th>QTYPICKED</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -209,6 +210,7 @@ const PickingListForm = () => {
                         <td>{item.DATETIMEASSIGNED}</td>
                         <td>{item.ASSIGNEDTOUSERID}</td>
                         <td>{item.PICKSTATUS}</td>
+                        <td>{item.QTYPICKED}</td>
                       </tr>
                     ))}
                   </tbody>

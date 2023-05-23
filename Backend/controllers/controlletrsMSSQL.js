@@ -2039,50 +2039,98 @@ const WBSDB = {
 
   // ----------------------------- START OF tbl_Dispatching_CL Controllers ----------------------------- //
 
+  // async insertTblDispatchingDataCL(req, res, next) {
+  //   try {
+  //     const {
+  //       PACKINGSLIPID,
+  //       VEHICLESHIPPLATENUMBER,
+  //       INVENTLOCATIONID,
+  //       INVENTSITEID,
+  //       WMSLOCATIONID,
+  //       ITEMID,
+  //       QTY,
+  //       REMAIN,
+  //       NAME,
+  //       CONFIGID,
+  //       PICKINGROUTEID
+  //     } = req.query;
+
+  //     const query = `
+  //       INSERT INTO dbo.tbl_Dispatching_CL
+  //         (PACKINGSLIPID, VEHICLESHIPPLATENUMBER, INVENTLOCATIONID, INVENTSITEID, WMSLOCATIONID, ITEMID, QTY, REMAIN, NAME, CONFIGID, PICKINGROUTEID)
+  //       VALUES
+  //         (@PACKINGSLIPID, @VEHICLESHIPPLATENUMBER, @INVENTLOCATIONID, @INVENTSITEID, @WMSLOCATIONID, @ITEMID, @QTY, @REMAIN, @NAME, @CONFIGID, @PICKINGROUTEID)
+  //     `;
+
+  //     let request = pool2.request();
+  //     request.input('PACKINGSLIPID', sql.NVarChar, PACKINGSLIPID);
+  //     request.input('VEHICLESHIPPLATENUMBER', sql.NVarChar, VEHICLESHIPPLATENUMBER);
+  //     request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
+  //     request.input('INVENTSITEID', sql.NVarChar, INVENTSITEID);
+  //     request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
+  //     request.input('ITEMID', sql.NVarChar, ITEMID);
+  //     request.input('QTY', sql.Float, QTY);
+  //     request.input('REMAIN', sql.Float, REMAIN);
+  //     request.input('NAME', sql.NVarChar, NAME);
+  //     request.input('CONFIGID', sql.NVarChar, CONFIGID);
+  //     request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+
+  //     await request.query(query);
+  //     res.status(201).send({ message: 'Data inserted successfully.' });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // },
+
   async insertTblDispatchingDataCL(req, res, next) {
     try {
-      const {
-        PACKINGSLIPID,
-        VEHICLESHIPPLATENUMBER,
-        INVENTLOCATIONID,
-        INVENTSITEID,
-        WMSLOCATIONID,
-        ITEMID,
-        QTY,
-        REMAIN,
-        NAME,
-        CONFIGID,
-        PICKINGROUTEID
-      } = req.query;
+      const packingSlipArray = req.body;
+      console.log(req?.token);
 
-      const query = `
-        INSERT INTO dbo.tbl_Dispatching_CL
-          (PACKINGSLIPID, VEHICLESHIPPLATENUMBER, INVENTLOCATIONID, INVENTSITEID, WMSLOCATIONID, ITEMID, QTY, REMAIN, NAME, CONFIGID, PICKINGROUTEID)
-        VALUES
-          (@PACKINGSLIPID, @VEHICLESHIPPLATENUMBER, @INVENTLOCATIONID, @INVENTSITEID, @WMSLOCATIONID, @ITEMID, @QTY, @REMAIN, @NAME, @CONFIGID, @PICKINGROUTEID)
-      `;
+      for (const packingSlip of packingSlipArray) {
+        const fields = [
+          "PACKINGSLIPID",
+          "VEHICLESHIPPLATENUMBER",
+          ...(packingSlip.INVENTLOCATIONID ? ["INVENTLOCATIONID"] : []),
+          ...(packingSlip.ITEMID ? ["ITEMID"] : []),
+          ...(packingSlip.ORDERED ? ["ORDERED"] : []),
+          ...(packingSlip.NAME ? ["NAME"] : []),
+          ...(packingSlip.CONFIGID ? ["CONFIGID"] : []),
+          ...(packingSlip.SALESID ? ["SALESID"] : []),
+        ];
 
-      let request = pool2.request();
-      request.input('PACKINGSLIPID', sql.NVarChar, PACKINGSLIPID);
-      request.input('VEHICLESHIPPLATENUMBER', sql.NVarChar, VEHICLESHIPPLATENUMBER);
-      request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
-      request.input('INVENTSITEID', sql.NVarChar, INVENTSITEID);
-      request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
-      request.input('ITEMID', sql.NVarChar, ITEMID);
-      request.input('QTY', sql.Float, QTY);
-      request.input('REMAIN', sql.Float, REMAIN);
-      request.input('NAME', sql.NVarChar, NAME);
-      request.input('CONFIGID', sql.NVarChar, CONFIGID);
-      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+        if (!packingSlip.PACKINGSLIPID || !packingSlip.VEHICLESHIPPLATENUMBER) {
+          return res.status(400).send({ message: "PACKINGSLIPID and VEHICLESHIPPLATENUMBER are required" });
+        }
 
-      await request.query(query);
-      res.status(201).send({ message: 'Data inserted successfully.' });
+        let values = fields.map((field) => "@" + field);
+
+        let query = `INSERT INTO [WBSSQL].[dbo].[tbl_Dispatching_CL] 
+          (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+          `;
+
+        let request = pool2.request();
+
+        request.input("PACKINGSLIPID", sql.NVarChar, packingSlip.PACKINGSLIPID);
+        request.input("VEHICLESHIPPLATENUMBER", sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
+        if (packingSlip.INVENTLOCATIONID) request.input("INVENTLOCATIONID", sql.NVarChar, packingSlip.INVENTLOCATIONID);
+        if (packingSlip.ITEMID) request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID);
+        if (packingSlip.ORDERED) request.input("ORDERED", sql.Float, packingSlip.ORDERED);
+        if (packingSlip.NAME) request.input("NAME", sql.NVarChar, packingSlip.NAME);
+        if (packingSlip.CONFIGID) request.input("CONFIGID", sql.NVarChar, packingSlip.CONFIGID);
+        if (packingSlip.SALESID) request.input("SALESID", sql.NVarChar, packingSlip.SALESID);
+
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Data inserted successfully.' });
     } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
+      return res.status(500).send({ message: error.message });
     }
   },
-
 
   async getAllTblDispatchingCL(req, res, next) {
     try {
@@ -2107,6 +2155,7 @@ const WBSDB = {
     }
   },
 
+  // TODO:  upate this updateTblDispatchingDataCL for new columns.
   async updateTblDispatchingDataCL(req, res, next) {
     try {
       const {
@@ -4586,6 +4635,7 @@ const WBSDB = {
     }
 
   },
+
 
 
 

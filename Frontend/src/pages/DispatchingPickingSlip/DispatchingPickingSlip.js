@@ -47,8 +47,18 @@ const DispatchingPickingSlip = () => {
     try {
 
 
-      const res = await userRequest.post(`/insertIntoPackingSlipTableCl?vehicleShipPlateNumber=${vehicleBarcode}`,
-        data)
+      // const res = await userRequest.post(`/insertTblDispatchingDataCL?vehicleShipPlateNumber=${vehicleBarcode}`,
+      //   data)
+
+      let apiData = data.map((item) => {
+        return {
+          ...item,
+          VEHICLESHIPPLATENUMBER: vehicleBarcode
+        }
+      })
+
+      const res = await userRequest.post(`/insertTblDispatchingDataCL`,
+        apiData)
 
       console.log(res?.data);
       setMessage(res?.data?.message ?? "Data Saved Successfully");

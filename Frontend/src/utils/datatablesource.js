@@ -458,50 +458,34 @@ export const TblDispatchingCLColumn = [
 
   },
   {
-    field: "INVENTSITEID",
-    headerName: "INVENT SITE ID",
-    width: 180,
-
-  },
-  {
-    field: "WMSLOCATIONID",
-    headerName: "WMS LOCATION ID",
-    width: 180,
-
-  },
-  {
     field: "ITEMID",
     headerName: "ITEM ID",
     width: 180,
 
   },
   {
-    field: "QTY",
-    headerName: "QTY",
-    width: 150,
-
-  },
-  {
-    field: "REMAIN",
-    headerName: "REMAIN",
-    width: 150,
+    field: "ORDERED",
+    headerName: "ORDERED",
+    width: 180,
 
   },
   {
     field: "NAME",
     headerName: "NAME",
-    width: 180,
+    width: 150,
 
   },
   {
     field: "CONFIGID",
     headerName: "CONFIG ID",
-    width: 180,
+    width: 150,
+
   },
   {
-    field: "PICKINGROUTEID",
-    headerName: "PICKING ROUTE ID",
+    field: "SALESID",
+    headerName: "SALES ID",
     width: 180,
+
   },
 
 ]

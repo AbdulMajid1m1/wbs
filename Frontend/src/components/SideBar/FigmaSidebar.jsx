@@ -37,6 +37,10 @@ const FigmaSidebar = () => {
 
     }
 
+    const storedUser = localStorage.getItem('currentUser');
+    const initialUser = storedUser ? JSON.parse(storedUser) : {};
+  
+
     return (
         <div className='main-sidebar'>
 
@@ -307,6 +311,11 @@ const FigmaSidebar = () => {
             <div className='main-images-container' onClick={handleLogout}>
                 <img src={exit} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Log-Out</p>
+            </div>
+
+
+            <div className='mt-8'>
+              <h2 className='text-white text-center font-semibold'>USER ID:<span className='text-white' style={{ "marginLeft": "5px" }}>{initialUser?.UserID}</span></h2>
             </div>
 
         </div>

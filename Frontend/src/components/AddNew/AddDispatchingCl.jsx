@@ -26,54 +26,100 @@ const AddDispatchingCl = ({ inputs, title,
         setMessage(null);
 
     };
-    const handleSubmit = async event => {
+    // const handleSubmit = async event => {
+    //     // if form is not valid, do not submit
+    //     if (!event.target.checkValidity()) {
+    //         return;
+    //     }
+    //     event.preventDefault();
+    //     try {
+    //         setIsLoading(true);
+
+    //         const data = {
+    //             PACKINGSLIPID: event.target.PACKINGSLIPID.value,
+    //             VEHICLESHIPPLATENUMBER: event.target.VEHICLESHIPPLATENUMBER.value,
+    //             INVENTLOCATIONID: event.target.INVENTLOCATIONID.value,
+    //             ITEMID: event.target.ITEMID.value,
+    //             ORDERED: event.target.ORDERED.value,
+    //             NAME: event.target.NAME.value,
+    //             CONFIGID: event.target.CONFIGID.value,
+    //             SALESID: event.target.SALESID.value,
+    //             // NAME: event.target.NAME.value,
+    //             // CONFIGID: event.target.CONFIGID.value,
+    //             // PICKINGROUTEID: event.target.PICKINGROUTEID.value,
+    //         };
+            
+    //         console.log(data);
+
+    //         const queryParameters = new URLSearchParams(data).toString();
+
+    //         userRequest.post(
+    //             `/insertTblDispatchingDataCL?${queryParameters}`)
+    //             .then((response) => {
+    //                 setIsLoading(false);
+    //                 console.log(response.data);
+    //                 setMessage("Successfully Added");
+    //                 setTimeout(() => {
+    //                     navigate(-1)
+    //                 }, 1000)
+    //             })
+    //             .catch((error) => {
+    //                 setIsLoading(false);
+    //                 console.log(error);
+    //                 setError(error?.response?.data?.message ?? "Failed to Add")
+    //             });
+    //     } catch (error) {
+    //         setIsLoading(false);
+    //         console.log(error);
+    //         setError("Failed to Add");
+    //     }
+    // };
+
+    const handleSubmit = async (event) => {
         // if form is not valid, do not submit
         if (!event.target.checkValidity()) {
-            return;
+          return;
         }
         event.preventDefault();
         try {
-            setIsLoading(true);
-
-            const data = {
-                PACKINGSLIPID: event.target.PACKINGSLIPID.value,
-                VEHICLESHIPPLATENUMBER: event.target.VEHICLESHIPPLATENUMBER.value,
-                INVENTLOCATIONID: event.target.INVENTLOCATIONID.value,
-                ITEMID: event.target.ITEMID.value,
-                ORDERED: event.target.ORDERED.value,
-                NAME: event.target.NAME.value,
-                CONFIGID: event.target.CONFIGID.value,
-                SALESID: event.target.SALESID.value,
-                // NAME: event.target.NAME.value,
-                // CONFIGID: event.target.CONFIGID.value,
-                // PICKINGROUTEID: event.target.PICKINGROUTEID.value,
-            };
-            
-            console.log(data);
-
-            const queryParameters = new URLSearchParams(data).toString();
-
-            userRequest.post(
-                `/insertTblDispatchingDataCL?${queryParameters}`)
-                .then((response) => {
-                    setIsLoading(false);
-                    console.log(response.data);
-                    setMessage("Successfully Added");
-                    setTimeout(() => {
-                        navigate(-1)
-                    }, 1000)
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.log(error);
-                    setError(error?.response?.data?.message ?? "Failed to Add")
-                });
+          setIsLoading(true);
+      
+          const data = {
+            PACKINGSLIPID: event.target.PACKINGSLIPID.value,
+            VEHICLESHIPPLATENUMBER: event.target.VEHICLESHIPPLATENUMBER.value,
+            INVENTLOCATIONID: event.target.INVENTLOCATIONID.value,
+            ITEMID: event.target.ITEMID.value,
+            ORDERED: event.target.ORDERED.value,
+            NAME: event.target.NAME.value,
+            CONFIGID: event.target.CONFIGID.value,
+            SALESID: event.target.SALESID.value,
+            // other parameters
+          };
+      
+          console.log(data);
+      
+          userRequest
+            .post(`/insertTblDispatchingDataCL`, [data]) // Pass the data object as the request body
+            .then((response) => {
+              setIsLoading(false);
+              console.log(response.data);
+              setMessage("Successfully Added");
+              setTimeout(() => {
+                navigate(-1);
+              }, 1000);
+            })
+            .catch((error) => {
+              setIsLoading(false);
+              console.log(error);
+              setError(error?.response?.data?.message ?? "Failed to Add");
+            });
         } catch (error) {
-            setIsLoading(false);
-            console.log(error);
-            setError("Failed to Add");
+          setIsLoading(false);
+          console.log(error);
+          setError("Failed to Add");
         }
-    };
+      };
+      
 
     const handleInputChange = (event, inputName) => {
         const value = event.target.value;

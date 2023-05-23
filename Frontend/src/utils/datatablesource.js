@@ -464,12 +464,6 @@ export const TblDispatchingCLColumn = [
 
   },
   {
-    field: "WMSLOCATIONID",
-    headerName: "WMS LOCATION ID",
-    width: 180,
-
-  },
-  {
     field: "ORDERED",
     headerName: "ORDERED",
     width: 180,

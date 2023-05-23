@@ -190,6 +190,8 @@ router.put("/updateTblUsersData", checkAuthentication, WBSDB.updateTblUsersData)
 
 router.post("/login", WBSDB.loginUser);
 
+router.post("/logout", WBSDB.logout);
+
 // ----- tblUsers APIS End -----------------
 
 

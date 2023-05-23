@@ -20,7 +20,7 @@ import exit from "../../images/exit.png"
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
-import { updateAccessToken } from '../../utils/userRequest'
+import userRequest from '../../utils/userRequest'
 
 
 const FigmaSidebar = () => {
@@ -33,10 +33,16 @@ const FigmaSidebar = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        Cookies.remove("accessToken")
-        updateAccessToken(null)
-        navigate("/")
+        // Cookies.remove("accessToken")
+        userRequest.post("/logout").then((response) => {
+            console.log(response)
+            navigate("/")
+            localStorage.removeItem("currentUser");
 
+        }).catch((error) => {
+            console.log(error);
+        }
+        )
     }
 
     const storedUser = localStorage.getItem('currentUser');
@@ -317,7 +323,7 @@ const FigmaSidebar = () => {
 
 
             <div className='main-images-container'>
-              <h2 className='text-white font-semibold'>USER ID:<span className='text-white' style={{ "marginLeft": "5px" }}>{initialUser?.UserID}</span></h2>
+                <h2 className='text-white font-semibold'>USER ID:<span className='text-white' style={{ "marginLeft": "5px" }}>{initialUser?.UserID}</span></h2>
             </div>
 
         </div>

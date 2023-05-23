@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import baseUrl from '../../utils/config'
 import axios from 'axios'
-import userRequest, { updateAccessToken } from '../../utils/userRequest'
+import userRequest from '../../utils/userRequest'
 import { SyncLoader } from 'react-spinners'
 
 const Registration = () => {
@@ -35,7 +35,6 @@ const Registration = () => {
       })
       .then((response) => {
         Cookies.set("accessToken", response?.data?.token);
-        updateAccessToken(response?.data?.token);
         localStorage.setItem("currentUser", JSON.stringify(response?.data?.user));
         navigate("/dashboard");
         setIsLoading(false)

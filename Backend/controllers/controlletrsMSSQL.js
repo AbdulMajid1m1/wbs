@@ -2555,13 +2555,27 @@ const WBSDB = {
 
 
       delete user.UserPassword;
-      res.status(200).send({ message: 'Login successful.', user, token });
+      return res.cookie("accessToken", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: false,
+
+      }).status(200).send({ message: 'Login successful.', user, token });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
 
+  async logout(req, res) {
+    res
+      .clearCookie("accessToken", {
+        sameSite: "none",
+        secure: true,
+      })
+      .status(200)
+      .send({ message: "Logout successful." });
+  },
 
 
 

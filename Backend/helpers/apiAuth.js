@@ -19,21 +19,25 @@ const checkAuthentication = async (req, res, next) => {
   // return next(); // remove this line after uncommenting above code
 };
 
-
 const getToken = (req) => {
   let token = '';
   let authorization = req.headers.authorization || req.headers['authorization'] || req.query.token;
-  // accepts toekn from browser cookies as well 
+
+  // Accepts token from browser cookies as well
   if (req.cookies && req.cookies.token) {
     authorization = req.cookies.token;
   }
-  console.log("authorization ", authorization)
+
+  // Retrieve token from HTTP-only cookie
+  if (!authorization && req.cookies && req.cookies.accessToken) {
+    authorization = req.cookies.accessToken;
+  }
+
   if (!authorization) {
     throw new Error('Token is not provided.');
   }
 
   const parts = authorization.split(' ');
-  // console.log("parts ",parts.length);
   if (parts.length === 2) {
     if (!(/^Bearer$/i.test(parts[0]))) {
       throw new Error('Token is not properly formatted.');
@@ -45,9 +49,8 @@ const getToken = (req) => {
   }
 
   return token;
-}
+};
+
 export {
   checkAuthentication,
-
 };
-// checkAuthentication()

@@ -6,7 +6,7 @@ import baseUrl from '../../utils/config'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import Swal from 'sweetalert2';
-import { updateAccessToken } from '../../utils/userRequest'
+import userRequest from '../../utils/userRequest'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,24 +14,17 @@ const Login = () => {
   const [UserPassword, setUserPassword] = React.useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post(baseUrl + "/login", null, {
+    userRequest
+      .post("/login", null, {
         params: {
           UserID: UserID,
           UserPassword: UserPassword,
         },
       })
       .then((response) => {
-        Cookies.set("accessToken", response?.data?.token);
-        updateAccessToken(response?.data?.token);
+        console.log(response);
         localStorage.setItem("currentUser", JSON.stringify(response?.data?.user));
         navigate("/dashboard");
-
-        // Swal.fire({
-        //   icon: 'success',
-        //   title: 'Success',
-        //   text: 'Welcome To Warehouse Dashboard',
-        // })
 
       })
       .catch((error) => {

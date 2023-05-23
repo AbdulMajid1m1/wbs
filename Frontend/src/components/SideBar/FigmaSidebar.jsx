@@ -314,8 +314,8 @@ const FigmaSidebar = () => {
             </div>
 
 
-            <div className='mt-8'>
-              <h2 className='text-white text-center font-semibold'>USER ID:<span className='text-white' style={{ "marginLeft": "5px" }}>{initialUser?.UserID}</span></h2>
+            <div className='main-images-container'>
+              <h2 className='text-white font-semibold'>USER ID:<span className='text-white' style={{ "marginLeft": "5px" }}>{initialUser?.UserID}</span></h2>
             </div>
 
         </div>

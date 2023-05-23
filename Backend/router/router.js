@@ -182,7 +182,7 @@ router.get("/getAllTblUsers", checkAuthentication, WBSDB.getAllTblUsers);
 
 router.get("/getSingleTblUsers", checkAuthentication, WBSDB.getSingleTblUsers);
 
-router.post("/insertTblUsersData", checkAuthentication, WBSDB.insertTblUsersData);
+router.post("/insertTblUsersData", WBSDB.insertTblUsersData);
 
 router.delete("/deleteTblUsersData", checkAuthentication, WBSDB.deleteTblUsersData);
 

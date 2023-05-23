@@ -2510,7 +2510,12 @@ const WBSDB = {
       }
       const token = jwt.sign(tokenPayload, jwtSecret, { expiresIn: jwtExpiration });
 
-      res.status(201).send({ message: 'User inserted successfully.', user, token });
+      return res.cookie("accessToken", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: false,
+
+      }).status(201).send({ message: 'User inserted successfully.', user, token });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });

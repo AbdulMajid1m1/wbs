@@ -35,6 +35,7 @@ const Registration = () => {
       })
       .then((response) => {
         Cookies.set("accessToken", response?.data?.token);
+        localStorage.setItem("currentUser", JSON.stringify(response?.data?.user));
         navigate("/dashboard");
         setIsLoading(false)
 

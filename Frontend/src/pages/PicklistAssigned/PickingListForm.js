@@ -13,6 +13,7 @@ import CustomSnakebar from '../../utils/CustomSnakebar';
 const PickingListForm = () => {
   const navigate = useNavigate();
 
+
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
@@ -20,6 +21,12 @@ const PickingListForm = () => {
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+
+  const storedUser = localStorage.getItem('currentUser');
+  const initialUser = storedUser ? JSON.parse(storedUser) : {};
+
+  const [currentUser, setCurrentUser] = useState(initialUser);
+
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -137,7 +144,7 @@ const PickingListForm = () => {
             </div>
 
             <div className=''>
-              <h2 className='text-[#00006A] text-center font-semibold'>Route ID<span className='text-[#FF0404]'>*</span></h2>
+              <h2 className='text-[#00006A] text-center font-semibold'>USER ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
             <form onSubmit={handleForm}>

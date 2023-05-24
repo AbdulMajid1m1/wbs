@@ -66,6 +66,12 @@ import PickingListLastForm from './pages/PicklistAssigned/PickingListLastForm'
 import DispatchingPickingSlip from './pages/DispatchingPickingSlip/DispatchingPickingSlip'
 import SalesPickingList from './pages/SalesPickingList/SalesPickingList'
 import Registration from './pages/UserRegistration/UserRegistration'
+import RMA from './pages/RMA/RMA'
+import RMALastForm from './pages/RMA/RMALastForm'
+import ReturnSalesOrder from './pages/ReturnSalesOrder/ReturnSalesOrder'
+import JournalProfitLost from './pages/JournalProfitLost/JournalProfitLost'
+import JournalMovement from './pages/JournalMovement/JournalMovement'
+import JournalCounting from './pages/JournalCounting/JournalCounting'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -113,6 +119,10 @@ const App = () => {
         <Route path="/pickinglistlast" element={<PickingListLastForm />} />
 
         <Route path="/dispatchingslip" element={<DispatchingPickingSlip />} />
+
+        <Route path='/rma' element={<RMA />} />
+        <Route path="/rmalastform" element={<RMALastForm />} />
+
 
         <Route
           path="/*"
@@ -169,6 +179,13 @@ const App = () => {
                 <Route path='/Picklistassign' element={<PicklistAssigned />} />
 
                 <Route path='/pickingsales' element={<SalesPickingList />} />
+
+                <Route path='/returnsales' element={<ReturnSalesOrder />} />
+                <Route path='/journalprofit' element={<JournalProfitLost />} />
+                <Route path='/journalmovement' element={<JournalMovement />} />
+                <Route path='/journalcounting' element={<JournalCounting />} />
+
+
               </Routes>
             </MainLayout>
           } />

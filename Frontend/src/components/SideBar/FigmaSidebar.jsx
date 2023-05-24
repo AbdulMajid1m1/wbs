@@ -200,6 +200,26 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Sales Picking List</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/returnsales')}>
+                        <img src={internal} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Return Sales Order</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/journalprofit')}>
+                        <img src={internal} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Journal Profit Lost</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/journalmovement')}>
+                        <img src={internal} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Journal Movement</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/journalcounting')}>
+                        <img src={internal} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Journal Counting</p>
+                    </div>
+
                 </div>
             )}
 
@@ -275,7 +295,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Picking Slip</p>
                     </div>
 
-                    <div className='main-images-container'>
+                    <div className='main-images-container' onClick={() => navigate('/rma')}>
                         <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Return RMA</p>
                     </div>

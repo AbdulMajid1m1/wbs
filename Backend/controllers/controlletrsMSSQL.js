@@ -284,14 +284,6 @@ const WBSDB = {
       if (!TRANSFERID) {
         return res.status(400).send({ message: "TRANSFERID is required." });
       }
-
-      // Define SQL query
-      // TODO: uncommit the original query
-      // let query = `
-      //   SELECT * 
-      //     FROM dbo.expectedTransferOrder
-      //     WHERE TRANSFERID = @TRANSFERID
-      // `;
       let query = `
         SELECT * 
           FROM dbo.expectedTransferOrder
@@ -4666,6 +4658,129 @@ const WBSDB = {
 
   },
 
+
+  // WMS_ReturnSalesOrder Controller  Start -----
+
+  async getAllWmsReturnSalesOrder(req, res, next) {
+
+    try {
+     
+      let query = `SELECT * FROM WMS_ReturnSalesOrder `
+
+      let request = pool1.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+  async getWmsReturnSalesOrderByReturnItemNum(req, res, next) {
+
+    try {
+      const { RETURNITEMNUM } = req.query;
+
+      if (!RETURNITEMNUM) {
+        return res.status(400).send({ message: "RETURNITEMNUM is required." });
+      }
+
+      let query = `SELECT * FROM WMS_ReturnSalesOrder WHERE
+       RETURNITEMNUM = @RETURNITEMNUM`
+
+      let request = pool1.request();
+      request.input('RETURNITEMNUM', sql.NVarChar, RETURNITEMNUM);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+ // WMS_ReturnSalesOrder Controller  END ------- 
+
+
+
+
+ // WMS_Journal_ProfitLost Controller Start -----
+
+ async getAllWmsJournalProfitLost(req, res, next) {
+
+  try {
+   
+    let query = `SELECT * FROM WMS_Journal_ProfitLost `
+
+    let request = pool1.request();
+
+    const data = await request.query(query);
+    if (data.recordsets[0].length === 0) {
+      return res.status(404).send({ message: "No Record found." });
+    }
+    return res.status(200).send(data.recordsets[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: error.message });
+
+  }
+},
+
+
+
+ // WMS_Journal_Movement Controller Start -----
+
+ async getAllWmsJournalMovement(req, res, next) {
+
+  try {
+   
+    let query = `SELECT * FROM WMS_Journal_Movement `
+
+    let request = pool1.request();
+
+    const data = await request.query(query);
+    if (data.recordsets[0].length === 0) {
+      return res.status(404).send({ message: "No Record found." });
+    }
+    return res.status(200).send(data.recordsets[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: error.message });
+
+  }
+},
+
+
+ // WMS_Journal_Counting Controller Start -----
+
+ async getAllWmsJournalCounting(req, res, next) {
+
+  try {
+   
+    let query = `SELECT * FROM WMS_Journal_Counting `
+
+    let request = pool1.request();
+
+    const data = await request.query(query);
+    if (data.recordsets[0].length === 0) {
+      return res.status(404).send({ message: "No Record found." });
+    }
+    return res.status(200).send(data.recordsets[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: error.message });
+
+  }
+},
 
 
 

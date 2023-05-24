@@ -365,3 +365,36 @@ router.post("/insertIntoPackingSlipTableCl", checkAuthentication, WBSDB.insertIn
 router.get("/getPackingSlipTableByPackingSlipId", checkAuthentication, WBSDB.getPackingSlipTableByPackingSlipId);
 
 export default router;
+
+
+
+// WMS_ReturnSalesOrder APIS Start -----
+
+router.get("/getWmsReturnSalesOrderByReturnItemNum", checkAuthentication, WBSDB.getWmsReturnSalesOrderByReturnItemNum);
+
+router.get("/getAllWmsReturnSalesOrder", checkAuthentication, WBSDB.getAllWmsReturnSalesOrder);
+
+
+
+
+// WMS_Journal_ProfitLost APIS Start -----
+
+
+router.get("/getAllWmsJournalProfitLost", checkAuthentication, WBSDB.getAllWmsJournalProfitLost);
+
+
+
+// WMS_Journal_Movement APIS Start -----
+
+
+router.get("/getAllWmsJournalMovement", checkAuthentication, WBSDB.getAllWmsJournalMovement);
+
+
+
+
+// WMS_Journal_Counting APIS Start -----
+
+
+router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);
+
+

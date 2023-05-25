@@ -65,12 +65,10 @@ const WmsCycleCounting = () => {
   const handleRowClick = (item, index) => {
     // save data in session storage
 
-    // sessionStorage.setItem('PickingRowData', JSON.stringify(item));
-    // sessionStorage.setItem('RmaRowData', JSON.stringify(item));
-    sessionStorage.setItem('ProfitRowData', JSON.stringify(item));
-    sessionStorage.setItem('ProfitRowIndex', index);
-    // sessionStorage.setItem('RmaRowIndex', index);
-    // sessionStorage.setItem('PickingRowIndex', index);
+    // sessionStorage.setItem('ProfitRowData', JSON.stringify(item));
+    sessionStorage.setItem('CycleRowData', JSON.stringify(item));
+    sessionStorage.setItem('CycleRowIndex', index);
+    
     navigate('/cyclecountinglast')
   }
 

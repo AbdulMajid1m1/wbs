@@ -11,7 +11,7 @@ const WmsProfitLossLast = () => {
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
   const [selectionType, setSelectionType] = useState('Serial');
-  const [barcode, setBarcode] = useState('Barcode');
+  const [barcode, setBarcode] = useState('NoBarcode');
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [newTableData, setNewTableData] = useState([]);
@@ -101,6 +101,7 @@ const storedData = sessionStorage.getItem('ProfitRowData');
   // const [selectionType, setSelectionType] = useState('Pallet');
   const [data, setData] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [barcodeInput, setBarcodeInput] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [userInputSubmit, setUserInputSubmit] = useState(false);
 
@@ -438,7 +439,7 @@ const storedData = sessionStorage.getItem('ProfitRowData');
 
 
             {/* Barcode Radio Button */}
-            <div class="text-center mb-4">
+            {/* <div class="text-center mb-4">
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                   flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
               >
@@ -466,10 +467,10 @@ const storedData = sessionStorage.getItem('ProfitRowData');
                   <span className="ml-2 text-[#00006A]">NO BARCODE</span>
                 </label>
               </div>
-            </div>
+            </div> */}
             
             {/* Barcode Input */}
-            <div className="mb-6">
+            {/* <div className="mb-6">
                 <label htmlFor='scanbarcode' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {barcode}#<span className='text-[#FF0404]'>*</span></label>
 
                 <input
@@ -481,8 +482,63 @@ const storedData = sessionStorage.getItem('ProfitRowData');
                   onBlur={handleInputUser}
 
                 />
-              </div>
+              </div> */}
 
+                  {/* Barcode Radio Button */}
+                  <div className="text-center mb-4">
+                  <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500 flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]">
+                    <label className="inline-flex items-center mt-1">
+                      <input
+                        type="radio"
+                        name=""
+                        value="Barcode"
+                        checked={barcode === 'Barcode'}
+                        onChange={(e) => setBarcode(e.target.value)}
+                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                      />
+                      <span className="ml-2 text-[#00006A]">BARCODE</span>
+                    </label>
+
+                    <label className="inline-flex items-center mt-1">
+                      <input
+                        type="radio"
+                        name=""
+                        value="NoBarcode"
+                        checked={barcode === 'NoBarcode'}
+                        onChange={(e) => setBarcode(e.target.value)}
+                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                      />
+                      <span className="ml-2 text-[#00006A]">NO BARCODE</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Barcode Input */}
+                {barcode === 'Barcode' && (
+                  <div className="mb-6">
+                    <label htmlFor="scanbarcode" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">
+                      Scan {barcode}#<span className="text-[#FF0404]">*</span>
+                    </label>
+
+                    <input
+                      id="scanbarcode"
+                      className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder={`Scan ${barcode}`}
+                      value={barcodeInput}
+                      onChange={(e) => setBarcodeInput(e.target.value)}
+                      onBlur={handleInputUser}
+                    />
+                  </div>
+                )}
+
+                {/* Hide userInput field when 'No Barcode' is selected */}
+                <style>
+                  {`
+                    input#scanbarcode {
+                      display: ${barcode === 'No Barcode' ? 'none' : 'block'};
+                    }
+                  `}
+                </style>
 
               <div class="text-center mb-4">
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500

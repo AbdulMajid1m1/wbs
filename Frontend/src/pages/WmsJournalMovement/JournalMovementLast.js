@@ -11,7 +11,7 @@ const JournalMovementLast = () => {
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
   const [selectionType, setSelectionType] = useState('Serial');
-  const [barcode, setBarcode] = useState('Barcode');
+  const [barcode, setBarcode] = useState('NoBarcode');
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [newTableData, setNewTableData] = useState([]);

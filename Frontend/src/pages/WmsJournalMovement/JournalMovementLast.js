@@ -23,6 +23,11 @@ const JournalMovementLast = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [userInputSubmit, setUserInputSubmit] = useState(false);
   const [newBarcode, setNewBarcode] = useState("");
+  const [addUser, setAddUser] = useState(false);
+  const [username, setUserName] = useState('');
+  const [usersList, setUsersList] = useState([]);
+  const [selectedRow, setSelectedRow] = useState([]);
+  
 
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
@@ -102,6 +107,26 @@ const JournalMovementLast = () => {
 
   }
 
+  const handleAddUserClose = () => {
+    setAddUser(false);
+  };
+
+    const handleAddUserPopup = async () => {
+    setAddUser(true);
+    try {
+      const res = await userRequest.get('/getAllTblUsers');
+      setUsersList(res.data);
+      console.log(res.data);
+      console.log("wokf")
+    } catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message || 'Something went wrong')
+
+    };
+  };
+
+
+
 
   return (
     <>
@@ -136,19 +161,19 @@ const JournalMovementLast = () => {
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
-                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                <div className='flex items-center flex-col w-full sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
                   <span>{parsedData?.ITEMID}</span>
                 </div>
 
-                <div className='flex flex-col gap-2'>
+                <div className='flex flex-col gap-2 w-full'>
                   <div className='text-[#FFFFFF]'>
-                    <span>Sales ID {parsedData?.SALESID}</span>
+                    <span>Sales ID: {parsedData?.SALESID}</span>
                   </div>
 
 
-                  <div className='text-[#FFFFFF]'>
-                    <span>NAME {parsedData.NAME}</span>
+                  <div className='text-[#FFFFFF] w-full'>
+                    <span>NAME: {parsedData.NAME}</span>
                   </div>
                 </div>
               </div>
@@ -299,6 +324,43 @@ const JournalMovementLast = () => {
 
             </form>
 
+            {/* AddUser Popup Screen */}
+            {addUser && (
+          <div className="popup-container fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
+            <div className="popup bg-white rounded-lg shadow-xl overflow-hidden max-w-md m-4">
+              <div className="header bg-blue-500 text-white font-bold py-4 px-6">
+                <h2>Add User</h2>
+              </div>
+              {/* onSubmit={handleFormSubmit} */}
+              <form className="p-6">
+                <label htmlFor="UserName" className="block mb-2 text-gray-700 text-sm">Name:</label>
+                <select
+                  id="UserName"
+                  value={username}
+                  onChange={(e) => setUserName(e.target.value)}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                >
+                  <option value="">--Select User--</option>
+                  {usersList.map((user) => (
+                    <option key={user.UserID} value={user.UserID}>
+                      {user.Fullname}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="flex justify-end gap-3 mt-6">
+                  <button className="close-btn text-white bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2" type="button" onClick={handleAddUserClose}>CANCEL</button>
+                  <button className="text-white bg-blue-500 hover:bg-blue-600 rounded-lg px-6 py-2" type="submit">SEND</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+
+
+
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
               <input
@@ -315,7 +377,8 @@ const JournalMovementLast = () => {
                 type='button'
                 className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
                 <span className='flex justify-center items-center'
-                  onClick={handleSaveBtnClick}
+                  // onClick={handleSaveBtnClick}
+                  onClick={handleAddUserPopup}
                 >
                   <p>Save</p>
                 </span>

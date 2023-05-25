@@ -518,6 +518,7 @@ const UserDataTable = ({
     } else {
       XLSX.writeFile(wb, `${title}.xlsx`); // Export the file
     }
+    
   };
 
 

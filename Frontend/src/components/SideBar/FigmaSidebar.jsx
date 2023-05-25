@@ -20,6 +20,7 @@ import movement from "../../images/movement.jpeg"
 import profit from "../../images/profit.jpeg"
 import cycle from "../../images/cycle.jpeg"
 import exit from "../../images/exit.png"
+import move from "../../images/Move.png"
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
@@ -311,6 +312,11 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Return RMA</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/rmaputaway')}>
+                        <img src={move} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>RMA PutAway</p>
+                    </div>
+
                     <div className='main-images-container' onClick={() => navigate('/rma')}>
                         <img src={movement} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Journal Movement</p>
@@ -324,6 +330,11 @@ const FigmaSidebar = () => {
                     <div className='main-images-container' onClick={() => navigate('/cyclecounting')}>
                         <img src={cycle} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Cycle Counting Process</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/rmaputaway')}>
+                        <img src={movement} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>RMA PutAway</p>
                     </div>
 
                 </div>

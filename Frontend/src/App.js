@@ -76,6 +76,7 @@ import WmsProfitLoss from './pages/WmsProfitLoss/WmsProfitLoss'
 import WmsProfitLossLast from './pages/WmsProfitLoss/WmsProfitLossLast'
 import WmsCycleCounting from './pages/WmsCycleCounting/WmsCycleCounting'
 import WmsCycleCountingLast from './pages/WmsCycleCounting/WmsCycleCountingLast'
+import RmaPutAway from './pages/RmaPutAway/RmaPutAway'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -132,6 +133,8 @@ const App = () => {
 
         <Route path='/cyclecounting' element={<WmsCycleCounting />} />
         <Route path='/cyclecountinglast' element={<WmsCycleCountingLast />} />
+
+        <Route path='/rmaputaway' element={<RmaPutAway />} />
 
 
         <Route

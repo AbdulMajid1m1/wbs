@@ -72,6 +72,10 @@ import ReturnSalesOrder from './pages/ReturnSalesOrder/ReturnSalesOrder'
 import JournalProfitLost from './pages/JournalProfitLost/JournalProfitLost'
 import JournalMovement from './pages/JournalMovement/JournalMovement'
 import JournalCounting from './pages/JournalCounting/JournalCounting'
+import WmsProfitLoss from './pages/WmsProfitLoss/WmsProfitLoss'
+import WmsProfitLossLast from './pages/WmsProfitLoss/WmsProfitLossLast'
+import WmsCycleCounting from './pages/WmsCycleCounting/WmsCycleCounting'
+import WmsCycleCountingLast from './pages/WmsCycleCounting/WmsCycleCountingLast'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -122,6 +126,12 @@ const App = () => {
 
         <Route path='/rma' element={<JournalMovementFirst />} />
         <Route path="/rmalastform" element={<JournalMovementLast />} />
+
+        <Route path='/profitloss' element={<WmsProfitLoss />} />
+        <Route path='/profitlosslast' element={<WmsProfitLossLast />} />
+
+        <Route path='/cyclecounting' element={<WmsCycleCounting />} />
+        <Route path='/cyclecountinglast' element={<WmsCycleCountingLast />} />
 
 
         <Route

@@ -2854,7 +2854,6 @@ const WBSDB = {
         itemdesc,
         gtin,
         remarks,
-
         classification,
         mainlocation,
         binlocation,
@@ -2896,13 +2895,72 @@ const WBSDB = {
 
       await request.query(query);
 
-      return res.status(201).send({ message: "Data successfully added." });
+      return res.status(201).send({ message: "Data Inserted Successfully." });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
 
+  async insertManyIntoMappedBarcode(req, res, next) {
+
+    const { records } = req.body;
+    try {
+
+      for (let record of records) {
+        const {
+          itemcode,
+          itemdesc,
+          gtin,
+          remarks,
+          classification,
+          mainlocation,
+          binlocation,
+          intcode,
+          itemserialno,
+          mapdate,
+          palletcode,
+          reference,
+          sid,
+          cid,
+          po,
+          trans
+        } = record;
+
+
+
+        let query = ` 
+        INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+        VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+      `;
+        let request = pool2.request();
+        request.input('itemCode', sql.VarChar(100), itemcode);
+        request.input('itemDesc', sql.NVarChar(255), itemdesc);
+        request.input('gtin', sql.VarChar(150), gtin);
+        request.input('remarks', sql.VarChar(100), remarks);
+        request.input('user', sql.VarChar(50), req.token.UserID);
+        request.input('classification', sql.VarChar(150), classification);
+        request.input('mainLocation', sql.VarChar(200), mainlocation);
+        request.input('binLocation', sql.VarChar(200), binlocation);
+        request.input('intCode', sql.VarChar(150), intcode);
+        request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+        request.input('mapDate', sql.Date, mapdate);
+        request.input('palletCode', sql.VarChar(255), palletcode);
+        request.input('reference', sql.VarChar(100), reference);
+        request.input('sid', sql.VarChar(50), sid);
+        request.input('cid', sql.VarChar(50), cid);
+        request.input('po', sql.VarChar(50), po);
+        request.input('trans', sql.Numeric(10, 0), trans);
+
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: "Data Inserted Successfully." });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 
@@ -4786,6 +4844,32 @@ const WBSDB = {
 
   // WMS_ReturnSalesOrder_C Controller Start -----
 
+  async getWmsReturnSalesOrderClByAssignedToUserId(req, res, next) {
+    try {
+      const AssignedToUserId = req?.token?.UserID;
+      if (!AssignedToUserId) {
+        return res.status(401).send({ message: "AssignedToUserId is required." });
+      }
+      let query = `SELECT * FROM WMS_ReturnSalesOrder_CL WHERE
+
+      ASSIGNEDTOUSERID = @AssignedToUserId`
+
+      let request = pool2.request();
+      request.input('AssignedToUserId', sql.NVarChar, AssignedToUserId);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+
   async insertIntoWmsReturnSalesOrderCl(req, res, next) {
     try {
       const returnSalesOrderArray = req.body;
@@ -4795,11 +4879,11 @@ const WBSDB = {
         let query = `INSERT INTO WMS_ReturnSalesOrder_CL
           ([ITEMID], [NAME], [EXPECTEDRETQTY], [SALESID], [RETURNITEMNUM],
           [INVENTSITEID], [INVENTLOCATIONID], [CONFIGID], [WMSLOCATIONID],
-          [TRXDATETIME], [TRXUSERID], [ITEMSERIALNO])
+          [TRXDATETIME], [TRXUSERID], [ITEMSERIALNO], [ASSIGNEDTOUSERID])
           VALUES
           (@ITEMID, @NAME, @EXPECTEDRETQTY, @SALESID, @RETURNITEMNUM,
           @INVENTSITEID, @INVENTLOCATIONID, @CONFIGID, @WMSLOCATIONID,
-          @TRXDATETIME, @TRXUSERID, @ITEMSERIALNO)`;
+          @TRXDATETIME, @TRXUSERID, @ITEMSERIALNO, @ASSIGNEDTOUSERID)`;
 
         let request = pool2.request();
 
@@ -4816,6 +4900,7 @@ const WBSDB = {
         request.input("TRXDATETIME", sql.DateTime, currentDateTime);
         request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
         request.input("ITEMSERIALNO", sql.VarChar, returnSalesOrder.ITEMSERIALNO);
+        request.input("ASSIGNEDTOUSERID", sql.NVarChar, returnSalesOrder.ASSIGNEDTOUSERID);
 
         await request.query(query);
       }

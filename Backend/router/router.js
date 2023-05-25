@@ -213,6 +213,8 @@ router.get("/getmapBarcodeDataByBinLocation", checkAuthentication, WBSDB.getmapB
 
 router.post("/insertIntoMappedBarcode", checkAuthentication, WBSDB.insertIntoMappedBarcode);
 
+router.post("/insertManyIntoMappedBarcode", checkAuthentication, WBSDB.insertManyIntoMappedBarcode);
+
 router.put("/updateTblMappedBarcodeByItemCode", checkAuthentication, WBSDB.updateTblMappedBarcodeByItemCode);
 
 router.put("/updateTblMappedBarcodeBinLocation", checkAuthentication, WBSDB.updateTblMappedBarcodeBinLocation);
@@ -377,9 +379,9 @@ router.get("/getAllWmsReturnSalesOrder", checkAuthentication, WBSDB.getAllWmsRet
 
 // WMS_ReturnSalesOrder_C APIS Start -----
 
-router.post("/insertIntoWmsReturnSalesOrderCl",checkAuthentication, WBSDB.insertIntoWmsReturnSalesOrderCl);
+router.post("/insertIntoWmsReturnSalesOrderCl", checkAuthentication, WBSDB.insertIntoWmsReturnSalesOrderCl);
 
-
+router.get("/getWmsReturnSalesOrderClByAssignedToUserId", checkAuthentication, WBSDB.getWmsReturnSalesOrderClByAssignedToUserId);
 
 // WMS_Journal_ProfitLost APIS Start -----
 

@@ -11,7 +11,7 @@ const JournalMovementLast = () => {
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
   const [selectionType, setSelectionType] = useState('Serial');
-  const [barcode, setBarcode] = useState('barcode');
+  const [barcode, setBarcode] = useState('noBarcode');
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [newTableData, setNewTableData] = useState([]);
@@ -27,7 +27,7 @@ const JournalMovementLast = () => {
   const [username, setUserName] = useState('');
   const [usersList, setUsersList] = useState([]);
   const [selectedRow, setSelectedRow] = useState([]);
-  
+
 
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
@@ -50,15 +50,24 @@ const JournalMovementLast = () => {
 
 
 
-  const handleSaveBtnClick = async () => {
+  const handleSaveBtnClick = async (e) => {
+    e.preventDefault()
+    handleAddUserClose()
     if (locationInputValue === "") {
       setError("Please select a location")
       return;
     }
 
+    if (newBarcode === "") {
+      setError("Item Serial Number cannot be empty")
+      return;
+    }
+
+
     let apiData = parsedData;
     apiData.INVENTLOCATIONID = locationInputValue;
     apiData.ITEMSERIALNO = newBarcode;
+    apiData.ASSIGNEDTOUSERID = username;
 
     try {
       const res = await userRequest.post(
@@ -111,7 +120,7 @@ const JournalMovementLast = () => {
     setAddUser(false);
   };
 
-    const handleAddUserPopup = async () => {
+  const handleAddUserPopup = async () => {
     setAddUser(true);
     try {
       const res = await userRequest.get('/getAllTblUsers');
@@ -326,37 +335,37 @@ const JournalMovementLast = () => {
 
             {/* AddUser Popup Screen */}
             {addUser && (
-          <div className="popup-container fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
-            <div className="popup bg-white rounded-lg shadow-xl overflow-hidden max-w-md m-4">
-              <div className="header bg-blue-500 text-white font-bold py-4 px-6">
-                <h2>Add User</h2>
-              </div>
-              {/* onSubmit={handleFormSubmit} */}
-              <form className="p-6">
-                <label htmlFor="UserName" className="block mb-2 text-gray-700 text-sm">Name:</label>
-                <select
-                  id="UserName"
-                  value={username}
-                  onChange={(e) => setUserName(e.target.value)}
-                  required
-                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                >
-                  <option value="">--Select User--</option>
-                  {usersList.map((user) => (
-                    <option key={user.UserID} value={user.UserID}>
-                      {user.Fullname}
-                    </option>
-                  ))}
-                </select>
+              <div className="popup-container fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
+                <div className="popup bg-white rounded-lg shadow-xl overflow-hidden max-w-md m-4">
+                  <div className="header bg-blue-500 text-white font-bold py-4 px-6">
+                    <h2>Add User</h2>
+                  </div>
+                  {/* onSubmit={handleFormSubmit} */}
+                  <form className="p-6" onSubmit={handleSaveBtnClick}>
+                    <label htmlFor="UserName" className="block mb-2 text-gray-700 text-sm">Name:</label>
+                    <select
+                      id="UserName"
+                      value={username}
+                      onChange={(e) => setUserName(e.target.value)}
+                      required
+                      className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="">--Select User--</option>
+                      {usersList.map((user) => (
+                        <option key={user.UserID} value={user.UserID}>
+                          {user.Fullname}
+                        </option>
+                      ))}
+                    </select>
 
-                <div className="flex justify-end gap-3 mt-6">
-                  <button className="close-btn text-white bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2" type="button" onClick={handleAddUserClose}>CANCEL</button>
-                  <button className="text-white bg-blue-500 hover:bg-blue-600 rounded-lg px-6 py-2" type="submit">SEND</button>
+                    <div className="flex justify-end gap-3 mt-6">
+                      <button className="close-btn text-white bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2" type="button" onClick={handleAddUserClose}>CANCEL</button>
+                      <button className="text-white bg-blue-500 hover:bg-blue-600 rounded-lg px-6 py-2" type="submit">SUBMIT</button>
+                    </div>
+                  </form>
                 </div>
-              </form>
-            </div>
-          </div>
-        )}
+              </div>
+            )}
 
 
 
@@ -380,7 +389,7 @@ const JournalMovementLast = () => {
                   // onClick={handleSaveBtnClick}
                   onClick={handleAddUserPopup}
                 >
-                  <p>Save</p>
+                  <p>Assign to User</p>
                 </span>
               </button>
             </div>

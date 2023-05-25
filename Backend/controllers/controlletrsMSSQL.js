@@ -4789,6 +4789,7 @@ const WBSDB = {
   async insertIntoWmsReturnSalesOrderCl(req, res, next) {
     try {
       const returnSalesOrderArray = req.body;
+      let currentDateTime = new Date();
 
       for (const returnSalesOrder of returnSalesOrderArray) {
         let query = `INSERT INTO WMS_ReturnSalesOrder_CL
@@ -4802,6 +4803,7 @@ const WBSDB = {
 
         let request = pool2.request();
 
+
         request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
         request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
         request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
@@ -4811,8 +4813,8 @@ const WBSDB = {
         request.input("INVENTLOCATIONID", sql.NVarChar, returnSalesOrder.INVENTLOCATIONID);
         request.input("CONFIGID", sql.NVarChar, returnSalesOrder.CONFIGID);
         request.input("WMSLOCATIONID", sql.NVarChar, returnSalesOrder.WMSLOCATIONID);
-        request.input("TRXDATETIME", sql.DateTime, returnSalesOrder.TRXDATETIME);
-        request.input("TRXUSERID", sql.NVarChar, returnSalesOrder.TRXUSERID);
+        request.input("TRXDATETIME", sql.DateTime, currentDateTime);
+        request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
         request.input("ITEMSERIALNO", sql.VarChar, returnSalesOrder.ITEMSERIALNO);
 
         await request.query(query);

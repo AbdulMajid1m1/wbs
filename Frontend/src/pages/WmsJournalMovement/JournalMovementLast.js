@@ -18,13 +18,11 @@ const JournalMovementLast = () => {
   const [selectedValue, setSelectedValue] = useState(null);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
-  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
-  const [tableOneSelectedRowIndex, setTableOneSelectedRowIndex] = useState({});
   const [data, setData] = useState([]);
-  const [userInput, setUserInput] = useState("");
   const [modelNumber, setModelNumber] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [userInputSubmit, setUserInputSubmit] = useState(false);
+  const [newBarcode, setNewBarcode] = useState("");
 
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
@@ -42,156 +40,9 @@ const JournalMovementLast = () => {
 
 
 
-  useEffect(() => {
-    const getLocationData = async () => {
-      try {
-        const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
-          {
-            headers: {
-              itemcode: parsedData?.ITEMID,
-            }
-          })
-        console.log(res?.data)
-        setLocation(res?.data)
-
-
-      }
-      catch (error) {
-        console.log(error)
-        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
-
-      }
-    }
-
-    getLocationData();
-
-  }, [parsedData?.ITEMID])
 
 
 
-  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
-  const [autocompleteKey, setAutocompleteKey] = useState(0);
-  const resetAutocomplete = () => {
-    setLocationInputValue(''); // Clear the location input value
-    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
-  };
-
-
-
-  const handleFromSelect = (event, value) => {
-    setSelectedValue(value);
-    fetchData(value);
-  };
-
-
-  const fetchData = async (selectedValue) => {
-    try {
-      const response = await userRequest.post(
-        "/getMappedBarcodedsByItemCodeAndBinLocation",
-        {},
-        {
-          headers: {
-            // itemcode: "CV-950H SS220 BK",
-            itemcode: parsedData?.ITEMID,
-            binlocation: selectedValue
-          }
-        }
-      );
-      const responseData = response.data;
-      setNewTableData(responseData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-
-  // const [selectionType, setSelectionType] = useState('Pallet');
-
-  // define the function to filter data based on user input and selection type
-
-  const filterData = () => {
-    let trimInput = userInput.trim()
-    // filter the data based on the user input and selection type
-    const filtered = newTableData.filter((item) => {
-      if (selectionType === 'Pallet') {
-        return item.PalletCode === trimInput;
-      } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo === trimInput;
-      }
-      // barcode radio button is selected
-      //   } else if (barcode === 'Barcode') {
-      //     return item.ItemSerialNo === trimInput;
-      //   }
-      else {
-        return true;
-      }
-    });
-
-    if (filtered.length === 0) {
-      setTimeout(() => {
-        setError("Please scan a valid barcode");
-      }, 300);
-      return;
-    }
-
-    setFilteredData((prevData) => {
-      // Filter out items that are already in prevData
-      const newItems = filtered.filter((item) => {
-        if (selectionType === 'Pallet') {
-          return !prevData.some(prevItem => prevItem.PalletCode === item.PalletCode);
-        } else if (selectionType === 'Serial') {
-          return !prevData.some(prevItem => prevItem.ItemSerialNo === item.ItemSerialNo);
-        }
-      });
-      setUserInput("");
-      return [...prevData, ...newItems]; // Append the new items to the existing state
-      // clear the user input state variable
-    });
-
-    // Remove the inserted records from the newTableData
-    setNewTableData((prevData) => {
-      return prevData.filter((item) => {
-        if (selectionType === 'Pallet') {
-          return !filtered.some(filteredItem => filteredItem.PalletCode === item.PalletCode);
-        } else if (selectionType === 'Serial') {
-          return !filtered.some(filteredItem => filteredItem.ItemSerialNo === item.ItemSerialNo);
-        } else {
-          return true;
-        }
-      });
-    });
-  };
-
-
-  // reset function
-  const resetDataOnUPdate = () => {
-    // remove the filtered data from the data state variable
-    const newData = data.filter((item) => {
-      if (selectionType === 'Pallet') {
-        return item.PalletCode !== userInput;
-      } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo !== userInput;
-      } else {
-        return true;
-      }
-    });
-    setData(newData);
-    // reset the user input state variable
-    setUserInput("");
-    // trigger the filtering of data
-    setUserInputSubmit(!userInputSubmit);
-
-
-  };
-
-
-
-
-  const handleInputUser = (e) => {
-    console.log(userInput)
-    // setUserInputSubmit(!userInputSubmit);
-    filterData();
-  }
 
 
   const handleSaveBtnClick = async () => {
@@ -199,54 +50,26 @@ const JournalMovementLast = () => {
       setError("Please select a location")
       return;
     }
-    if (filteredData.length === 0) {
-      setError("Please scan a barcode")
-      return;
-    }
-    let pickedQty;
-    if (selectionType === "Serial") {
-      pickedQty = 1;
-    }
-    const APIData = filteredData.map((item) => {
-      return {
-        INVENTLOCATIONID: locationInputValue,
-        ORDERED: parsedData?.QTY,
-        PACKINGSLIPID: parsedData?.TRANSREFID,// comming from previous page
-        ASSIGNEDUSERID: item.ASSIGNEDTOUSERID, // comming from mapped barcode data
-        SALESID: parsedData?.PICKINGROUTEID, // comming from previous page
-        ITEMID: parsedData?.ITEMID, // comming from previous page
-        NAME: parsedData?.ITEMNAME, // comming from previous page
-        CONFIGID: parsedData?.CONFIGID, // comming from previous page
-        // VEHICLESHIPPLATENUMBER:
-        // DATETIMECREATED: new Date().toISOString().slice(0, 19).replace('T', ' '), // current date time
-        DATETIMECREATED: parsedData?.DATETIMEASSIGNED,
 
+    let apiData = parsedData;
+    apiData.INVENTLOCATIONID = locationInputValue;
+    apiData.ITEMSERIALNO = newBarcode;
 
-      }
-
-
-    })
-
-    console.log(APIData)
     try {
       const res = await userRequest.post(
-        `/insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl`,
-        APIData,
-        {
-          params: {
-            PICKINGROUTEID: parsedData?.PICKINGROUTEID,
-            ITEMID: parsedData?.ITEMID,
-            QTYPICKED: parsedData?.QTYPICKED,
-            QTY: parsedData?.QTY
-          }
-        }
+        `/insertIntoWmsReturnSalesOrderCl`,
+        [apiData],
+
       );
       console.log(res?.data)
       setMessage(res?.data?.message ?? 'Data saved successfully');
 
       // clear the filtered data and user input
       setFilteredData([]);
-      setUserInput("");
+      setLocationInputValue("");
+      setTimeout(() => {
+        navigate(-1);
+      }, 1000);
 
     }
     catch (error) {
@@ -256,50 +79,26 @@ const JournalMovementLast = () => {
     }
   }
 
-  const handleTableOneRowClick = (row, index) => {
-    console.log(row)
-    console.log(index)
-    setSelectedRowIndex(index);
-    setTableOneSelectedRowIndex(row);
-  }
-
-
   const GenerateBarcode = async () => {
-    if (selectedRowIndex === null) {
-      setError("Please select a row from the table")
-      return;
-    }
+
     if (modelNumber === "") {
       setError("Please enter a model number")
       return;
     }
 
-    if (tableOneSelectedRowIndex?.ItemSerialNo) {
-      setError("Selected row already has a barcode");
-      return;
-    }
+
 
     const response = await userRequest.post("/generateBarcodeForRma",
       {
         RETURNITEMNUM: parsedData?.RETURNITEMNUM,
-        ITEMID: tableOneSelectedRowIndex?.ItemCode,
+        ITEMID: parsedData?.ITEMID,
         MODELNO: modelNumber,
       }
     )
     console.log(response?.data)
+    setNewBarcode(response?.data?.RMASERIALNO)
     setMessage(response?.data?.message ?? 'Barcode generated successfully');
     // APPPEND THIS BARCODE TO THE SELECTED ROW
-    setTableOneSelectedRowIndex((prevData) => {
-      return {
-        ...prevData,
-        ItemSerialNo: response?.data?.barcode,
-      }
-    }
-    )
-
-    // setFilteredData((prevData) => {
-
-
 
   }
 
@@ -323,7 +122,7 @@ const JournalMovementLast = () => {
                     </span>
                   </button>
                 </div>
-                <span className='text-white -mt-7'>Journal ID:</span>
+                <span className='text-white -mt-7'>Retrun Item No:</span>
                 <input
                   //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
@@ -333,57 +132,7 @@ const JournalMovementLast = () => {
                   disabled
                 />
 
-                <div className='flex gap-2 justify-center items-center'>
-                  <span className='text-white'>FROM:</span>
 
-                  <div className='w-full'>
-                    <Autocomplete
-                      ref={autocompleteRef}
-                      key={autocompleteKey}
-                      id="location"
-                      // options={location.filter(item => item.BinLocation)}
-                      // getOptionLabel={(option) => option.BinLocation}
-                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
-                      getOptionLabel={(option) => option}
-                      onChange={handleFromSelect}
-
-                      onInputChange={(event, value) => {
-                        if (!value) {
-                          // perform operation when input is cleared
-                          console.log("Input cleared");
-
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          InputProps={{
-                            ...params.InputProps,
-                            className: "text-white",
-                          }}
-                          InputLabelProps={{
-                            ...params.InputLabelProps,
-                            style: { color: "white" },
-                          }}
-
-                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                          placeholder="FROM"
-                          required
-                        />
-                      )}
-                      classes={{
-                        endAdornment: "text-white",
-                      }}
-                      sx={{
-                        '& .MuiAutocomplete-endAdornment': {
-                          color: 'white',
-                        },
-                      }}
-                    />
-
-                  </div>
-                </div>
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
@@ -394,12 +143,12 @@ const JournalMovementLast = () => {
 
                 <div className='flex flex-col gap-2'>
                   <div className='text-[#FFFFFF]'>
-                    <span>CLASS {parsedData?.ASSIGNEDTOUSERID}</span>
+                    <span>Sales ID {parsedData?.SALESID}</span>
                   </div>
 
 
                   <div className='text-[#FFFFFF]'>
-                    <span>GROUPID {parsedData.EXPEDITIONSTATUS}</span>
+                    <span>NAME {parsedData.NAME}</span>
                   </div>
                 </div>
               </div>
@@ -407,85 +156,21 @@ const JournalMovementLast = () => {
               <div>
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.QTY}</span>
+                    <span>Return Quantity<span className='text-[#FF0404]'>*</span></span>
+                    <span>{parsedData.EXPECTEDRETQTY}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    <span>{filteredData.length}</span>
+                    {/* <span>{filteredData.length}</span> */}
+                    <span>1</span>
                   </div>
                 </div>
               </div>
 
             </div>
 
-            <div className='mb-6'>
-              {/* // creae excel like Tables  */}
-              <div className="table-location-generate1">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>ItemCode</th>
-                      <th>ItemDesc</th>
-                      <th>GTIN</th>
-                      <th>Remarks</th>
-                      <th>User</th>
-                      <th>Classification</th>
-                      <th>MainLocation</th>
-                      <th>BinLocation</th>
-                      <th>IntCode</th>
-                      <th>ItemSerialNo</th>
-                      <th>MapDate</th>
-                      <th>PalletCode</th>
-                      <th>Reference</th>
-                      <th>SID</th>
-                      <th>CID</th>
-                      <th>PO</th>
-                      <th>Trans</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {newTableData.map((data, index) => (
-                      <tr key={"tranidRow" + index} onClick={() => handleTableOneRowClick(data, index)}
-                        style={{ backgroundColor: index === selectedRowIndex ? "#F98E1A" : "" }}
-                      >
-                        <td>{data.ItemCode}</td>
-                        <td>{data.ItemDesc}</td>
-                        <td>{data.GTIN}</td>
-                        <td>{data.Remarks}</td>
-                        <td>{data.User}</td>
-                        <td>{data.Classification}</td>
-                        <td>{data.MainLocation}</td>
-                        <td>{data.BinLocation}</td>
-                        <td>{data.IntCode}</td>
-                        <td>{data.ItemSerialNo}</td>
-                        <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                        <td>{data.PalletCode}</td>
-                        <td>{data.Reference}</td>
-                        <td>{data.SID}</td>
-                        <td>{data.CID}</td>
-                        <td>{data.PO}</td>
-                        <td>{data.Trans}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
 
-
-
-            </div >
-
-            <div className='mb-4 flex justify-end items-center gap-2'>
-              <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-              <input
-                id="totals"
-                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Totals"
-                value={newTableData.length}
-              />
-            </div>
 
 
             {/* Barcode Radio Button */}
@@ -552,110 +237,57 @@ const JournalMovementLast = () => {
               </button>
             </div>
 
-            <div class="text-center mb-4">
-              <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                  flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-              >
-                <label className="inline-flex items-center mt-1">
-                  <input
-                    type="radio"
-                    name="selectionType"
-                    value="Pallet"
-                    checked={selectionType === 'Pallet'}
-                    onChange={e => setSelectionType(e.target.value)}
-                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    disabled
-                  />
-                  <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                </label>
-                <label className="inline-flex items-center mt-1">
-                  <input
-                    type="radio"
-                    name="selectionType"
-                    value="Serial"
-                    checked={selectionType === 'Serial'}
-                    onChange={e => setSelectionType(e.target.value)}
-                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                  />
-                  <span className="ml-2 text-[#00006A]">BY SERIAL</span>
-                </label>
-              </div>
-            </div>
+
 
             <form
             //   onSubmit={handleFormSubmit}
             >
 
-              <div className="mb-6">
-                <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}#<span className='text-[#FF0404]'>*</span></label>
 
-                <input
-                  id="scanpallet"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder={`Scan ${selectionType}`}
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  onBlur={handleInputUser}
-
-                />
-              </div>
 
               <div className='mb-6'>
+                <label className='text-[#00006A] font-semibold'>List of Items on RMA<span className='text-[#FF0404]'>*</span></label>
                 {/* // creae excel like Tables  */}
                 <div className="table-location-generate1">
                   <table>
                     <thead>
                       <tr>
-                        <th>ItemCode</th>
-                        <th>ItemDesc</th>
-                        <th>GTIN</th>
-                        <th>Remarks</th>
-                        <th>User</th>
-                        <th>Classification</th>
-                        <th>MainLocation</th>
-                        <th>BinLocation</th>
-                        <th>IntCode</th>
-                        <th>ItemSerialNo</th>
-                        <th>MapDate</th>
-                        <th>PalletCode</th>
-                        <th>Reference</th>
-                        <th>SID</th>
-                        <th>CID</th>
-                        <th>PO</th>
-                        <th>Trans</th>
+                        <th>ITEMID</th>
+                        <th>NAME</th>
+                        <th>EXPECTEDRETQTY</th>
+                        <th>SALESID</th>
+                        <th>RETURNITEMNUM</th>
+                        <th>INVENTSITEID</th>
+                        <th>INVENTLOCATIONID</th>
+                        <th>CONFIGID</th>
+                        <th>WMSLOCATIONID</th>
+                        <th>ITEMSERIALNO</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredData.map((data, index) => (
-                        <tr key={"tranidRow" + index}>
-                          <td>{data.ItemCode}</td>
-                          <td>{data.ItemDesc}</td>
-                          <td>{data.GTIN}</td>
-                          <td>{data.Remarks}</td>
-                          <td>{data.User}</td>
-                          <td>{data.Classification}</td>
-                          <td>{data.MainLocation}</td>
-                          <td>{data.BinLocation}</td>
-                          <td>{data.IntCode}</td>
-                          <td>{data.ItemSerialNo}</td>
-                          <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                          <td>{data.PalletCode}</td>
-                          <td>{data.Reference}</td>
-                          <td>{data.SID}</td>
-                          <td>{data.CID}</td>
-                          <td>{data.PO}</td>
-                          <td>{data.Trans}</td>
-                        </tr>
-                      ))}
+
+                      <tr
+                      >
+                        <td>{parsedData?.ITEMID}</td>
+                        <td>{parsedData?.NAME}</td>
+                        <td>{parsedData?.EXPECTEDRETQTY}</td>
+                        <td>{parsedData?.SALESID}</td>
+                        <td>{parsedData?.RETURNITEMNUM}</td>
+                        <td>{parsedData?.INVENTSITEID}</td>
+                        <td>{parsedData?.INVENTLOCATIONID}</td>
+                        <td>{parsedData?.CONFIGID}</td>
+                        <td>{parsedData?.WMSLOCATIONID}</td>
+                        <td>{newBarcode}</td>
+                      </tr>
+
                     </tbody>
                   </table>
+
                 </div>
+              </div>
 
 
-
-              </div >
-
-              <div className='flex justify-end items-center gap-2'>
+              {/* <div className='flex justify-end items-center gap-2'>
                 <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                 <input
                   id="totals"
@@ -663,7 +295,7 @@ const JournalMovementLast = () => {
                   placeholder="Totals"
                   value={filteredData.length}
                 />
-              </div>
+              </div> */}
 
             </form>
 

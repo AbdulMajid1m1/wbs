@@ -375,6 +375,10 @@ router.get("/getWmsReturnSalesOrderByReturnItemNum", checkAuthentication, WBSDB.
 router.get("/getAllWmsReturnSalesOrder", checkAuthentication, WBSDB.getAllWmsReturnSalesOrder);
 
 
+// WMS_ReturnSalesOrder_C APIS Start -----
+
+router.post("/insertIntoWmsReturnSalesOrderCl",checkAuthentication, WBSDB.insertIntoWmsReturnSalesOrderCl);
+
 
 
 // WMS_Journal_ProfitLost APIS Start -----

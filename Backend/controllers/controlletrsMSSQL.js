@@ -4664,7 +4664,7 @@ const WBSDB = {
   async getAllWmsReturnSalesOrder(req, res, next) {
 
     try {
-     
+
       let query = `SELECT * FROM WMS_ReturnSalesOrder `
 
       let request = pool1.request();
@@ -4708,80 +4708,120 @@ const WBSDB = {
     }
   },
 
- // WMS_ReturnSalesOrder Controller  END ------- 
+  // WMS_ReturnSalesOrder Controller  END ------- 
 
 
 
 
- // WMS_Journal_ProfitLost Controller Start -----
+  // WMS_Journal_ProfitLost Controller Start -----
 
- async getAllWmsJournalProfitLost(req, res, next) {
+  async getAllWmsJournalProfitLost(req, res, next) {
 
-  try {
-   
-    let query = `SELECT * FROM WMS_Journal_ProfitLost `
+    try {
 
-    let request = pool1.request();
+      let query = `SELECT * FROM WMS_Journal_ProfitLost `
 
-    const data = await request.query(query);
-    if (data.recordsets[0].length === 0) {
-      return res.status(404).send({ message: "No Record found." });
+      let request = pool1.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
     }
-    return res.status(200).send(data.recordsets[0]);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ message: error.message });
-
-  }
-},
+  },
 
 
 
- // WMS_Journal_Movement Controller Start -----
+  // WMS_Journal_Movement Controller Start -----
 
- async getAllWmsJournalMovement(req, res, next) {
+  async getAllWmsJournalMovement(req, res, next) {
 
-  try {
-   
-    let query = `SELECT * FROM WMS_Journal_Movement `
+    try {
 
-    let request = pool1.request();
+      let query = `SELECT * FROM WMS_Journal_Movement `
 
-    const data = await request.query(query);
-    if (data.recordsets[0].length === 0) {
-      return res.status(404).send({ message: "No Record found." });
+      let request = pool1.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
     }
-    return res.status(200).send(data.recordsets[0]);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ message: error.message });
-
-  }
-},
+  },
 
 
- // WMS_Journal_Counting Controller Start -----
+  // WMS_Journal_Counting Controller Start -----
 
- async getAllWmsJournalCounting(req, res, next) {
+  async getAllWmsJournalCounting(req, res, next) {
 
-  try {
-   
-    let query = `SELECT * FROM WMS_Journal_Counting `
+    try {
 
-    let request = pool1.request();
+      let query = `SELECT * FROM WMS_Journal_Counting `
 
-    const data = await request.query(query);
-    if (data.recordsets[0].length === 0) {
-      return res.status(404).send({ message: "No Record found." });
+      let request = pool1.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
     }
-    return res.status(200).send(data.recordsets[0]);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ message: error.message });
+  },
 
-  }
-},
 
+  // WMS_ReturnSalesOrder_C Controller Start -----
+
+  async insertIntoWmsReturnSalesOrderCl(req, res, next) {
+    try {
+      const returnSalesOrderArray = req.body;
+
+      for (const returnSalesOrder of returnSalesOrderArray) {
+        let query = `INSERT INTO WMS_ReturnSalesOrder_CL
+          ([ITEMID], [NAME], [EXPECTEDRETQTY], [SALESID], [RETURNITEMNUM],
+          [INVENTSITEID], [INVENTLOCATIONID], [CONFIGID], [WMSLOCATIONID],
+          [TRXDATETIME], [TRXUSERID], [ITEMSERIALNO])
+          VALUES
+          (@ITEMID, @NAME, @EXPECTEDRETQTY, @SALESID, @RETURNITEMNUM,
+          @INVENTSITEID, @INVENTLOCATIONID, @CONFIGID, @WMSLOCATIONID,
+          @TRXDATETIME, @TRXUSERID, @ITEMSERIALNO)`;
+
+        let request = pool2.request();
+        
+        request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
+        request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
+        request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
+        request.input("SALESID", sql.NVarChar, returnSalesOrder.SALESID);
+        request.input("RETURNITEMNUM", sql.NVarChar, returnSalesOrder.RETURNITEMNUM);
+        request.input("INVENTSITEID", sql.NVarChar, returnSalesOrder.INVENTSITEID);
+        request.input("INVENTLOCATIONID", sql.NVarChar, returnSalesOrder.INVENTLOCATIONID);
+        request.input("CONFIGID", sql.NVarChar, returnSalesOrder.CONFIGID);
+        request.input("WMSLOCATIONID", sql.NVarChar, returnSalesOrder.WMSLOCATIONID);
+        request.input("TRXDATETIME", sql.DateTime, returnSalesOrder.TRXDATETIME);
+        request.input("TRXUSERID", sql.NVarChar, returnSalesOrder.TRXUSERID);
+        request.input("ITEMSERIALNO", sql.VarChar, returnSalesOrder.ITEMSERIALNO);
+
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Data inserted successfully.' });
+    } catch (error) {
+      return res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

@@ -401,4 +401,6 @@ router.get("/getAllWmsJournalMovement", checkAuthentication, WBSDB.getAllWmsJour
 
 router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);
 
+router.post("/generateBarcodeForRma", checkAuthentication, WBSDB.generateBarcodeForRma);
+
 

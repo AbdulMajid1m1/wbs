@@ -11,13 +11,21 @@ const JournalMovementLast = () => {
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
   const [selectionType, setSelectionType] = useState('Serial');
-  const [barcode, setBarcode] = useState('Barcode');
+  const [barcode, setBarcode] = useState('barcode');
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [newTableData, setNewTableData] = useState([]);
   const [selectedValue, setSelectedValue] = useState(null);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+  const [tableOneSelectedRowIndex, setTableOneSelectedRowIndex] = useState({});
+  const [data, setData] = useState([]);
+  const [userInput, setUserInput] = useState("");
+  const [modelNumber, setModelNumber] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+  const [userInputSubmit, setUserInputSubmit] = useState(false);
+
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -26,7 +34,7 @@ const JournalMovementLast = () => {
   };
 
   // retrieve data from session storage
-//   const storedData = sessionStorage.getItem('PickingRowData');
+  // const storedData = sessionStorage.getItem('PickingRowData');
   const storedData = sessionStorage.getItem('RmaRowData');
   const parsedData = JSON.parse(storedData);
   console.log("parsedData")
@@ -98,10 +106,6 @@ const JournalMovementLast = () => {
 
 
   // const [selectionType, setSelectionType] = useState('Pallet');
-  const [data, setData] = useState([]);
-  const [userInput, setUserInput] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
-  const [userInputSubmit, setUserInputSubmit] = useState(false);
 
   // define the function to filter data based on user input and selection type
 
@@ -114,11 +118,11 @@ const JournalMovementLast = () => {
       } else if (selectionType === 'Serial') {
         return item.ItemSerialNo === trimInput;
       }
-        // barcode radio button is selected
-    //   } else if (barcode === 'Barcode') {
-    //     return item.ItemSerialNo === trimInput;
-    //   }
-       else {
+      // barcode radio button is selected
+      //   } else if (barcode === 'Barcode') {
+      //     return item.ItemSerialNo === trimInput;
+      //   }
+      else {
         return true;
       }
     });
@@ -252,6 +256,52 @@ const JournalMovementLast = () => {
     }
   }
 
+  const handleTableOneRowClick = (row, index) => {
+    console.log(row)
+    console.log(index)
+    setSelectedRowIndex(index);
+    setTableOneSelectedRowIndex(row);
+  }
+
+
+  const GenerateBarcode = async () => {
+    if (selectedRowIndex === null) {
+      setError("Please select a row from the table")
+      return;
+    }
+    if (modelNumber === "") {
+      setError("Please enter a model number")
+      return;
+    }
+
+    if (tableOneSelectedRowIndex?.ItemSerialNo) {
+      setError("Selected row already has a barcode");
+      return;
+    }
+
+    const response = await userRequest.post("/generateBarcodeForRma",
+      {
+        RETURNITEMNUM: parsedData?.RETURNITEMNUM,
+        ITEMID: tableOneSelectedRowIndex?.ItemCode,
+        MODELNO: modelNumber,
+      }
+    )
+    console.log(response?.data)
+    setMessage(response?.data?.message ?? 'Barcode generated successfully');
+    // APPPEND THIS BARCODE TO THE SELECTED ROW
+    setTableOneSelectedRowIndex((prevData) => {
+      return {
+        ...prevData,
+        ItemSerialNo: response?.data?.barcode,
+      }
+    }
+    )
+
+    // setFilteredData((prevData) => {
+
+
+
+  }
 
 
   return (
@@ -397,7 +447,9 @@ const JournalMovementLast = () => {
                   </thead>
                   <tbody>
                     {newTableData.map((data, index) => (
-                      <tr key={"tranidRow" + index}>
+                      <tr key={"tranidRow" + index} onClick={() => handleTableOneRowClick(data, index)}
+                        style={{ backgroundColor: index === selectedRowIndex ? "#F98E1A" : "" }}
+                      >
                         <td>{data.ItemCode}</td>
                         <td>{data.ItemDesc}</td>
                         <td>{data.GTIN}</td>
@@ -444,9 +496,9 @@ const JournalMovementLast = () => {
                 <label className="inline-flex items-center mt-1">
                   <input
                     type="radio"
-                    name=""
-                    value="Barcode"
-                    checked={barcode === 'Barcode'}
+                    name="barcode"
+                    value="barcode"
+                    checked={barcode === 'barcode'}
                     onChange={e => setBarcode(e.target.value)}
                     className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
                   />
@@ -456,9 +508,9 @@ const JournalMovementLast = () => {
                 <label className="inline-flex items-center mt-1">
                   <input
                     type="radio"
-                    name=""
-                    value="No Barcode"
-                    checked={barcode === 'No Barcode'}
+                    name="noBarcode"
+                    value="noBarcode"
+                    checked={barcode === 'noBarcode'}
                     onChange={e => setBarcode(e.target.value)}
                     className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
                   />
@@ -466,24 +518,41 @@ const JournalMovementLast = () => {
                 </label>
               </div>
             </div>
-            
+
             {/* Barcode Input */}
-            <div className="mb-6">
-                <label htmlFor='scanbarcode' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {barcode}#<span className='text-[#FF0404]'>*</span></label>
+            <div className="mb-6"
+              style={{ display: barcode === 'barcode' ? 'none' : '' }}
+            >
+              <label htmlFor='scanbarcode' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Model Number#<span className='text-[#FF0404]'>*</span></label>
 
-                <input
-                  id="scanbarcode"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder={`Scan ${barcode}`}
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  onBlur={handleInputUser}
+              <input
+                id="scanbarcode"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder={"Enter Model Number"}
+                value={modelNumber}
 
-                />
-              </div>
+                onChange={(e) => setModelNumber(e.target.value)}
+                // onBlur={handleInputUser}
+                disabled={barcode === 'barcode' ? true : false}
 
+              />
+            </div>
 
-              <div class="text-center mb-4">
+            <div className='mb-6 flex justify-center items-center'>
+              <button
+                onClick={GenerateBarcode}
+
+                style={{ display: barcode === 'barcode' ? 'none' : '' }}
+                type='button'
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[40%]'>
+                <span className='flex justify-center items-center'
+                >
+                  <p>Generate Barcode </p>
+                </span>
+              </button>
+            </div>
+
+            <div class="text-center mb-4">
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                   flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
               >

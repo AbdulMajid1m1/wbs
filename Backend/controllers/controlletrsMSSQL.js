@@ -650,7 +650,8 @@ const WBSDB = {
   },
 
 
-  async generateAndUpdatePalletIds(req, res) {
+
+  async generateAndUpdatePalletIds(req, res, next) {
     try {
       const serialNumberList = req.query.serialNumberList;
 
@@ -4800,7 +4801,7 @@ const WBSDB = {
           @TRXDATETIME, @TRXUSERID, @ITEMSERIALNO)`;
 
         let request = pool2.request();
-        
+
         request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
         request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
         request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
@@ -4824,6 +4825,52 @@ const WBSDB = {
   },
 
 
+  async generateBarcodeForRma(req, res, next) {
+    try {
+
+      const { RETURNITEMNUM, ITEMID, MODELNO } = req.body;
+      // Fetch the last SSCC_AutoCounter from TblSysNo using pool2
+      const query = `
+      SELECT TOP 1 SSCC_AutoCounter AS LastSSCCAutoCounter FROM TblSysNo ORDER BY SSCC_AutoCounter DESC
+    `;
+
+
+      const result = await pool2.request().query(query);
+      let SSCC_AutoCounter = result.recordset[0].LastSSCCAutoCounter;
+
+      // If there is no number in SSCC_AutoCounter, use 1 as the starting counter
+      if (!SSCC_AutoCounter) {
+        SSCC_AutoCounter = 1;
+      } else {
+        SSCC_AutoCounter = parseInt(SSCC_AutoCounter) + 1;
+      }
+      //logic for code here
+
+      let RMASERIALNO = RETURNITEMNUM + "-" + ITEMID + "-" + MODELNO + "-" + SSCC_AutoCounter;
+
+
+      // Update or insert SSCC_AutoCounter in TblSysNo
+      const updateTblSysNoQuery = `
+       IF EXISTS (SELECT * FROM TblSysNo)
+       BEGIN
+         UPDATE TblSysNo SET SSCC_AutoCounter = @SSCC_AutoCounter
+       END
+       ELSE
+       BEGIN
+         INSERT INTO TblSysNo (SSCC_AutoCounter) VALUES (1)
+       END
+     `;
+
+      await pool2.request()
+        .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
+        .query(updateTblSysNoQuery);
+
+      res.status(200).send({ RMASERIALNO });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

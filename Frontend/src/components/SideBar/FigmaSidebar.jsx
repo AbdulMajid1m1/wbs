@@ -306,7 +306,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Picking Slip</p>
                     </div>
 
-                    <div className='main-images-container'>
+                    <div className='main-images-container' onClick={() => navigate('/rma')}>
                         <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Return RMA</p>
                     </div>

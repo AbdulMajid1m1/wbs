@@ -1774,3 +1774,271 @@ export const SalesPickingListColumn = [
 ]
 
 
+
+
+export const ReturnSalesOrderColumn = [
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "NAME",
+    headerName: "NAME",
+    width: 230,
+
+  },
+  {
+    field: "EXPECTEDRETQTY",
+    headerName: "EXPECTEDRETQTY",
+    width: 180,
+
+  },
+  {
+    field: "SALESID",
+    headerName: "SALES ID",
+    width: 180,
+
+  },
+  {
+    field: "RETURNITEMNUM",
+    headerName: "RETURN ITEM NUM",
+    width: 180,
+
+  },
+  {
+    field: "INVENTSITEID",
+    headerName: "INVENT SITE ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+
+  }, 
+
+
+
+]
+
+
+
+export const JournalProfitLostColumn = [
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEMNAME",
+    width: 230,
+
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 180,
+
+  },
+  {
+    field: "JOURNALID",
+    headerName: "JOURNAL ID",
+    width: 180,
+
+  },
+  {
+    field: "TRANSDATE",
+    headerName: "TRANS DATE",
+    width: 180,
+
+  },
+  {
+    field: "INVENTSITEID",
+    headerName: "INVENT SITE ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+
+  }, 
+
+
+
+]
+
+
+
+
+export const JournalMovementColumn = [
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEMNAME",
+    width: 230,
+
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 180,
+
+  },
+  {
+    field: "LEDGERACCOUNTIDOFFSET",
+    headerName: "LEDGER ACCOUNT ID OFF SET",
+    width: 180,
+
+  },
+  {
+    field: "JOURNALID",
+    headerName: "JOURNAL ID",
+    width: 180,
+
+  },
+  {
+    field: "TRANSDATE",
+    headerName: "TRANS DATE",
+    width: 180,
+
+  },
+  {
+    field: "INVENTSITEID",
+    headerName: "INVENT SITE ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+
+  }, 
+
+
+
+]
+
+
+
+export const JournalCountingTableColumn = [
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEMNAME",
+    width: 230,
+
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 180,
+
+  },
+  {
+    field: "INVENTONHAND",
+    headerName: "INVENT ON HAND",
+    width: 180,
+
+  },
+  {
+    field: "COUNTED",
+    headerName: "COUNTED",
+    width: 180,
+
+  },
+  {
+    field: "JOURNALID",
+    headerName: "JOURNAL ID",
+    width: 180,
+
+  },
+  {
+    field: "TRANSDATE",
+    headerName: "TRANS DATE",
+    width: 180,
+
+  },
+  {
+    field: "INVENTSITEID",
+    headerName: "INVENT SITE ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+
+  }, 
+
+
+
+]
+
+

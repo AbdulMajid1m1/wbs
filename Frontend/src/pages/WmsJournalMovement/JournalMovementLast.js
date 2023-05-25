@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import "./RMALastForm.css";
+import "./JournalMovementLast.css";
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { Autocomplete, TextField } from '@mui/material';
-// import { items } from 'fusioncharts';
 
-const RMALastForm = () => {
+const JournalMovementLast = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
@@ -274,13 +273,13 @@ const RMALastForm = () => {
                     </span>
                   </button>
                 </div>
-                <span className='text-white -mt-7'>RMA:</span>
+                <span className='text-white -mt-7'>Journal ID:</span>
                 <input
                   //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
                   placeholder="Picking Route ID"
-                  value={parsedData?.PICKINGROUTEID}
+                  value={parsedData?.RETURNITEMNUM}
                   disabled
                 />
 
@@ -628,4 +627,4 @@ const RMALastForm = () => {
   )
 }
 
-export default RMALastForm
+export default JournalMovementLast

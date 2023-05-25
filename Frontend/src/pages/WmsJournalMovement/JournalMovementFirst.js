@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { json, useNavigate } from 'react-router-dom';
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
-import "./RMA.css";
-// import CustomSnakebar from '../../utils/CustomSnakebar';
-// import back from "../../images/back.png"
+import "./JournalMovementFirst.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 
-const RMA = () => {
+const JournalMovementFirst = () => {
   const navigate = useNavigate();
 
 
@@ -41,7 +39,8 @@ const RMA = () => {
     e.preventDefault();
     setIsLoading(true)
 
-    userRequest.get(`/getAllWmsSalesPickingListClFromWBSByPickingRouteId?PICKINGROUTEID=${transferTag}`)
+    // userRequest.get(`/getAllWmsSalesPickingListClFromWBSByPickingRouteId?PICKINGROUTEID=${transferTag}`)
+    userRequest.get(`/getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=${transferTag}`)
       .then(response => {
         console.log(response?.data);
 
@@ -56,7 +55,7 @@ const RMA = () => {
       .catch(error => {
         console.error(error);
         setIsLoading(false)
-        setError(error?.data?.message ?? 'Wrong Route ID');
+        setError(error?.response?.data?.message ?? 'Wrong Route ID');
 
       });
 
@@ -135,7 +134,7 @@ const RMA = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>RMA Form</h2>
+                <h2 className='text-center text-[#fff]'>Journal Movement Screen</h2>
 
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>
@@ -146,7 +145,7 @@ const RMA = () => {
             </div>
 
             <div className=''>
-              <h2 className='text-[#00006A] text-center font-semibold'>USER ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
+              <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
             <form onSubmit={handleForm}>
@@ -176,19 +175,15 @@ const RMA = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>PICKINGROUTEID</th>
+                      <th>ITEMID</th>
+                      <th>NAME</th>
+                      <th>EXPECTEDRETQTY</th>
+                      <th>SALESID</th>
+                      <th>RETURNITEMNUM</th>
+                      <th>INVENTSITEID</th>
                       <th>INVENTLOCATIONID</th>
                       <th>CONFIGID</th>
-                      <th>ITEMID</th>
-                      <th>ITEMNAME</th>
-                      <th>QTY</th>
-                      <th>CUSTOMER</th>
-                      <th>DLVDATE</th>
-                      <th>TRANSREFID</th>
-                      <th>EXPEDITIONSTATUS</th>
-                      <th>DATETIMEASSIGNED</th>
-                      <th>ASSIGNEDTOUSERID</th>
-                      <th>PICKSTATUS</th>
+                      <th>WMSLOCATIONID</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -198,19 +193,15 @@ const RMA = () => {
                         style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
 
                       >
-                        <td>{item.PICKINGROUTEID}</td>
+                        <td>{item.ITEMID}</td>
+                        <td>{item.NAME}</td>
+                        <td>{item.EXPECTEDRETQTY}</td>
+                        <td>{item.SALESID}</td>
+                        <td>{item.RETURNITEMNUM}</td>
+                        <td>{item.INVENTSITEID}</td>
                         <td>{item.INVENTLOCATIONID}</td>
                         <td>{item.CONFIGID}</td>
-                        <td>{item.ITEMID}</td>
-                        <td>{item.ITEMNAME}</td>
-                        <td>{item.QTY}</td>
-                        <td>{item.CUSTOMER}</td>
-                        <td>{item.DLVDATE}</td>
-                        <td>{item.TRANSREFID}</td>
-                        <td>{item.EXPEDITIONSTATUS}</td>
-                        <td>{item.DATETIMEASSIGNED}</td>
-                        <td>{item.ASSIGNEDTOUSERID}</td>
-                        <td>{item.PICKSTATUS}</td>
+                        <td>{item.WMSLOCATIONID}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -254,6 +245,6 @@ const RMA = () => {
   )
 }
 
-export default RMA
+export default JournalMovementFirst
 
 

@@ -66,8 +66,8 @@ import PickingListLastForm from './pages/PicklistAssigned/PickingListLastForm'
 import DispatchingPickingSlip from './pages/DispatchingPickingSlip/DispatchingPickingSlip'
 import SalesPickingList from './pages/SalesPickingList/SalesPickingList'
 import Registration from './pages/UserRegistration/UserRegistration'
-import RMA from './pages/RMA/RMA'
-import RMALastForm from './pages/RMA/RMALastForm'
+import JournalMovementFirst from './pages/WmsJournalMovement/JournalMovementFirst'
+import JournalMovementLast from './pages/WmsJournalMovement/JournalMovementLast'
 import ReturnSalesOrder from './pages/ReturnSalesOrder/ReturnSalesOrder'
 import JournalProfitLost from './pages/JournalProfitLost/JournalProfitLost'
 import JournalMovement from './pages/JournalMovement/JournalMovement'
@@ -120,8 +120,8 @@ const App = () => {
 
         <Route path="/dispatchingslip" element={<DispatchingPickingSlip />} />
 
-        <Route path='/rma' element={<RMA />} />
-        <Route path="/rmalastform" element={<RMALastForm />} />
+        <Route path='/rma' element={<JournalMovementFirst />} />
+        <Route path="/rmalastform" element={<JournalMovementLast />} />
 
 
         <Route

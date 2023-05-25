@@ -16,6 +16,9 @@ import receipts from "../../images/bill.png"
 import stocking from "../../images/stocking.png"
 import barcode from "../../images/barcode.png"
 import productreturn from "../../images/return.png"
+import movement from "../../images/movement.jpeg"
+import profit from "../../images/profit.jpeg"
+import cycle from "../../images/cycle.jpeg"
 import exit from "../../images/exit.png"
 import Cookies from 'js-cookie'
 
@@ -309,8 +312,18 @@ const FigmaSidebar = () => {
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/rma')}>
-                        <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={movement} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Journal Movement</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/profitloss')}>
+                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Profit and Loss</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/cyclecounting')}>
+                        <img src={cycle} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Cycle Counting Process</p>
                     </div>
 
                 </div>

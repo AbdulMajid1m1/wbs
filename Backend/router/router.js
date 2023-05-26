@@ -406,3 +406,7 @@ router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJour
 router.post("/generateBarcodeForRma", checkAuthentication, WBSDB.generateBarcodeForRma);
 
 
+
+//  ---------- WMS_Journal_Movement_CL API Start ----------
+
+router.post("/insertJournalMovementCLData", checkAuthentication, WBSDB.insertJournalMovementCLData);

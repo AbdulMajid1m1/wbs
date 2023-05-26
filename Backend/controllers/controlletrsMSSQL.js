@@ -1462,157 +1462,6 @@ const WBSDB = {
 
 
 
-  // async updateShipmentRecievedDataCL(req, res, next) {
-  //   try {
-  //     const {
-  //       SHIPMENTID,
-  //       CONTAINERID,
-  //       ARRIVALWAREHOUSE,
-  //       ITEMNAME,
-  //       ITEMID,
-  //       PURCHID,
-  //       CLASSIFICATION,
-  //       SERIALNUM,
-  //       RCVDCONFIGID,
-  //       RCVD_DATE,
-  //       GTIN,
-  //       RZONE,
-  //       PALLET_DATE,
-  //       PALLETCODE,
-  //       BIN,
-  //       REMARKS,
-  //       POQTY,
-  //       RCVQTY,
-  //       REMAININGQTY
-  //     } = req.query;
-
-  //     if (!SERIALNUM) {
-  //       return res.status(400).send({ message: 'SERIALNUM is required.' });
-  //     }
-
-  //     let query = `
-  //       UPDATE dbo.tbl_Shipment_Received_CL
-  //       SET `;
-
-  //     const updateFields = [];
-  //     const request = pool2.request();
-
-  //     if (SHIPMENTID !== undefined) {
-  //       updateFields.push('SHIPMENTID = @SHIPMENTID');
-  //       request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
-  //     }
-
-  //     if (CONTAINERID !== undefined) {
-  //       updateFields.push('CONTAINERID = @CONTAINERID');
-  //       request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
-  //     }
-
-  //     if (ARRIVALWAREHOUSE !== undefined) {
-  //       updateFields.push('ARRIVALWAREHOUSE = @ARRIVALWAREHOUSE');
-  //       request.input('ARRIVALWAREHOUSE', sql.NVarChar, ARRIVALWAREHOUSE);
-  //     }
-
-  //     if (ITEMNAME !== undefined) {
-  //       updateFields.push('ITEMNAME = @ITEMNAME');
-  //       request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
-  //     }
-
-  //     if (ITEMID !== undefined) {
-  //       updateFields.push('ITEMID = @ITEMID');
-  //       request.input('ITEMID', sql.NVarChar, ITEMID);
-  //     }
-
-  //     if (PURCHID !== undefined) {
-  //       updateFields.push('PURCHID = @PURCHID');
-  //       request.input('PURCHID', sql.NVarChar, PURCHID);
-  //     }
-
-  //     if (CLASSIFICATION !== undefined) {
-  //       updateFields.push('CLASSIFICATION = @CLASSIFICATION');
-  //       request.input('CLASSIFICATION', sql.Float, CLASSIFICATION);
-  //     }
-
-  //     if (RCVDCONFIGID !== undefined) {
-  //       updateFields.push('RCVDCONFIGID = @RCVDCONFIGID');
-  //       request.input('RCVDCONFIGID', sql.NVarChar, RCVDCONFIGID);
-  //     }
-
-  //     if (RCVD_DATE !== undefined) {
-  //       updateFields.push('RCVD_DATE = @RCVD_DATE');
-  //       request.input('RCVD_DATE', sql.Date, RCVD_DATE);
-  //     }
-
-  //     if (GTIN !== undefined) {
-  //       updateFields.push('GTIN = @GTIN');
-  //       request.input('GTIN', sql.NVarChar, GTIN);
-  //     }
-
-  //     if (RZONE !== undefined) {
-  //       updateFields.push('RZONE = @RZONE');
-  //       request.input('RZONE', sql.NVarChar, RZONE);
-  //     }
-
-  //     if (PALLET_DATE !== undefined) {
-  //       updateFields.push('PALLET_DATE = @PALLET_DATE');
-  //       request.input('PALLET_DATE', sql.Date, PALLET_DATE);
-  //     }
-
-  //     if (PALLETCODE !== undefined) {
-  //       updateFields.push('PALLETCODE = @PALLETCODE');
-  //       request.input('PALLETCODE', sql.NVarChar, PALLETCODE);
-  //     }
-
-  //     if (BIN !== undefined) {
-  //       updateFields.push('BIN = @BIN');
-  //       request.input('BIN', sql.NVarChar, BIN);
-  //     }
-
-  //     if (REMARKS !== undefined) {
-  //       updateFields.push('REMARKS = @REMARKS');
-  //       request.input('REMARKS', sql.NVarChar, REMARKS);
-  //     }
-
-  //     if (POQTY !== undefined) {
-  //       updateFields.push('POQTY = @POQTY');
-  //       request.input('POQTY', sql.Numeric(18, 0), POQTY);
-  //     }
-
-  //     if (RCVQTY !== undefined) {
-  //       updateFields.push('RCVQTY = @RCVQTY');
-  //       request.input('RCVQTY', sql.Numeric(18, 0), RCVQTY);
-  //     }
-
-  //     if (REMAININGQTY !== undefined) {
-  //       updateFields.push('REMAININGQTY = @REMAININGQTY');
-  //       request.input('REMAININGQTY', sql.Numeric(18, 0), REMAININGQTY);
-  //     }
-
-  //     if (updateFields.length === 0) {
-  //       return res.status(400).send({ message: 'At least one field is required to update.' });
-  //     }
-
-  //     query += updateFields.join(', ');
-
-  //     query += `
-  //     WHERE SERIALNUM = @SERIALNUM
-  //     `;
-
-  //     request.input('SERIALNUM', sql.NVarChar, SERIALNUM);
-
-  //     const result = await request.query(query);
-
-  //     if (result.rowsAffected[0] === 0) {
-  //       return res.status(404).send({ message: 'Shipment record not found.' });
-  //     }
-
-  //     res.status(200).send({ message: 'Shipment data updated successfully.' });
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // },
-
-
 
 
   // ----------------------------- tbl_Shipment_Received_CL END ----------------------------- //
@@ -4961,11 +4810,93 @@ const WBSDB = {
 
 
 
+  //  ---------- WMS_Journal_Movement_CL Controller Start ----------
 
 
+  async insertJournalMovementCLData(req, res, next) {
+    try {
+      const journalMovementDataArray = req.body;
+      if (journalMovementDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < journalMovementDataArray.length; i++) {
+        const {
+          ITEMID,
+          ITEMNAME,
+          QTY,
+          LEDGERACCOUNTIDOFFSET,
+          JOURNALID,
+          TRANSDATE,
+          INVENTSITEID,
+          INVENTLOCATIONID,
+          CONFIGID,
+          WMSLOCATIONID,
+          TRXDATETIME,
+          TRXUSERIDASSIGNED,
+          TRXUSERIDASSIGNEDBY,
+          ITEMSERIALNO,
+          QTYSCANNED,
+          QTYDIFFERENCE
+        } = journalMovementDataArray[i];
+
+        // Dynamic SQL query construction
+        let fields = [
+          "ITEMID",
+          "ITEMNAME",
+          "QTY",
+          "LEDGERACCOUNTIDOFFSET",
+          "JOURNALID",
+          "TRANSDATE",
+          "INVENTSITEID",
+          "INVENTLOCATIONID",
+          "CONFIGID",
+          "WMSLOCATIONID",
+          "TRXDATETIME",
+          "TRXUSERIDASSIGNED",
+          "TRXUSERIDASSIGNEDBY",
+          "ITEMSERIALNO",
+          "QTYSCANNED",
+          "QTYDIFFERENCE"
+        ];
 
 
+        let values = fields.map((field) => "@" + field);
 
+        let query = `
+          INSERT INTO [WBSSQL].[dbo].[WMS_Journal_Movement_CL]
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool2.request();
+        request.input('ITEMID', sql.NVarChar, ITEMID);
+        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+        request.input('QTY', sql.Float, QTY);
+        request.input('LEDGERACCOUNTIDOFFSET', sql.NVarChar, LEDGERACCOUNTIDOFFSET);
+        request.input('JOURNALID', sql.NVarChar, JOURNALID);
+        request.input('TRANSDATE', sql.Date, TRANSDATE);
+        request.input('INVENTSITEID', sql.NVarChar, INVENTSITEID);
+        request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
+        request.input('CONFIGID', sql.NVarChar, CONFIGID);
+        request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
+        request.input('TRXDATETIME', sql.DateTime, new Date());
+        request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
+        request.input('ITEMSERIALNO', sql.NVarChar, ITEMSERIALNO);
+        request.input('QTYSCANNED', sql.Float, QTYSCANNED);
+        request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted into WMS_Journal_Movement_CL successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

@@ -25,6 +25,7 @@ const SalesPickingList = () => {
                     .catch(error => {
                         // handleUserError(error)
                         console.error(error);
+                        
                         setIsLoading(false)
 
                     });

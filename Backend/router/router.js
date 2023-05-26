@@ -398,7 +398,7 @@ router.get("/getAllWmsJournalMovement", checkAuthentication, WBSDB.getAllWmsJour
 
 
 
-// WMS_Journal_Counting APIS Start -----
+// WMS_Journal_Counting APIS Start ----- .
 
 
 router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);

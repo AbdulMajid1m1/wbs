@@ -2418,7 +2418,7 @@ const WBSDB = {
     res
       .clearCookie("accessToken", {
         sameSite: "none",
-        secure: true,
+        secure: false,
       })
       .status(200)
       .send({ message: "Logout successful." });
@@ -4691,6 +4691,8 @@ const WBSDB = {
   },
 
 
+
+
   // WMS_ReturnSalesOrder_C Controller Start -----
 
   async getWmsReturnSalesOrderClByAssignedToUserId(req, res, next) {
@@ -4899,6 +4901,25 @@ const WBSDB = {
   },
 
 
+  async getAllWmsJournalMovementCl(req, res, next) {
+
+    try {
+
+      let query = `SELECT * FROM WMS_Journal_Movement_CL`
+
+      let request = pool2.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
 
 };
 

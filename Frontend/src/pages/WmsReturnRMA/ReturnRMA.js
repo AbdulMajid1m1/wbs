@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { json, useNavigate } from 'react-router-dom';
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
-import "./JournalMovementFirst.css";
+import "./ReturnRMA.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 
-const JournalMovementFirst = () => {
+const ReturnRMA = () => {
   const navigate = useNavigate();
 
 
@@ -68,7 +68,7 @@ const JournalMovementFirst = () => {
     sessionStorage.setItem('RmaRowData', JSON.stringify(item));
     sessionStorage.setItem('RmaRowIndex', index);
     // sessionStorage.setItem('PickingRowIndex', index);
-    navigate('/journallast')
+    navigate('/rmalastform')
   }
 
 
@@ -134,7 +134,7 @@ const JournalMovementFirst = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>Journal Movement Screen</h2>
+                <h2 className='text-center text-[#fff]'>Return RMA Screen</h2>
 
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>
@@ -148,7 +148,7 @@ const JournalMovementFirst = () => {
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
-            {/* <form onSubmit={handleForm}>
+            <form onSubmit={handleForm}>
               <div className='mb-6'>
                 <label htmlFor='rma' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">RMA<span className='text-[#FF0404]'>*</span></label>
                 <div className='w-full flex'>
@@ -166,10 +166,10 @@ const JournalMovementFirst = () => {
                   </button>
                 </div>
               </div>
-            </form> */}
+            </form>
 
-            <div className='mt-6'>
-              <label className='text-[#00006A] font-semibold'>List of Items on Journal Movement<span className='text-[#FF0404]'>*</span></label>
+            <div className='mb-6'>
+              <label className='text-[#00006A] font-semibold'>List of Items on RMA<span className='text-[#FF0404]'>*</span></label>
               {/* // creae excel like Tables  */}
               <div className="table-location-generate1">
                 <table>
@@ -214,7 +214,7 @@ const JournalMovementFirst = () => {
 
 
               <div className='mt-6'>
-                <div className='w-full flex justify-end place-items-end'>
+                <div className='w-full flex justify-between place-items-end'>
                   {/* <div>
                   <button
                     type='submit'
@@ -245,6 +245,6 @@ const JournalMovementFirst = () => {
   )
 }
 
-export default JournalMovementFirst
+export default ReturnRMA
 
 

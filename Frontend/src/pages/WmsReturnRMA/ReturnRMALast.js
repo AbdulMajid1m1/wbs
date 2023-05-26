@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import "./JournalMovementLast.css";
+import "./ReturnRMALast.css";
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { Autocomplete, TextField } from '@mui/material';
 
-const JournalMovementLast = () => {
+const ReturnRMALast = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
@@ -384,7 +384,7 @@ const JournalMovementLast = () => {
             <div className='mb-6 flex justify-center items-center'>
               <button
                 type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[30%]'>
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
                 <span className='flex justify-center items-center'
                   // onClick={handleSaveBtnClick}
                   onClick={handleAddUserPopup}
@@ -400,4 +400,4 @@ const JournalMovementLast = () => {
   )
 }
 
-export default JournalMovementLast
+export default ReturnRMALast

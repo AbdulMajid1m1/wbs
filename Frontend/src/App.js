@@ -66,8 +66,8 @@ import PickingListLastForm from './pages/PicklistAssigned/PickingListLastForm'
 import DispatchingPickingSlip from './pages/DispatchingPickingSlip/DispatchingPickingSlip'
 import SalesPickingList from './pages/SalesPickingList/SalesPickingList'
 import Registration from './pages/UserRegistration/UserRegistration'
-import JournalMovementFirst from './pages/WmsJournalMovement/JournalMovementFirst'
-import JournalMovementLast from './pages/WmsJournalMovement/JournalMovementLast'
+import ReturnRMA from './pages/WmsReturnRMA/ReturnRMA'
+import ReturnRMALast from './pages/WmsReturnRMA/ReturnRMALast'
 import ReturnSalesOrder from './pages/ReturnSalesOrder/ReturnSalesOrder'
 import JournalProfitLost from './pages/JournalProfitLost/JournalProfitLost'
 import JournalMovement from './pages/JournalMovement/JournalMovement'
@@ -78,6 +78,8 @@ import WmsCycleCounting from './pages/WmsCycleCounting/WmsCycleCounting'
 import WmsCycleCountingLast from './pages/WmsCycleCounting/WmsCycleCountingLast'
 import RmaPutAway from './pages/RmaPutAway/RmaPutAway'
 import WarehouseMovement from './pages/WarehouseMovement/WarehouseMovement'
+import JournalMovementFirst from './pages/WmsJournalMovement/JournalMovementFirst'
+import JournalMovementLast from './pages/WmsJournalMovement/JournalMovementLast'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -126,8 +128,12 @@ const App = () => {
 
         <Route path="/dispatchingslip" element={<DispatchingPickingSlip />} />
 
-        <Route path='/rma' element={<JournalMovementFirst />} />
-        <Route path="/rmalastform" element={<JournalMovementLast />} />
+        <Route path='/rma' element={<ReturnRMA />} />
+        <Route path="/rmalastform" element={<ReturnRMALast />} />
+
+        <Route path='/journalfirst' element={<JournalMovementFirst />} />
+        <Route path='/journallast' element={<JournalMovementLast />} />
+
 
         <Route path='/profitloss' element={<WmsProfitLoss />} />
         <Route path='/profitlosslast' element={<WmsProfitLossLast />} />

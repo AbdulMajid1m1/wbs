@@ -322,7 +322,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>RMA PutAway</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/rma')}>
+                    <div className='main-images-container' onClick={() => navigate('/journalfirst')}>
                         <img src={movement} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Journal Movement</p>
                     </div>

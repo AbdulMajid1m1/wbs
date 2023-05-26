@@ -2355,7 +2355,7 @@ const WBSDB = {
       return res.cookie("accessToken", token, {
         httpOnly: true,
         secure: false,
-        sameSite: false,
+        sameSite: "None",
 
       }).status(201).send({ message: 'User inserted successfully.', user, token });
     } catch (error) {
@@ -2405,7 +2405,7 @@ const WBSDB = {
       return res.cookie("accessToken", token, {
         httpOnly: true,
         secure: false,
-        sameSite: false,
+        sameSite: "None",
 
       }).status(200).send({ message: 'Login successful.', user, token });
     } catch (error) {

@@ -18,6 +18,8 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 let jwtSecret = process.env.JWT_SECRET;
+let cookieExp = process.env.COOKIE_EXPIRATION
+let cookieAge = cookieExp * 24 * 60 * 60 * 1000;
 let jwtExpiration = process.env.JWT_EXPIRATION;
 import upload from "../config/multerConfig.js";
 dotenv.config();
@@ -2354,8 +2356,8 @@ const WBSDB = {
 
       return res.cookie("accessToken", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: false,
+        path: '/',
+        maxAge: cookieAge,
 
       }).status(201).send({ message: 'User inserted successfully.', user, token });
     } catch (error) {
@@ -2404,8 +2406,10 @@ const WBSDB = {
       delete user.UserPassword;
       return res.cookie("accessToken", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: false,
+        path: '/',
+        maxAge: cookieAge,
+
+
 
       }).status(200).send({ message: 'Login successful.', user, token });
     } catch (error) {
@@ -2417,8 +2421,6 @@ const WBSDB = {
   async logout(req, res) {
     res
       .clearCookie("accessToken", {
-        sameSite: "none",
-        secure: true,
       })
       .status(200)
       .send({ message: "Logout successful." });
@@ -4691,6 +4693,8 @@ const WBSDB = {
   },
 
 
+
+
   // WMS_ReturnSalesOrder_C Controller Start -----
 
   async getWmsReturnSalesOrderClByAssignedToUserId(req, res, next) {
@@ -4897,6 +4901,55 @@ const WBSDB = {
       return res.status(500).send({ message: error.message });
     }
   },
+
+
+  async getAllWmsJournalMovementCl(req, res, next) {
+
+    try {
+
+      let query = `SELECT * FROM WMS_Journal_Movement_CL`
+
+      let request = pool2.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+
+  async getWmsJournalMovementClByAssignedToUserId(req, res, next) {
+    try {
+      const TRXUSERIDASSIGNED = req?.token?.UserID;
+      if (!TRXUSERIDASSIGNED) {
+        return res.status(401).send({ message: "TRXUSERIDASSIGNED is required." });
+      }
+      let query = `SELECT * FROM WMS_Journal_Movement_CL WHERE
+
+      TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED`
+
+      let request = pool2.request();
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+
 
 
 

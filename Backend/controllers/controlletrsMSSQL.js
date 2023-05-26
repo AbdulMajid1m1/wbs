@@ -4923,6 +4923,36 @@ const WBSDB = {
     }
   },
 
+
+  async getWmsJournalMovementClByAssignedToUserId(req, res, next) {
+    try {
+      const TRXUSERIDASSIGNED = req?.token?.UserID;
+      if (!TRXUSERIDASSIGNED) {
+        return res.status(401).send({ message: "TRXUSERIDASSIGNED is required." });
+      }
+      let query = `SELECT * FROM WMS_Journal_Movement_CL WHERE
+
+      TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED`
+
+      let request = pool2.request();
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+
+
+
+
 };
 
 

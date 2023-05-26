@@ -412,3 +412,5 @@ router.post("/generateBarcodeForRma", checkAuthentication, WBSDB.generateBarcode
 router.post("/insertJournalMovementCLData", checkAuthentication, WBSDB.insertJournalMovementCLData);
 
 router.get("/getAllWmsJournalMovementCl", checkAuthentication, WBSDB.getAllWmsJournalMovementCl);
+
+router.get("/getWmsJournalMovementClByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalMovementClByAssignedToUserId);

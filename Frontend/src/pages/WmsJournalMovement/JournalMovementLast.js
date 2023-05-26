@@ -156,13 +156,13 @@ const JournalMovementLast = () => {
                     </span>
                   </button>
                 </div>
-                <span className='text-white -mt-7'>Retrun Item No:</span>
+                <span className='text-white -mt-7'>Journal ID:</span>
                 <input
                   //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
                   placeholder="Picking Route ID"
-                  value={parsedData?.RETURNITEMNUM}
+                  value={parsedData?.JOURNALID}
                   disabled
                 />
 
@@ -182,7 +182,7 @@ const JournalMovementLast = () => {
 
 
                   <div className='text-[#FFFFFF] w-full'>
-                    <span>NAME: {parsedData.NAME}</span>
+                    <span>NAME: {parsedData.TRXUSERIDASSIGNED}</span>
                   </div>
                 </div>
               </div>
@@ -280,38 +280,50 @@ const JournalMovementLast = () => {
 
 
               <div className='mb-6'>
-                <label className='text-[#00006A] font-semibold'>List of Items on RMA<span className='text-[#FF0404]'>*</span></label>
+                <label className='text-[#00006A] font-semibold'>List of Items on Journal Movement<span className='text-[#FF0404]'>*</span></label>
                 {/* // creae excel like Tables  */}
                 <div className="table-location-generate1">
                   <table>
                     <thead>
-                      <tr>
-                        <th>ITEMID</th>
-                        <th>NAME</th>
-                        <th>EXPECTEDRETQTY</th>
-                        <th>SALESID</th>
-                        <th>RETURNITEMNUM</th>
-                        <th>INVENTSITEID</th>
-                        <th>INVENTLOCATIONID</th>
-                        <th>CONFIGID</th>
-                        <th>WMSLOCATIONID</th>
-                        <th>ITEMSERIALNO</th>
-                      </tr>
+                    <tr>
+                      <th>ITEMID</th>
+                      <th>ITEMNAME</th>
+                      <th>QTY</th>
+                      <th>LEDGERACCOUNTIDOFFSET</th>
+                      <th>JOURNALID</th>
+                      <th>TRANSDATE</th>
+                      <th>INVENTSITEID</th>
+                      <th>INVENTLOCATIONID</th>
+                      <th>CONFIGID</th>
+                      <th>WMSLOCATIONID</th>
+                      <th>TRXDATETIME</th>
+                      <th>TRXUSERIDASSIGNED</th>
+                      <th>TRXUSERIDASSIGNEDBY</th>
+                      <th>ITEMSERIALNO</th>
+                      <th>QTYSCANNED</th>
+                      <th>QTYDIFFERENCE</th>
+                    </tr>
                     </thead>
                     <tbody>
 
                       <tr
                       >
-                        <td>{parsedData?.ITEMID}</td>
-                        <td>{parsedData?.NAME}</td>
-                        <td>{parsedData?.EXPECTEDRETQTY}</td>
-                        <td>{parsedData?.SALESID}</td>
-                        <td>{parsedData?.RETURNITEMNUM}</td>
+                       <td>{parsedData?.ITEMID}</td>
+                        <td>{parsedData?.ITEMNAME}</td>
+                        <td>{parsedData?.QTY}</td>
+                        <td>{parsedData?.LEDGERACCOUNTIDOFFSET}</td>
+                        <td>{parsedData?.JOURNALID}</td>
+                        <td>{parsedData?.TRANSDATE}</td>
                         <td>{parsedData?.INVENTSITEID}</td>
                         <td>{parsedData?.INVENTLOCATIONID}</td>
                         <td>{parsedData?.CONFIGID}</td>
                         <td>{parsedData?.WMSLOCATIONID}</td>
-                        <td>{newBarcode}</td>
+                        <td>{parsedData?.TRXDATETIME}</td>
+                        <td>{parsedData?.TRXUSERIDASSIGNED}</td>
+                        <td>{parsedData?.TRXUSERIDASSIGNEDBY}</td>
+                        <td>{parsedData?.ITEMSERIALNO}</td>
+                        <td>{parsedData?.QTYSCANNED}</td>
+                        <td>{parsedData?.QTYDIFFERENCE}</td>
                       </tr>
 
                     </tbody>

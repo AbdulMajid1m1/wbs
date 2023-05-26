@@ -34,32 +34,22 @@ const JournalMovementFirst = () => {
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
   }
-
-  const handleForm = (e) => {
-    e.preventDefault();
-    setIsLoading(true)
-
-    // userRequest.get(`/getAllWmsSalesPickingListClFromWBSByPickingRouteId?PICKINGROUTEID=${transferTag}`)
-    userRequest.get(`/getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=${transferTag}`)
-      .then(response => {
-        console.log(response?.data);
-
-        setData(response?.data ?? []);
-        // sessionStorage.setItem('allJournalRows', JSON.stringify(response?.data ?? []));
-        sessionStorage.setItem('rmaRows', JSON.stringify(response?.data ?? []));
-        setIsLoading(false)
-        setMessage(response?.data?.message ?? 'Show All data');
-
+  
+  // create use effect to get data from this api /getWmsJournalMovementClByAssignedToUserId
+  useEffect(() => {
+    setIsLoading(true);
+    userRequest.get('/getWmsJournalMovementClByAssignedToUserId')
+      .then((response) => {
+        console.log(response);
+        setData(response?.data);
+        setIsLoading(false);
       })
-
-      .catch(error => {
-        console.error(error);
-        setIsLoading(false)
-        setError(error?.response?.data?.message ?? 'Wrong Route ID');
-
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
       });
+  }, []);
 
-  }
 
   const handleRowClick = (item, index) => {
     // save data in session storage
@@ -148,26 +138,6 @@ const JournalMovementFirst = () => {
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
-            {/* <form onSubmit={handleForm}>
-              <div className='mb-6'>
-                <label htmlFor='rma' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">RMA<span className='text-[#FF0404]'>*</span></label>
-                <div className='w-full flex'>
-                  <input
-                    id="rma"
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                    placeholder="RMA"
-                    onChange={handleChangeValue}
-                  />
-                  <button
-                    type='submit'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm'
-                  >
-                    FIND
-                  </button>
-                </div>
-              </div>
-            </form> */}
-
             <div className='mt-6'>
               <label className='text-[#00006A] font-semibold'>List of Items on Journal Movement<span className='text-[#FF0404]'>*</span></label>
               {/* // creae excel like Tables  */}
@@ -176,32 +146,44 @@ const JournalMovementFirst = () => {
                   <thead>
                     <tr>
                       <th>ITEMID</th>
-                      <th>NAME</th>
-                      <th>EXPECTEDRETQTY</th>
-                      <th>SALESID</th>
-                      <th>RETURNITEMNUM</th>
+                      <th>ITEMNAME</th>
+                      <th>QTY</th>
+                      <th>LEDGERACCOUNTIDOFFSET</th>
+                      <th>JOURNALID</th>
+                      <th>TRANSDATE</th>
                       <th>INVENTSITEID</th>
                       <th>INVENTLOCATIONID</th>
                       <th>CONFIGID</th>
                       <th>WMSLOCATIONID</th>
+                      <th>TRXDATETIME</th>
+                      <th>TRXUSERIDASSIGNED</th>
+                      <th>TRXUSERIDASSIGNEDBY</th>
+                      <th>ITEMSERIALNO</th>
+                      <th>QTYSCANNED</th>
+                      <th>QTYDIFFERENCE</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.map((item, index) => (
                       <tr key={index} onClick={() => handleRowClick(item, index)}
-
                         style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
-
                       >
                         <td>{item.ITEMID}</td>
-                        <td>{item.NAME}</td>
-                        <td>{item.EXPECTEDRETQTY}</td>
-                        <td>{item.SALESID}</td>
-                        <td>{item.RETURNITEMNUM}</td>
+                        <td>{item.ITEMNAME}</td>
+                        <td>{item.QTY}</td>
+                        <td>{item.LEDGERACCOUNTIDOFFSET}</td>
+                        <td>{item.JOURNALID}</td>
+                        <td>{item.TRANSDATE}</td>
                         <td>{item.INVENTSITEID}</td>
                         <td>{item.INVENTLOCATIONID}</td>
                         <td>{item.CONFIGID}</td>
                         <td>{item.WMSLOCATIONID}</td>
+                        <td>{item.TRXDATETIME}</td>
+                        <td>{item.TRXUSERIDASSIGNED}</td>
+                        <td>{item.TRXUSERIDASSIGNEDBY}</td>
+                        <td>{item.ITEMSERIALNO}</td>
+                        <td>{item.QTYSCANNED}</td>
+                        <td>{item.QTYDIFFERENCE}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -215,16 +197,7 @@ const JournalMovementFirst = () => {
 
               <div className='mt-6'>
                 <div className='w-full flex justify-end place-items-end'>
-                  {/* <div>
-                  <button
-                    type='submit'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
-                    <span className='flex justify-center items-center'>
-                      <p>Save</p>
-                    </span>
-                  </button>
-                  </div> */}
-
+  
                   <div>
                     <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                     <input

@@ -40,7 +40,9 @@ const JournalMovement = () => {
         <div>
 
             <UserDataTable data={data} title="Journal Movement" columnsName={JournalMovementColumn} backButton={true}
-                actionColumnVisibility={false}
+                emailButton={false}
+                uniqueId="journalUserAssigned"
+                AddUser={true}
                 buttonVisibility={false}
             />
 

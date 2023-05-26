@@ -414,3 +414,12 @@ router.post("/insertJournalMovementCLData", checkAuthentication, WBSDB.insertJou
 router.get("/getAllWmsJournalMovementCl", checkAuthentication, WBSDB.getAllWmsJournalMovementCl);
 
 router.get("/getWmsJournalMovementClByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalMovementClByAssignedToUserId);
+
+router.put("/updateWmsJournalMovementClQtyScanned", checkAuthentication, WBSDB.updateWmsJournalMovementClQtyScanned);
+
+
+
+//  ---------- WMS_Journal_Movement_CLDets API Start ----------
+
+
+router.post("/insertJournalMovementCLDets", checkAuthentication, WBSDB.insertJournalMovementCLDets);

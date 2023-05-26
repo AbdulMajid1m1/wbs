@@ -18,6 +18,8 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 let jwtSecret = process.env.JWT_SECRET;
+let cookieExp = process.env.COOKIE_EXPIRATION
+let cookieAge = cookieExp * 24 * 60 * 60 * 1000;
 let jwtExpiration = process.env.JWT_EXPIRATION;
 import upload from "../config/multerConfig.js";
 dotenv.config();
@@ -2354,8 +2356,8 @@ const WBSDB = {
 
       return res.cookie("accessToken", token, {
         httpOnly: true,
-        // secure: false,
-        // sameSite: "None",
+        path: '/',
+        maxAge: cookieAge,
 
       }).status(201).send({ message: 'User inserted successfully.', user, token });
     } catch (error) {
@@ -2404,7 +2406,10 @@ const WBSDB = {
       delete user.UserPassword;
       return res.cookie("accessToken", token, {
         httpOnly: true,
-        
+        path: '/',
+        maxAge: cookieAge,
+
+
 
       }).status(200).send({ message: 'Login successful.', user, token });
     } catch (error) {
@@ -2416,8 +2421,6 @@ const WBSDB = {
   async logout(req, res) {
     res
       .clearCookie("accessToken", {
-        // sameSite: "none",
-        secure: false,
       })
       .status(200)
       .send({ message: "Logout successful." });

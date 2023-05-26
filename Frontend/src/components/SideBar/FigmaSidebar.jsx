@@ -92,6 +92,11 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Warehouse Locations</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/warehousemovement')}>
+                        <img src={picklist} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Journal Movement</p>
+                    </div>
+
                     <div className='main-images-container'>
                         <img src={items} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>PutAway</p>

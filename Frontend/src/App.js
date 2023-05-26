@@ -77,6 +77,7 @@ import WmsProfitLossLast from './pages/WmsProfitLoss/WmsProfitLossLast'
 import WmsCycleCounting from './pages/WmsCycleCounting/WmsCycleCounting'
 import WmsCycleCountingLast from './pages/WmsCycleCounting/WmsCycleCountingLast'
 import RmaPutAway from './pages/RmaPutAway/RmaPutAway'
+import WarehouseMovement from './pages/WarehouseMovement/WarehouseMovement'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -197,6 +198,9 @@ const App = () => {
                 <Route path='/journalprofit' element={<JournalProfitLost />} />
                 <Route path='/journalmovement' element={<JournalMovement />} />
                 <Route path='/journalcounting' element={<JournalCounting />} />
+
+                <Route path='/warehousemovement' element={<WarehouseMovement />} />
+
 
 
               </Routes>

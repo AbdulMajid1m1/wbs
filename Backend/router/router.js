@@ -292,7 +292,7 @@ router.post('/sendEmail', upload.array('attachments'), WBSDB.sendEmail);
 
 router.post("/insertTblTransferBinToBinCL", checkAuthentication, WBSDB.insertTblTransferBinToBinCL);
 
-
+        
 // ----------------- tbl_TransferBinToBin_CL APIS End -----------------
 
 

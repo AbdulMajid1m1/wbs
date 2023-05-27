@@ -4949,6 +4949,123 @@ const WBSDB = {
     }
   },
 
+  async updateWmsJournalMovementClQtyScanned(req, res, next) {
+    try {
+      const { ITEMID, ITEMSERIALNO } = req.body;
+
+      // Update QTYSCANNED and decrease QTYDIFFERENCE using parameterized query
+      let updateQtyQuery = `
+          UPDATE [WBSSQL].[dbo].[WMS_Journal_Movement_CL]
+          SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
+              QTYDIFFERENCE = QTY - (ISNULL(QTYSCANNED,0) + 1)
+          WHERE ITEMID = @ITEMID AND ITEMSERIALNO = @ITEMSERIALNO
+        `;
+
+      let request = pool2.request();
+      request.input('ITEMID', ITEMID);
+      request.input('ITEMSERIALNO', ITEMSERIALNO);
+
+      // Execute the update query
+      await request.query(updateQtyQuery);
+
+      return res.status(200).send({ message: "Quantity updated successfully." });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+  //  ---------- WMS_Journal_Movement_CLDets Controller Start ----------
+
+
+  async insertJournalMovementCLDets(req, res, next) {
+    try {
+      const journalMovementDataArray = req.body;
+      if (journalMovementDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < journalMovementDataArray.length; i++) {
+        const {
+          ITEMID,
+          ITEMNAME,
+          QTY,
+          LEDGERACCOUNTIDOFFSET,
+          JOURNALID,
+          TRANSDATE,
+          INVENTSITEID,
+          INVENTLOCATIONID,
+          CONFIGID,
+          WMSLOCATIONID,
+          TRXDATETIME,
+          TRXUSERIDASSIGNED,
+          TRXUSERIDASSIGNEDBY,
+          ITEMSERIALNO,
+          QTYSCANNED,
+          QTYDIFFERENCE
+        } = journalMovementDataArray[i];
+
+        // Dynamic SQL query construction
+        let fields = [
+          "ITEMID",
+          "ITEMNAME",
+          "QTY",
+          "LEDGERACCOUNTIDOFFSET",
+          "JOURNALID",
+          "TRANSDATE",
+          "INVENTSITEID",
+          "INVENTLOCATIONID",
+          "CONFIGID",
+          "WMSLOCATIONID",
+          "TRXDATETIME",
+          "TRXUSERIDASSIGNED",
+          "TRXUSERIDASSIGNEDBY",
+          "ITEMSERIALNO",
+          "QTYSCANNED",
+          "QTYDIFFERENCE"
+        ];
+
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+          INSERT INTO [WBSSQL].[dbo].[WMS_Journal_Movement_CLDets]
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool2.request();
+        request.input('ITEMID', sql.NVarChar, ITEMID);
+        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+        request.input('QTY', sql.Float, QTY);
+        request.input('LEDGERACCOUNTIDOFFSET', sql.NVarChar, LEDGERACCOUNTIDOFFSET);
+        request.input('JOURNALID', sql.NVarChar, JOURNALID);
+        request.input('TRANSDATE', sql.Date, TRANSDATE);
+        request.input('INVENTSITEID', sql.NVarChar, INVENTSITEID);
+        request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
+        request.input('CONFIGID', sql.NVarChar, CONFIGID);
+        request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
+        request.input('TRXDATETIME', sql.DateTime, new Date());
+        request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
+        request.input('ITEMSERIALNO', sql.NVarChar, ITEMSERIALNO);
+        request.input('QTYSCANNED', sql.Float, QTYSCANNED);
+        request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
 
 
 

@@ -11,7 +11,6 @@ const WmsProfitLossLast = () => {
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
   const [selectionType, setSelectionType] = useState('Serial');
-  const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [newTableData, setNewTableData] = useState([]);
   const [selectedValue, setSelectedValue] = useState(null);
@@ -64,7 +63,6 @@ const WmsProfitLossLast = () => {
   const autocompleteRef = useRef(); // Ref to access the Autocomplete component
   const [autocompleteKey, setAutocompleteKey] = useState(0);
   const resetAutocomplete = () => {
-    setLocationInputValue(''); // Clear the location input value
     setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
   };
 
@@ -135,21 +133,17 @@ const WmsProfitLossLast = () => {
       })
       console.log(response?.data)
       let insertData = response?.data?.updatedRow;
-      insertData.INVENTLOCATIONID = locationInputValue
       try {
         let res2 = await userRequest.post("/insertJournalMovementCLDets", [insertData])
         console.log(response?.data)
         setMessage(res2?.data?.message ?? 'Insertion successful');
         setFilteredData((prevData) => {
           return [...prevData, insertData]; // Append the new items to the existing state
-          // clear the user input state variable
-
-
-
 
         }
         );
 
+        // clear the user input state variable
         setUserInput("");
 
       } catch (error) {
@@ -162,23 +156,6 @@ const WmsProfitLossLast = () => {
       console.log(error)
       setError(error?.response?.data?.message ?? 'Update failed');
     }
-
-
-
-
-    // setFilteredData((prevData) => {
-    //   // Filter out items that are already in prevData
-    //   const newItems = filtered.filter((item) => {
-    //     if (selectionType === 'Pallet') {
-    //       return !prevData.some(prevItem => prevItem.PalletCode === item.PalletCode);
-    //     } else if (selectionType === 'Serial') {
-    //       return !prevData.some(prevItem => prevItem.ItemSerialNo === item.ItemSerialNo);
-    //     }
-    //   });
-    //   setUserInput("");
-    //   return [...prevData, ...newItems]; // Append the new items to the existing state
-    //   // clear the user input state variable
-    // });
 
     // Remove the inserted records from the newTableData
     setNewTableData((prevData) => {
@@ -195,35 +172,10 @@ const WmsProfitLossLast = () => {
   };
 
 
-  // reset function
-  // const resetDataOnUPdate = () => {
-  //   // remove the filtered data from the data state variable
-  //   const newData = data.filter((item) => {
-  //     if (selectionType === 'Pallet') {
-  //       return item.PalletCode !== userInput;
-  //     } else if (selectionType === 'Serial') {
-  //       return item.ItemSerialNo !== userInput;
-  //     } else {
-  //       return true;
-  //     }
-  //   });
-  //   setData(newData);
-  //   // reset the user input state variable
-  //   setUserInput("");
-  //   // trigger the filtering of data
-  //   setUserInputSubmit(!userInputSubmit);
-
-
-  // };
 
 
 
-
-  const handleInputUser = (e) => {
-    if (locationInputValue === "") {
-      setError("Please select a location")
-      return;
-    }
+  const handleInputUser = (e) => {   
     if (e.target.value.length === 0) {
       setError("Please scan a barcode");
       return
@@ -233,68 +185,6 @@ const WmsProfitLossLast = () => {
     filterData();
   }
 
-
-  // const handleSaveBtnClick = async () => {
-  //   if (locationInputValue === "") {
-  //     setError("Please select a location")
-  //     return;
-  //   }
-  //   if (filteredData.length === 0) {
-  //     setError("Please scan a barcode")
-  //     return;
-  //   }
-  //   let pickedQty;
-  //   if (selectionType === "Serial") {
-  //     pickedQty = 1;
-  //   }
-  //   const APIData = filteredData.map((item) => {
-  //     return {
-  //       INVENTLOCATIONID: locationInputValue,
-  //       ORDERED: parsedData?.QTY,
-  //       PACKINGSLIPID: parsedData?.TRANSREFID,// comming from previous page
-  //       ASSIGNEDUSERID: item.ASSIGNEDTOUSERID, // comming from mapped barcode data
-  //       SALESID: parsedData?.PICKINGROUTEID, // comming from previous page
-  //       ITEMID: parsedData?.ITEMID, // comming from previous page
-  //       NAME: parsedData?.ITEMNAME, // comming from previous page
-  //       CONFIGID: parsedData?.CONFIGID, // comming from previous page
-  //       // VEHICLESHIPPLATENUMBER:
-  //       // DATETIMECREATED: new Date().toISOString().slice(0, 19).replace('T', ' '), // current date time
-  //       DATETIMECREATED: parsedData?.DATETIMEASSIGNED,
-
-
-  //     }
-
-
-  //   })
-
-  //   console.log(APIData)
-  //   try {
-  //     const res = await userRequest.post(
-  //       `/insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl`,
-  //       APIData,
-  //       {
-  //         params: {
-  //           PICKINGROUTEID: parsedData?.PICKINGROUTEID,
-  //           ITEMID: parsedData?.ITEMID,
-  //           QTYPICKED: parsedData?.QTYPICKED,
-  //           QTY: parsedData?.QTY
-  //         }
-  //       }
-  //     );
-  //     console.log(res?.data)
-  //     setMessage(res?.data?.message ?? 'Data saved successfully');
-
-  //     // clear the filtered data and user input
-  //     setFilteredData([]);
-  //     setUserInput("");
-
-  //   }
-  //   catch (error) {
-  //     console.log(error)
-  //     setError(error?.response?.data?.message ?? 'Cannot save data');
-
-  //   }
-  // }
 
 
 
@@ -335,8 +225,6 @@ const WmsProfitLossLast = () => {
                       ref={autocompleteRef}
                       key={autocompleteKey}
                       id="location"
-                      // options={location.filter(item => item.BinLocation)}
-                      // getOptionLabel={(option) => option.BinLocation}
                       options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
                       getOptionLabel={(option) => option}
                       onChange={handleFromSelect}
@@ -480,107 +368,7 @@ const WmsProfitLossLast = () => {
             </div>
 
 
-            {/* Barcode Radio Button */}
-            {/* <div class="text-center mb-4">
-              <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                  flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-              >
-                <label className="inline-flex items-center mt-1">
-                  <input
-                    type="radio"
-                    name=""
-                    value="Barcode"
-                    checked={barcode === 'Barcode'}
-                    onChange={e => setBarcode(e.target.value)}
-                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                  />
-                  <span className="ml-2 text-[#00006A]">BARCODE</span>
-                </label>
 
-                <label className="inline-flex items-center mt-1">
-                  <input
-                    type="radio"
-                    name=""
-                    value="No Barcode"
-                    checked={barcode === 'No Barcode'}
-                    onChange={e => setBarcode(e.target.value)}
-                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                  />
-                  <span className="ml-2 text-[#00006A]">NO BARCODE</span>
-                </label>
-              </div>
-            </div> */}
-
-            {/* Barcode Input */}
-            {/* <div className="mb-6">
-                <label htmlFor='scanbarcode' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {barcode}#<span className='text-[#FF0404]'>*</span></label>
-
-                <input
-                  id="scanbarcode"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder={`Scan ${barcode}`}
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  onBlur={handleInputUser}
-
-                />
-              </div> */}
-
-            {/* Barcode Radio Button */}
-            {/* <div className="text-center mb-4">
-                  <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500 flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]">
-                    <label className="inline-flex items-center mt-1">
-                      <input
-                        type="radio"
-                        name=""
-                        value="Barcode"
-                        checked={barcode === 'Barcode'}
-                        onChange={(e) => setBarcode(e.target.value)}
-                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                      />
-                      <span className="ml-2 text-[#00006A]">BARCODE</span>
-                    </label>
-
-                    <label className="inline-flex items-center mt-1">
-                      <input
-                        type="radio"
-                        name=""
-                        value="NoBarcode"
-                        checked={barcode === 'NoBarcode'}
-                        onChange={(e) => setBarcode(e.target.value)}
-                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                      />
-                      <span className="ml-2 text-[#00006A]">NO BARCODE</span>
-                    </label>
-                  </div>
-                </div> */}
-
-            {/* Barcode Input */}
-            {/* {barcode === 'Barcode' && (
-                  <div className="mb-6">
-                    <label htmlFor="scanbarcode" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">
-                      Scan {barcode}#<span className="text-[#FF0404]">*</span>
-                    </label>
-
-                    <input
-                      id="scanbarcode"
-                      className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder={`Scan ${barcode}`}
-                      value={barcodeInput}
-                      onChange={(e) => setBarcodeInput(e.target.value)}
-                      onBlur={handleInputUser}
-                    />
-                  </div>
-                )} */}
-
-            {/* Hide userInput field when 'No Barcode' is selected */}
-            {/* <style>
-                  {`
-                    input#scanbarcode {
-                      display: ${barcode === 'No Barcode' ? 'none' : 'block'};
-                    }
-                  `}
-                </style> */}
 
             <div class="text-center mb-4">
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
@@ -613,18 +401,8 @@ const WmsProfitLossLast = () => {
             </div>
 
             <form
-            //   onSubmit={handleFormSubmit}
             >
-              <div className="mb-6">
-                <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-                <input
-                  id="enterscan"
-                  value={locationInputValue}
-                  onChange={e => setLocationInputValue(e.target.value)}
-                  className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Enter/Scan Location"
-                />
-              </div >
+
 
               <div className="mb-6">
                 <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}#<span className='text-[#FF0404]'>*</span></label>
@@ -708,17 +486,6 @@ const WmsProfitLossLast = () => {
 
 
 
-            {/* <div className='mb-6 flex justify-center items-center'>
-              <button
-                type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
-                <span className='flex justify-center items-center'
-                  onClick={handleSaveBtnClick}
-                >
-                  <p>Save</p>
-                </span>
-              </button>
-            </div> */}
           </div>
         </div >
       </div >

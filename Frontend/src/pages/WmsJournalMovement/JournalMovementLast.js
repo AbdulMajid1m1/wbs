@@ -131,11 +131,14 @@ const WmsProfitLossLast = () => {
       const response = await userRequest.put("/updateWmsJournalMovementClQtyScanned", {
         ITEMID: parsedData?.ITEMID,
       })
-      console.log(response?.data)
+      
       let insertData = response?.data?.updatedRow;
       insertData.ITEMSERIALNO = trimInput;
+      console.log("data to be")
+      console.log(insertData)
       try {
         let res2 = await userRequest.post("/insertJournalMovementCLDets", [insertData])
+        console.log("inserted data")
         console.log(response?.data)
         setMessage(res2?.data?.message ?? 'Insertion successful');
         setFilteredData((prevData) => {

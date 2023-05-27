@@ -4920,7 +4920,7 @@ const WBSDB = {
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {
       console.log(error);
-    res.status(500).send({ message: error.message });
+      res.status(500).send({ message: error.message });
 
     }
   },
@@ -5106,7 +5106,7 @@ const WBSDB = {
         request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
         request.input('TRXDATETIME', sql.DateTime, new Date());
         request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
-        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
+        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, TRXUSERIDASSIGNEDBY);
         request.input('ITEMSERIALNO', sql.NVarChar, ITEMSERIALNO);
         request.input('QTYSCANNED', sql.Float, QTYSCANNED);
         request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
@@ -5362,7 +5362,7 @@ const WBSDB = {
         request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
         request.input('TRXDATETIME', sql.DateTime, new Date());
         request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
-        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
+        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, TRXUSERIDASSIGNEDBY);
         request.input('ITEMSERIALNO', sql.NVarChar, ITEMSERIALNO);
         request.input('QTYSCANNED', sql.Float, QTYSCANNED);
         request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
@@ -5594,6 +5594,7 @@ const WBSDB = {
           WMSLOCATIONID,
           TRXDATETIME,
           TRXUSERIDASSIGNED,
+          TRXUSERIDASSIGNEDBY,
           ITEMSERIALNO,
           QTYSCANNED,
           QTYDIFFERENCE
@@ -5642,7 +5643,7 @@ const WBSDB = {
         request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
         request.input('TRXDATETIME', sql.DateTime, TRXDATETIME || new Date());
         request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
-        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
+        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, TRXUSERIDASSIGNEDBY);
         request.input('ITEMSERIALNO', sql.NVarChar, ITEMSERIALNO);
         request.input('QTYSCANNED', sql.Float, QTYSCANNED);
         request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);

@@ -5498,6 +5498,52 @@ const WBSDB = {
   },
 
 
+  async updateWmsournalCountingCLQtyScanned(req, res, next) {
+    try {
+      const { ITEMID } = req.body;
+
+      // Check if the item exists in the table
+      let checkItemQuery = `
+        SELECT TOP 1 *
+        FROM [WBSSQL].[dbo].[WMS_Journal_Counting_CL]
+        WHERE ITEMID = @ITEMID
+      `;
+
+      let request = pool2.request();
+      request.input('ITEMID', ITEMID);
+
+      let result = await request.query(checkItemQuery);
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'Item not found.' });
+      }
+
+      // Update QTYSCANNED and decrease QTYDIFFERENCE using parameterized query
+      let updateQtyQuery = `
+        UPDATE [WBSSQL].[dbo].[WMS_Journal_Counting_CL]
+        SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
+            QTYDIFFERENCE = QTY - (ISNULL(QTYSCANNED,0) + 1)
+        OUTPUT inserted.* -- Include this line to return the updated row
+        WHERE ITEMID = @ITEMID
+      `;
+
+      request = pool2.request();
+      request.input('ITEMID', ITEMID);
+
+      // Execute the update query
+      result = await request.query(updateQtyQuery);
+
+      // Access the updated row from the result object
+      const updatedRow = result.recordset[0];
+
+      return res.status(200).send({ message: "Quantity updated successfully.", updatedRow });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
   // ---------- WMS_Journal_CountingCLDets Controller End ----------
 
   async insertWMSJournalCountingCLDets(req, res, next) {
@@ -5589,6 +5635,7 @@ const WBSDB = {
       return res.status(500).send({ message: error.message });
     }
   },
+
 
 
 

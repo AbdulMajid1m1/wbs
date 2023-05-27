@@ -4951,30 +4951,34 @@ const WBSDB = {
 
   async updateWmsJournalMovementClQtyScanned(req, res, next) {
     try {
-      const { ITEMID, ITEMSERIALNO } = req.body;
+      const { ITEMID } = req.body;
+      // const { ITEMID, ITEMSERIALNO } = req.body;
 
       // Update QTYSCANNED and decrease QTYDIFFERENCE using parameterized query
       let updateQtyQuery = `
-          UPDATE [WBSSQL].[dbo].[WMS_Journal_Movement_CL]
-          SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
-              QTYDIFFERENCE = QTY - (ISNULL(QTYSCANNED,0) + 1)
-          WHERE ITEMID = @ITEMID AND ITEMSERIALNO = @ITEMSERIALNO
-        `;
+        UPDATE [WBSSQL].[dbo].[WMS_Journal_Movement_CL]
+        SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
+            QTYDIFFERENCE = QTY - (ISNULL(QTYSCANNED,0) + 1)
+        OUTPUT inserted.* -- Include this line to return the updated row
+        WHERE ITEMID = @ITEMID
+      `;
 
       let request = pool2.request();
       request.input('ITEMID', ITEMID);
-      request.input('ITEMSERIALNO', ITEMSERIALNO);
+      // request.input('ITEMSERIALNO', ITEMSERIALNO);
 
       // Execute the update query
-      await request.query(updateQtyQuery);
+      let result = await request.query(updateQtyQuery);
 
-      return res.status(200).send({ message: "Quantity updated successfully." });
+      // Access the updated row from the result object
+      const updatedRow = result.recordset[0];
+
+      return res.status(200).send({ message: "Quantity updated successfully.", updatedRow });
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error.message });
     }
   },
-
 
 
   //  ---------- WMS_Journal_Movement_CLDets Controller Start ----------
@@ -4983,9 +4987,16 @@ const WBSDB = {
   async insertJournalMovementCLDets(req, res, next) {
     try {
       const journalMovementDataArray = req.body;
+
+      if (!Array.isArray(journalMovementDataArray)) {
+        return res.status(400).send({ message: 'Invalid input. Array expected.' });
+      }
+
       if (journalMovementDataArray.length === 0) {
         return res.status(400).send({ message: "Please provide data to insert." });
       }
+
+
 
       for (let i = 0; i < journalMovementDataArray.length; i++) {
         const {

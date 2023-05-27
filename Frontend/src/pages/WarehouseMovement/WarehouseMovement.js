@@ -9,6 +9,7 @@ import SideBar2 from '../../components/SideBar/SideBar2'
 
 const WarehouseMovement = () => {
     const [alldata, setAllData] = useState([]);
+    const [secondGridData, setSecondGridData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
 
@@ -17,10 +18,7 @@ const WarehouseMovement = () => {
             try {
 
                 userRequest.get("/getAllWmsJournalMovementCl")
-                    // axios.get("http://localhost:7008/api/getAllTblItems")
-                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
-                        // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
 
                         setAllData(response?.data ?? [])
@@ -28,7 +26,6 @@ const WarehouseMovement = () => {
 
                     })
                     .catch(error => {
-                        // handleUserError(error)
                         console.error(error);
                         setIsLoading(false)
 
@@ -40,13 +37,59 @@ const WarehouseMovement = () => {
             }
         };
         getAllAssetsList();
+        const getAllJournalMovementCLDets = async () => {
+            try {
+
+                userRequest.get("/getAllWmsJournalMovementClDets")
+                    .then(response => {
+                        console.log(response?.data);
+
+                        setSecondGridData(response?.data ?? [])
+                        setIsLoading(false)
+
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        setIsLoading(false)
+
+                    });
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+        };
+        getAllJournalMovementCLDets();
     }, []);
+
+    const handleJournalMovementClRowClick = (item) => {
+        console.log(item);
+        // filter data for second grid using item.ITEMID and JOURNALMOVEMENTCLID
+        const filteredData = secondGridData.filter((data) => {
+            return data.ITEMID === item.ITEMID && data.JOURNALID === item.JOURNALID
+        })
+        console.log(filteredData);
+        setSecondGridData(filteredData)
+    }
 
     return (
         <div>
 
-            <UserDataTable data={alldata} title="Journal Movement" columnsName={WarehouseMovementColumn} backButton={true}
+
+            <UserDataTable data={alldata} title="Journal Movement CL" columnsName={WarehouseMovementColumn} backButton={true}
                 actionColumnVisibility={false}
+                uniqueId={"journalMovementClId"}
+                buttonVisibility={false}
+                checkboxSelection={'disabled'}
+                handleJournalMovementClRowClick={handleJournalMovementClRowClick}
+
+            />
+
+            <UserDataTable data={secondGridData} title="Journal Movement CLDets " columnsName={WarehouseMovementColumn} backButton={true}
+                actionColumnVisibility={false}
+                uniqueId={"journalMovementClDetId"}
+                // checkboxSelection={true}
+
                 buttonVisibility={false}
             />
 

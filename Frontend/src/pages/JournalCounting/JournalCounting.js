@@ -43,7 +43,7 @@ const JournalCounting = () => {
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 AddUser={true}
-                uniqueId="journalcounting"
+                uniqueId="journalCountingUser"
                 UserName="Journal Counting User"
             />
 

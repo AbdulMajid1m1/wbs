@@ -763,75 +763,42 @@ const UserDataTable = ({
           // Handle any errors that occur within the "SERIALNUM" case
         }
         break;
-          // Journal Profit Lost Api Call 
-          case "journalprofitlost":
-            try {
-              if (username === '') {
-                setError('Please select a user');
-                return;
-              }
-              handleAddUserClose();
-              setUserName('');
-        
-              let newData = selectedRow.map(singleRowData => ({
-                ...singleRowData.data,
-                TRXUSERIDASSIGNED: username,
-                // QTYPICKED:1,
-              }));
-              console.log('new Data', newData)
-        
-              // Make the API request
-              userRequest.post('/insertJournalProfitLostCL', newData)
-                .then(response => {
-                  // Handle the response from the API if needed
-                  console.log(response.data);
-                  setMessage(response?.data?.message || 'Journal Profit Lost to user successfully')
-                })
-                .catch(error => {
-                  // Handle any errors that occur during the request
-                  console.error(error);
-                  setError(error?.response?.data?.message || 'Something went wrong')
-                });
-            } catch (error) {
-              // Handle any errors that occur within the "SERIALNUM" case
-            }
-            break;
 
 
 
-            // Journal Counting User Api Call 
-          case "journalcounting":
-            try {
-              if (username === '') {
-                setError('Please select a user');
-                return;
-              }
-              handleAddUserClose();
-              setUserName('');
-        
-              let newData = selectedRow.map(singleRowData => ({
-                ...singleRowData.data,
-                TRXUSERIDASSIGNED: username,
-                // QTYPICKED:1,
-              }));
-              console.log('new Data', newData)
-        
-              // Make the API request
-              userRequest.post('/insertJournalProfitLostCL', newData)
-                .then(response => {
-                  // Handle the response from the API if needed
-                  console.log(response.data);
-                  setMessage(response?.data?.message || 'Journal Profit Lost to user successfully')
-                })
-                .catch(error => {
-                  // Handle any errors that occur during the request
-                  console.error(error);
-                  setError(error?.response?.data?.message || 'Something went wrong')
-                });
-            } catch (error) {
-              // Handle any errors that occur within the "SERIALNUM" case
-            }
-            break;
+      // Journal Counting User Api Call 
+      case "journalCountingUser":
+        try {
+          if (username === '') {
+            setError('Please select a user');
+            return;
+          }
+          handleAddUserClose();
+          setUserName('');
+
+          let newData = selectedRow.map(singleRowData => ({
+            ...singleRowData.data,
+            TRXUSERIDASSIGNED: username,
+            // QTYPICKED:1,
+          }));
+          console.log('new Data', newData)
+
+          // Make the API request
+          userRequest.post('/insertWMSJournalCountingCL', newData)
+            .then(response => {
+              // Handle the response from the API if needed
+              console.log(response.data);
+              setMessage(response?.data?.message || 'Journal Profit Lost to user successfully')
+            })
+            .catch(error => {
+              // Handle any errors that occur during the request
+              console.error(error);
+              setError(error?.response?.data?.message || 'Something went wrong')
+            });
+        } catch (error) {
+          // Handle any errors that occur within the "SERIALNUM" case
+        }
+        break;
       default:
         // Handle the default case if needed
         break;

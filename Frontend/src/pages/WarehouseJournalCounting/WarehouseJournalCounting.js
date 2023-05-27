@@ -14,7 +14,7 @@ const WarehouseJournalCounting = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllWmsJournalCounting")
+                userRequest.get("/getAllWmsJournalCountingCL")
                     .then(response => {
                         console.log(response?.data);
                         setData(response?.data ?? [])

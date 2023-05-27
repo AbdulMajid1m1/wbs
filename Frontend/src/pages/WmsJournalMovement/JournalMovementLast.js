@@ -441,7 +441,7 @@ const WmsProfitLossLast = () => {
                     </thead>
                     <tbody>
                       {filteredData.map((item, index) => (
-                        <tr
+                        <tr key={index + "journelRow"}
                         >
                           <td>{item?.ITEMID}</td>
                           <td>{item?.ITEMNAME}</td>

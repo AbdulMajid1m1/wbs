@@ -5594,7 +5594,6 @@ const WBSDB = {
           WMSLOCATIONID,
           TRXDATETIME,
           TRXUSERIDASSIGNED,
-          TRXUSERIDASSIGNEDBY,
           ITEMSERIALNO,
           QTYSCANNED,
           QTYDIFFERENCE

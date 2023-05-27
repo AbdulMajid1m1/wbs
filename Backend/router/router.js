@@ -446,3 +446,15 @@ router.post("/insertJournalProfitLostClDets", checkAuthentication, WBSDB.insertJ
 
 /// ---------- WMS_Journal_Counting API Start ----
 router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);
+
+router.post("/insertWMSJournalCountingCL", checkAuthentication, WBSDB.insertWMSJournalCountingCL);
+
+router.get("/getWmsJournalCountingCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalCountingCLByAssignedToUserId);
+
+
+
+
+// ---------- WMS_Journal_CountingCLDets API End ----------
+
+router.post("/insertWMSJournalCountingCLDets", checkAuthentication, WBSDB.insertWMSJournalCountingCLDets);
+

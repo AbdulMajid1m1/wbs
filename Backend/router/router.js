@@ -444,8 +444,12 @@ router.post("/insertJournalProfitLostClDets", checkAuthentication, WBSDB.insertJ
 
 
 
-/// ---------- WMS_Journal_Counting API Start ----
+/// ---------- WMS_Journal_Counting and CL API Start ----
 router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);
+
+router.get("/getAllWmsJournalCountingCL", checkAuthentication, WBSDB.getAllWmsJournalCountingCL);
+
+
 
 router.post("/insertWMSJournalCountingCL", checkAuthentication, WBSDB.insertWMSJournalCountingCL);
 

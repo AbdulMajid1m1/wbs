@@ -127,8 +127,11 @@ const WmsCycleCountingLast = () => {
     }
     try {
 
+
       const response = await userRequest.put("/updateWmsournalCountingCLQtyScanned", {
         ITEMID: parsedData?.ITEMID,
+        JOURNALID: parsedData?.JOURNALID,
+        TRXUSERIDASSIGNED: parsedData?.TRXUSERIDASSIGNED,
       })
       console.log(response?.data)
       let insertData = response?.data?.updatedRow;

@@ -130,8 +130,12 @@ const WmsProfitLossLast = () => {
 
       const response = await userRequest.put("/updateWmsJournalMovementClQtyScanned", {
         ITEMID: parsedData?.ITEMID,
+        JOURNALID: parsedData?.JOURNALID,
+        TRXUSERIDASSIGNED: parsedData?.TRXUSERIDASSIGNED,
+
+
       })
-      
+
       let insertData = response?.data?.updatedRow;
       insertData.ITEMSERIALNO = trimInput;
       console.log("data to be")

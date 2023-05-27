@@ -4973,7 +4973,7 @@ const WBSDB = {
 
   async updateWmsJournalMovementClQtyScanned(req, res, next) {
     try {
-      const { ITEMID } = req.body;
+      const { ITEMID, JOURNALID, TRXUSERIDASSIGNED } = req.body;
       // const { ITEMID, ITEMSERIALNO } = req.body;
 
       // Update QTYSCANNED and decrease QTYDIFFERENCE using parameterized query
@@ -4982,11 +4982,14 @@ const WBSDB = {
         SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
             QTYDIFFERENCE = QTY - (ISNULL(QTYSCANNED,0) + 1)
         OUTPUT inserted.* -- Include this line to return the updated row
-        WHERE ITEMID = @ITEMID
+        WHERE ITEMID = @ITEMID AND JOURNALID = @JOURNALID AND TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
       `;
 
       let request = pool2.request();
-      request.input('ITEMID', ITEMID);
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('JOURNALID', sql.NVarChar, JOURNALID);
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+
       // request.input('ITEMSERIALNO', ITEMSERIALNO);
 
       // Execute the update query
@@ -5258,8 +5261,7 @@ const WBSDB = {
 
   async updateWmsJournalProfitLostClQtyScanned(req, res, next) {
     try {
-      const { ITEMID } = req.body;
-      // const { ITEMID, ITEMSERIALNO } = req.body;
+      const { ITEMID, JOURNALID, TRXUSERIDASSIGNED } = req.body;
 
       // Update QTYSCANNED and decrease QTYDIFFERENCE using parameterized query
       let updateQtyQuery = `
@@ -5267,12 +5269,14 @@ const WBSDB = {
         SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
             QTYDIFFERENCE = QTY - (ISNULL(QTYSCANNED,0) + 1)
         OUTPUT inserted.* -- Include this line to return the updated row
-        WHERE ITEMID = @ITEMID
+        WHERE ITEMID = @ITEMID AND JOURNALID = @JOURNALID AND TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
       `;
 
       let request = pool2.request();
-      request.input('ITEMID', ITEMID);
-      // request.input('ITEMSERIALNO', ITEMSERIALNO);
+
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('JOURNALID', sql.NVarChar, JOURNALID);
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
 
       // Execute the update query
       let result = await request.query(updateQtyQuery);
@@ -5521,17 +5525,19 @@ const WBSDB = {
 
   async updateWmsournalCountingCLQtyScanned(req, res, next) {
     try {
-      const { ITEMID } = req.body;
+      const { ITEMID, JOURNALID, TRXUSERIDASSIGNED } = req.body;
 
       // Check if the item exists in the table
       let checkItemQuery = `
         SELECT TOP 1 *
         FROM [WBSSQL].[dbo].[WMS_Journal_Counting_CL]
-        WHERE ITEMID = @ITEMID
+        WHERE ITEMID = @ITEMID AND JOURNALID = @JOURNALID AND TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
       `;
 
       let request = pool2.request();
-      request.input('ITEMID', ITEMID);
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('JOURNALID', sql.NVarChar, JOURNALID);
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
 
       let result = await request.query(checkItemQuery);
       if (result.recordset.length === 0) {
@@ -5544,7 +5550,7 @@ const WBSDB = {
         SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
             QTYDIFFERENCE = QTY - (ISNULL(QTYSCANNED,0) + 1)
         OUTPUT inserted.* -- Include this line to return the updated row
-        WHERE ITEMID = @ITEMID
+        WHERE ITEMID = @ITEMID AND JOURNALID = @JOURNALID AND TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
       `;
 
       request = pool2.request();

@@ -51,6 +51,7 @@ const SalesPickingList = () => {
                 uniqueId="picklistAssignToUser"
                 addNewNavigation="/pickinglistfrom"
                 AddUser={true}
+                UserName="Picklist Assign"
         />    
 
             {isLoading &&

@@ -44,6 +44,7 @@ const JournalMovement = () => {
                 uniqueId="journalUserAssigned"
                 AddUser={true}
                 buttonVisibility={false}
+                UserName="Journal Movement User"
             />
 
             {isLoading &&

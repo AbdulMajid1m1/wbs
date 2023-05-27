@@ -42,6 +42,9 @@ const JournalProfitLost = () => {
             <UserDataTable data={data} title="Journal Profit Lost" columnsName={JournalProfitLostColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                AddUser={true}
+                uniqueId="journalprofitlost"
+                UserName="Journal Profit User"
             />
 
             {isLoading &&

@@ -141,9 +141,9 @@ const WmsProfitLoss = () => {
         </div>
       }
 
-      <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
+      <div className="before:animate-pulse before:bg-gradient-to-b " style={{ minHeight: '550px' }}>
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
-          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
+          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg" style={{ minHeight: '550px' }}>
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
               <div className='flex justify-between items-center gap-2 text-xs sm:text-xl'>
@@ -194,15 +194,22 @@ const WmsProfitLoss = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>ITEMID</th>
-                      <th>NAME</th>
-                      <th>EXPECTEDRETQTY</th>
-                      <th>SALESID</th>
-                      <th>RETURNITEMNUM</th>
+                    <th>ITEMID</th>
+                      <th>ITEMNAME</th>
+                      <th>QTY</th>
+                      <th>LEDGERACCOUNTIDOFFSET</th>
+                      <th>JOURNALID</th>
+                      <th>TRANSDATE</th>
                       <th>INVENTSITEID</th>
                       <th>INVENTLOCATIONID</th>
                       <th>CONFIGID</th>
                       <th>WMSLOCATIONID</th>
+                      <th>TRXDATETIME</th>
+                      <th>TRXUSERIDASSIGNED</th>
+                      <th>TRXUSERIDASSIGNEDBY</th>
+                      <th>ITEMSERIALNO</th>
+                      <th>QTYSCANNED</th>
+                      <th>QTYDIFFERENCE</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -213,14 +220,21 @@ const WmsProfitLoss = () => {
 
                       >
                         <td>{item.ITEMID}</td>
-                        <td>{item.NAME}</td>
-                        <td>{item.EXPECTEDRETQTY}</td>
-                        <td>{item.SALESID}</td>
-                        <td>{item.RETURNITEMNUM}</td>
+                        <td>{item.ITEMNAME}</td>
+                        <td>{item.QTY}</td>
+                        <td>{item.LEDGERACCOUNTIDOFFSET}</td>
+                        <td>{item.JOURNALID}</td>
+                        <td>{item.TRANSDATE}</td>
                         <td>{item.INVENTSITEID}</td>
                         <td>{item.INVENTLOCATIONID}</td>
                         <td>{item.CONFIGID}</td>
                         <td>{item.WMSLOCATIONID}</td>
+                        <td>{item.TRXDATETIME}</td>
+                        <td>{item.TRXUSERIDASSIGNED}</td>
+                        <td>{item.TRXUSERIDASSIGNEDBY}</td>
+                        <td>{item.ITEMSERIALNO}</td>
+                        <td>{item.QTYSCANNED}</td>
+                        <td>{item.QTYDIFFERENCE}</td>
                       </tr>
                     ))}
                   </tbody>

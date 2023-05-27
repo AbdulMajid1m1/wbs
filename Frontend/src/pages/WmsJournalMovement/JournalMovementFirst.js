@@ -35,7 +35,6 @@ const JournalMovementFirst = () => {
     setTransferTag(e.target.value);
   }
   
-  // create use effect to get data from this api /getWmsJournalMovementClByAssignedToUserId
   useEffect(() => {
     setIsLoading(true);
     userRequest.get('/getWmsJournalMovementClByAssignedToUserId')
@@ -55,8 +54,8 @@ const JournalMovementFirst = () => {
     // save data in session storage
 
     // sessionStorage.setItem('PickingRowData', JSON.stringify(item));
-    sessionStorage.setItem('RmaRowData', JSON.stringify(item));
-    sessionStorage.setItem('RmaRowIndex', index);
+    sessionStorage.setItem('JournalRowData', JSON.stringify(item));
+    sessionStorage.setItem('JournalRowIndex', index);
     // sessionStorage.setItem('PickingRowIndex', index);
     navigate('/journallast')
   }

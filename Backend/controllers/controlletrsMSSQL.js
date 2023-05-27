@@ -5186,6 +5186,65 @@ const WBSDB = {
   },
   
 
+  async getWmsJournalProfitLostCLByAssignedToUserId(req, res, next) {
+    try {
+      const TRXUSERIDASSIGNED = req?.token?.UserID;
+      if (!TRXUSERIDASSIGNED) {
+        return res.status(401).send({ message: "TRXUSERIDASSIGNED is required." });
+      }
+      let query = `SELECT * FROM WMS_Journal_ProfitLost_CL WHERE
+
+      TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED`
+
+      let request = pool2.request();
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
+  async updateWmsJournalProfitLostClQtyScanned(req, res, next) {
+    try {
+      const { ITEMID } = req.body;
+      // const { ITEMID, ITEMSERIALNO } = req.body;
+
+      // Update QTYSCANNED and decrease QTYDIFFERENCE using parameterized query
+      let updateQtyQuery = `
+        UPDATE [WBSSQL].[dbo].[WMS_Journal_ProfitLost_CL]
+        SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
+            QTYDIFFERENCE = QTY - (ISNULL(QTYSCANNED,0) + 1)
+        OUTPUT inserted.* -- Include this line to return the updated row
+        WHERE ITEMID = @ITEMID
+      `;
+
+      let request = pool2.request();
+      request.input('ITEMID', ITEMID);
+      // request.input('ITEMSERIALNO', ITEMSERIALNO);
+
+      // Execute the update query
+      let result = await request.query(updateQtyQuery);
+
+      // Access the updated row from the result object
+      const updatedRow = result.recordset[0];
+
+      return res.status(200).send({ message: "Quantity updated successfully.", updatedRow });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
 // ---------- WMS_Journal_ProfitLost_CLDets Controller Start ----------
 
   async insertJournalProfitLostClDets(req, res, next) {

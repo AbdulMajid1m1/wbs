@@ -650,33 +650,108 @@ const UserDataTable = ({
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (username === '') {
-      setError('Please select a user');
-      return;
+    
+    // if (username === '') {
+    //   setError('Please select a user');
+    //   return;
+    // }
+    // handleAddUserClose();
+    // setUserName('');
+
+    // let newData = selectedRow.map(singleRowData => ({
+    //   ...singleRowData.data,
+    //   ASSIGNEDTOUSERID: username,
+    //   // QTYPICKED:1,
+    // }));
+    // console.log('new Data', newData)
+
+    // // Make the API request
+    // userRequest.post('/insertPickingListDataCLIntoWBS', newData)
+    //   .then(response => {
+    //     // Handle the response from the API if needed
+    //     console.log(response.data);
+    //     setMessage(response?.data?.message || 'Picklist assigned to user successfully')
+    //   })
+    //   .catch(error => {
+    //     // Handle any errors that occur during the request
+    //     console.error(error);
+    //     setError(error?.response?.data?.message || 'Something went wrong')
+    //   });
+
+    switch (uniqueId) {
+      case "picklistAssignToUser":
+        try {
+          if (username === '') {
+            setError('Please select a user');
+            return;
+          }
+          handleAddUserClose();
+          setUserName('');
+    
+          let newData = selectedRow.map(singleRowData => ({
+            ...singleRowData.data,
+            ASSIGNEDTOUSERID: username,
+            // QTYPICKED:1,
+          }));
+          console.log('new Data', newData)
+    
+          // Make the API request
+          userRequest.post('/insertPickingListDataCLIntoWBS', newData)
+            .then(response => {
+              // Handle the response from the API if needed
+              console.log(response.data);
+              setMessage(response?.data?.message || 'Picklist assigned to user successfully')
+            })
+            .catch(error => {
+              // Handle any errors that occur during the request
+              console.error(error);
+              setError(error?.response?.data?.message || 'Something went wrong')
+            });
+        } catch (error) {
+          // Handle any errors that occur within the "SERIALNUM" case
+        }
+        break;
+
+        case "journalUserAssigned":
+          try {
+            if (username === '') {
+              setError('Please select a user');
+              return;
+            }
+            handleAddUserClose();
+            setUserName('');
+      
+            let newData = selectedRow.map(singleRowData => ({
+              ...singleRowData.data,
+              TRXUSERIDASSIGNED: username,
+              // QTYPICKED:1,
+            }));
+            console.log('new Data', newData)
+      
+            // Make the API request
+            userRequest.post('/insertJournalMovementCLData', newData)
+              .then(response => {
+                // Handle the response from the API if needed
+                console.log(response.data);
+                setMessage(response?.data?.message || 'Picklist assigned to user successfully')
+              })
+              .catch(error => {
+                // Handle any errors that occur during the request
+                console.error(error);
+                setError(error?.response?.data?.message || 'Something went wrong')
+              });
+          } catch (error) {
+            // Handle any errors that occur within the "SERIALNUM" case
+          }
+          break;
+      default:
+        // Handle the default case if needed
+        break;
     }
-    handleAddUserClose();
-    setUserName('');
-
-    let newData = selectedRow.map(singleRowData => ({
-      ...singleRowData.data,
-      ASSIGNEDTOUSERID: username,
-      // QTYPICKED:1,
-    }));
-    console.log('new Data', newData)
-
-    // Make the API request
-    userRequest.post('/insertPickingListDataCLIntoWBS', newData)
-      .then(response => {
-        // Handle the response from the API if needed
-        console.log(response.data);
-        setMessage(response?.data?.message || 'Picklist assigned to user successfully')
-      })
-      .catch(error => {
-        // Handle any errors that occur during the request
-        console.error(error);
-        setError(error?.response?.data?.message || 'Something went wrong')
-      });
+    
   };
+
+  
 
 
   return (
@@ -731,10 +806,10 @@ const UserDataTable = ({
               <button onClick={() => handleExport(false)}>Export to Excel</button>
               <button onClick={() => handlePdfExport(false)}
               >Export to Pdf</button>
-              {AddUser && <button onClick={handleAddUserPopup}>Assign Picklist</button>}
               {printButton && <button onClick={handlePrint}>Print Shipment</button>}
             </span>
             }
+            {AddUser && <button onClick={handleAddUserPopup}>Assign Picklist</button>}
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>

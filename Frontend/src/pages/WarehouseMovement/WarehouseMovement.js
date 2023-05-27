@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { JournalMovementColumn, JournalProfitLostColumn, ReturnSalesOrderColumn } from '../../utils/datatablesource'
+import { AllItems, WarehouseMovementColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
+// import SideBar from '../../components/SideBar/SideBar'
+import SideBar2 from '../../components/SideBar/SideBar2'
 
-const JournalMovement = () => {
-    const [data, setData] = useState([]);
+const WarehouseMovement = () => {
+    const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
 
@@ -14,10 +16,14 @@ const JournalMovement = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllWmsJournalMovement")
+                userRequest.get("/getAllWmsJournalMovementCl")
+                    // axios.get("http://localhost:7008/api/getAllTblItems")
+                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
+                        // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
-                        setData(response?.data ?? [])
+
+                        setAllData(response?.data ?? [])
                         setIsLoading(false)
 
                     })
@@ -39,10 +45,8 @@ const JournalMovement = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Journal Movement" columnsName={JournalMovementColumn} backButton={true}
-                emailButton={false}
-                uniqueId="journalUserAssigned"
-                AddUser={true}
+            <UserDataTable data={alldata} title="Journal Movement" columnsName={WarehouseMovementColumn} backButton={true}
+                actionColumnVisibility={false}
                 buttonVisibility={false}
             />
 
@@ -70,4 +74,4 @@ const JournalMovement = () => {
     )
 }
 
-export default JournalMovement
+export default WarehouseMovement

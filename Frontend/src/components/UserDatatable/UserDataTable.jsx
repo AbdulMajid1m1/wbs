@@ -691,7 +691,7 @@ const UserDataTable = ({
               setError(error?.response?.data?.message || 'Something went wrong')
             });
         } catch (error) {
-          // Handle any errors that occur within the "SERIALNUM" case
+         console.log(error)
         }
         break;
 
@@ -699,6 +699,7 @@ const UserDataTable = ({
         try {
           if (username === '') {
             setError('Please select a user');
+
             return;
           }
           handleAddUserClose();

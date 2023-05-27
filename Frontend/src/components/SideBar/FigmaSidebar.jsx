@@ -137,6 +137,11 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Pick List Assigned</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/warehouseprofitloss')}>
+                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Journal ProfitLoss</p>
+                    </div>
+
                     <div className='main-images-container'>
                         <img src={inventory} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>RMA</p>

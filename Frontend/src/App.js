@@ -80,6 +80,7 @@ import RmaPutAway from './pages/RmaPutAway/RmaPutAway'
 import WarehouseMovement from './pages/WarehouseMovement/WarehouseMovement'
 import JournalMovementFirst from './pages/WmsJournalMovement/JournalMovementFirst'
 import JournalMovementLast from './pages/WmsJournalMovement/JournalMovementLast'
+import WarehouseJournalProfitLoss from './pages/WarehouseJournalProfitLoss/WarehouseJournalProfitLoss'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -206,6 +207,9 @@ const App = () => {
                 <Route path='/journalcounting' element={<JournalCounting />} />
 
                 <Route path='/warehousemovement' element={<WarehouseMovement />} />
+                
+                <Route path='/warehouseprofitloss' element={<WarehouseJournalProfitLoss />} />
+
 
 
 

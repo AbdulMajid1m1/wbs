@@ -180,7 +180,7 @@ const UserDataTable = ({
 
 
   const handleRowClick = (item) => {
-    if(uniqueId ==="journalMovementClId") {
+    if (uniqueId === "journalMovementClId") {
       handleJournalMovementClRowClick(item);
       return;
     }
@@ -777,7 +777,11 @@ const UserDataTable = ({
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
       {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
-      <div className="datatable">
+      <div className="datatable"
+        style={
+          uniqueId === 'journalMovementClId' || uniqueId === 'journalMovementClDetId' ? { height: '450px' } : null
+        }
+      >
         <div className="datatableTitle">
           <div className="left-div">
             <span>{title}</span>
@@ -1010,7 +1014,7 @@ const UserDataTable = ({
             ))}
           </div>
         )}
-      </div>
+      </div >
     </>
 
   );

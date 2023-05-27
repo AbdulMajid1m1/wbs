@@ -84,6 +84,9 @@ const WarehouseMovement = () => {
                 handleJournalMovementClRowClick={handleJournalMovementClRowClick}
 
             />
+            <div
+                style={{ height: '40px' }}
+            ></div>
 
             <UserDataTable data={secondGridData} title="Journal Movement CLDets " columnsName={WarehouseMovementColumn} backButton={true}
                 actionColumnVisibility={false}
@@ -93,7 +96,8 @@ const WarehouseMovement = () => {
                 buttonVisibility={false}
             />
 
-            {isLoading &&
+            {
+                isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -113,7 +117,7 @@ const WarehouseMovement = () => {
                 </div>
             }
 
-        </div>
+        </div >
     )
 }
 

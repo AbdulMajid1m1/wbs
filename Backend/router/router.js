@@ -424,6 +424,8 @@ router.put("/updateWmsJournalMovementClQtyScanned", checkAuthentication, WBSDB.u
 
 router.post("/insertJournalMovementCLDets", checkAuthentication, WBSDB.insertJournalMovementCLDets);
 
+router.get("/getAllWmsJournalMovementClDets", checkAuthentication, WBSDB.getAllWmsJournalMovementClDets);
+
 
 // ---- WMS_Journal_ProfitLost_CL APIS Start ----
 
@@ -439,3 +441,24 @@ router.put("/updateWmsJournalProfitLostClQtyScanned", checkAuthentication, WBSDB
 
 
 router.post("/insertJournalProfitLostClDets", checkAuthentication, WBSDB.insertJournalProfitLostClDets);
+
+
+
+/// ---------- WMS_Journal_Counting and CL API Start ----
+router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);
+
+router.get("/getAllWmsJournalCountingCL", checkAuthentication, WBSDB.getAllWmsJournalCountingCL);
+
+
+
+router.post("/insertWMSJournalCountingCL", checkAuthentication, WBSDB.insertWMSJournalCountingCL);
+
+router.get("/getWmsJournalCountingCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalCountingCLByAssignedToUserId);
+
+router.put("/updateWmsournalCountingCLQtyScanned", checkAuthentication, WBSDB.updateWmsournalCountingCLQtyScanned);
+
+
+// ---------- WMS_Journal_CountingCLDets API End ----------
+
+router.post("/insertWMSJournalCountingCLDets", checkAuthentication, WBSDB.insertWMSJournalCountingCLDets);
+

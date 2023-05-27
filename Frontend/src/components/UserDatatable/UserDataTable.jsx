@@ -31,7 +31,9 @@ const UserDataTable = ({
   emailButton,
   detectAddRole,
   AddUser,
-  UserName
+  UserName,
+  checkboxSelection,
+  handleJournalMovementClRowClick, // this is for journal movement cl function to get the row data on click
 
 }) => {
   const navigate = useNavigate();
@@ -50,6 +52,9 @@ const UserDataTable = ({
     setMessage(null);
 
   };
+
+  // if checkboxSelection is giving in props then use it other wise by default it is false
+  const checkboxSelectionValue = checkboxSelection == 'disabled' ? false : true;
 
   const [filterModel, setFilterModel] = useState({ items: [] });
 
@@ -175,6 +180,10 @@ const UserDataTable = ({
 
 
   const handleRowClick = (item) => {
+    if(uniqueId ==="journalMovementClId") {
+      handleJournalMovementClRowClick(item);
+      return;
+    }
     const index = item.id;
     let itemGroup;
 
@@ -519,7 +528,7 @@ const UserDataTable = ({
     } else {
       XLSX.writeFile(wb, `${title}.xlsx`); // Export the file
     }
-    
+
   };
 
 
@@ -651,33 +660,6 @@ const UserDataTable = ({
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    
-    // if (username === '') {
-    //   setError('Please select a user');
-    //   return;
-    // }
-    // handleAddUserClose();
-    // setUserName('');
-
-    // let newData = selectedRow.map(singleRowData => ({
-    //   ...singleRowData.data,
-    //   ASSIGNEDTOUSERID: username,
-    //   // QTYPICKED:1,
-    // }));
-    // console.log('new Data', newData)
-
-    // // Make the API request
-    // userRequest.post('/insertPickingListDataCLIntoWBS', newData)
-    //   .then(response => {
-    //     // Handle the response from the API if needed
-    //     console.log(response.data);
-    //     setMessage(response?.data?.message || 'Picklist assigned to user successfully')
-    //   })
-    //   .catch(error => {
-    //     // Handle any errors that occur during the request
-    //     console.error(error);
-    //     setError(error?.response?.data?.message || 'Something went wrong')
-    //   });
 
     switch (uniqueId) {
       case "picklistAssignToUser":
@@ -688,14 +670,14 @@ const UserDataTable = ({
           }
           handleAddUserClose();
           setUserName('');
-    
+
           let newData = selectedRow.map(singleRowData => ({
             ...singleRowData.data,
             ASSIGNEDTOUSERID: username,
             // QTYPICKED:1,
           }));
           console.log('new Data', newData)
-    
+
           // Make the API request
           userRequest.post('/insertPickingListDataCLIntoWBS', newData)
             .then(response => {
@@ -713,41 +695,74 @@ const UserDataTable = ({
         }
         break;
 
-        case "journalUserAssigned":
-          try {
-            if (username === '') {
-              setError('Please select a user');
-              return;
-            }
-            handleAddUserClose();
-            setUserName('');
-      
-            let newData = selectedRow.map(singleRowData => ({
-              ...singleRowData.data,
-              TRXUSERIDASSIGNED: username,
-              // QTYPICKED:1,
-            }));
-            console.log('new Data', newData)
-      
-            // Make the API request
-            userRequest.post('/insertJournalMovementCLData', newData)
-              .then(response => {
-                // Handle the response from the API if needed
-                console.log(response.data);
-                setMessage(response?.data?.message || 'Picklist assigned to user successfully')
-              })
-              .catch(error => {
-                // Handle any errors that occur during the request
-                console.error(error);
-                setError(error?.response?.data?.message || 'Something went wrong')
-              });
-          } catch (error) {
-            // Handle any errors that occur within the "SERIALNUM" case
+      case "journalUserAssigned":
+        try {
+          if (username === '') {
+            setError('Please select a user');
+            return;
           }
-          break;
+          handleAddUserClose();
+          setUserName('');
+
+          let newData = selectedRow.map(singleRowData => ({
+            ...singleRowData.data,
+            TRXUSERIDASSIGNED: username,
+            // QTYPICKED:1,
+          }));
+          console.log('new Data', newData)
+
+          // Make the API request
+          userRequest.post('/insertJournalMovementCLData', newData)
+            .then(response => {
+              // Handle the response from the API if needed
+              console.log(response.data);
+              setMessage(response?.data?.message || 'Picklist assigned to user successfully')
+            })
+            .catch(error => {
+              // Handle any errors that occur during the request
+              console.error(error);
+              setError(error?.response?.data?.message || 'Something went wrong')
+            });
+        } catch (error) {
+          // Handle any errors that occur within the "SERIALNUM" case
+        }
+        break;
 
           
 
+      // Journal Profit Lost Api Call 
+      case "journalprofitlost":
+        try {
+          if (username === '') {
+            setError('Please select a user');
+            return;
+          }
+          handleAddUserClose();
+          setUserName('');
+
+          let newData = selectedRow.map(singleRowData => ({
+            ...singleRowData.data,
+            TRXUSERIDASSIGNED: username,
+            // QTYPICKED:1,
+          }));
+          console.log('new Data', newData)
+
+          // Make the API request
+          userRequest.post('/insertJournalProfitLostCL', newData)
+            .then(response => {
+              // Handle the response from the API if needed
+              console.log(response.data);
+              setMessage(response?.data?.message || 'Journal Profit Lost to user successfully')
+            })
+            .catch(error => {
+              // Handle any errors that occur during the request
+              console.error(error);
+              setError(error?.response?.data?.message || 'Something went wrong')
+            });
+        } catch (error) {
+          // Handle any errors that occur within the "SERIALNUM" case
+        }
+        break;
           // Journal Profit Lost Api Call 
           case "journalprofitlost":
             try {
@@ -821,10 +836,10 @@ const UserDataTable = ({
         // Handle the default case if needed
         break;
     }
-    
+
   };
 
-  
+
 
 
   return (
@@ -902,7 +917,7 @@ const UserDataTable = ({
           }
           pageSize={30}
           rowsPerPageOptions={[30, 50, 100]}
-          checkboxSelection
+          checkboxSelection={checkboxSelectionValue}
 
           filterModel={filterModel}
           onFilterModelChange={handleFilterModelChange}
@@ -919,9 +934,6 @@ const UserDataTable = ({
             <div className="popup">
               <div className="header">
                 <h2>Shipment Receiving Email</h2>
-                {/* <button className="close-btn" onClick={handleClosePopup}>
-                x
-              </button> */}
               </div>
               <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email:</label>
@@ -943,16 +955,6 @@ const UserDataTable = ({
                   required
                   placeholder="Subject"
                 />
-
-                {/* <label htmlFor="sendTo">Send To:</label>
-                <input
-                  type="sendTo"
-                  id="sendTo"
-                  value={sendTo}
-                  onChange={(e) => setSendTo(e.target.value)}
-                  required
-                  placeholder="Send To"
-                /> */}
 
                 <label htmlFor="remarks">Remarks:</label>
                 <input
@@ -977,37 +979,11 @@ const UserDataTable = ({
 
 
 
-        {/* Add User */}
-        {/* {addUser && (
-          <div className="popup-container">
-            <div className="popup">
-              <div className="header">
-                <h2>Add User</h2>
-              </div>
-              <form onSubmit={handleFormSubmit}>
-                <label htmlFor="UserName">Name:</label>
-                <input
-                  type="text"
-                  id="UserName"
-                  value={username}
-                  onChange={(e) => setUserName(e.target.value)}
-                  required
-                  placeholder="User Name"
-                />
-
-                <div className="flex gap-3">
-                  <button className="close-btn" type="button" onClick={handleAddUserClose}>CANCEL</button>
-                  <button type="submit">SEND</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )} */}
         {addUser && (
           <div className="popup-container fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
             <div className="popup bg-white rounded-lg shadow-xl overflow-hidden max-w-md m-4">
               <div className="header bg-blue-500 text-white font-bold py-4 px-6">
-                <h2>Add User</h2>
+                <h2 style={{ color: "white" }}>Add User</h2>
               </div>
               <form onSubmit={handleFormSubmit} className="p-6">
                 <label htmlFor="UserName" className="block mb-2 text-gray-700 text-sm">Name:</label>

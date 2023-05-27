@@ -38,7 +38,7 @@ const WmsProfitLoss = () => {
   
   useEffect(() => {
     setIsLoading(true);
-    userRequest.get('/getWmsJournalMovementClByAssignedToUserId')
+    userRequest.get('/getWmsJournalProfitLostCLByAssignedToUserId')
       .then((response) => {
         console.log(response);
         setData(response?.data);

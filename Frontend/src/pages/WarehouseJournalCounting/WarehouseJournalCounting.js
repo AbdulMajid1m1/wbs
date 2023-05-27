@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { JournalCountingTableColumn, JournalMovementColumn, JournalProfitLostColumn, ReturnSalesOrderColumn } from '../../utils/datatablesource'
+import { JournalProfitLostColumn, ReturnSalesOrderColumn, WarehouseJournalCountingColumn, WarehouseProfitLostColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 
-const JournalCounting = () => {
+const WarehouseJournalCounting = () => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -13,8 +13,8 @@ const JournalCounting = () => {
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
-                    
-                userRequest.get("/getAllWmsJournalCounting")
+
+                userRequest.get("/getAllWmsJournalProfitLostCL")
                     .then(response => {
                         console.log(response?.data);
                         setData(response?.data ?? [])
@@ -39,12 +39,10 @@ const JournalCounting = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Journal Counting" columnsName={JournalCountingTableColumn} backButton={true}
+            <UserDataTable data={data} title="Warehouse Journal Counting" columnsName={WarehouseJournalCountingColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
-                AddUser={true}
-                uniqueId="journalcounting"
-                UserName="Journal Counting User"
+                
             />
 
             {isLoading &&
@@ -71,4 +69,4 @@ const JournalCounting = () => {
     )
 }
 
-export default JournalCounting
+export default WarehouseJournalCounting

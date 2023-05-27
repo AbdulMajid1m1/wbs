@@ -2246,3 +2246,115 @@ export const WarehouseProfitLostColumn = [
 
 
 ]
+
+
+
+export const WarehouseJournalCountingColumn = [
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEMNAME",
+    width: 230,
+
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 180,
+
+  },
+  {
+    field: "INVENTONHAND",
+    headerName: "INVENT ON HAND",
+    width: 180,
+
+  },
+  {
+    field: "COUNTED",
+    headerName: "COUNTED",
+    width: 180,
+
+  },
+  {
+    field: "JOURNALID",
+    headerName: "JOURNAL ID",
+    width: 180,
+
+  },
+  {
+    field: "TRANSDATE",
+    headerName: "TRANS DATE",
+    width: 180,
+
+  },
+  {
+    field: "INVENTSITEID",
+    headerName: "INVENT SITE ID",
+    width: 180,
+
+  },
+  {
+    field: "INVENTLOCATIONID",
+    headerName: "INVENT LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "CONFIGID",
+    headerName: "CONFIG ID",
+    width: 180,
+
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+
+  },
+  {
+    field: "TRXDATETIME",
+    headerName: "TRX DATE TIME",
+    width: 180,
+
+  },
+  {
+    field: "TRXUSERIDASSIGNED",
+    headerName: "TRX USER ID ASSIGNED",
+    width: 180,
+
+  },
+  {
+    field: "TRXUSERIDASSIGNEDBY",
+    headerName: "TRX USERID ASSIGNED BY",
+    width: 180,
+
+  }, 
+  {
+    field: "ITEMSERIALNO",
+    headerName: "ITEM SERIAL NO",
+    width: 180,
+
+  },
+  {
+    field: "QTYSCANNED",
+    headerName: "QTY SCANNED",
+    width: 180,
+
+  }, 
+  {
+    field: "QTYDIFFERENCE",
+    headerName: "QTY DIFFERENCE",
+    width: 180,
+
+  }, 
+ 
+
+
+
+
+]

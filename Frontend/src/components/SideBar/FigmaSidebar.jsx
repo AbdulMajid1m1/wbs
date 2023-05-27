@@ -97,6 +97,16 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Journal Movement</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/warehouseprofitloss')}>
+                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Journal ProfitLoss</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/warehousecounting')}>
+                        <img src={cycle} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Journal Counting</p>
+                    </div>
+
                     <div className='main-images-container'>
                         <img src={items} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>PutAway</p>
@@ -137,10 +147,6 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Pick List Assigned</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/warehouseprofitloss')}>
-                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Journal ProfitLoss</p>
-                    </div>
 
                     <div className='main-images-container'>
                         <img src={inventory} className='main-inside-image' alt='' />

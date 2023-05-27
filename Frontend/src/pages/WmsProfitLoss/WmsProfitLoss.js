@@ -35,6 +35,22 @@ const WmsProfitLoss = () => {
     setTransferTag(e.target.value);
   }
 
+  
+  useEffect(() => {
+    setIsLoading(true);
+    userRequest.get('/getWmsJournalMovementClByAssignedToUserId')
+      .then((response) => {
+        console.log(response);
+        setData(response?.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
+  }, []);
+
+
   const handleForm = (e) => {
     e.preventDefault();
     setIsLoading(true)
@@ -151,7 +167,7 @@ const WmsProfitLoss = () => {
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
-            <form onSubmit={handleForm}>
+            {/* <form onSubmit={handleForm}>
               <div className='mb-6'>
                 <label htmlFor='profit' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Profit Loss<span className='text-[#FF0404]'>*</span></label>
                 <div className='w-full flex'>
@@ -169,9 +185,9 @@ const WmsProfitLoss = () => {
                   </button>
                 </div>
               </div>
-            </form>
+            </form> */}
 
-            <div className='mb-6'>
+            <div className='mt-6'>
               <label className='text-[#00006A] font-semibold'>List of Profit and Loss<span className='text-[#FF0404]'>*</span></label>
               {/* // creae excel like Tables  */}
               <div className="table-location-generate1">

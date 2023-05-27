@@ -337,10 +337,10 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Cycle Counting Process</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/rmaputaway')}>
+                    {/* <div className='main-images-container' onClick={() => navigate('/rmaputaway')}>
                         <img src={movement} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>RMA PutAway</p>
-                    </div>
+                    </div> */}
 
                 </div>
             )}

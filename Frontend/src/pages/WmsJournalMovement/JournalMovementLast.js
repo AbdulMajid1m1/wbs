@@ -323,7 +323,7 @@ const WmsProfitLossLast = () => {
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
                   placeholder="Picking Route ID"
-                  value={parsedData?.RETURNITEMNUM}
+                  value={parsedData?.JOURNALID}
                   disabled
                 />
 

@@ -133,6 +133,7 @@ const WmsProfitLossLast = () => {
       })
       console.log(response?.data)
       let insertData = response?.data?.updatedRow;
+      insertData.ITEMSERIALNO = trimInput;
       try {
         let res2 = await userRequest.post("/insertJournalMovementCLDets", [insertData])
         console.log(response?.data)

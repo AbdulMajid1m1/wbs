@@ -129,11 +129,12 @@ const WmsProfitLossLast = () => {
     try {
 
       // const response = await userRequest.put("/updateWmsJournalMovementClQtyScanned", {
-        const response = await userRequest.put("/updateWmsJournalProfitLostClQtyScanned", {
+      const response = await userRequest.put("/updateWmsJournalProfitLostClQtyScanned", {
         ITEMID: parsedData?.ITEMID,
       })
       console.log(response?.data)
       let insertData = response?.data?.updatedRow;
+      insertData.ITEMSERIALNO = trimInput;
       try {
         // let res2 = await userRequest.post("/insertJournalMovementCLDets", [insertData])
         let res2 = await userRequest.post("/insertJournalProfitLostClDets", [insertData])

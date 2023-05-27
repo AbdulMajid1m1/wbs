@@ -431,7 +431,9 @@ router.post("/insertJournalProfitLostCL", checkAuthentication, WBSDB.insertJourn
 
 router.get("/getAllWmsJournalProfitLostCL", checkAuthentication, WBSDB.getAllWmsJournalProfitLostCL);
 
+router.get("/getWmsJournalProfitLostCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalProfitLostCLByAssignedToUserId);
 
+router.put("/updateWmsJournalProfitLostClQtyScanned", checkAuthentication, WBSDB.updateWmsJournalProfitLostClQtyScanned);
 
 // ---- WMS_Journal_ProfitLost_CLDets APIS Start ----
 

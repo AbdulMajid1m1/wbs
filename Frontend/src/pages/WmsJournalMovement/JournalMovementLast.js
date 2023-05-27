@@ -175,7 +175,7 @@ const WmsProfitLossLast = () => {
 
 
 
-  const handleInputUser = (e) => {   
+  const handleInputUser = (e) => {
     if (e.target.value.length === 0) {
       setError("Please scan a barcode");
       return
@@ -212,7 +212,7 @@ const WmsProfitLossLast = () => {
                   //   value={parsedData.TRANSFERID}
                   className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                  placeholder="Picking Route ID"
+                  placeholder="Journal ID"
                   value={parsedData?.JOURNALID}
                   disabled
                 />
@@ -426,7 +426,6 @@ const WmsProfitLossLast = () => {
                       <tr>
                         <th>ITEMID</th>
                         <th>ITEMNAME</th>
-                        <th>QTY</th>
                         <th>LEDGERACCOUNTIDOFFSET</th>
                         <th>JOURNALID</th>
                         <th>TRANSDATE</th>
@@ -438,8 +437,6 @@ const WmsProfitLossLast = () => {
                         <th>TRXUSERIDASSIGNED</th>
                         <th>TRXUSERIDASSIGNEDBY</th>
                         <th>ITEMSERIALNO</th>
-                        <th>QTYSCANNED</th>
-                        <th>QTYDIFFERENCE</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -448,7 +445,6 @@ const WmsProfitLossLast = () => {
                         >
                           <td>{item?.ITEMID}</td>
                           <td>{item?.ITEMNAME}</td>
-                          <td>{item?.QTY}</td>
                           <td>{item?.LEDGERACCOUNTIDOFFSET}</td>
                           <td>{item?.JOURNALID}</td>
                           <td>{item?.TRANSDATE}</td>
@@ -460,8 +456,6 @@ const WmsProfitLossLast = () => {
                           <td>{item?.TRXUSERIDASSIGNED}</td>
                           <td>{item?.TRXUSERIDASSIGNEDBY}</td>
                           <td>{item?.ITEMSERIALNO}</td>
-                          <td>{item?.QTYSCANNED}</td>
-                          <td>{item?.QTYDIFFERENCE}</td>
                         </tr>
                       ))}
                     </tbody>

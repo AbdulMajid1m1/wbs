@@ -39,7 +39,7 @@ const BinToBinCL = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="2  Bin To Bin CL" columnsName={BinToBinCLColumn} backButton={true}
+            <UserDataTable data={data} title="Bin To Bin CL (Warehouse Operation)" columnsName={BinToBinCLColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             />

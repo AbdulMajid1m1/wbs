@@ -45,7 +45,7 @@ const TblAllLocations = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="/tbl-new-location" title="TBL ALL LOCATIONS " columnsName={TblAllLocationColumn} backButton={true}
+            <UserDataTable data={alldata} addNewNavigation="/tbl-new-location" title="TBL ALL LOCATIONS (Warehouse Operation)" columnsName={TblAllLocationColumn} backButton={true}
              uniqueId="locationTableId" />
 
 

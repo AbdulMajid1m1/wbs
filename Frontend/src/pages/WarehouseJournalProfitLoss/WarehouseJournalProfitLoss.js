@@ -39,7 +39,7 @@ const WarehouseJournalProfitLost = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Warehouse ProfitLost" columnsName={WarehouseProfitLostColumn} backButton={true}
+            <UserDataTable data={data} title="Warehouse ProfitLost (Warehouse Operation)" columnsName={WarehouseProfitLostColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 

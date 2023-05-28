@@ -45,7 +45,7 @@ const TblPickingCl = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="/tbl-new-picking" title="PICKING" columnsName={TblPickingClColumn} backButton={true} uniqueId="PICKINGROUTEID"
+            <UserDataTable data={alldata} addNewNavigation="/tbl-new-picking" title="PICKING (Warehouse Operation)" columnsName={TblPickingClColumn} backButton={true} uniqueId="PICKINGROUTEID"
 
 
             />

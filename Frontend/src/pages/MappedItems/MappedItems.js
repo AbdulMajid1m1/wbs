@@ -46,7 +46,7 @@ const MappedItems = () => {
         <div>
 
             <UserDataTable data={alldata}
-             addNewNavigation="/insert-mapped-barcode" title="MAPPED ITEMS"
+             addNewNavigation="/insert-mapped-barcode" title="MAPPED ITEMS (Warehouse Operation) "
               columnsName={MappedItemsColumn} backButton={true}
                uniqueId="ItemCode"
     

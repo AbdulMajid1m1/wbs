@@ -48,7 +48,7 @@ const TblDispatchingCL = () => {
             {/* <SideBar /> */}
             {/* <SideBar2 /> */}
 
-            <UserDataTable data={alldata} addNewNavigation="/tbl-new-dispatch" title="TBL DISPATCHING CL " columnsName={TblDispatchingCLColumn} backButton={true} uniqueId="PACKINGSLIPID"/>
+            <UserDataTable data={alldata} addNewNavigation="/tbl-new-dispatch" title="TBL DISPATCHING CL (Warehouse Operation)" columnsName={TblDispatchingCLColumn} backButton={true} uniqueId="PACKINGSLIPID"/>
 
 
             {isLoading &&

@@ -47,7 +47,7 @@ const TblItemCl = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="Stock Master" columnsName={AllItems} backButton={true}
+            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="Stock Master (Warehouse Operation)" columnsName={AllItems} backButton={true}
              uniqueId="itemTableId"
 
 

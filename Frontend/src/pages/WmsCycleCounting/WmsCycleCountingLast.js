@@ -128,7 +128,7 @@ const WmsCycleCountingLast = () => {
     try {
 
 
-      const response = await userRequest.put("/updateWmsournalCountingCLQtyScanned", {
+      const response = await userRequest.put("/updateWmsJournalCountingCLQtyScanned", {
         ITEMID: parsedData?.ITEMID,
         JOURNALID: parsedData?.JOURNALID,
         TRXUSERIDASSIGNED: parsedData?.TRXUSERIDASSIGNED,

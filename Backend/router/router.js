@@ -455,7 +455,7 @@ router.post("/insertWMSJournalCountingCL", checkAuthentication, WBSDB.insertWMSJ
 
 router.get("/getWmsJournalCountingCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalCountingCLByAssignedToUserId);
 
-router.put("/updateWmsournalCountingCLQtyScanned", checkAuthentication, WBSDB.updateWmsournalCountingCLQtyScanned);
+router.put("/updateWmsJournalCountingCLQtyScanned", checkAuthentication, WBSDB.updateWmsJournalCountingCLQtyScanned);
 
 
 // ---------- WMS_Journal_CountingCLDets API End ----------

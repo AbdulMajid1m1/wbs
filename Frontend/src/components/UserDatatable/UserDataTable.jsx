@@ -691,7 +691,7 @@ const UserDataTable = ({
               setError(error?.response?.data?.message || 'Something went wrong')
             });
         } catch (error) {
-         console.log(error)
+          console.log(error)
         }
         break;
 
@@ -729,7 +729,7 @@ const UserDataTable = ({
         }
         break;
 
-          
+
 
       // Journal Profit Lost Api Call 
       case "journalprofitlost":
@@ -969,7 +969,7 @@ const UserDataTable = ({
                   <option value="">--Select User--</option>
                   {usersList.map((user) => (
                     <option key={user.UserID} value={user.UserID}>
-                      {user.Fullname}
+                      {user?.Fullname} - {user?.UserID}
                     </option>
                   ))}
                 </select>

@@ -39,7 +39,7 @@ const RealloactionPicked = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="1 Realloaction Picked" columnsName={SideBarTableColumn} backButton={true}
+            <UserDataTable data={data} title="Realloaction Picked (Warehouse Operation)" columnsName={SideBarTableColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             />

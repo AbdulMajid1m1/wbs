@@ -41,7 +41,7 @@ const TblShipmentReceivedCl = () => {
     <div>
 
       {/* <SideBar2 /> */}
-      <UserDataTable data={data} title="SHIPMENT RECEIVED" columnsName={TblShipmentReceivedClColumn}
+      <UserDataTable data={data} title="SHIPMENT RECEIVED (Warehouse Operation)" columnsName={TblShipmentReceivedClColumn}
         backButton={true}
         uniqueId="SERIALNUM"
         addNewNavigation="/receipts"

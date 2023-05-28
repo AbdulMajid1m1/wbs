@@ -39,7 +39,7 @@ const WarehouseJournalCounting = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Warehouse Journal Counting" columnsName={WarehouseJournalCountingColumn} backButton={true}
+            <UserDataTable data={data} title="Warehouse Journal Counting (Warehouse Operation)" columnsName={WarehouseJournalCountingColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 

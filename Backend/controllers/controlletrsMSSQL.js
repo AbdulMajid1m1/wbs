@@ -5523,7 +5523,7 @@ const WBSDB = {
   },
 
 
-  async updateWmsournalCountingCLQtyScanned(req, res, next) {
+  async updateWmsJournalCountingCLQtyScanned(req, res, next) {
     try {
       const { ITEMID, JOURNALID, TRXUSERIDASSIGNED } = req.body;
 

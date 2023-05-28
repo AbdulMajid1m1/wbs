@@ -76,7 +76,7 @@ const WarehouseMovement = () => {
         <div>
 
 
-            <UserDataTable data={alldata} title="Journal Movement CL" columnsName={WarehouseMovementColumn} backButton={true}
+            <UserDataTable data={alldata} title="Journal Movement CL (Warehouse Operation)" columnsName={WarehouseMovementColumn} backButton={true}
                 actionColumnVisibility={false}
                 uniqueId={"journalMovementClId"}
                 buttonVisibility={false}

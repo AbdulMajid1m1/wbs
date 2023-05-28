@@ -321,7 +321,7 @@ const ReturnRMALast = () => {
                     </div>
                   </div>
                     <div id='inside-BRCode'>
-                      <Barcode value="RMA0040408 GNGJ90JGWC RV900JPK" width={1} height={60} />
+                      <Barcode value={`${parsedData.ITEMID} ${parsedData.SALESID}`}  width={1} height={60} />
                     </div>
                   </div>
               </div>

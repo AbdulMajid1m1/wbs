@@ -4697,7 +4697,28 @@ const WBSDB = {
 
 
 
-  // WMS_ReturnSalesOrder_C Controller Start -----
+  // WMS_ReturnSalesOrder_CL Controller Start -----
+
+
+  async getAllWmsReturnSalesOrderCl(req, res, next) {
+
+    try {
+
+      let query = `SELECT * FROM WMS_ReturnSalesOrder_CL `
+
+      let request = pool2.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
 
   async getWmsReturnSalesOrderClByAssignedToUserId(req, res, next) {
     try {
@@ -5527,7 +5548,7 @@ const WBSDB = {
     try {
       const { ITEMID, JOURNALID, TRXUSERIDASSIGNED } = req.body;
 
-      // Check if the item exists in the table
+      // Check if the item exists in the table d
       let checkItemQuery = `
         SELECT TOP 1 *
         FROM [WBSSQL].[dbo].[WMS_Journal_Counting_CL]

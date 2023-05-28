@@ -33,7 +33,7 @@ const UserDataTable = ({
   AddUser,
   UserName,
   checkboxSelection,
-  handleJournalMovementClRowClick, // this is for journal movement cl function to get the row data on click
+  handleRowClickInParent, // this is for journal movement cl function to get the row data on click
 
 }) => {
   const navigate = useNavigate();
@@ -180,8 +180,8 @@ const UserDataTable = ({
 
 
   const handleRowClick = (item) => {
-    if (uniqueId === "journalMovementClId") {
-      handleJournalMovementClRowClick(item);
+    if (uniqueId === "journalMovementClId" || uniqueId === "wProfitLostClId" || uniqueId === "journalCountingClId") {
+      handleRowClickInParent(item);
       return;
     }
     const index = item.id;
@@ -807,7 +807,15 @@ const UserDataTable = ({
 
   };
 
+  let smallHeightTableScreens = [
+    'journalMovementClId',
+    'journalMovementClDetId',
+    "wProfitLostClId",
+    'wProfitLostClDetsId',
+    'journalCountingClId',
+    'journalCountingClDetsId',
 
+  ]
 
 
   return (
@@ -817,7 +825,7 @@ const UserDataTable = ({
 
       <div className="datatable"
         style={
-          uniqueId === 'journalMovementClId' || uniqueId === 'journalMovementClDetId' ? { height: '450px' } : null
+          smallHeightTableScreens.includes(uniqueId) ? { height: '450px' } : null
         }
       >
         <div className="datatableTitle">

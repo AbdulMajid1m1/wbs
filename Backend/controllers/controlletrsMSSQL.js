@@ -5255,6 +5255,7 @@ const WBSDB = {
   },
 
 
+
   async getWmsJournalProfitLostCLByAssignedToUserId(req, res, next) {
     try {
       const TRXUSERIDASSIGNED = req?.token?.UserID;
@@ -5316,6 +5317,26 @@ const WBSDB = {
 
 
   // ---------- WMS_Journal_ProfitLost_CLDets Controller Start ----------
+
+  async getAllWmsJournalProfitLostClDets(req, res, next) {
+
+    try {
+
+      let query = `SELECT * FROM WMS_Journal_ProfitLost_CLDets`
+
+      let request = pool2.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
 
   async insertJournalProfitLostClDets(req, res, next) {
     try {
@@ -5543,7 +5564,6 @@ const WBSDB = {
     }
   },
 
-
   async updateWmsJournalCountingCLQtyScanned(req, res, next) {
     try {
       const { ITEMID, JOURNALID, TRXUSERIDASSIGNED } = req.body;
@@ -5575,7 +5595,9 @@ const WBSDB = {
       `;
 
       request = pool2.request();
-      request.input('ITEMID', ITEMID);
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('JOURNALID', sql.NVarChar, JOURNALID); // Missing declaration
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED); // Missing declaration
 
       // Execute the update query
       result = await request.query(updateQtyQuery);
@@ -5593,6 +5615,27 @@ const WBSDB = {
 
 
   // ---------- WMS_Journal_CountingCLDets Controller End ----------
+
+  async getAllWmsJournalCountingCLDets(req, res, next) {
+
+    try {
+
+      let query = `SELECT * FROM WMS_Journal_Counting_CL `
+
+      let request = pool2.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
 
   async insertWMSJournalCountingCLDets(req, res, next) {
     try {

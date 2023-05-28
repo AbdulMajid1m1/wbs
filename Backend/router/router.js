@@ -378,7 +378,7 @@ router.get("/getAllWmsReturnSalesOrder", checkAuthentication, WBSDB.getAllWmsRet
 
 
 
-// WMS_ReturnSalesOrder_C APIS Start -----
+// WMS_ReturnSalesOrder_CL APIS Start -----
 
 router.get("/getAllWmsReturnSalesOrderCl", checkAuthentication, WBSDB.getAllWmsReturnSalesOrderCl);
 
@@ -442,7 +442,7 @@ router.put("/updateWmsJournalProfitLostClQtyScanned", checkAuthentication, WBSDB
 
 // ---- WMS_Journal_ProfitLost_CLDets APIS Start ----
 
-
+router.get("/getAllWmsJournalProfitLostClDets", checkAuthentication, WBSDB.getAllWmsJournalProfitLostClDets);
 router.post("/insertJournalProfitLostClDets", checkAuthentication, WBSDB.insertJournalProfitLostClDets);
 
 
@@ -463,5 +463,6 @@ router.put("/updateWmsJournalCountingCLQtyScanned", checkAuthentication, WBSDB.u
 
 // ---------- WMS_Journal_CountingCLDets API End ----------
 
+router.get("/getAllWmsJournalCountingCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingCLDets);
 router.post("/insertWMSJournalCountingCLDets", checkAuthentication, WBSDB.insertWMSJournalCountingCLDets);
 

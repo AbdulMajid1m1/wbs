@@ -146,6 +146,19 @@ const WmsCycleCountingLast = () => {
         }
         );
 
+        // Remove the inserted records from the newTableData
+        setNewTableData((prevData) => {
+          return prevData.filter((item) => {
+            if (selectionType === 'Pallet') {
+              return !filtered.some(filteredItem => filteredItem.PalletCode === item.PalletCode);
+            } else if (selectionType === 'Serial') {
+              return !filtered.some(filteredItem => filteredItem.ItemSerialNo === item.ItemSerialNo);
+            } else {
+              return true;
+            }
+          });
+        });
+
         // clear the user input state variable
         setUserInput("");
 
@@ -160,18 +173,7 @@ const WmsCycleCountingLast = () => {
       setError(error?.response?.data?.message ?? 'Update failed');
     }
 
-    // Remove the inserted records from the newTableData
-    setNewTableData((prevData) => {
-      return prevData.filter((item) => {
-        if (selectionType === 'Pallet') {
-          return !filtered.some(filteredItem => filteredItem.PalletCode === item.PalletCode);
-        } else if (selectionType === 'Serial') {
-          return !filtered.some(filteredItem => filteredItem.ItemSerialNo === item.ItemSerialNo);
-        } else {
-          return true;
-        }
-      });
-    });
+
   };
 
 

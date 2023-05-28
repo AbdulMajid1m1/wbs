@@ -10,6 +10,7 @@ import SideBar2 from '../../components/SideBar/SideBar2'
 const WarehouseMovement = () => {
     const [alldata, setAllData] = useState([]);
     const [secondGridData, setSecondGridData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
 
@@ -45,12 +46,11 @@ const WarehouseMovement = () => {
                         console.log(response?.data);
 
                         setSecondGridData(response?.data ?? [])
-                        setIsLoading(false)
+                        setFilteredData(response?.data ?? [])
 
                     })
                     .catch(error => {
                         console.error(error);
-                        setIsLoading(false)
 
                     });
 
@@ -62,14 +62,14 @@ const WarehouseMovement = () => {
         getAllJournalMovementCLDets();
     }, []);
 
-    const handleJournalMovementClRowClick = (item) => {
+    const handleRowClickInParent = (item) => {
         console.log(item);
         // filter data for second grid using item.ITEMID and JOURNALMOVEMENTCLID
         const filteredData = secondGridData.filter((data) => {
-            return data.ITEMID === item.ITEMID && data.JOURNALID === item.JOURNALID
+            return data.ITEMID === item.ITEMID && data.JOURNALID === item.JOURNALID && data.TRXUSERIDASSIGNED === item.TRXUSERIDASSIGNED
         })
         console.log(filteredData);
-        setSecondGridData(filteredData)
+        setFilteredData(filteredData)
     }
 
     return (
@@ -81,14 +81,14 @@ const WarehouseMovement = () => {
                 uniqueId={"journalMovementClId"}
                 buttonVisibility={false}
                 checkboxSelection={'disabled'}
-                handleJournalMovementClRowClick={handleJournalMovementClRowClick}
+                handleRowClickInParent={handleRowClickInParent}
 
             />
             <div
                 style={{ height: '40px' }}
             ></div>
 
-            <UserDataTable data={secondGridData} title="Journal Movement CLDets " columnsName={WarehouseMovementColumn} backButton={true}
+            <UserDataTable data={filteredData} title="Journal Movement CLDets " columnsName={WarehouseMovementColumn} backButton={true}
                 actionColumnVisibility={false}
                 uniqueId={"journalMovementClDetId"}
                 // checkboxSelection={true}

@@ -7,6 +7,8 @@ import { SyncLoader } from 'react-spinners';
 
 const WarehouseJournalProfitLost = () => {
     const [data, setData] = useState([]);
+    const [secondGridData, setSecondGridData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
 
@@ -34,15 +36,62 @@ const WarehouseJournalProfitLost = () => {
             }
         };
         getAllAssetsList();
+
+        const getAllJournalProfitLosssCLDets = async () => {
+            try {
+                userRequest.get("/getAllWmsJournalProfitLostClDets")
+                    .then(response => {
+                        console.log(response?.data);
+
+                        setSecondGridData(response?.data ?? [])
+                        setFilteredData(response?.data ?? [])
+
+
+                    })
+                    .catch(error => {
+                        console.error(error);
+
+
+                    });
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+        };
+        getAllJournalProfitLosssCLDets();
     }, []);
+
+    const handleRowClickInParent = (item) => {
+        console.log(item);
+        // filter data for second grid using item.ITEMID and JOURNALMOVEMENTCLID
+        const filteredData = secondGridData.filter((data) => {
+            return data.ITEMID === item.ITEMID && data.JOURNALID === item.JOURNALID && data.TRXUSERIDASSIGNED === item.TRXUSERIDASSIGNED
+        })
+        console.log(filteredData);
+        setFilteredData(filteredData)
+    }
+
 
     return (
         <div>
 
-            <UserDataTable data={data} title="Warehouse ProfitLost (Warehouse Operation)" columnsName={WarehouseProfitLostColumn} backButton={true}
+            <UserDataTable data={data} title="Warehouse ProfitLostCL (Warehouse Operation)" columnsName={WarehouseProfitLostColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
-                
+                checkboxSelection={'disabled'}
+                uniqueId={"wProfitLostClId"}
+                handleRowClickInParent={handleRowClickInParent}
+
+            />
+            <div
+                style={{ height: '40px' }}
+            ></div>
+
+            <UserDataTable data={filteredData} title="Warehouse ProfitLostCLDets" columnsName={WarehouseProfitLostColumn} backButton={true}
+                actionColumnVisibility={false}
+                buttonVisibility={false}
+                uniqueId={"wProfitLostClDetsId"}
             />
 
             {isLoading &&

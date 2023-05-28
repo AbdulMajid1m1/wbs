@@ -128,7 +128,7 @@ const ReturnRMALast = () => {
 
       setTimeout(() => {
         handlePrint();
-       
+
 
       }, 20);
     }
@@ -178,7 +178,7 @@ const ReturnRMALast = () => {
   }
 
   const handleInputUser = (e) => {
-    setNewBarcode(e.target.value)
+    setNewBarcode(userInput)
     if (e.target.value.length === 0) {
       setTimeout(() => {
         setError("Please scan a barcode");
@@ -243,7 +243,7 @@ const ReturnRMALast = () => {
           });
         });
       }
-      else{
+      else {
         // clear model number
         setModelNumber("");
       }

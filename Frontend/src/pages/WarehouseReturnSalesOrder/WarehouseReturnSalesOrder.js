@@ -5,7 +5,7 @@ import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 
-const ReturnSalesOrder = () => {
+const WarehouseReturnSalesOrder = () => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -14,7 +14,7 @@ const ReturnSalesOrder = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllWmsReturnSalesOrder")
+                userRequest.get("/getAllWmsReturnSalesOrderCl")
                     .then(response => {
                         console.log(response?.data);
                         setData(response?.data ?? [])
@@ -39,7 +39,7 @@ const ReturnSalesOrder = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Return Sales Order (Axapta)" columnsName={ReturnSalesOrderColumn} backButton={true}
+            <UserDataTable data={data} title="Return Sales Order (Warehouse)" columnsName={ReturnSalesOrderColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             />
@@ -68,4 +68,4 @@ const ReturnSalesOrder = () => {
     )
 }
 
-export default ReturnSalesOrder
+export default WarehouseReturnSalesOrder

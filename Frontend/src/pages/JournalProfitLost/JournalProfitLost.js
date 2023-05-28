@@ -39,7 +39,7 @@ const JournalProfitLost = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Journal Profit Lost" columnsName={JournalProfitLostColumn} backButton={true}
+            <UserDataTable data={data} title="Journal Profit Lost (Axapta)" columnsName={JournalProfitLostColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 AddUser={true}

@@ -39,7 +39,7 @@ const JournalCounting = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Journal Counting" columnsName={JournalCountingTableColumn} backButton={true}
+            <UserDataTable data={data} title="Journal Counting (Axapta)" columnsName={JournalCountingTableColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 AddUser={true}

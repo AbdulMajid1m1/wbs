@@ -39,7 +39,7 @@ const JournalMovement = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Journal Movement" columnsName={JournalMovementColumn} backButton={true}
+            <UserDataTable data={data} title="Journal Movement (Axapta)" columnsName={JournalMovementColumn} backButton={true}
                 emailButton={false}
                 uniqueId="journalUserAssigned"
                 AddUser={true}

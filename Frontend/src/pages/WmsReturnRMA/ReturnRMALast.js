@@ -28,11 +28,18 @@ const ReturnRMALast = () => {
   const [userInputSubmit, setUserInputSubmit] = useState(false);
   const [newBarcode, setNewBarcode] = useState("");
   const [addUser, setAddUser] = useState(false);
-  const [username, setUserName] = useState('');
   const [usersList, setUsersList] = useState([]);
-  const [selectedRow, setSelectedRow] = useState([]);
+  const [userInput, setUserInput] = useState("");
 
 
+
+
+
+  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const resetAutocomplete = () => {
+    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  };
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -40,62 +47,63 @@ const ReturnRMALast = () => {
 
   };
 
-  // retrieve data from session storage
-  // const storedData = sessionStorage.getItem('PickingRowData');
   const storedData = sessionStorage.getItem('RmaRowData');
   const parsedData = JSON.parse(storedData);
   console.log("parsedData")
   console.log(parsedData)
 
 
+  useEffect(() => {
+    const getLocationData = async () => {
+      try {
+        const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
+          {
+            headers: {
+              itemcode: parsedData?.ITEMID,
+            }
+          })
+        console.log(res?.data)
+        setLocation(res?.data)
 
 
+      }
+      catch (error) {
+        console.log(error)
+        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
 
-
-
-
-  const handleSaveBtnClick = async (e) => {
-    e.preventDefault()
-    handleAddUserClose()
-    if (locationInputValue === "") {
-      setError("Please select a location")
-      return;
+      }
     }
 
-    if (newBarcode === "") {
-      setError("Item Serial Number cannot be empty")
-      return;
-    }
+    getLocationData();
 
+  }, [parsedData?.ITEMID])
 
-    let apiData = parsedData;
-    apiData.INVENTLOCATIONID = locationInputValue;
-    apiData.ITEMSERIALNO = newBarcode;
-    apiData.ASSIGNEDTOUSERID = username;
+  const handleFromSelect = (event, value) => {
+    setSelectedValue(value);
+    fetchData(value);
+  };
 
+  const fetchData = async (selectedValue) => {
     try {
-      const res = await userRequest.post(
-        `/insertIntoWmsReturnSalesOrderCl`,
-        [apiData],
-
+      const response = await userRequest.post(
+        "/getMappedBarcodedsByItemCodeAndBinLocation",
+        {},
+        {
+          headers: {
+            // itemcode: "CV-950H SS220 BK",
+            itemcode: parsedData?.ITEMID,
+            binlocation: selectedValue
+          }
+        }
       );
-      console.log(res?.data)
-      setMessage(res?.data?.message ?? 'Data saved successfully');
-
-      // clear the filtered data and user input
-      setFilteredData([]);
-      setLocationInputValue("");
-      setTimeout(() => {
-        navigate(-1);
-      }, 1000);
-
+      const responseData = response.data;
+      setNewTableData(responseData);
+    } catch (error) {
+      console.error(error);
     }
-    catch (error) {
-      console.log(error)
-      setError(error?.response?.data?.message ?? 'Cannot save data');
+  };
 
-    }
-  }
+
 
   const GenerateBarcode = async () => {
 
@@ -103,47 +111,42 @@ const ReturnRMALast = () => {
       setError("Please enter a model number")
       return;
     }
+    try {
+      const response = await userRequest.post("/generateBarcodeForRma",
+        {
+          RETURNITEMNUM: parsedData?.RETURNITEMNUM,
+          ITEMID: parsedData?.ITEMID,
+          MODELNO: modelNumber,
+        }
+      )
+      console.log(response?.data)
+      setNewBarcode(response?.data?.RMASERIALNO)
+      console.log("newBarcode", response?.data?.RMASERIALNO)
+      setMessage(response?.data?.message ?? 'Barcode generated successfully');
 
+      filterData();
 
+      setTimeout(() => {
+        handlePrint();
+       
 
-    const response = await userRequest.post("/generateBarcodeForRma",
-      {
-        RETURNITEMNUM: parsedData?.RETURNITEMNUM,
-        ITEMID: parsedData?.ITEMID,
-        MODELNO: modelNumber,
-      }
-    )
-    console.log(response?.data)
-    setNewBarcode(response?.data?.RMASERIALNO)
-    setMessage(response?.data?.message ?? 'Barcode generated successfully');
-    // APPPEND THIS BARCODE TO THE SELECTED ROW
+      }, 20);
+    }
+    catch (error) {
+      console.log(error)
+      setError(error?.response?.data?.message ?? 'Cannot generate barcode');
+
+    }
 
   }
 
-  const handleAddUserClose = () => {
-    setAddUser(false);
-  };
-
-  const handleAddUserPopup = async () => {
-    setAddUser(true);
-    try {
-      const res = await userRequest.get('/getAllTblUsers');
-      setUsersList(res.data);
-      console.log(res.data);
-      console.log("wokf")
-    } catch (error) {
-      console.log(error);
-      setError(error?.response?.data?.message || 'Something went wrong')
-
-    };
-  };
 
 
 
-  
+
+
+
   const handlePrint = () => {
-    
-    // Open a new window/tab with only the QR code
     const printWindow = window.open('', 'Print Window', 'height=400,width=800');
     const html = '<html><head><title>Print Barcode</title>' +
       '<style>' +
@@ -152,21 +155,17 @@ const ReturnRMALast = () => {
       '#header { display: flex; justify-content: center; padding: 1px;}' +
       '#imglogo {height: 40px; width: 100px;}' +
       '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;}' +
-
       '#paragh { font-size: 15px; font-weight: 600; }' +
       '</style>' +
       '</head><body>' +
-      '<div id="barcode"></div>' +
-      '</div>' +
+      '<div id="printBarcode"></div>' +
       '</body></html>';
 
     printWindow.document.write(html);
-    const barcodeContainer = printWindow.document.getElementById('barcode');
+    const barcodeContainer = printWindow.document.getElementById('printBarcode');
     const barcode = document.getElementById('barcode').cloneNode(true);
     barcodeContainer.appendChild(barcode);
 
-
-    // Add logo image to document
     const logoImg = new Image();
     logoImg.src = logo;
 
@@ -178,6 +177,89 @@ const ReturnRMALast = () => {
     };
   }
 
+  const handleInputUser = (e) => {
+    setNewBarcode(e.target.value)
+    if (e.target.value.length === 0) {
+      setTimeout(() => {
+        setError("Please scan a barcode");
+      }, 100);
+      return
+    }
+
+    console.log(userInput)
+    filterData();
+  }
+
+  const filterData = async () => {
+    let filtered;
+    if (barcode === "barcode") {
+      let trimInput = userInput.trim()
+
+      // filter the data based on the user input and selection type
+      filtered = newTableData.filter((item) => {
+        if (selectionType === 'Pallet') {
+          return item.PalletCode === trimInput;
+        } else if (selectionType === 'Serial') {
+          return item.ItemSerialNo === trimInput;
+        }
+
+        else {
+          return true;
+        }
+      });
+
+      if (filtered.length === 0) {
+        setTimeout(() => {
+          setError("Please scan a valid barcode");
+        }, 100);
+        return;
+      }
+
+    }
+
+    let apiData = parsedData;
+    apiData.ITEMSERIALNO = newBarcode;
+    try {
+      const res = await userRequest.post(
+        `/insertIntoWmsReturnSalesOrderCl`,
+        [apiData],
+
+      );
+      console.log(res?.data)
+      setMessage(res?.data?.message ?? 'Data inserted successfully');
+
+      setFilteredData(prev => [...prev, apiData])
+      if (barcode === "barcode") {
+        // Remove the inserted records from the newTableData
+        setNewTableData((prevData) => {
+          return prevData.filter((item) => {
+            if (selectionType === 'Pallet') {
+              return !filtered.some(filteredItem => filteredItem.PalletCode === item.PalletCode);
+            } else if (selectionType === 'Serial') {
+              return !filtered.some(filteredItem => filteredItem.ItemSerialNo === item.ItemSerialNo);
+            } else {
+              return true;
+            }
+          });
+        });
+      }
+      else{
+        // clear model number
+        setModelNumber("");
+      }
+      // clear the user input state variable
+      setUserInput("");
+
+
+    }
+    catch (error) {
+      console.log(error)
+      setError(error?.response?.data?.message ?? 'Cannot save data');
+
+    }
+
+
+  };
 
 
   return (
@@ -208,7 +290,55 @@ const ReturnRMALast = () => {
                   value={parsedData?.RETURNITEMNUM}
                   disabled
                 />
+                <div className='flex gap-2 justify-center items-center'>
+                  <span className='text-white'>FROM:</span>
 
+                  <div className='w-full'>
+                    <Autocomplete
+                      ref={autocompleteRef}
+                      key={autocompleteKey}
+                      id="location"
+                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
+                      getOptionLabel={(option) => option}
+                      onChange={handleFromSelect}
+
+                      onInputChange={(event, value) => {
+                        if (!value) {
+                          // perform operation when input is cleared
+                          console.log("Input cleared");
+
+                        }
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          InputProps={{
+                            ...params.InputProps,
+                            className: "text-white",
+                          }}
+                          InputLabelProps={{
+                            ...params.InputLabelProps,
+                            style: { color: "white" },
+                          }}
+
+                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                          placeholder="FROM"
+                          required
+                        />
+                      )}
+                      classes={{
+                        endAdornment: "text-white",
+                      }}
+                      sx={{
+                        '& .MuiAutocomplete-endAdornment': {
+                          color: 'white',
+                        },
+                      }}
+                    />
+
+                  </div>
+                </div>
 
               </div>
 
@@ -224,9 +354,9 @@ const ReturnRMALast = () => {
                   </div>
 
 
-                  <div className='text-[#FFFFFF] w-full'>
+                  {/* <div className='text-[#FFFFFF] w-full'>
                     <span>NAME: {parsedData.NAME}</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -247,6 +377,72 @@ const ReturnRMALast = () => {
 
             </div>
 
+
+
+            <div className='mb-6'>
+              {/* // creae excel like Tables  */}
+              <div className="table-location-generate1">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ItemCode</th>
+                      <th>ItemDesc</th>
+                      <th>GTIN</th>
+                      <th>Remarks</th>
+                      <th>User</th>
+                      <th>Classification</th>
+                      <th>MainLocation</th>
+                      <th>BinLocation</th>
+                      <th>IntCode</th>
+                      <th>ItemSerialNo</th>
+                      <th>MapDate</th>
+                      <th>PalletCode</th>
+                      <th>Reference</th>
+                      <th>SID</th>
+                      <th>CID</th>
+                      <th>PO</th>
+                      <th>Trans</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {newTableData.map((data, index) => (
+                      <tr key={"tranidRow" + index}>
+                        <td>{data.ItemCode}</td>
+                        <td>{data.ItemDesc}</td>
+                        <td>{data.GTIN}</td>
+                        <td>{data.Remarks}</td>
+                        <td>{data.User}</td>
+                        <td>{data.Classification}</td>
+                        <td>{data.MainLocation}</td>
+                        <td>{data.BinLocation}</td>
+                        <td>{data.IntCode}</td>
+                        <td>{data.ItemSerialNo}</td>
+                        <td>{new Date(data.MapDate).toLocaleDateString()}</td>
+                        <td>{data.PalletCode}</td>
+                        <td>{data.Reference}</td>
+                        <td>{data.SID}</td>
+                        <td>{data.CID}</td>
+                        <td>{data.PO}</td>
+                        <td>{data.Trans}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+
+
+            </div >
+
+            <div className='mb-4 flex justify-end items-center gap-2'>
+              <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+              <input
+                id="totals"
+                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Totals"
+                value={newTableData.length}
+              />
+            </div>
 
             {/* Barcode Radio Button */}
             <div class="text-center mb-4">
@@ -292,7 +488,6 @@ const ReturnRMALast = () => {
                 value={modelNumber}
 
                 onChange={(e) => setModelNumber(e.target.value)}
-                // onBlur={handleInputUser}
                 disabled={barcode === 'barcode' ? true : false}
 
               />
@@ -312,7 +507,7 @@ const ReturnRMALast = () => {
               </button>
 
 
-              
+
               <div id="barcode">
                 <div id="barcode" className='hidden'>
                   <div id='header'>
@@ -320,24 +515,72 @@ const ReturnRMALast = () => {
                       <img src={logo} id='imglogo' alt='' />
                     </div>
                   </div>
-                    <div id='inside-BRCode'>
-                      <Barcode value={`${parsedData.ITEMID} ${parsedData.SALESID}`}  width={1} height={60} />
-                    </div>
+                  <div id='inside-BRCode'>
+                    {/* <Barcode value={`${parsedData.ITEMID} ${parsedData.SALESID}`} width={1} height={60} /> */}
+                    <Barcode value={`${newBarcode}`} width={1} height={60} />
                   </div>
+                </div>
               </div>
 
 
-              {/* Print Barcode */}
-              <button
-                type='button'
-                onClick={handlePrint}
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[35%]'>
-                <span className='flex justify-center items-center'
-                >
-                  <p>Print Barcode </p>
-                </span>
-                </button>
+
+
             </div>
+
+
+            <div class="text-center mb-4"
+              style={{ display: barcode !== 'barcode' ? 'none' : '' }}
+            >
+              <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                  flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+              >
+
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="Serial"
+                    checked={selectionType === 'Serial'}
+                    onChange={e => setSelectionType(e.target.value)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                  />
+                  <span className="ml-2 text-[#00006A]">BY SERIAL</span>
+                </label>
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="Pallet"
+                    checked={selectionType === 'Pallet'}
+                    onChange={e => setSelectionType(e.target.value)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    disabled
+                  />
+                  <span className="ml-2 text-[#00006A]">BY PALLETE</span>
+                </label>
+              </div>
+            </div>
+
+
+            <div className="mb-6"
+              style={{ display: barcode !== 'barcode' ? 'none' : '' }}>
+              <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan {selectionType}#<span className='text-[#FF0404]'>*</span></label>
+
+              <input
+                id="scanpallet"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder={`Scan ${selectionType}`}
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                onBlur={handleInputUser}
+
+              />
+            </div>
+
+
+
+
+
 
 
 
@@ -367,20 +610,22 @@ const ReturnRMALast = () => {
                       </tr>
                     </thead>
                     <tbody>
+                      {filteredData.map((data, index) => (
+                        <tr key={"rmaCl" + index}
+                        >
 
-                      <tr
-                      >
-                        <td>{parsedData?.ITEMID}</td>
-                        <td>{parsedData?.NAME}</td>
-                        <td>{parsedData?.EXPECTEDRETQTY}</td>
-                        <td>{parsedData?.SALESID}</td>
-                        <td>{parsedData?.RETURNITEMNUM}</td>
-                        <td>{parsedData?.INVENTSITEID}</td>
-                        <td>{parsedData?.INVENTLOCATIONID}</td>
-                        <td>{parsedData?.CONFIGID}</td>
-                        <td>{parsedData?.WMSLOCATIONID}</td>
-                        <td>{newBarcode}</td>
-                      </tr>
+                          <td>{data?.ITEMID}</td>
+                          <td>{data?.NAME}</td>
+                          <td>{data?.EXPECTEDRETQTY}</td>
+                          <td>{data?.SALESID}</td>
+                          <td>{data?.RETURNITEMNUM}</td>
+                          <td>{data?.INVENTSITEID}</td>
+                          <td>{data?.INVENTLOCATIONID}</td>
+                          <td>{data?.CONFIGID}</td>
+                          <td>{data?.WMSLOCATIONID}</td>
+                          <td>{newBarcode}</td>
+                        </tr>
+                      ))}
 
                     </tbody>
                   </table>
@@ -389,7 +634,7 @@ const ReturnRMALast = () => {
               </div>
 
 
-              {/* <div className='flex justify-end items-center gap-2'>
+              <div className='flex justify-end items-center gap-2'>
                 <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                 <input
                   id="totals"
@@ -397,48 +642,13 @@ const ReturnRMALast = () => {
                   placeholder="Totals"
                   value={filteredData.length}
                 />
-              </div> */}
+              </div>
 
             </form>
 
-            {/* AddUser Popup Screen */}
-            {addUser && (
-              <div className="popup-container fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
-                <div className="popup bg-white rounded-lg shadow-xl overflow-hidden max-w-md m-4">
-                  <div className="header bg-blue-500 text-white font-bold py-4 px-6">
-                    <h2>Add User</h2>
-                  </div>
-                  {/* onSubmit={handleFormSubmit} */}
-                  <form className="p-6" onSubmit={handleSaveBtnClick}>
-                    <label htmlFor="UserName" className="block mb-2 text-gray-700 text-sm">Name:</label>
-                    <select
-                      id="UserName"
-                      value={username}
-                      onChange={(e) => setUserName(e.target.value)}
-                      required
-                      className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    >
-                      <option value="">--Select User--</option>
-                      {usersList.map((user) => (
-                        <option key={user.UserID} value={user.UserID}>
-                          {user.Fullname}
-                        </option>
-                      ))}
-                    </select>
-
-                    <div className="flex justify-end gap-3 mt-6">
-                      <button className="close-btn text-white bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2" type="button" onClick={handleAddUserClose}>CANCEL</button>
-                      <button className="text-white bg-blue-500 hover:bg-blue-600 rounded-lg px-6 py-2" type="submit">SUBMIT</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
 
 
-
-
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="enterscan"
@@ -447,20 +657,18 @@ const ReturnRMALast = () => {
                 className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter/Scan Location"
               />
-            </div >
+            </div > */}
 
-            <div className='mb-6 flex justify-center items-center'>
+            {/* <div className='mb-6 flex justify-center items-center'>
               <button
                 type='button'
                 className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[35%]'>
-                <span className='flex justify-center items-center'
-                  // onClick={handleSaveBtnClick}
-                  onClick={handleAddUserPopup}
+                <span className='flex justify-center items-center'   
                 >
                   <p>Assign to User</p>
                 </span>
               </button>
-            </div>
+            </div> */}
           </div>
         </div >
       </div >

@@ -4776,7 +4776,8 @@ const WBSDB = {
         request.input("TRXDATETIME", sql.DateTime, currentDateTime);
         request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
         request.input("ITEMSERIALNO", sql.VarChar, returnSalesOrder.ITEMSERIALNO);
-        request.input("ASSIGNEDTOUSERID", sql.NVarChar, returnSalesOrder.ASSIGNEDTOUSERID);
+        // request.input("ASSIGNEDTOUSERID", sql.NVarChar, returnSalesOrder.ASSIGNEDTOUSERID);
+        request.input("ASSIGNEDTOUSERID", sql.NVarChar, req?.token?.UserID);
 
         await request.query(query);
       }

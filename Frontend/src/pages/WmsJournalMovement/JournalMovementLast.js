@@ -22,10 +22,6 @@ const WmsProfitLossLast = () => {
     setMessage(null);
 
   };
-
-  // retrieve data from session storage
-  //   const storedData = sessionStorage.getItem('PickingRowData');
-  // const storedData = sessionStorage.getItem('RmaRowData');
   const storedData = sessionStorage.getItem('JournalRowData');
   const parsedData = JSON.parse(storedData);
   console.log("parsedData")

@@ -39,7 +39,7 @@ const ReturnSalesOrder = () => {
     return (
         <div>
 
-            <UserDataTable data={data} title="Return Sales Order" columnsName={ReturnSalesOrderColumn} backButton={true}
+            <UserDataTable data={data} title="Return Sales Order (Axapta)" columnsName={ReturnSalesOrderColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             />

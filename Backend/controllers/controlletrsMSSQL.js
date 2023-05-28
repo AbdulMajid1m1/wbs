@@ -5527,7 +5527,7 @@ const WBSDB = {
     try {
       const { ITEMID, JOURNALID, TRXUSERIDASSIGNED } = req.body;
 
-      // Check if the item exists in the table
+      // Check if the item exists in the table d
       let checkItemQuery = `
         SELECT TOP 1 *
         FROM [WBSSQL].[dbo].[WMS_Journal_Counting_CL]

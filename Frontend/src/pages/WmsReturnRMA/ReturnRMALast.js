@@ -623,7 +623,7 @@ const ReturnRMALast = () => {
                           <td>{data?.INVENTLOCATIONID}</td>
                           <td>{data?.CONFIGID}</td>
                           <td>{data?.WMSLOCATIONID}</td>
-                          <td>{newBarcode}</td>
+                          <td>{data?.ITEMSERIALNO}</td>
                         </tr>
                       ))}
 

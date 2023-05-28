@@ -5,6 +5,10 @@ import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { Autocomplete, TextField } from '@mui/material';
+import Barcode from "react-barcode";
+import { QRCodeSVG } from "qrcode.react";
+import logo from "../../images/alessalogo2.png"
+
 
 const ReturnRMALast = () => {
   const navigate = useNavigate();
@@ -136,6 +140,45 @@ const ReturnRMALast = () => {
 
 
 
+  
+  const handlePrint = () => {
+    
+    // Open a new window/tab with only the QR code
+    const printWindow = window.open('', 'Print Window', 'height=400,width=800');
+    const html = '<html><head><title>Print Barcode</title>' +
+      '<style>' +
+      '@page { size: 3in 2in; margin: 0; }' +
+      'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
+      '#header { display: flex; justify-content: center; padding: 1px;}' +
+      '#imglogo {height: 40px; width: 100px;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;}' +
+
+      '#paragh { font-size: 15px; font-weight: 600; }' +
+      '</style>' +
+      '</head><body>' +
+      '<div id="barcode"></div>' +
+      '</div>' +
+      '</body></html>';
+
+    printWindow.document.write(html);
+    const barcodeContainer = printWindow.document.getElementById('barcode');
+    const barcode = document.getElementById('barcode').cloneNode(true);
+    barcodeContainer.appendChild(barcode);
+
+
+    // Add logo image to document
+    const logoImg = new Image();
+    logoImg.src = logo;
+
+    logoImg.onload = function () {
+      printWindow.document.getElementById('imglogo').src = logoImg.src;
+
+      printWindow.print();
+      printWindow.close();
+    };
+  }
+
+
 
   return (
     <>
@@ -257,18 +300,45 @@ const ReturnRMALast = () => {
               />
             </div>
 
-            <div className='mb-6 flex justify-center items-center'>
+            <div className='mb-6 flex justify-center items-center gap-2'>
               <button
                 onClick={GenerateBarcode}
 
                 style={{ display: barcode === 'barcode' ? 'none' : '' }}
                 type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[40%]'>
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[35%]'>
                 <span className='flex justify-center items-center'
                 >
                   <p>Generate Barcode </p>
                 </span>
               </button>
+
+
+              
+              <div id="barcode">
+                <div id="barcode" className='hidden'>
+                  <div id='header'>
+                    <div>
+                      <img src={logo} id='imglogo' alt='' />
+                    </div>
+                  </div>
+                    <div id='inside-BRCode'>
+                      <Barcode value="RMA0040408 GNGJ90JGWC RV900JPK" width={1} height={60} />
+                    </div>
+                  </div>
+              </div>
+
+
+              {/* Print Barcode */}
+              <button
+                type='button'
+                onClick={handlePrint}
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[35%]'>
+                <span className='flex justify-center items-center'
+                >
+                  <p>Print Barcode </p>
+                </span>
+                </button>
             </div>
 
 
@@ -384,7 +454,7 @@ const ReturnRMALast = () => {
             <div className='mb-6 flex justify-center items-center'>
               <button
                 type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[35%]'>
                 <span className='flex justify-center items-center'
                   // onClick={handleSaveBtnClick}
                   onClick={handleAddUserPopup}

@@ -82,6 +82,7 @@ import JournalMovementFirst from './pages/WmsJournalMovement/JournalMovementFirs
 import JournalMovementLast from './pages/WmsJournalMovement/JournalMovementLast'
 import WarehouseJournalProfitLoss from './pages/WarehouseJournalProfitLoss/WarehouseJournalProfitLoss'
 import WarehouseJournalCounting from './pages/WarehouseJournalCounting/WarehouseJournalCounting'
+import WarehouseReturnSalesOrder from './pages/WarehouseReturnSalesOrder/WarehouseReturnSalesOrder'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -206,12 +207,14 @@ const App = () => {
                 <Route path='/journalprofit' element={<JournalProfitLost />} />
                 <Route path='/journalmovement' element={<JournalMovement />} />
                 <Route path='/journalcounting' element={<JournalCounting />} />
+                <Route path='/warehousereturn' element={<WarehouseReturnSalesOrder />} />
 
                 <Route path='/warehousemovement' element={<WarehouseMovement />} />
                 
                 <Route path='/warehouseprofitloss' element={<WarehouseJournalProfitLoss />} />
 
                 <Route path='/warehousecounting' element={<WarehouseJournalCounting />} />
+                
 
 
 

@@ -955,7 +955,7 @@ const UserDataTable = ({
           <div className="popup-container fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
             <div className="popup bg-white rounded-lg shadow-xl overflow-hidden max-w-md m-4">
               <div className="header bg-blue-500 text-white font-bold py-4 px-6">
-                <h2 style={{ color: "white" }}>Add User</h2>
+                <h2 style={{ color: "white" }}>LIST OF USERS</h2>
               </div>
               <form onSubmit={handleFormSubmit} className="p-6">
                 <label htmlFor="UserName" className="block mb-2 text-gray-700 text-sm">Name:</label>

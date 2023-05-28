@@ -124,7 +124,7 @@ const ReturnRMALast = () => {
       console.log("newBarcode", response?.data?.RMASERIALNO)
       setMessage(response?.data?.message ?? 'Barcode generated successfully');
 
-      filterData();
+      filterData(response?.data?.RMASERIALNO);
 
       setTimeout(() => {
         handlePrint();
@@ -178,7 +178,8 @@ const ReturnRMALast = () => {
   }
 
   const handleInputUser = (e) => {
-    setNewBarcode(userInput)
+    setNewBarcode(e.target.value);
+    console.log("ccccc" + e.target.value)
     if (e.target.value.length === 0) {
       setTimeout(() => {
         setError("Please scan a barcode");
@@ -187,10 +188,13 @@ const ReturnRMALast = () => {
     }
 
     console.log(userInput)
-    filterData();
+
+
+    filterData(e.target.value);
+
   }
 
-  const filterData = async () => {
+  const filterData = async (newBarcodeValue) => {
     let filtered;
     if (barcode === "barcode") {
       let trimInput = userInput.trim()
@@ -218,7 +222,8 @@ const ReturnRMALast = () => {
     }
 
     let apiData = parsedData;
-    apiData.ITEMSERIALNO = newBarcode;
+    console.log("apiData barcode" + newBarcodeValue)
+    apiData.ITEMSERIALNO = newBarcodeValue;
     try {
       const res = await userRequest.post(
         `/insertIntoWmsReturnSalesOrderCl`,

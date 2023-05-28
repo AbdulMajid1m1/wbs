@@ -248,8 +248,6 @@ const ReturnRMALast = () => {
             </div>
 
 
-
-
             {/* Barcode Radio Button */}
             <div class="text-center mb-4">
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500

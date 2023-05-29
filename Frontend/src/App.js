@@ -84,6 +84,7 @@ import WarehouseJournalProfitLoss from './pages/WarehouseJournalProfitLoss/Wareh
 import WarehouseJournalCounting from './pages/WarehouseJournalCounting/WarehouseJournalCounting'
 import WarehouseReturnSalesOrder from './pages/WarehouseReturnSalesOrder/WarehouseReturnSalesOrder'
 import WmsInventory from './pages/WmsInventory/WmsInventory'
+import WarehouseWmsInventory from './pages/WarehouseWmsInventory/WarehouseWmsInventory'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -217,6 +218,8 @@ const App = () => {
                 <Route path='/warehouseprofitloss' element={<WarehouseJournalProfitLoss />} />
 
                 <Route path='/warehousecounting' element={<WarehouseJournalCounting />} />
+
+                <Route path='/warehouseinventory' element={<WarehouseWmsInventory />} />
                 
 
 

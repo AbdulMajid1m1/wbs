@@ -2358,3 +2358,84 @@ export const WarehouseJournalCountingColumn = [
 
 
 ]
+
+
+
+export const WarehouseWmsInventoryColumn = [
+  {
+    field: "ITEMID",
+    headerName: "ITEM ID",
+    width: 180,
+
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEMNAME",
+    width: 230,
+
+  },
+  {
+    field: "ITEMGROUPID",
+    headerName: "ITEM GROUP ID",
+    width: 180,
+
+  },
+  {
+    field: "GROUPNAME",
+    headerName: "GROUP NAME",
+    width: 180,
+
+  },
+  {
+    field: "INVENTORYBY",
+    headerName: "INVENTORY BY",
+    width: 180,
+
+  },
+  {
+    field: "TRXDATETIME",
+    headerName: "TRX DATE TIME",
+    width: 180,
+
+  },
+  {
+    field: "TRXUSERIDASSIGNED",
+    headerName: "TRX USER ID ASSIGNED",
+    width: 180,
+
+  },
+  {
+    field: "TRXUSERIDASSIGNEDBY",
+    headerName: "TRX USERID ASSIGNED BY",
+    width: 180,
+
+  },
+  {
+    field: "QTYSCANNED",
+    headerName: "QTY SCANNED",
+    width: 180,
+
+  },
+  {
+    field: "QTYDIFFERENCE",
+    headerName: "QTY DIFFERENCE",
+    width: 180,
+
+  },
+  {
+    field: "QTYONHAND",
+    headerName: "QTY ON HAND",
+    width: 180,
+
+  },
+  {
+    field: "JOURNALID",
+    headerName: "JOURNAL ID",
+    width: 180,
+
+  },
+ 
+
+
+
+]

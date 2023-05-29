@@ -85,6 +85,7 @@ import WarehouseJournalCounting from './pages/WarehouseJournalCounting/Warehouse
 import WarehouseReturnSalesOrder from './pages/WarehouseReturnSalesOrder/WarehouseReturnSalesOrder'
 import WmsInventory from './pages/WmsInventory/WmsInventory'
 import WarehouseWmsInventory from './pages/WarehouseWmsInventory/WarehouseWmsInventory'
+import WmsPhysicalInventory from './pages/WmsPhysicalInventory/WmsPhysicalInventory'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -149,6 +150,8 @@ const App = () => {
         <Route path='/rmaputaway' element={<RmaPutAway />} />
 
         <Route path='/wmsinventory' element={<WmsInventory />} />
+
+        <Route path='/wmsphysical' element={<WmsPhysicalInventory />} />
 
 
         <Route

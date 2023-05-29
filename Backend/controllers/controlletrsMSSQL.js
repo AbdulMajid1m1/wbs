@@ -5760,6 +5760,75 @@ const WBSDB = {
   //------------------- WMS_Journal_Counting_OnlyCL Controller Start -------------------
 
 
+  // async insertIntoWmsJournalCountingOnlyCL(req, res, next) {
+  //   try {
+  //     const countingOnlyDataArray = req.body;
+
+  //     if (!Array.isArray(countingOnlyDataArray)) {
+  //       return res.status(400).send({ message: 'Invalid input. Array expected.' });
+  //     }
+
+  //     if (countingOnlyDataArray.length === 0) {
+  //       return res.status(400).send({ message: "Please provide data to insert." });
+  //     }
+
+  //     for (let i = 0; i < countingOnlyDataArray.length; i++) {
+  //       const {
+  //         ITEMID,
+  //         ITEMNAME,
+  //         ITEMGROUPID,
+  //         GROUPNAME,
+  //         INVENTORYBY,
+  //         TRXUSERIDASSIGNED,
+  //         QTYSCANNED,
+  //         QTYDIFFERENCE,
+  //         QTYONHAND
+  //       } = countingOnlyDataArray[i];
+
+  //       let fields = [
+  //         "ITEMID",
+  //         "ITEMNAME",
+  //         "ITEMGROUPID",
+  //         "GROUPNAME",
+  //         "INVENTORYBY",
+  //         "TRXDATETIME",
+  //         "TRXUSERIDASSIGNED",
+  //         "TRXUSERIDASSIGNEDBY",
+  //         "QTYSCANNED",
+  //         "QTYDIFFERENCE",
+  //         "QTYONHAND"
+  //       ];
+
+  //       let values = fields.map((field) => "@" + field);
+
+  //       let query = `
+  //         INSERT INTO [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+  //           (${fields.join(', ')}) 
+  //         VALUES 
+  //           (${values.join(', ')})
+  //       `;
+
+  //       let request = pool2.request();
+  //       request.input('ITEMID', sql.NVarChar, ITEMID);
+  //       request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+  //       request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
+  //       request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
+  //       request.input('INVENTORYBY', sql.NVarChar, INVENTORYBY);
+  //       request.input('TRXDATETIME', sql.DateTime, new Date());
+  //       request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+  //       request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
+  //       request.input('QTYSCANNED', sql.Float, QTYSCANNED);
+  //       request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
+  //       request.input('QTYONHAND', sql.Float, QTYONHAND);
+  //       await request.query(query);
+  //     }
+
+  //     return res.status(201).send({ message: 'Records inserted successfully' });
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(500).send({ message: error.message });
+  //   }
+  // },
   async insertIntoWmsJournalCountingOnlyCL(req, res, next) {
     try {
       const countingOnlyDataArray = req.body;
@@ -5785,6 +5854,28 @@ const WBSDB = {
           QTYONHAND
         } = countingOnlyDataArray[i];
 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const checkQuery = `
+          SELECT *
+          FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+          WHERE ITEMID = @ITEMID
+            AND TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
+            AND CONVERT(date, TRXDATETIME) = @TRXDATETIME
+        `;
+
+        const checkRequest = pool2.request();
+        checkRequest.input('ITEMID', sql.NVarChar, ITEMID);
+        checkRequest.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        checkRequest.input('TRXDATETIME', sql.Date, today);
+
+        const checkResult = await checkRequest.query(checkQuery);
+
+        if (checkResult.recordset.length > 0) {
+          return res.status(400).send({ message: `Record with ITEMID '${ITEMID}' already exists for today` });
+        }
+
         let fields = [
           "ITEMID",
           "ITEMNAME",
@@ -5801,26 +5892,28 @@ const WBSDB = {
 
         let values = fields.map((field) => "@" + field);
 
-        let query = `
+        let insertQuery = `
           INSERT INTO [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
             (${fields.join(', ')}) 
           VALUES 
             (${values.join(', ')})
         `;
 
-        let request = pool2.request();
-        request.input('ITEMID', sql.NVarChar, ITEMID);
-        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
-        request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
-        request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
-        request.input('INVENTORYBY', sql.NVarChar, INVENTORYBY);
-        request.input('TRXDATETIME', sql.DateTime, new Date());
-        request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
-        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
-        request.input('QTYSCANNED', sql.Float, QTYSCANNED);
-        request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
-        request.input('QTYONHAND', sql.Float, QTYONHAND);
-        await request.query(query);
+        let insertRequest = pool2.request();
+        insertRequest.input('ITEMID', sql.NVarChar, ITEMID);
+        insertRequest.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+        insertRequest.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
+        insertRequest.input('GROUPNAME', sql.NVarChar, GROUPNAME);
+        insertRequest.input('INVENTORYBY', sql.NVarChar, INVENTORYBY);
+
+        insertRequest.input('TRXDATETIME', sql.DateTime, today);
+        insertRequest.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        insertRequest.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
+        insertRequest.input('QTYSCANNED', sql.Float, QTYSCANNED);
+        insertRequest.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
+        insertRequest.input('QTYONHAND', sql.Float, QTYONHAND);
+
+        await insertRequest.query(insertQuery);
       }
 
       return res.status(201).send({ message: 'Records inserted successfully' });
@@ -5829,6 +5922,8 @@ const WBSDB = {
       return res.status(500).send({ message: error.message });
     }
   },
+
+
 
   // Fetch all data from WMS_Journal_Counting_OnlyCL
   async getAllWmsJournalCountingOnlyCl(req, res, next) {
@@ -5904,8 +5999,6 @@ const WBSDB = {
           TRXUSERIDASSIGNEDBY,
           CONFIGID,
           ITEMSERIALNO,
-          DATETIMESCANNED,
-          CURRENTUSERLOGGEDINID,
           QTYSCANNED,
           BINLOCATION
         } = countingOnlyCLDetsDataArray[i];
@@ -5942,15 +6035,15 @@ const WBSDB = {
         request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
         request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
         request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
-        request.input('JOURNALID', sql.NVarChar, JOURNALID);
+        request.input('JOURNALID', sql.Int, JOURNALID);
         request.input('INVENTORYBY', sql.NVarChar, INVENTORYBY);
-        request.input('TRXDATETIME', sql.DateTime, new Date());
+        request.input('TRXDATETIME', sql.DateTime, TRXDATETIME);
         request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
         request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, TRXUSERIDASSIGNEDBY);
         request.input('CONFIGID', sql.NVarChar, CONFIGID);
         request.input('ITEMSERIALNO', sql.NVarChar, ITEMSERIALNO);
-        request.input('DATETIMESCANNED', sql.DateTime, DATETIMESCANNED);
-        request.input('CURRENTUSERLOGGEDINID', sql.NVarChar, CURRENTUSERLOGGEDINID);
+        request.input('DATETIMESCANNED', sql.DateTime, new Date());
+        request.input('CURRENTUSERLOGGEDINID', sql.NVarChar, req?.token?.UserID);
         request.input('QTYSCANNED', sql.Float, QTYSCANNED);
         request.input('BINLOCATION', sql.NVarChar, BINLOCATION);
         await request.query(query);
@@ -5985,6 +6078,87 @@ const WBSDB = {
     }
   },
 
+
+
+  async validateItemSerialNumberForJournalCountingOnlyCLDets(req, res, next) {
+    try {
+      const { itemSerialNo } = req.body;
+
+      if (!itemSerialNo) {
+        return res.status(400).send({ message: "Please provide an itemSerialNo." });
+      }
+
+      let query = `
+        SELECT * FROM [WBSSQL].[dbo].[tblMappedBarcodes]
+        WHERE ItemSerialNo=@itemSerialNo
+      `;
+
+      let request = pool2.request();
+      request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
+      const data = await request.query(query);
+
+      if (data.recordset.length === 0) {
+        return res.status(404).send({ message: "Serial number not exist in mapped barcode." });
+      }
+
+      query = `
+        SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCLDets]
+        WHERE ITEMSERIALNO=@itemSerialNo
+      `;
+
+      request = pool2.request();
+      request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
+      const data2 = await request.query(query);
+
+      if (data2.recordset.length !== 0) {
+        return res.status(400).send({ message: "The serial number already exists." });
+      }
+
+      return res.status(200).send({ message: 'Serial number is validated.', data: data?.recordsets[0] });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async incrementQTYSCANNEDInJournalCountingOnlyCL(req, res) {
+    try {
+      const { TRXUSERIDASSIGNED, ITEMID, TRXDATETIME } = req.body;
+
+      // Check if required fields are provided
+      if (!TRXUSERIDASSIGNED || !ITEMID || !TRXDATETIME) {
+        return res.status(400).json({ message: 'Missing required fields.' });
+      }
+
+      // Update QTYSCANNED by incrementing it by 1
+      const query = `
+        UPDATE [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+        SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1
+        OUTPUT INSERTED.*
+        WHERE TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
+        AND ITEMID = @ITEMID
+        AND TRXDATETIME = @TRXDATETIME
+      `;
+      const request = pool2.request();
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('TRXDATETIME', sql.DateTime, TRXDATETIME);
+      const result = await request.query(query);
+
+      // Check if any rows were affected
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).json({ message: 'No matching rows found.' });
+      }
+
+      // Return the updated data
+      const updatedData = result.recordset[0];
+      return res.status(200).json({ message: 'QTYSCANNED updated successfully.', data: updatedData });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'An error occurred while updating QTYSCANNED.' });
+    }
+  }
 
 
 

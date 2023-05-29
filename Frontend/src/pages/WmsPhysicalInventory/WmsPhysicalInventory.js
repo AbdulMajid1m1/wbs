@@ -5,9 +5,10 @@ import icon from "../../images/close.png"
 import "./WmsPhysicalInventory.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const WmsPhysicalInventory = () => {
-  
+
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,27 +21,127 @@ const WmsPhysicalInventory = () => {
   const [dataList, setDataList] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  
- 
-    useEffect(() => {
-        setIsLoading(true);
-        userRequest.get('/getWmsJournalCountingOnlyCLByAssignedToUserId')
-        .then(response => {
-            console.log(response?.data);
-            setDataList(response?.data ?? []);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            console.error(error);
-            setIsLoading(false);
-        });
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState("");
+  // to reset snakebar messages
+  const resetSnakeBarMessages = () => {
+    setError(null);
+    setMessage(null);
 
-    }, []);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    userRequest.get('/getWmsJournalCountingOnlyCLByAssignedToUserId')
+      .then(response => {
+        console.log(response?.data);
+        setDataList(response?.data ?? []);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setIsLoading(false);
+      });
+
+  }, []);
+
+  const handleInputUser = async (e) => {
+    let itemSerialNo = e.target.value;
+    setUserInput(itemSerialNo);
+    if (e.target.value === "") {
+      setError("Serial Number is required");
+      return;
+    }
+
+    try {
+      const res = await userRequest.post("/validateItemSerialNumberForJournalCountingOnlyCLDets", { itemSerialNo })
+      console.log(res?.data);
+      console.log(res?.data?.data);
+      let mappedData = res?.data?.data[0];
+
+      // find the record in dataList bases on mappedData.ITEMID
+      let foundRecord = dataList.find(item => item.ITEMID === mappedData.ItemCode);
+      console.log(foundRecord);
+      if (!foundRecord) {
+        setError("Mapped ITEMID not found in the list");
+        return;
+      }
+
+      // call the update api
+      try {
+
+        const updateApiResponse = await userRequest.put("/incrementQTYSCANNEDInJournalCountingOnlyCL",
+          {
+            TRXUSERIDASSIGNED: foundRecord?.TRXUSERIDASSIGNED,
+            ITEMID: foundRecord?.ITEMID,
+            TRXDATETIME: foundRecord?.TRXDATETIME,
+          }
+        )
+
+        console.log(updateApiResponse?.data);
+        let updatedData = updateApiResponse?.data?.data;
+
+        let apiData = {
+          ...foundRecord,
+          CONFIGID: mappedData?.Classification,
+          BINLOCATION: mappedData?.BinLocation,
+          QTYSCANNED: updatedData?.QTYSCANNED,
+          ITEMSERIALNO: mappedData?.ItemSerialNo,
+        }
+        
+        console.log(apiData);
+        try {
+          const insertApiResponse = await userRequest.post("/insertIntoWmsJournalCountingOnlyCLDets", [apiData])
+          console.log(insertApiResponse?.data);
+          setMessage("Item Scanned Successfully");
+          setUserInput("");
+          setFilteredData(prev => [...prev, apiData]);
+
+
+        }
+        catch (error) {
+
+          console.log(error);
+          setError(error?.response?.data?.message ?? "Something went wrong!");
+
+        }
+
+
+
+
+      }
+      catch (error) {
+        console.log(error);
+        setError(error?.response?.data?.message ?? "Something went wrong!");
+      }
+
+
+
+
+
+
+
+
+
+
+    }
+    catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message ?? "Something went wrong!");
+    }
+  }
+
+
+
+
 
 
   return (
     <>
-   
+      {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
+
       {isLoading &&
 
         <div className='loading-spinner-background'
@@ -129,10 +230,10 @@ const WmsPhysicalInventory = () => {
               </div>
 
 
-              </div>
+            </div>
 
 
-              <div className='mb-4 flex justify-end items-center gap-2'>
+            <div className='mb-4 flex justify-end items-center gap-2'>
               <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="totals"
@@ -188,7 +289,7 @@ const WmsPhysicalInventory = () => {
                   placeholder={`Scan ${selectionType}`}
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
-                //   onBlur={handleInputUser}
+                  onBlur={handleInputUser}
 
                 />
               </div>
@@ -198,41 +299,45 @@ const WmsPhysicalInventory = () => {
                 <div className="table-location-generate1">
                   <table>
                     <thead>
-                        <tr>
+                      <tr>
                         <th>ITEMID</th>
                         <th>ITEMNAME</th>
                         <th>ITEMGROUPID</th>
                         <th>GROUPNAME</th>
+                        <th>JOURNALID</th>
                         <th>INVENTORYBY</th>
                         <th>TRXDATETIME</th>
                         <th>TRXUSERIDASSIGNED</th>
                         <th>TRXUSERIDASSIGNEDBY</th>
+                        <th>CONFIGID</th>
+                        <th>ITEMSERIALNO</th>
+                       
                         <th>QTYSCANNED</th>
-                        <th>QTYDIFFERENCE</th>
-                        <th>QTYONHAND</th>
-                        <th>JOURNALID</th>
-                        </tr>
+                        <th>BINLOCATION</th>
+                      </tr>
                     </thead>
                     <tbody>
                       {filteredData.map((item, index) => (
-                        <tr
-                        >
-                            <td>{item.ITEMID}</td>
-                            <td>{item.ITEMNAME}</td>
-                            <td>{item.ITEMGROUPID}</td>
-                            <td>{item.GROUPNAME}</td>
-                            <td>{item.INVENTORYBY}</td>
-                            <td>{item.TRXDATETIME}</td>
-                            <td>{item.TRXUSERIDASSIGNED}</td>
-                            <td>{item.TRXUSERIDASSIGNEDBY}</td>
-                            <td>{item.QTYSCANNED}</td>
-                            <td>{item.QTYDIFFERENCE}</td>
-                            <td>{item.QTYONHAND}</td>
-                            <td>{item.JOURNALID}</td>
+                        <tr key={index}>
+                          <td>{item.ITEMID}</td>
+                          <td>{item.ITEMNAME}</td>
+                          <td>{item.ITEMGROUPID}</td>
+                          <td>{item.GROUPNAME}</td>
+                          <td>{item.JOURNALID}</td>
+                          <td>{item.INVENTORYBY}</td>
+                          <td>{item.TRXDATETIME}</td>
+                          <td>{item.TRXUSERIDASSIGNED}</td>
+                          <td>{item.TRXUSERIDASSIGNEDBY}</td>
+                          <td>{item.CONFIGID}</td>
+                          <td>{item.ITEMSERIALNO}</td>
+                         
+                          <td>{item.QTYSCANNED}</td>
+                          <td>{item.BINLOCATION}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+
                 </div>
 
 
@@ -251,9 +356,9 @@ const WmsPhysicalInventory = () => {
 
             </form>
 
-            
 
-              <div className='mb-6'>
+
+            {/* <div className='mb-6'>
               <button
                 type='button'
                 className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
@@ -262,10 +367,10 @@ const WmsPhysicalInventory = () => {
                   <p>Save</p>
                 </span>
               </button>
-            </div>
+            </div> */}
 
-             </div>
-           {/* </div> */}
+          </div>
+          {/* </div> */}
         </div>
       </div>
     </>

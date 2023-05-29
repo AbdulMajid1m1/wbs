@@ -115,6 +115,18 @@ const WmsInventory = () => {
 
   // handle the save button click
   const handleSaveBtnClick = async () => {
+    if(selectedBy === ''){
+      setError('Please select the selected by type!');
+      return;
+    }
+    if (selectedRows.length === 0) {
+      setError('Please select at least one row!');
+      return;
+    }
+    if (assignedTo === '') {
+      setError('Please select the assigned to user!');
+      return;
+    }
     try {
       let apiData = selectedRows.map(row => {
         return {

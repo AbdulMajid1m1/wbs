@@ -476,6 +476,8 @@ router.get("/getAllWmsJournalCountingOnlyCl", checkAuthentication, WBSDB.getAllW
 
 router.get("/getWmsJournalCountingOnlyCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalCountingOnlyCLByAssignedToUserId);
 
+router.put("/incrementQTYSCANNEDInJournalCountingOnlyCL", checkAuthentication, WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCL);
+
 
 // -------------- WMS_Journal_Counting_OnlyCLDets API Start --------------
 
@@ -483,3 +485,5 @@ router.get("/getWmsJournalCountingOnlyCLByAssignedToUserId", checkAuthentication
 router.post("/insertIntoWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.insertIntoWmsJournalCountingOnlyCLDets);
 
 router.get("/getAllWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCLDets);
+
+router.post("/validateItemSerialNumberForJournalCountingOnlyCLDets", checkAuthentication, WBSDB.validateItemSerialNumberForJournalCountingOnlyCLDets);

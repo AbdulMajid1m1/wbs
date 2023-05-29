@@ -83,6 +83,7 @@ import JournalMovementLast from './pages/WmsJournalMovement/JournalMovementLast'
 import WarehouseJournalProfitLoss from './pages/WarehouseJournalProfitLoss/WarehouseJournalProfitLoss'
 import WarehouseJournalCounting from './pages/WarehouseJournalCounting/WarehouseJournalCounting'
 import WarehouseReturnSalesOrder from './pages/WarehouseReturnSalesOrder/WarehouseReturnSalesOrder'
+import WmsInventory from './pages/WmsInventory/WmsInventory'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -145,6 +146,8 @@ const App = () => {
         <Route path='/cyclecountinglast' element={<WmsCycleCountingLast />} />
 
         <Route path='/rmaputaway' element={<RmaPutAway />} />
+
+        <Route path='/wmsinventory' element={<WmsInventory />} />
 
 
         <Route

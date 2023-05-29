@@ -5780,7 +5780,6 @@ const WBSDB = {
           GROUPNAME,
           INVENTORYBY,
           TRXUSERIDASSIGNED,
-          TRXUSERIDASSIGNEDBY,
           QTYSCANNED,
           QTYDIFFERENCE,
           QTYONHAND
@@ -5817,7 +5816,7 @@ const WBSDB = {
         request.input('INVENTORYBY', sql.NVarChar, INVENTORYBY);
         request.input('TRXDATETIME', sql.DateTime, new Date());
         request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
-        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, TRXUSERIDASSIGNEDBY);
+        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
         request.input('QTYSCANNED', sql.Float, QTYSCANNED);
         request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
         request.input('QTYONHAND', sql.Float, QTYONHAND);

@@ -180,7 +180,7 @@ const UserDataTable = ({
 
 
   const handleRowClick = (item) => {
-    if (uniqueId === "journalMovementClId" || uniqueId === "wProfitLostClId" || uniqueId === "journalCountingClId") {
+    if (uniqueId === "journalMovementClId" || uniqueId === "wProfitLostClId" || uniqueId === "journalCountingClId" || uniqueId === "wmsInventoryClId") {
       handleRowClickInParent(item);
       return;
     }
@@ -814,6 +814,8 @@ const UserDataTable = ({
     'wProfitLostClDetsId',
     'journalCountingClId',
     'journalCountingClDetsId',
+    'wmsInventoryClId',
+    'wmsInventoryClDetsId',
 
   ]
 

@@ -27,17 +27,17 @@ const WmsInventory = () => {
     };
 
     const [dataList, setDataList] = useState([]);
-//   useEffect(() => {
-//     userRequest.get('/getAllTblRZones')
-//       .then(response => {
-//         console.log(response?.data);
-//         setDataList(response?.data ?? []);
-//       })
-//       .catch(error => {
-//         console.error(error);
-//       });
+    useEffect(() => {
+        userRequest.get('/getAllTblUsers')
+        .then(response => {
+            console.log(response?.data);
+            setDataList(response?.data ?? []);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
-//   }, []);
+    }, []);
 
   const handleAutoComplete = (event, value) => {
     console.log('Selected value:', value);
@@ -92,56 +92,18 @@ const WmsInventory = () => {
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
-            <div className='mt-6 flex justify-start items-center gap-3'>
-            <label className='text-[#00006A]'>BY</label>
-            <FormControl style={{ minWidth: '200px' }}>
-                <Select
-                    labelId="select-by-label"
-                    id="select-by"                     
-                    multiple
-                    value={selectedBy}
-                    className='bg-[#fff]'
-                    onChange={handleByChange}
-                    renderValue={(selected) => (
-                        <div>
-                        {selected.map((value) => (
-                            <span key={value}>{value}</span>
-                        ))}
-                        </div>
-                )}
-                >
-                
-                <MenuItem value="Option 1">Option 1</MenuItem>
-                <MenuItem value="Option 2">Option 2</MenuItem>
-                <MenuItem value="Option 3">Option 3</MenuItem>
-                </Select>
-            </FormControl>
-            </div>
-
-
-            <div className=''>    
-                <UserDataTable  data={data} columnsName={WarehouseJournalCountingColumn} backButton={false}
-                actionColumnVisibility={false}
-                buttonVisibility={false}
-                
-                />
-            </div>
-            
-            <div className="mb-6 flex justify-start items-center gap-2">
-                <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIG USER</label>
-
-                <Autocomplete
-                  id="zone"
-                  options={dataList}
-                  getOptionLabel={(option) => option.RZONE}
+            <div className='mb-6'>
+            <label className='text-[#00006A] text-center font-semibold'>BY</label>
+              
+            <Autocomplete
+                  id="userid"
+                  options={[
+                    { item: 'ITEMID'},
+                    { item: 'BINLOCATION' },
+                  ]}
+                  getOptionLabel={(option) => option.item ?? ''}
                   onChange={handleAutoComplete}
 
-                  // onChange={(event, value) => {
-                  //   if (value) {
-                  //     console.log(`Selected: ${value}`);
-
-                  //   }
-                  // }}
                   onInputChange={(event, value) => {
                     if (!value) {
                       // perform operation when input is cleared
@@ -161,8 +123,63 @@ const WmsInventory = () => {
                         style: { color: "white" },
                       }}
 
-                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Assign User ID"
+                      className="bg-gray-50 border border-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="ItemID/Binlocation"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+
+            </div>
+
+
+            <div className='-mt-6'>    
+                <UserDataTable  data={data} columnsName={WarehouseJournalCountingColumn} backButton={false}
+                actionColumnVisibility={false}
+                buttonVisibility={false}
+                
+                />
+            </div>
+            
+            <div className="mb-6">
+                <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIGN</label>
+
+                <Autocomplete
+                  id="userid"
+                  options={dataList}
+                //   getOptionLabel={(option) => option.Fullname ?? ''}
+                  getOptionLabel={(option) => option.Fullname ? `${option.Fullname} - ${option.UserID}` : ''}
+                  onChange={handleAutoComplete}
+
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Assign User"
                       required
                     />
                   )}

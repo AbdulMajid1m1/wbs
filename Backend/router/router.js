@@ -467,3 +467,17 @@ router.put("/updateWmsJournalCountingCLQtyScanned", checkAuthentication, WBSDB.u
 router.get("/getAllWmsJournalCountingCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingCLDets);
 router.post("/insertWMSJournalCountingCLDets", checkAuthentication, WBSDB.insertWMSJournalCountingCLDets);
 
+
+// -------------- WMS_Journal_Counting_OnlyCL API Start --------------
+
+router.post("/insertIntoWmsJournalCountingOnlyCL", checkAuthentication, WBSDB.insertIntoWmsJournalCountingOnlyCL);
+
+router.get("/getAllWmsJournalCountingOnlyCl", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCl);
+
+
+// -------------- WMS_Journal_Counting_OnlyCLDets API Start --------------
+
+
+router.post("/insertIntoWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.insertIntoWmsJournalCountingOnlyCLDets);
+
+router.get("/getAllWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCLDets);

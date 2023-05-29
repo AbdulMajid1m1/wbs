@@ -325,6 +325,7 @@ router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsRe
 
 router.get("/getAllTblStockMaster", checkAuthentication, WBSDB.getAllTblStockMaster);
 
+router.get("/getTblStockMasterByItemId", checkAuthentication, WBSDB.getTblStockMasterByItemId);
 router.get("/getStockMasterDataByItemId", checkAuthentication, WBSDB.getStockMasterDataByItemId);
 
 router.post("/insertStockMasterData", checkAuthentication, WBSDB.insertStockMasterData);

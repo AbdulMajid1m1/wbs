@@ -73,7 +73,7 @@ const WmsPhysicalInventory = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>WMS Physical Inventory</h2>
+                <h2 className='text-center text-[#fff]'>(WMS) Physical Inventory</h2>
 
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>
@@ -93,45 +93,35 @@ const WmsPhysicalInventory = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>ItemCode</th>
-                      <th>ItemDesc</th>
-                      <th>GTIN</th>
-                      <th>Remarks</th>
-                      <th>User</th>
-                      <th>Classification</th>
-                      <th>MainLocation</th>
-                      <th>BinLocation</th>
-                      <th>IntCode</th>
-                      <th>ItemSerialNo</th>
-                      <th>MapDate</th>
-                      <th>PalletCode</th>
-                      <th>Reference</th>
-                      <th>SID</th>
-                      <th>CID</th>
-                      <th>PO</th>
-                      <th>Trans</th>
+                      <th>ITEMID</th>
+                      <th>ITEMNAME</th>
+                      <th>ITEMGROUPID</th>
+                      <th>GROUPNAME</th>
+                      <th>INVENTORYBY</th>
+                      <th>TRXDATETIME</th>
+                      <th>TRXUSERIDASSIGNED</th>
+                      <th>TRXUSERIDASSIGNEDBY</th>
+                      <th>QTYSCANNED</th>
+                      <th>QTYDIFFERENCE</th>
+                      <th>QTYONHAND</th>
+                      <th>JOURNALID</th>
                     </tr>
                   </thead>
                   <tbody>
                     {dataList.map((data, index) => (
                       <tr key={"tranidRow" + index}>
-                        <td>{data.ItemCode}</td>
-                        <td>{data.ItemDesc}</td>
-                        <td>{data.GTIN}</td>
-                        <td>{data.Remarks}</td>
-                        <td>{data.User}</td>
-                        <td>{data.Classification}</td>
-                        <td>{data.MainLocation}</td>
-                        <td>{data.BinLocation}</td>
-                        <td>{data.IntCode}</td>
-                        <td>{data.ItemSerialNo}</td>
-                        <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                        <td>{data.PalletCode}</td>
-                        <td>{data.Reference}</td>
-                        <td>{data.SID}</td>
-                        <td>{data.CID}</td>
-                        <td>{data.PO}</td>
-                        <td>{data.Trans}</td>
+                        <td>{data.ITEMID}</td>
+                        <td>{data.ITEMNAME}</td>
+                        <td>{data.ITEMGROUPID}</td>
+                        <td>{data.GROUPNAME}</td>
+                        <td>{data.INVENTORYBY}</td>
+                        <td>{data.TRXDATETIME}</td>
+                        <td>{data.TRXUSERIDASSIGNED}</td>
+                        <td>{data.TRXUSERIDASSIGNEDBY}</td>
+                        <td>{data.QTYSCANNED}</td>
+                        <td>{data.QTYDIFFERENCE}</td>
+                        <td>{data.QTYONHAND}</td>
+                        <td>{data.JOURNALID}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -208,39 +198,37 @@ const WmsPhysicalInventory = () => {
                 <div className="table-location-generate1">
                   <table>
                     <thead>
-                      <tr>
+                        <tr>
                         <th>ITEMID</th>
                         <th>ITEMNAME</th>
-                        <th>LEDGERACCOUNTIDOFFSET</th>
-                        <th>JOURNALID</th>
-                        <th>TRANSDATE</th>
-                        <th>INVENTSITEID</th>
-                        <th>INVENTLOCATIONID</th>
-                        <th>CONFIGID</th>
-                        <th>WMSLOCATIONID</th>
+                        <th>ITEMGROUPID</th>
+                        <th>GROUPNAME</th>
+                        <th>INVENTORYBY</th>
                         <th>TRXDATETIME</th>
                         <th>TRXUSERIDASSIGNED</th>
                         <th>TRXUSERIDASSIGNEDBY</th>
-                        <th>ITEMSERIALNO</th>
-                      </tr>
+                        <th>QTYSCANNED</th>
+                        <th>QTYDIFFERENCE</th>
+                        <th>QTYONHAND</th>
+                        <th>JOURNALID</th>
+                        </tr>
                     </thead>
                     <tbody>
                       {filteredData.map((item, index) => (
                         <tr
                         >
-                          <td>{item?.ITEMID}</td>
-                          <td>{item?.ITEMNAME}</td>
-                          <td>{item?.LEDGERACCOUNTIDOFFSET}</td>
-                          <td>{item?.JOURNALID}</td>
-                          <td>{item?.TRANSDATE}</td>
-                          <td>{item?.INVENTSITEID}</td>
-                          <td>{item?.INVENTLOCATIONID}</td>
-                          <td>{item?.CONFIGID}</td>
-                          <td>{item?.WMSLOCATIONID}</td>
-                          <td>{item?.TRXDATETIME}</td>
-                          <td>{item?.TRXUSERIDASSIGNED}</td>
-                          <td>{item?.TRXUSERIDASSIGNEDBY}</td>
-                          <td>{item?.ITEMSERIALNO}</td>
+                            <td>{item.ITEMID}</td>
+                            <td>{item.ITEMNAME}</td>
+                            <td>{item.ITEMGROUPID}</td>
+                            <td>{item.GROUPNAME}</td>
+                            <td>{item.INVENTORYBY}</td>
+                            <td>{item.TRXDATETIME}</td>
+                            <td>{item.TRXUSERIDASSIGNED}</td>
+                            <td>{item.TRXUSERIDASSIGNEDBY}</td>
+                            <td>{item.QTYSCANNED}</td>
+                            <td>{item.QTYDIFFERENCE}</td>
+                            <td>{item.QTYONHAND}</td>
+                            <td>{item.JOURNALID}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -257,7 +245,7 @@ const WmsPhysicalInventory = () => {
                   id="totals"
                   className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Totals"
-                //   value={filteredData.length}
+                  value={filteredData.length}
                 />
               </div>
 

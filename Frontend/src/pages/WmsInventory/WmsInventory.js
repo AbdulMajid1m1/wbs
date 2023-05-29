@@ -8,6 +8,7 @@ import { SyncLoader } from 'react-spinners';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
 import { WarehouseJournalCountingColumn } from '../../utils/datatablesource';
 import { FormControl, InputLabel, Select, MenuItem, TextField, Autocomplete } from '@mui/material';
+import PickingListTable from '../../components/PickingListTable/PickingListTable';
 
 const WmsInventory = () => {
   
@@ -142,11 +143,13 @@ const WmsInventory = () => {
 
 
             <div className='-mt-6'>    
-                <UserDataTable  data={data} columnsName={WarehouseJournalCountingColumn} backButton={false}
+                {/* <UserDataTable  data={data} columnsName={WarehouseJournalCountingColumn} backButton={false}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 
-                />
+                /> */}
+
+                <PickingListTable data={data} columnsName={WarehouseJournalCountingColumn}/>
             </div>
             
             <div className="mb-6">

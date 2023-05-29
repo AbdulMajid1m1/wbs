@@ -8,6 +8,9 @@ import { SyncLoader } from 'react-spinners';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
 import { AllItems } from '../../utils/datatablesource';
 import { FormControl, InputLabel, Select, MenuItem, TextField, Autocomplete } from '@mui/material';
+import CustomSnakebar from '../../utils/CustomSnakebar';
+import { useQuery } from '@tanstack/react-query';
+
 
 const WmsInventory = () => {
 
@@ -242,12 +245,14 @@ const WmsInventory = () => {
             </div>
 
 
-            <div className='-mt-6'>    
-                <UserDataTable  data={data} columnsName={WarehouseJournalCountingColumn} backButton={false}
+            <div className='-mt-6'>
+              <UserDataTable data={data} columnsName={AllItems} backButton={false}
+                handleRowClickInParent={handleRowClickInParent}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
-                
-                />
+                uniqueId={"mobileWmsInventoryId"}
+
+              />
             </div>
 
             <div className="mb-6">

@@ -203,17 +203,14 @@ const WmsPhysicalInventory = () => {
                         <th>ITEMNAME</th>
                         <th>ITEMGROUPID</th>
                         <th>GROUPNAME</th>
-                        <th>JOURNALID</th>
                         <th>INVENTORYBY</th>
                         <th>TRXDATETIME</th>
                         <th>TRXUSERIDASSIGNED</th>
                         <th>TRXUSERIDASSIGNEDBY</th>
-                        <th>CONFIGID</th>
-                        <th>ITEMSERIALNO</th>
-                        <th>DATETIMESCANNED</th>
-                        <th>CURRENTUSERLOGGEDINID</th>
                         <th>QTYSCANNED</th>
-                        <th>BINLOCATION</th>
+                        <th>QTYDIFFERENCE</th>
+                        <th>QTYONHAND</th>
+                        <th>JOURNALID</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -224,17 +221,14 @@ const WmsPhysicalInventory = () => {
                             <td>{item.ITEMNAME}</td>
                             <td>{item.ITEMGROUPID}</td>
                             <td>{item.GROUPNAME}</td>
-                            <td>{item.JOURNALID}</td>
                             <td>{item.INVENTORYBY}</td>
                             <td>{item.TRXDATETIME}</td>
                             <td>{item.TRXUSERIDASSIGNED}</td>
                             <td>{item.TRXUSERIDASSIGNEDBY}</td>
-                            <td>{item.CONFIGID}</td>
-                            <td>{item.ITEMSERIALNO}</td>
-                            <td>{item.DATETIMESCANNED}</td>
-                            <td>{item.CURRENTUSERLOGGEDINID}</td>
                             <td>{item.QTYSCANNED}</td>
-                            <td>{item.BINLOCATION}</td>
+                            <td>{item.QTYDIFFERENCE}</td>
+                            <td>{item.QTYONHAND}</td>
+                            <td>{item.JOURNALID}</td>
                         </tr>
                       ))}
                     </tbody>

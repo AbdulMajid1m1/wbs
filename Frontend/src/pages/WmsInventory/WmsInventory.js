@@ -128,7 +128,7 @@ const WmsInventory = () => {
             </div>
             
             <div className="mb-6 flex justify-start items-center gap-2">
-                <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIG USER</label>
+                <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIGN USER</label>
 
                 <Autocomplete
                   id="zone"

@@ -472,7 +472,7 @@ router.post("/insertWMSJournalCountingCLDets", checkAuthentication, WBSDB.insert
 
 router.post("/insertIntoWmsJournalCountingOnlyCL", checkAuthentication, WBSDB.insertIntoWmsJournalCountingOnlyCL);
 
-router.get("/getAllWmsJournalCountingCl", checkAuthentication, WBSDB.getAllWmsJournalCountingCl);
+router.get("/getAllWmsJournalCountingOnlyCl", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCl);
 
 
 // -------------- WMS_Journal_Counting_OnlyCLDets API Start --------------
@@ -480,4 +480,4 @@ router.get("/getAllWmsJournalCountingCl", checkAuthentication, WBSDB.getAllWmsJo
 
 router.post("/insertIntoWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.insertIntoWmsJournalCountingOnlyCLDets);
 
-router.get("/getWMSJournalCountingCLDets", checkAuthentication, WBSDB.getWMSJournalCountingCLDets);
+router.get("/getAllWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCLDets);

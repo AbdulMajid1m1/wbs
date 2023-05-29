@@ -5832,7 +5832,7 @@ const WBSDB = {
   },
 
   // Fetch all data from WMS_Journal_Counting_OnlyCL
-  async getAllWmsJournalCountingCl(req, res, next) {
+  async getAllWmsJournalCountingOnlyCl(req, res, next) {
     try {
       let query = `
     SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
@@ -5941,7 +5941,7 @@ const WBSDB = {
 
 
   // Fetch all data from WMS_Journal_Counting_OnlyCLDets
-  async getWMSJournalCountingCLDets(req, res, next) {
+  async getAllWmsJournalCountingOnlyCLDets(req, res, next) {
     try {
       let query = `
     SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCLDets]

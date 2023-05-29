@@ -184,6 +184,10 @@ const UserDataTable = ({
       handleRowClickInParent(item);
       return;
     }
+    if (uniqueId = "mobileWmsInventoryId") {
+      handleRowClickInParent(item);
+      return;
+    }
     const index = item.id;
     let itemGroup;
 
@@ -820,6 +824,8 @@ const UserDataTable = ({
   ]
 
 
+
+
   return (
     <>
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -907,6 +913,8 @@ const UserDataTable = ({
             // call your handle function and pass the row data as a parameter
             handleRowClick(params.row, rowIdx);
           }}
+          
+
         />
 
 

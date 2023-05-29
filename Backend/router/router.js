@@ -474,6 +474,8 @@ router.post("/insertIntoWmsJournalCountingOnlyCL", checkAuthentication, WBSDB.in
 
 router.get("/getAllWmsJournalCountingOnlyCl", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCl);
 
+router.get("/getWmsJournalCountingOnlyCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalCountingOnlyCLByAssignedToUserId);
+
 
 // -------------- WMS_Journal_Counting_OnlyCLDets API Start --------------
 

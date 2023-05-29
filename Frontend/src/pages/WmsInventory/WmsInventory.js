@@ -133,7 +133,8 @@ const WmsInventory = () => {
                 <Autocomplete
                   id="userid"
                   options={dataList}
-                  getOptionLabel={(option) => option.Fullname ?? ''}
+                //   getOptionLabel={(option) => option.Fullname ?? ''}
+                  getOptionLabel={(option) => option.Fullname ? `${option.Fullname} - ${option.UserID}` : ''}
                   onChange={handleAutoComplete}
 
                   // onChange={(event, value) => {

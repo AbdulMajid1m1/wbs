@@ -27,17 +27,17 @@ const WmsInventory = () => {
     };
 
     const [dataList, setDataList] = useState([]);
-  useEffect(() => {
-    userRequest.get('/getAllTblRZones')
-      .then(response => {
-        console.log(response?.data);
-        setDataList(response?.data ?? []);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+//   useEffect(() => {
+//     userRequest.get('/getAllTblRZones')
+//       .then(response => {
+//         console.log(response?.data);
+//         setDataList(response?.data ?? []);
+//       })
+//       .catch(error => {
+//         console.error(error);
+//       });
 
-  }, []);
+//   }, []);
 
   const handleAutoComplete = (event, value) => {
     console.log('Selected value:', value);
@@ -128,7 +128,7 @@ const WmsInventory = () => {
             </div>
             
             <div className="mb-6 flex justify-start items-center gap-2">
-                <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIG BY</label>
+                <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIG USER</label>
 
                 <Autocomplete
                   id="zone"
@@ -162,7 +162,7 @@ const WmsInventory = () => {
                       }}
 
                       className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Assign by User ID"
+                      placeholder="Assign User ID"
                       required
                     />
                   )}

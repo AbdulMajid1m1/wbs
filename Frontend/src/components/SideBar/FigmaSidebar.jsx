@@ -21,6 +21,7 @@ import profit from "../../images/profit.jpeg"
 import cycle from "../../images/cycle.jpeg"
 import exit from "../../images/exit.png"
 import move from "../../images/Move.png"
+import physical from "../../images/physical.png"
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
@@ -300,6 +301,11 @@ const FigmaSidebar = () => {
                     <div className='main-images-container' onClick={() => navigate('/wmsinventory')}>
                         <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>WMS Inventory</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/wmsphysical')}>
+                        <img src={physical} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>WMS Physical Inventory</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/putaway')}>

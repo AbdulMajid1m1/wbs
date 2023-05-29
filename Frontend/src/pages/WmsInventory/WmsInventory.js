@@ -27,17 +27,17 @@ const WmsInventory = () => {
     };
 
     const [dataList, setDataList] = useState([]);
-//   useEffect(() => {
-//     userRequest.get('/getAllTblRZones')
-//       .then(response => {
-//         console.log(response?.data);
-//         setDataList(response?.data ?? []);
-//       })
-//       .catch(error => {
-//         console.error(error);
-//       });
+    useEffect(() => {
+        userRequest.get('/getAllTblUsers')
+        .then(response => {
+            console.log(response?.data);
+            setDataList(response?.data ?? []);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
-//   }, []);
+    }, []);
 
   const handleAutoComplete = (event, value) => {
     console.log('Selected value:', value);
@@ -128,12 +128,12 @@ const WmsInventory = () => {
             </div>
             
             <div className="mb-6 flex justify-start items-center gap-2">
-                <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIGN USER</label>
+                <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIGN</label>
 
                 <Autocomplete
-                  id="zone"
+                  id="userid"
                   options={dataList}
-                  getOptionLabel={(option) => option.RZONE}
+                  getOptionLabel={(option) => option.Fullname ?? ''}
                   onChange={handleAutoComplete}
 
                   // onChange={(event, value) => {
@@ -161,8 +161,8 @@ const WmsInventory = () => {
                         style: { color: "white" },
                       }}
 
-                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Assign User ID"
+                      className="bg-gray-50 border border-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Assign User"
                       required
                     />
                   )}

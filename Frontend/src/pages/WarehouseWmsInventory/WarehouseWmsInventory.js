@@ -16,7 +16,7 @@ const WarehouseWmsInventory = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllWmsJournalCountingCL")
+                userRequest.get("/getAllWmsJournalCountingOnlyCl")
                     .then(response => {
                         console.log(response?.data);
                         setData(response?.data ?? [])
@@ -39,7 +39,7 @@ const WarehouseWmsInventory = () => {
         const getAllWmsJournalCountingCLDets = async () => {
             try {
 
-                userRequest.get("/getAllWmsJournalCountingCLDets")
+                userRequest.get("/getAllWmsJournalCountingOnlyCLDets")
                     .then(response => {
                         console.log(response?.data);
 

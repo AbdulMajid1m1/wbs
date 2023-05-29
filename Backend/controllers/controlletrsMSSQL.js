@@ -3838,10 +3838,10 @@ const WBSDB = {
     try {
 
       const { itemid } = req.query;
-      if(!itemid){
+      if (!itemid) {
         return res.status(400).send({ message: "Please provide itemid." });
       }
-      
+
       let query = `
       SELECT * FROM dbo.tbl_Stock_Master
       WHERE ITEMID=@ITEMID
@@ -5750,6 +5750,210 @@ const WBSDB = {
       }
 
       return res.status(201).send({ message: 'Records inserted successfully' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  //------------------- WMS_Journal_Counting_OnlyCL Controller Start -------------------
+
+
+  async insertIntoWmsJournalCountingOnlyCL(req, res, next) {
+    try {
+      const countingOnlyDataArray = req.body;
+
+      if (!Array.isArray(countingOnlyDataArray)) {
+        return res.status(400).send({ message: 'Invalid input. Array expected.' });
+      }
+
+      if (countingOnlyDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < countingOnlyDataArray.length; i++) {
+        const {
+          ITEMID,
+          ITEMNAME,
+          ITEMGROUPID,
+          GROUPNAME,
+          INVENTORYBY,
+          TRXUSERIDASSIGNED,
+          TRXUSERIDASSIGNEDBY,
+          QTYSCANNED,
+          QTYDIFFERENCE,
+          QTYONHAND
+        } = countingOnlyDataArray[i];
+
+        let fields = [
+          "ITEMID",
+          "ITEMNAME",
+          "ITEMGROUPID",
+          "GROUPNAME",
+          "INVENTORYBY",
+          "TRXDATETIME",
+          "TRXUSERIDASSIGNED",
+          "TRXUSERIDASSIGNEDBY",
+          "QTYSCANNED",
+          "QTYDIFFERENCE",
+          "QTYONHAND"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+          INSERT INTO [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool2.request();
+        request.input('ITEMID', sql.NVarChar, ITEMID);
+        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+        request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
+        request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
+        request.input('INVENTORYBY', sql.NVarChar, INVENTORYBY);
+        request.input('TRXDATETIME', sql.DateTime, new Date());
+        request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, TRXUSERIDASSIGNEDBY);
+        request.input('QTYSCANNED', sql.Float, QTYSCANNED);
+        request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
+        request.input('QTYONHAND', sql.Float, QTYONHAND);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted successfully' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+  // Fetch all data from WMS_Journal_Counting_OnlyCL
+  async getAllWmsJournalCountingCl(req, res, next) {
+    try {
+      let query = `
+    SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+    `;
+
+      let request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  //------------------- WMS_Journal_Counting_OnlyCLDets Controller Start -------------------
+
+  async insertIntoWmsJournalCountingOnlyCLDets(req, res, next) {
+    try {
+      const countingOnlyCLDetsDataArray = req.body;
+
+      if (!Array.isArray(countingOnlyCLDetsDataArray)) {
+        return res.status(400).send({ message: 'Invalid input. Array expected.' });
+      }
+
+      if (countingOnlyCLDetsDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < countingOnlyCLDetsDataArray.length; i++) {
+        const {
+          ITEMID,
+          ITEMNAME,
+          ITEMGROUPID,
+          GROUPNAME,
+          JOURNALID,
+          INVENTORYBY,
+          TRXDATETIME,
+          TRXUSERIDASSIGNED,
+          TRXUSERIDASSIGNEDBY,
+          CONFIGID,
+          ITEMSERIALNO,
+          DATETIMESCANNED,
+          CURRENTUSERLOGGEDINID,
+          QTYSCANNED,
+          BINLOCATION
+        } = countingOnlyCLDetsDataArray[i];
+
+        let fields = [
+          "ITEMID",
+          "ITEMNAME",
+          "ITEMGROUPID",
+          "GROUPNAME",
+          "JOURNALID",
+          "INVENTORYBY",
+          "TRXDATETIME",
+          "TRXUSERIDASSIGNED",
+          "TRXUSERIDASSIGNEDBY",
+          "CONFIGID",
+          "ITEMSERIALNO",
+          "DATETIMESCANNED",
+          "CURRENTUSERLOGGEDINID",
+          "QTYSCANNED",
+          "BINLOCATION"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+        INSERT INTO [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCLDets]
+          (${fields.join(', ')}) 
+        VALUES 
+          (${values.join(', ')})
+      `;
+
+        let request = pool2.request();
+        request.input('ITEMID', sql.NVarChar, ITEMID);
+        request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
+        request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
+        request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
+        request.input('JOURNALID', sql.NVarChar, JOURNALID);
+        request.input('INVENTORYBY', sql.NVarChar, INVENTORYBY);
+        request.input('TRXDATETIME', sql.DateTime, new Date());
+        request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, TRXUSERIDASSIGNEDBY);
+        request.input('CONFIGID', sql.NVarChar, CONFIGID);
+        request.input('ITEMSERIALNO', sql.NVarChar, ITEMSERIALNO);
+        request.input('DATETIMESCANNED', sql.DateTime, DATETIMESCANNED);
+        request.input('CURRENTUSERLOGGEDINID', sql.NVarChar, CURRENTUSERLOGGEDINID);
+        request.input('QTYSCANNED', sql.Float, QTYSCANNED);
+        request.input('BINLOCATION', sql.NVarChar, BINLOCATION);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted successfully' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+  // Fetch all data from WMS_Journal_Counting_OnlyCLDets
+  async getWMSJournalCountingCLDets(req, res, next) {
+    try {
+      let query = `
+    SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCLDets]
+    `;
+
+      let request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error.message });

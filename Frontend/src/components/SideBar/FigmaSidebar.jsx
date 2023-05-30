@@ -308,6 +308,16 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>WMS Physical Inventory</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}>
+                        <img src={items} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Inventory By BinLocation</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/wmsbinlocation')}>
+                        <img src={move} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>By BinLocation</p>
+                    </div>
+
                     <div className='main-images-container' onClick={() => navigate('/putaway')}>
                         <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Put-Away Transaction</p>

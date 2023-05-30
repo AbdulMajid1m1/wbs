@@ -6173,6 +6173,44 @@ const WBSDB = {
       console.error(error);
       return res.status(500).json({ message: 'An error occurred while updating QTYSCANNED.' });
     }
+  },
+
+  async incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation(req, res) {
+    try {
+      const { TRXUSERIDASSIGNED, BINLOCATION, TRXDATETIME } = req.body;
+
+      // Check if required fields are provided
+      if (!TRXUSERIDASSIGNED || !BINLOCATION || !TRXDATETIME) {
+        return res.status(400).json({ message: 'Missing required fields.' });
+      }
+
+      // Update QTYSCANNED by incrementing it by 1
+      const query = `
+        UPDATE [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+        SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1
+        OUTPUT INSERTED.*
+        WHERE TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
+        AND BINLOCATION = @BINLOCATION
+        AND TRXDATETIME = @TRXDATETIME
+      `;
+      const request = pool2.request();
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+      request.input('BINLOCATION', sql.NVarChar, BINLOCATION);
+      request.input('TRXDATETIME', sql.DateTime, TRXDATETIME);
+      const result = await request.query(query);
+
+      // Check if any rows were affected
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).json({ message: 'No matching rows found.' });
+      }
+
+      // Return the updated data
+      const updatedData = result.recordset[0];
+      return res.status(200).json({ message: 'QTYSCANNED updated successfully.', data: updatedData });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'An error occurred while updating QTYSCANNED.' });
+    }
   }
 
 

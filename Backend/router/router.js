@@ -480,6 +480,8 @@ router.get("/getWmsJournalCountingOnlyCLByAssignedToUserId", checkAuthentication
 
 router.put("/incrementQTYSCANNEDInJournalCountingOnlyCL", checkAuthentication, WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCL);
 
+router.put("/incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation", checkAuthentication, WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation);
+
 router.get("/getWmsJournalCountingOnlyCLByBinLocation", checkAuthentication, WBSDB.getWmsJournalCountingOnlyCLByBinLocation);
 router.get("/getBinLocationByUserIdFromJournalCountingOnlyCL", checkAuthentication, WBSDB.getBinLocationByUserIdFromJournalCountingOnlyCL);
 
@@ -488,6 +490,7 @@ router.get("/getBinLocationByUserIdFromJournalCountingOnlyCL", checkAuthenticati
 
 
 router.post("/insertIntoWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.insertIntoWmsJournalCountingOnlyCLDets);
+
 
 router.get("/getAllWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCLDets);
 

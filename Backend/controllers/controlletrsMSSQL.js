@@ -2677,6 +2677,30 @@ const WBSDB = {
   },
 
 
+  async getDistinctMappedBarcodeBinLocations(req, res, next) {
+    try {
+      let query = `SELECT DISTINCT BinLocation FROM  tblMappedBarcodes ORDER BY BinLocation`
+      let request = pool2.request();
+
+      let data = await request.query(query)
+      data = data.recordsets[0]
+
+      if (data.length === 0) {
+        return res.status(404).send({ message: "No Records Found!" })
+      }
+
+      return res.status(200).send(data)
+
+
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+
+  },
+
+
   async getAllTblMappedBarcodes(req, res, next) {
     try {
 
@@ -5760,75 +5784,7 @@ const WBSDB = {
   //------------------- WMS_Journal_Counting_OnlyCL Controller Start -------------------
 
 
-  // async insertIntoWmsJournalCountingOnlyCL(req, res, next) {
-  //   try {
-  //     const countingOnlyDataArray = req.body;
-
-  //     if (!Array.isArray(countingOnlyDataArray)) {
-  //       return res.status(400).send({ message: 'Invalid input. Array expected.' });
-  //     }
-
-  //     if (countingOnlyDataArray.length === 0) {
-  //       return res.status(400).send({ message: "Please provide data to insert." });
-  //     }
-
-  //     for (let i = 0; i < countingOnlyDataArray.length; i++) {
-  //       const {
-  //         ITEMID,
-  //         ITEMNAME,
-  //         ITEMGROUPID,
-  //         GROUPNAME,
-  //         INVENTORYBY,
-  //         TRXUSERIDASSIGNED,
-  //         QTYSCANNED,
-  //         QTYDIFFERENCE,
-  //         QTYONHAND
-  //       } = countingOnlyDataArray[i];
-
-  //       let fields = [
-  //         "ITEMID",
-  //         "ITEMNAME",
-  //         "ITEMGROUPID",
-  //         "GROUPNAME",
-  //         "INVENTORYBY",
-  //         "TRXDATETIME",
-  //         "TRXUSERIDASSIGNED",
-  //         "TRXUSERIDASSIGNEDBY",
-  //         "QTYSCANNED",
-  //         "QTYDIFFERENCE",
-  //         "QTYONHAND"
-  //       ];
-
-  //       let values = fields.map((field) => "@" + field);
-
-  //       let query = `
-  //         INSERT INTO [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
-  //           (${fields.join(', ')}) 
-  //         VALUES 
-  //           (${values.join(', ')})
-  //       `;
-
-  //       let request = pool2.request();
-  //       request.input('ITEMID', sql.NVarChar, ITEMID);
-  //       request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
-  //       request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
-  //       request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
-  //       request.input('INVENTORYBY', sql.NVarChar, INVENTORYBY);
-  //       request.input('TRXDATETIME', sql.DateTime, new Date());
-  //       request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
-  //       request.input('TRXUSERIDASSIGNEDBY', sql.NVarChar, req?.token?.UserID);
-  //       request.input('QTYSCANNED', sql.Float, QTYSCANNED);
-  //       request.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
-  //       request.input('QTYONHAND', sql.Float, QTYONHAND);
-  //       await request.query(query);
-  //     }
-
-  //     return res.status(201).send({ message: 'Records inserted successfully' });
-  //   } catch (error) {
-  //     console.log(error);
-  //     return res.status(500).send({ message: error.message });
-  //   }
-  // },
+  
   async insertIntoWmsJournalCountingOnlyCL(req, res, next) {
     try {
       const countingOnlyDataArray = req.body;
@@ -5944,6 +5900,33 @@ const WBSDB = {
       return res.status(500).send({ message: error.message });
     }
   },
+
+  async getWmsJournalCountingOnlyCLByBinLocation(req, res, next) {
+    try {
+      const BINLOCATION = req.query.binloacation;
+      if (!BINLOCATION) {
+        return res.status(401).send({ message: "binloacation is required." });
+
+      }
+      let query = `SELECT * FROM WMS_Journal_Counting_OnlyCL WHERE
+      BINLOCATION = @BINLOCATION AND TRXUSERIDASSIGNED= @TRXUSERIDASSIGNED`
+
+      let request = pool2.request();
+      request.input('BINLOCATION', sql.NVarChar, BINLOCATION);
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, req?.token?.UserID);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
 
 
   async getWmsJournalCountingOnlyCLByAssignedToUserId(req, res, next) {
@@ -6122,6 +6105,9 @@ const WBSDB = {
   },
 
 
+  
+
+
   async incrementQTYSCANNEDInJournalCountingOnlyCL(req, res) {
     try {
       const { TRXUSERIDASSIGNED, ITEMID, TRXDATETIME } = req.body;
@@ -6159,6 +6145,9 @@ const WBSDB = {
       return res.status(500).json({ message: 'An error occurred while updating QTYSCANNED.' });
     }
   }
+
+
+
 
 
 

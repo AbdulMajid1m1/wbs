@@ -96,20 +96,38 @@ const PhysicalInventoryBinLocation = () => {
       let mappedData = res?.data?.data[0];
 
       // find the record in dataList bases on mappedData.ITEMID
-      let foundRecord = dataList.find(item => item.ITEMID === mappedData.ItemCode);
+      // let foundRecord = dataList.find(item => item.BINLOCATION === mappedData.BinLocation);
+      // let foundRecord = dataList.find(item =>
+      //   {
+      //    item.BINLOCATION === mappedData.BinLocation
+      //   console.log(item.BINLOCATION+" "+  " equal to  "+" "+ mappedData.BinLocation)
+      //   });
+    //   let foundRecord = dataList.find(item => {
+    //     console.log(item.BINLOCATION + " equal to " + mappedData.BinLocation);
+    //     return item.BINLOCATION === mappedData.BinLocation;
+    // });
+
+    let foundRecord = dataList.find(item => {
+      console.log(item.BINLOCATION + " equal to " + mappedData.BinLocation);
+  console.log(item.BINLOCATION === mappedData.BinLocation);
+      return item.BINLOCATION === mappedData.BinLocation;
+  });
+      
       console.log(foundRecord);
       if (!foundRecord) {
-        // setError("Mapped ITEMID not found in the list");
+        setError("Mapped BinLocation not found in the list");
         return;
       }
 
       // call the update api
       try {
 
-        const updateApiResponse = await userRequest.put("/incrementQTYSCANNEDInJournalCountingOnlyCL",
+        // const updateApiResponse = await userRequest.put("/incrementQTYSCANNEDInJournalCountingOnlyCL",
+        const updateApiResponse = await userRequest.put("/incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation",
           {
             TRXUSERIDASSIGNED: foundRecord?.TRXUSERIDASSIGNED,
-            ITEMID: foundRecord?.ITEMID,
+            ITEMID: mappedData?.ItemCode,
+            // mappedData?.ItemCode,
             TRXDATETIME: foundRecord?.TRXDATETIME,
           }
         )

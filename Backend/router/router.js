@@ -242,6 +242,8 @@ router.post("/getMappedBarcodedsByItemCodeAndBinLocation", checkAuthentication, 
 router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, WBSDB.deleteTblMappedBarcodesDataByItemCode);
 
 
+router.get("/getDistinctMappedBarcodeBinLocations", checkAuthentication, WBSDB.getDistinctMappedBarcodeBinLocations);
+
 // ------------- tblMappedBarcodes APIS End -------- 
 
 
@@ -478,6 +480,8 @@ router.get("/getWmsJournalCountingOnlyCLByAssignedToUserId", checkAuthentication
 
 router.put("/incrementQTYSCANNEDInJournalCountingOnlyCL", checkAuthentication, WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCL);
 
+router.get("/getWmsJournalCountingOnlyCLByBinLocation", checkAuthentication, WBSDB.getWmsJournalCountingOnlyCLByBinLocation);
+
 
 // -------------- WMS_Journal_Counting_OnlyCLDets API Start --------------
 
@@ -487,3 +491,6 @@ router.post("/insertIntoWmsJournalCountingOnlyCLDets", checkAuthentication, WBSD
 router.get("/getAllWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCLDets);
 
 router.post("/validateItemSerialNumberForJournalCountingOnlyCLDets", checkAuthentication, WBSDB.validateItemSerialNumberForJournalCountingOnlyCLDets);
+
+
+

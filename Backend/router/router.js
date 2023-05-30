@@ -481,6 +481,7 @@ router.get("/getWmsJournalCountingOnlyCLByAssignedToUserId", checkAuthentication
 router.put("/incrementQTYSCANNEDInJournalCountingOnlyCL", checkAuthentication, WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCL);
 
 router.get("/getWmsJournalCountingOnlyCLByBinLocation", checkAuthentication, WBSDB.getWmsJournalCountingOnlyCLByBinLocation);
+router.get("/getBinLocationByUserIdFromJournalCountingOnlyCL", checkAuthentication, WBSDB.getBinLocationByUserIdFromJournalCountingOnlyCL);
 
 
 // -------------- WMS_Journal_Counting_OnlyCLDets API Start --------------

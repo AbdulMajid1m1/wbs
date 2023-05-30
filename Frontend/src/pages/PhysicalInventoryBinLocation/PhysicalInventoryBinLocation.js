@@ -141,6 +141,8 @@ const PhysicalInventoryBinLocation = () => {
           BINLOCATION: mappedData?.BinLocation,
           QTYSCANNED: updatedData?.QTYSCANNED,
           ITEMSERIALNO: mappedData?.ItemSerialNo,
+          ITEMID: mappedData?.ItemCode,
+          ITEMNAME: mappedData?.ItemDesc,
         }
         
         console.log(apiData);

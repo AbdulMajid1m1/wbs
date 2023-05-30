@@ -5784,7 +5784,7 @@ const WBSDB = {
   //------------------- WMS_Journal_Counting_OnlyCL Controller Start -------------------
 
 
-  
+
   async insertIntoWmsJournalCountingOnlyCL(req, res, next) {
     try {
       const countingOnlyDataArray = req.body;
@@ -5955,6 +5955,31 @@ const WBSDB = {
   },
 
 
+  async getBinLocationByUserIdFromJournalCountingOnlyCL(req, res, next) {
+    try {
+      const TRXUSERIDASSIGNED = req?.token?.UserID;
+      if (!TRXUSERIDASSIGNED) {
+        return res.status(401).send({ message: "TRXUSERIDASSIGNED is required." });
+      }
+      let query = `SELECT BINLOCATION FROM WMS_Journal_Counting_OnlyCL WHERE TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
+      AND BINLOCATION IS NOT NULL AND BINLOCATION <> ''
+      `;
+
+      let request = pool2.request();
+      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
   //------------------- WMS_Journal_Counting_OnlyCLDets Controller Start -------------------
 
   async insertIntoWmsJournalCountingOnlyCLDets(req, res, next) {
@@ -6105,7 +6130,7 @@ const WBSDB = {
   },
 
 
-  
+
 
 
   async incrementQTYSCANNEDInJournalCountingOnlyCL(req, res) {

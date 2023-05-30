@@ -61,7 +61,7 @@ const WmsBinlocation = () => {
   } = useQuery({
     queryKey: ['stockMaster'],
     queryFn: () =>
-      userRequest.get("/getmapBarcodeDataByBinLocation").then(
+      userRequest.get("/getDistinctMappedBarcodeBinLocations").then(
         (res) => res.data,
       ),
   })
@@ -133,6 +133,7 @@ const WmsBinlocation = () => {
           ...row,
           TRXUSERIDASSIGNED: assignedTo,
           INVENTORYBY: selectedBy,
+          BINLOCATION: row.BinLocation,
         }
       });
       const res = await userRequest.post('/insertIntoWmsJournalCountingOnlyCL', apiData)

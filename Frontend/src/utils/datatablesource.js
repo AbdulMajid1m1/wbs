@@ -2444,7 +2444,7 @@ export const WarehouseWmsInventoryColumn = [
 
 export const WmsByBinlocationColumn = [
   {
-    field: "BINLOCATION",
+    field: "BinLocation",
     headerName: "BY BINLOCATION",
     width: 180,
 

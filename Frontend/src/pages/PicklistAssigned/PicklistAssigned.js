@@ -42,13 +42,14 @@ const PicklistAssigned = () => {
         <div>
 
 
-        <UserDataTable data={alldata} title="Pick List" columnsName={PicklistAssignedColumn}
-            backButton={true}
-            uniqueId="pickingSlipId"
-            addNewNavigation="/pickinglistfrom"
-            AddUser={true}
-      />    
-              {/* <UserDataTable data={alldata} title="" columnsName={PicklistAssignedColumn} backButton={true} uniqueId="itemTableId"
+            <UserDataTable data={alldata} title="Pick List" columnsName={PicklistAssignedColumn}
+                backButton={true}
+                uniqueId="pickingSlipId"
+                addNewNavigation="/pickinglistfrom"
+                AddUser={true}
+                UserName="Assign picklist"
+            />
+            {/* <UserDataTable data={alldata} title="" columnsName={PicklistAssignedColumn} backButton={true} uniqueId="itemTableId"
                 actionColumnVisibility={false}
                 buttonVisibility={false}
             /> */}
@@ -78,3 +79,4 @@ const PicklistAssigned = () => {
 }
 
 export default PicklistAssigned
+

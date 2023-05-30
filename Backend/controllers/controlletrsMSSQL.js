@@ -5807,7 +5807,8 @@ const WBSDB = {
           TRXUSERIDASSIGNED,
           QTYSCANNED,
           QTYDIFFERENCE,
-          QTYONHAND
+          QTYONHAND,
+          BINLOCATION,
         } = countingOnlyDataArray[i];
 
         const today = new Date();
@@ -5843,7 +5844,9 @@ const WBSDB = {
           "TRXUSERIDASSIGNEDBY",
           "QTYSCANNED",
           "QTYDIFFERENCE",
-          "QTYONHAND"
+          "QTYONHAND",
+          "BINLOCATION"
+          
         ];
 
         let values = fields.map((field) => "@" + field);
@@ -5868,6 +5871,7 @@ const WBSDB = {
         insertRequest.input('QTYSCANNED', sql.Float, QTYSCANNED);
         insertRequest.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
         insertRequest.input('QTYONHAND', sql.Float, QTYONHAND);
+        insertRequest.input('BINLOCATION', sql.NVarChar, BINLOCATION);
 
         await insertRequest.query(insertQuery);
       }

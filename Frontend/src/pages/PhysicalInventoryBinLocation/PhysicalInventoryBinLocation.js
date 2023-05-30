@@ -31,20 +31,55 @@ const PhysicalInventoryBinLocation = () => {
 
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    userRequest.get('/getWmsJournalCountingOnlyCLByAssignedToUserId')
-      .then(response => {
-        console.log(response?.data);
-        setDataList(response?.data ?? []);
-        setIsLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setIsLoading(false);
-      });
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   userRequest.get('/getWmsJournalCountingOnlyCLByAssignedToUserId')
+  //     .then(response => {
+  //       console.log(response?.data);
+  //       setDataList(response?.data ?? []);
+  //       setIsLoading(false);
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //       setIsLoading(false);
+  //     });
 
-  }, []);
+  // }, []);
+
+
+      const [options, setOptions] = useState([]);
+
+      useEffect(() => {
+        userRequest.get('/getBinLocationByUserIdFromJournalCountingOnlyCL')
+          .then(response => {
+            // Set the retrieved data as options
+            setOptions(response.data);
+          })
+          .catch(error => {
+            // Handle errors
+            console.error('Error fetching options:', error);
+          });
+      }, []);
+    
+    
+    const handleBySelection = (event, value) => {
+      setIsLoading(true);
+      console.log('Selected value:', value);
+      
+      // Make the API request to fetch the table data based on the selected value
+      userRequest.get(`/getmapBarcodeDataByBinLocation?binLocation=${value.BINLOCATION}`)
+        .then(response => {
+          // Set the retrieved data as the table data
+          setDataList(response.data);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          // Handle errors
+          console.error('Error fetching table data:', error);
+          setIsLoading(false);
+        });
+    };
+    
 
   const handleInputUser = async (e) => {
     let itemSerialNo = e.target.value;
@@ -133,16 +168,6 @@ const PhysicalInventoryBinLocation = () => {
   }
 
 
-
-  const [selectedBy, setSelectedBy] = useState([]);
-  
-
-  const handleBySelection = (event, value) => {
-    setSelectedBy(value?.item ?? '');
-    console.log(value);
-  };
-
-
   return (
     <>
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -195,17 +220,13 @@ const PhysicalInventoryBinLocation = () => {
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
-            {/* DropDown */}
             <div className='mb-6'>
               <label className='text-[#00006A] text-center font-semibold'>FROM:</label>
 
               <Autocomplete
                 id="by"
-                options={[
-                  { item: 'itemid' },
-                  { item: 'binlocation' },
-                ]}
-                getOptionLabel={(option) => option.item ?? ''}
+                options={options}
+                getOptionLabel={(option) => option.BINLOCATION ?? ''}
                 onChange={handleBySelection}
 
                 onInputChange={(event, value) => {
@@ -228,7 +249,7 @@ const PhysicalInventoryBinLocation = () => {
                     }}
 
                     className="bg-gray-50 border border-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                    placeholder="ItemID/Binlocation"
+                    placeholder="Binlocation"
                     required
                   />
                 )}

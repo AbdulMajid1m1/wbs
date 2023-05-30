@@ -129,6 +129,7 @@ const WmsBinlocation = () => {
     }
     try {
       let apiData = selectedRows.map(row => {
+        console.log(row);
         return {
           ...row,
           TRXUSERIDASSIGNED: assignedTo,

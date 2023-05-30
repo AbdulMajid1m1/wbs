@@ -67,7 +67,7 @@ const PhysicalInventoryBinLocation = () => {
       console.log('Selected value:', value);
       
       // Make the API request to fetch the table data based on the selected value
-      userRequest.get(`/getmapBarcodeDataByBinLocation?binLocation=${value.BINLOCATION}`)
+      userRequest.get(`/getWmsJournalCountingOnlyCLByBinLocation?binloacation=${value.BINLOCATION}`)
         .then(response => {
           // Set the retrieved data as the table data
           setDataList(response.data);
@@ -435,7 +435,7 @@ const PhysicalInventoryBinLocation = () => {
 
 
 
-            <div className='mb-6'>
+            {/* <div className='mb-6'>
               <button
                 type='button'
                 className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
@@ -444,7 +444,7 @@ const PhysicalInventoryBinLocation = () => {
                   <p>Save</p>
                 </span>
               </button>
-            </div>
+            </div> */}
 
           </div>
           {/* </div> */}

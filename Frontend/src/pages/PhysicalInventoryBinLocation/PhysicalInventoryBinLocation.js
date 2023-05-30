@@ -126,8 +126,8 @@ const PhysicalInventoryBinLocation = () => {
         const updateApiResponse = await userRequest.put("/incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation",
           {
             TRXUSERIDASSIGNED: foundRecord?.TRXUSERIDASSIGNED,
-            ITEMID: mappedData?.ItemCode,
             // mappedData?.ItemCode,
+            BINLOCATION: foundRecord?.BINLOCATION,
             TRXDATETIME: foundRecord?.TRXDATETIME,
           }
         )

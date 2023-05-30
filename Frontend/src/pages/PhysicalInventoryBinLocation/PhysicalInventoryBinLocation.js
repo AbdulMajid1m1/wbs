@@ -99,7 +99,7 @@ const PhysicalInventoryBinLocation = () => {
       let foundRecord = dataList.find(item => item.ITEMID === mappedData.ItemCode);
       console.log(foundRecord);
       if (!foundRecord) {
-        setError("Mapped ITEMID not found in the list");
+        // setError("Mapped ITEMID not found in the list");
         return;
       }
 
@@ -283,6 +283,7 @@ const PhysicalInventoryBinLocation = () => {
                       <th>QTYDIFFERENCE</th>
                       <th>QTYONHAND</th>
                       <th>JOURNALID</th>
+                      <th>BINLOCATION</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -300,6 +301,7 @@ const PhysicalInventoryBinLocation = () => {
                         <td>{data.QTYDIFFERENCE}</td>
                         <td>{data.QTYONHAND}</td>
                         <td>{data.JOURNALID}</td>
+                        <td>{data.BINLOCATION}</td>
                       </tr>
                     ))}
                   </tbody>

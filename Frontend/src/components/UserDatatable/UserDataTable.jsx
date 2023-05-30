@@ -180,42 +180,49 @@ const UserDataTable = ({
 
 
   const handleRowClick = (item) => {
-    if (uniqueId === "journalMovementClId" || uniqueId === "wProfitLostClId" || uniqueId === "journalCountingClId" || uniqueId === "wmsInventoryClId") {
+    if (uniqueId === "journalMovementClId" || uniqueId === "wProfitLostClId" || uniqueId === "journalCountingClId" || uniqueId === "wmsInventoryClId"
+      || uniqueId === "mobileWmsInventoryId"
+    ) {
       handleRowClickInParent(item);
       return;
     }
-    if (uniqueId = "mobileWmsInventoryId") {
-      handleRowClickInParent(item);
+
+    else {
+
+
+      // check for which component this code belongs to
+
+      // const index = item.id;
+      // let itemGroup;
+
+      // userRequest.get('/getStockMasterDataByItemId?ITEMID=23CHP130')
+      //   .then((response) => {
+      //     itemGroup = response.data[0].ITEMGROUP
+
+      //   })
+      //   .catch(err => {
+      //     console.log(err)
+      //   })
+
+      // // Set the value of qrcodeValue to the data of the clicked row
+      // setQRCodeValue(JSON.stringify(item));
+      // setSelectedRow(data[index]);
+      // setSelectedRowIndex(index);
+      // console.log(item);
+
+      // // Check if the row is already selected
+      // const selectedIndex = selectedRow.findIndex(selectedItem => selectedItem.index === index);
+      // if (selectedIndex > -1) {
+      //   // If the row is already selected, remove it from the selectedRows array
+      //   const newSelectedRows = [...selectedRow];
+      //   newSelectedRows.splice(selectedIndex, 1);
+      //   setSelectedRow(newSelectedRows);
+      // } else {
+      //   // If the row is not selected, add it to the selectedRows array
+      //   setSelectedRow([...selectedRow, { data: item, index }]);
+      // }
+
       return;
-    }
-    const index = item.id;
-    let itemGroup;
-
-    userRequest.get('/getStockMasterDataByItemId?ITEMID=23CHP130')
-      .then((response) => {
-        itemGroup = response.data[0].ITEMGROUP
-
-      })
-      .catch(err => {
-        console.log(err)
-      })
-
-    // Set the value of qrcodeValue to the data of the clicked row
-    setQRCodeValue(JSON.stringify(item));
-    setSelectedRow(data[index]);
-    setSelectedRowIndex(index);
-    console.log(item);
-
-    // Check if the row is already selected
-    const selectedIndex = selectedRow.findIndex(selectedItem => selectedItem.index === index);
-    if (selectedIndex > -1) {
-      // If the row is already selected, remove it from the selectedRows array
-      const newSelectedRows = [...selectedRow];
-      newSelectedRows.splice(selectedIndex, 1);
-      setSelectedRow(newSelectedRows);
-    } else {
-      // If the row is not selected, add it to the selectedRows array
-      setSelectedRow([...selectedRow, { data: item, index }]);
     }
   };
 
@@ -913,7 +920,7 @@ const UserDataTable = ({
             // call your handle function and pass the row data as a parameter
             handleRowClick(params.row, rowIdx);
           }}
-          
+
 
         />
 

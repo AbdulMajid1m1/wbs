@@ -315,7 +315,7 @@ const FigmaSidebar = () => {
 
                     <div className='main-images-container' onClick={() => navigate('/wmsbinlocation')}>
                         <img src={move} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>By BinLocation</p>
+                        <p className='sidebar-text'>WMS Inventory (by BIN)</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/putaway')}>

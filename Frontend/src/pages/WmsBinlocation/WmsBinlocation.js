@@ -61,7 +61,7 @@ const WmsBinlocation = () => {
   } = useQuery({
     queryKey: ['stockMaster'],
     queryFn: () =>
-      userRequest.get("/getAllTblStockMaster").then(
+      userRequest.get("/getmapBarcodeDataByBinLocation").then(
         (res) => res.data,
       ),
   })

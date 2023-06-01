@@ -39,7 +39,7 @@ const WmsItemMapping = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    userRequest.get('/getmapBarcodeDataByuser')
+    userRequest.get('/getAllTblMappedBarcodes')
       .then(response => {
         console.log(response?.data);
         setData(response?.data ?? []);
@@ -51,6 +51,33 @@ const WmsItemMapping = () => {
       });
 
   }, []);
+
+  
+  
+    const saveItemMapping = () => {
+        setIsLoading(true);
+        const data = {
+            "itemserialno": userserial,
+            "gtin": usergtin,
+            "Config": userconfig,
+            "mapdate": userdate,
+            "QRCode": userqrcode,
+            "BinLocation": userbinlocation,
+            "UserID": currentUser?.UserID
+        }
+        userRequest.post('/insertIntoMappedBarcodeOrUpdateBySerialNo', data)
+            .then(response => {
+                console.log(response?.data);
+                setIsLoading(false);
+                setMessage(response?.data?.message);
+            })
+            .catch(error => {
+                console.error(error);
+                setIsLoading(false);
+                setError(error?.response?.data?.message);
+            });
+    }
+
 
 
   return (
@@ -184,7 +211,7 @@ const WmsItemMapping = () => {
               </div>
 
               <div className='mb-6'>
-                <button
+                <button onClick={saveItemMapping}
                     type='button'
                     className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[30%]'>
                     <span className='flex justify-center items-center'

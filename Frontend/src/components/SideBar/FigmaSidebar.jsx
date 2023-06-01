@@ -323,7 +323,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Put-Away Transaction</p>
                     </div>
 
-                    <div className='main-images-container'>
+                    <div className='main-images-container' onClick={() => navigate('/wmsmapping')}>
                         <img src={barcode} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Product Barcode Mapping</p>
                     </div>

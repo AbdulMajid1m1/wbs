@@ -88,6 +88,7 @@ import WarehouseWmsInventory from './pages/WarehouseWmsInventory/WarehouseWmsInv
 import WmsPhysicalInventory from './pages/WmsPhysicalInventory/WmsPhysicalInventory'
 import PhysicalInventoryBinLocation from './pages/PhysicalInventoryBinLocation/PhysicalInventoryBinLocation'
 import WmsBinlocation from './pages/WmsBinlocation/WmsBinlocation'
+import WmsItemMapping from './pages/WmsItemMapping/WmsItemMapping'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -158,6 +159,8 @@ const App = () => {
         <Route path='/wmsphysicalbinlocation' element={<PhysicalInventoryBinLocation />} />
         
         <Route path='/wmsbinlocation' element={<WmsBinlocation />} />
+
+        <Route path='/wmsmapping' element={<WmsItemMapping />} />
 
 
         <Route

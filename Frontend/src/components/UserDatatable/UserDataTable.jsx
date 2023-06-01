@@ -34,7 +34,8 @@ const UserDataTable = ({
   UserName,
   checkboxSelection,
   handleRowClickInParent, // this is for journal movement cl function to get the row data on click
-
+  handleSaveData,
+  
 }) => {
   const navigate = useNavigate();
   const [qrcodeValue, setQRCodeValue] = useState('');
@@ -184,6 +185,12 @@ const UserDataTable = ({
       || uniqueId === "mobileWmsInventoryId"
     ) {
       handleRowClickInParent(item);
+      return;
+    }
+
+    if (uniqueId === "wmsItemMappingId")
+    {
+      handleSaveData(item);
       return;
     }
 

@@ -26,7 +26,7 @@ const WmsItemMapping = () => {
   const [userdate, setUserDate] = useState("");
   const [userqrcode, setUserQrCode] = useState("");
   const [userbinlocation, setUserBinlocation] = useState("");
-
+  const [rowData, setRowData] = useState([]);
 
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
@@ -57,19 +57,37 @@ const WmsItemMapping = () => {
     const saveItemMapping = () => {
         setIsLoading(true);
         const data = {
-            "itemserialno": userserial,
-            "gtin": usergtin,
-            "Config": userconfig,
-            "mapdate": userdate,
-            "QRCode": userqrcode,
-            "BinLocation": userbinlocation,
-            "UserID": currentUser?.UserID
+            // set this body
+                "itemcode": rowData?.ItemCode,
+                "itemdesc": rowData?.ItemDesc,
+                "gtin": usergtin,
+                "remarks": rowData?.Remarks,
+                "classification": rowData?.Classification,
+                "mainlocation": rowData?.MainLocation,
+                "binlocation": userbinlocation,
+                "intcode": rowData?.IntCode,
+                "itemserialno": userserial,
+                "mapdate": userdate,
+                "palletcode": rowData?.PalletCode,
+                "reference": rowData?.Reference,
+                "sid": rowData?.SID,
+                "cid": userconfig,
+                "po": rowData?.PO,
+                "trans": rowData?.Trans
+            
         }
         userRequest.post('/insertIntoMappedBarcodeOrUpdateBySerialNo', data)
             .then(response => {
                 console.log(response?.data);
                 setIsLoading(false);
                 setMessage(response?.data?.message);
+                setUserSerial("");
+                setUserGtin("");
+                setUserConfig("");
+                setUserDate("");
+                setUserQrCode("");
+                setUserBinlocation("");
+                
             })
             .catch(error => {
                 console.error(error);
@@ -78,7 +96,12 @@ const WmsItemMapping = () => {
             });
     }
 
+    console.log(rowData);
+    const hanleSaveData = (item) => {
+        // console.log(item);
+        setRowData(item);
 
+    }
 
   return (
     <>
@@ -136,6 +159,8 @@ const WmsItemMapping = () => {
             <UserDataTable data={data} columnsName={WmsItemMappedColumn} backButton={false}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                uniqueId={"wmsItemMappingId"}
+                handleSaveData={hanleSaveData}
               />
             </div>
 
@@ -183,6 +208,7 @@ const WmsItemMapping = () => {
                     <label htmlFor='date' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Manufacturing Date<span className='text-[#FF0404]'>*</span></label>
                     <input
                         id="date"
+                        type="date"
                         className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder='Manufacturing Date'
                       onChange={(e) => setUserDate(e.target.value)}

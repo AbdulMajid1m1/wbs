@@ -2804,6 +2804,7 @@ const WBSDB = {
     }
   },
 
+  // check if serial number exists in tblMappedBarcodes table
   async insertIntoMappedBarcodeOrUpdateBySerialNo(req, res, next) {
     try {
       const {

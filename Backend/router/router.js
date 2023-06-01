@@ -209,6 +209,8 @@ router.get("/getAllTblMappedBarcodes", checkAuthentication, WBSDB.getAllTblMappe
 
 router.post("/getmapBarcodeDataByItemCode", checkAuthentication, WBSDB.getmapBarcodeDataByItemCode); // tblMappedBarcodes
 
+router.get("/getmapBarcodeDataByuser", checkAuthentication, WBSDB.getmapBarcodeDataByuser); // tblMappedBarcodes
+
 router.get("/getmapBarcodeDataByBinLocation", checkAuthentication, WBSDB.getmapBarcodeDataByBinLocation);
 
 router.post("/insertIntoMappedBarcode", checkAuthentication, WBSDB.insertIntoMappedBarcode);

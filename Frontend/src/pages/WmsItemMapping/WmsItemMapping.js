@@ -27,7 +27,7 @@ const WmsItemMapping = () => {
   const [userqrcode, setUserQrCode] = useState("");
   const [userbinlocation, setUserBinlocation] = useState("");
 
-  
+
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   // to reset snakebar messages
@@ -135,12 +135,19 @@ const WmsItemMapping = () => {
 
               <div className="mb-6">
                 <label htmlFor='config' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Select CONFIG#<span className='text-[#FF0404]'>*</span></label>
-                <input
-                  id="scanpallet"
+                <select
+                  id="config"
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder='Scan CONFIG'
+                //   value={userconfig}
                   onChange={(e) => setUserConfig(e.target.value)}
-                />
+                >
+                    <option value="">Select CONFIG</option>
+                    <option value="1">G/WG</option>
+                    <option value="2">D/WG</option>
+                    <option value="2">S/WG</option>
+                    <option value="2">PRMDL (V)</option>
+                </select>
               </div>
 
 

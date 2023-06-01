@@ -2804,7 +2804,7 @@ const WBSDB = {
     }
   },
 
-  async insertIntoMappedBarcode(req, res, next) {
+  async insertIntoMappedBarcodeOrUpdateBySerialNo(req, res, next) {
     try {
       const {
         itemcode,

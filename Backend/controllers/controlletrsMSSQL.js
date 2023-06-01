@@ -2655,6 +2655,33 @@ const WBSDB = {
   },
 
 
+  async getmapBarcodeDataByuser(req, res, next) {
+    try {
+      // Get ITEMID from headers
+      let currentUser = req?.token?.UserID;
+      if (!currentUser) {
+        res.status(401).send({ message: "Unauthorized! token is required" });
+        return;
+      }
+
+
+      let query = `
+      SELECT * FROM dbo.tblMappedBarcodes
+      WHERE [User] = @User
+      `;
+      let request = pool2.request();
+      request.input('User', sql.NVarChar, currentUser);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
   async getmapBarcodeDataByBinLocation(req, res, next) {
     try {
       const { BinLocation } = req.query;
@@ -2776,6 +2803,92 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
+  async insertIntoMappedBarcode(req, res, next) {
+    try {
+      const {
+        itemcode,
+        itemdesc,
+        gtin,
+        remarks,
+        classification,
+        mainlocation,
+        binlocation,
+        intcode,
+        itemserialno,
+        mapdate,
+        palletcode,
+        reference,
+        sid,
+        cid,
+        po,
+        trans
+      } = req.body;
+
+      // Check if the required serial number exists
+      if (!itemserialno) {
+        return res.status(400).send({ message: "Serial number is required." });
+      }
+
+      let query = `
+        IF EXISTS (SELECT 1 FROM dbo.tblMappedBarcodes WHERE ItemSerialNo = @itemSerialNo)
+        BEGIN
+          UPDATE dbo.tblMappedBarcodes
+          SET ItemCode = @itemCode,
+              ItemDesc = @itemDesc,
+              GTIN = @gtin,
+              Remarks = @remarks,
+              [User] = @user,
+              Classification = @classification,
+              MainLocation = @mainLocation,
+              BinLocation = @binLocation,
+              IntCode = @intCode,
+              MapDate = @mapDate,
+              PalletCode = @palletCode,
+              Reference = @reference,
+              SID = @sid,
+              CID = @cid,
+              PO = @po,
+              Trans = @trans
+          WHERE ItemSerialNo = @itemSerialNo
+        END
+        ELSE
+        BEGIN
+          INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+          VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+        END
+      `;
+
+      let request = pool2.request();
+      request.input('itemCode', sql.VarChar(100), itemcode);
+      request.input('itemDesc', sql.NVarChar(255), itemdesc);
+      request.input('gtin', sql.VarChar(150), gtin);
+      request.input('remarks', sql.VarChar(100), remarks);
+      request.input('user', sql.VarChar(50), req.token.UserID);
+      request.input('classification', sql.VarChar(150), classification);
+      request.input('mainLocation', sql.VarChar(200), mainlocation);
+      request.input('binLocation', sql.VarChar(200), binlocation);
+      request.input('intCode', sql.VarChar(150), intcode);
+      request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+      request.input('mapDate', sql.Date, mapdate);
+      request.input('palletCode', sql.VarChar(255), palletcode);
+      request.input('reference', sql.VarChar(100), reference);
+      request.input('sid', sql.VarChar(50), sid);
+      request.input('cid', sql.VarChar(50), cid);
+      request.input('po', sql.VarChar(50), po);
+      request.input('trans', sql.Numeric(10, 0), trans);
+
+      await request.query(query);
+
+      return res.status(201).send({ message: "Data inserted successfully." });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
 
   async insertManyIntoMappedBarcode(req, res, next) {
 
@@ -5846,7 +5959,7 @@ const WBSDB = {
           "QTYDIFFERENCE",
           "QTYONHAND",
           "BINLOCATION"
-          
+
         ];
 
         let values = fields.map((field) => "@" + field);

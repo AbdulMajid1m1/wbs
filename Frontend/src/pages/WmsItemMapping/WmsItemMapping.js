@@ -6,7 +6,7 @@ import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
-import { AllItems } from '../../utils/datatablesource';
+import { AllItems, WmsItemMappedColumn } from '../../utils/datatablesource';
 
 const WmsItemMapping = () => {
 
@@ -37,20 +37,20 @@ const WmsItemMapping = () => {
 
   };
 
-//   useEffect(() => {
-//     setIsLoading(true);
-//     userRequest.get('/getAllTblStockMaster')
-//       .then(response => {
-//         console.log(response?.data);
-//         setData(response?.data ?? []);
-//         setIsLoading(false);
-//       })
-//       .catch(error => {
-//         console.error(error);
-//         setIsLoading(false);
-//       });
+  useEffect(() => {
+    setIsLoading(true);
+    userRequest.get('/getmapBarcodeDataByuser')
+      .then(response => {
+        console.log(response?.data);
+        setData(response?.data ?? []);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setIsLoading(false);
+      });
 
-//   }, []);
+  }, []);
 
 
   return (
@@ -106,7 +106,7 @@ const WmsItemMapping = () => {
             </div>
 
             <div className='-mt-3'>
-            <UserDataTable data={data} columnsName={AllItems} backButton={false}
+            <UserDataTable data={data} columnsName={WmsItemMappedColumn} backButton={false}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
               />

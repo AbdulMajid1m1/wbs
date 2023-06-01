@@ -2454,3 +2454,114 @@ export const WmsByBinlocationColumn = [
 
 
 ]
+
+
+
+export const WmsItemMappedColumn = [
+  {
+    field: "ItemCode",
+    headerName: "ItemCode",
+    width: 180,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "ItemDesc",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+  {
+    field: "Remarks",
+    headerName: "Remarks",
+    width: 180,
+
+  },
+  {
+    field: "User",
+    headerName: "User",
+    width: 180,
+
+  },
+  {
+    field: "Classification",
+    headerName: "Classification",
+    width: 180,
+
+  },
+  {
+    field: "MainLocation",
+    headerName: "MainLocation",
+    width: 180,
+
+  },
+  {
+    field: "BinLocation",
+    headerName: "BinLocation",
+    width: 180,
+
+  },
+  {
+    field: "IntCode",
+    headerName: "IntCode",
+    width: 180,
+
+  },
+  {
+    field: "ItemSerialNo",
+    headerName: "ItemSerialNo",
+    width: 180,
+
+  },
+  {
+    field: "MapDate",
+    headerName: "MapDate",
+    width: 180,
+
+  },
+  {
+    field: "PalletCode",
+    headerName: "PalletCode",
+    width: 180,
+
+  },
+  {
+    field: "Reference",
+    headerName: "Reference",
+    width: 180,
+
+  },
+  {
+    field: "SID",
+    headerName: "SID",
+    width: 180,
+
+  },
+  {
+    field: "CID",
+    headerName: "CID",
+    width: 180,
+
+  },
+  {
+    field: "PO",
+    headerName: "PO",
+    width: 180,
+
+  },
+  {
+    field: "Trans",
+    headerName: "Trans",
+    width: 180,
+
+  },
+ 
+
+
+
+]

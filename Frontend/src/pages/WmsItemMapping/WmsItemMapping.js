@@ -26,7 +26,7 @@ const WmsItemMapping = () => {
   const [userdate, setUserDate] = useState("");
   const [userqrcode, setUserQrCode] = useState("");
   const [userbinlocation, setUserBinlocation] = useState("");
-  const [rowData, setRowData] = useState([]);
+  const [rowData, setRowData] = useState();
 
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
@@ -52,56 +52,60 @@ const WmsItemMapping = () => {
 
   }, []);
 
-  
-  
-    const saveItemMapping = () => {
-        setIsLoading(true);
-        const data = {
-            // set this body
-                "itemcode": rowData?.ItemCode,
-                "itemdesc": rowData?.ItemDesc,
-                "gtin": usergtin,
-                "remarks": rowData?.Remarks,
-                "classification": rowData?.Classification,
-                "mainlocation": rowData?.MainLocation,
-                "binlocation": userbinlocation,
-                "intcode": rowData?.IntCode,
-                "itemserialno": userserial,
-                "mapdate": userdate,
-                "palletcode": rowData?.PalletCode,
-                "reference": rowData?.Reference,
-                "sid": rowData?.SID,
-                "cid": userconfig,
-                "po": rowData?.PO,
-                "trans": rowData?.Trans
-            
-        }
-        userRequest.post('/insertIntoMappedBarcodeOrUpdateBySerialNo', data)
-            .then(response => {
-                console.log(response?.data);
-                setIsLoading(false);
-                setMessage(response?.data?.message);
-                setUserSerial("");
-                setUserGtin("");
-                setUserConfig("");
-                setUserDate("");
-                setUserQrCode("");
-                setUserBinlocation("");
-                
-            })
-            .catch(error => {
-                console.error(error);
-                setIsLoading(false);
-                setError(error?.response?.data?.message);
-            });
-    }
 
-    console.log(rowData);
-    const hanleSaveData = (item) => {
-        // console.log(item);
-        setRowData(item);
+
+  const saveItemMapping = () => {
+    if (!rowData) {
+      setError("Please select a row to save");
+      return;
+    }
+    setIsLoading(true);
+    const data = {
+      // set this body
+      "itemcode": rowData?.ItemCode,
+      "itemdesc": rowData?.ItemDesc,
+      "gtin": usergtin,
+      "remarks": rowData?.Remarks,
+      "classification": rowData?.Classification,
+      "mainlocation": rowData?.MainLocation,
+      "binlocation": userbinlocation,
+      "intcode": rowData?.IntCode,
+      "itemserialno": userserial,
+      "mapdate": userdate,
+      "palletcode": rowData?.PalletCode,
+      "reference": rowData?.Reference,
+      "sid": rowData?.SID,
+      "cid": userconfig,
+      "po": rowData?.PO,
+      "trans": rowData?.Trans
 
     }
+    userRequest.post('/insertIntoMappedBarcodeOrUpdateBySerialNo', data)
+      .then(response => {
+        console.log(response?.data);
+        setIsLoading(false);
+        setMessage(response?.data?.message);
+        setUserSerial("");
+        setUserGtin("");
+        setUserConfig("");
+        setUserDate("");
+        setUserQrCode("");
+        setUserBinlocation("");
+
+      })
+      .catch(error => {
+        console.error(error);
+        setIsLoading(false);
+        setError(error?.response?.data?.message);
+      });
+  }
+
+  console.log(rowData);
+  const hanleSaveData = (item) => {
+    // console.log(item);
+    setRowData(item);
+
+  }
 
   return (
     <>
@@ -156,96 +160,103 @@ const WmsItemMapping = () => {
             </div>
 
             <div className='-mt-3'>
-            <UserDataTable data={data} columnsName={WmsItemMappedColumn} backButton={false}
+              <UserDataTable data={data} columnsName={WmsItemMappedColumn} backButton={false}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 uniqueId={"wmsItemMappingId"}
                 handleSaveData={hanleSaveData}
+                checkboxSelection={"disabled"}
+
               />
             </div>
 
 
-              <div className="mb-6">
-                <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
-                <input
-                  id="scan"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Scan Serial'
-                  onChange={(e) => setUserSerial(e.target.value)}
-                />
-              </div>
-
-              <div className="mb-6">
-                <label htmlFor='gtin' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan GITN#<span className='text-[#FF0404]'>*</span></label>
-                <input
-                  id="gtin"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Scan GTIN'
-                  onChange={(e) => setUserGtin(e.target.value)}
-                />
-              </div>
-
-              <div className="mb-6">
-                <label htmlFor='config' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Select CONFIG#<span className='text-[#FF0404]'>*</span></label>
-                <select
-                  id="config"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Scan CONFIG'
-                //   value={userconfig}
-                  onChange={(e) => setUserConfig(e.target.value)}
-                >
-                    <option value="">Select CONFIG</option>
-                    <option value="1">G/WG</option>
-                    <option value="2">D/WG</option>
-                    <option value="2">S/WG</option>
-                    <option value="2">PRMDL (V)</option>
-                </select>
-              </div>
-
-
-              <div className='mb-6 flex justify-between gap-3'>
-                <div>
-                    <label htmlFor='date' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Manufacturing Date<span className='text-[#FF0404]'>*</span></label>
-                    <input
-                        id="date"
-                        type="date"
-                        className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder='Manufacturing Date'
-                      onChange={(e) => setUserDate(e.target.value)}
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor='qrcode' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan QR Code<span className='text-[#FF0404]'>*</span></label>
-                    <input
-                    id="qrcode"
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder='Scan QR Code'
-                      onChange={(e) => setUserQrCode(e.target.value)}
-                    />
-                </div>
+            <div className="mb-6">
+              <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
+              <input
+                id="scan"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Scan Serial'
+                value={userserial}
+                onChange={(e) => setUserSerial(e.target.value)}
+              />
             </div>
 
             <div className="mb-6">
-                <label htmlFor='binlocation' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Binlocation<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='gtin' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan GITN#<span className='text-[#FF0404]'>*</span></label>
+              <input
+                id="gtin"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Scan GTIN'
+                value={usergtin}
+                onChange={(e) => setUserGtin(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor='config' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Select CONFIG#<span className='text-[#FF0404]'>*</span></label>
+              <select
+                id="config"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Scan CONFIG'
+                //   value={userconfig}
+                onChange={(e) => setUserConfig(e.target.value)}
+              >
+                <option value="">Select CONFIG</option>
+                <option value="1">G/WG</option>
+                <option value="2">D/WG</option>
+                <option value="2">S/WG</option>
+                <option value="2">PRMDL (V)</option>
+              </select>
+            </div>
+
+
+            <div className='mb-6 flex justify-between gap-3'>
+              <div>
+                <label htmlFor='date' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Manufacturing Date<span className='text-[#FF0404]'>*</span></label>
                 <input
-                  id="binlocation"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Scan Binlocation'
-                  onChange={(e) => setUserBinlocation(e.target.value)}
+                  id="date"
+                  type="date"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder='Manufacturing Date'
+                  onChange={(e) => setUserDate(e.target.value)}
+                  value={userdate}
                 />
               </div>
 
-              <div className='mb-6'>
-                <button onClick={saveItemMapping}
-                    type='button'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[30%]'>
-                    <span className='flex justify-center items-center'
-                    >
-                    <p>Save</p>
-                    </span>
-                </button>
+              <div>
+                <label htmlFor='qrcode' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan QR Code<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="qrcode"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder='Scan QR Code'
+                  onChange={(e) => setUserQrCode(e.target.value)}
+                  value={userqrcode}
+                />
               </div>
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor='binlocation' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Binlocation<span className='text-[#FF0404]'>*</span></label>
+              <input
+                id="binlocation"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Scan Binlocation'
+                onChange={(e) => setUserBinlocation(e.target.value)}
+                value={userbinlocation}
+              />
+            </div>
+
+            <div className='mb-6'>
+              <button onClick={saveItemMapping}
+                type='button'
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[30%]'>
+                <span className='flex justify-center items-center'
+                >
+                  <p>Save</p>
+                </span>
+              </button>
+            </div>
 
           </div>
         </div>

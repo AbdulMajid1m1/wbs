@@ -22,6 +22,8 @@ import cycle from "../../images/cycle.jpeg"
 import exit from "../../images/exit.png"
 import move from "../../images/Move.png"
 import physical from "../../images/physical.png"
+import truckdata from "../../images/truckdata.png"
+import zonemaster from "../../images/zonemaster.png"
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
@@ -156,6 +158,16 @@ const FigmaSidebar = () => {
                     <div className='main-images-container' onClick={() => navigate('/pickingsales')}>
                         <img src={packing} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Pick List Assigned</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/truckdata')}>
+                        <img src={truckdata} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Truck Master Data</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/zonemaster')}>
+                        <img src={zonemaster} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Zone Master</p>
                     </div>
 
                     <div className='main-images-container'>

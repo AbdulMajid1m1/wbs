@@ -506,6 +506,11 @@ router.post("/validateItemSerialNumberForJournalCountingOnlyCLDets", checkAuthen
 
 router.get("/getAllWmsTruckMaster", checkAuthentication, WBSDB.getAllWmsTruckMaster);
 
+router.post("/insertTruckMasterData", checkAuthentication, WBSDB.insertTruckMasterData);
+
+router.delete("/deleteTruckMasterData", checkAuthentication, WBSDB.deleteTruckMasterData);
+
+router.put("/updateTruckMasterData", checkAuthentication, WBSDB.updateTruckMasterData);
 // ---------- tblZones API Start ----------
 
 router.get("/getAlltblZones", checkAuthentication, WBSDB.getAlltblZones);

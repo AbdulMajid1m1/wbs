@@ -409,6 +409,21 @@ const UserDataTable = ({
           }
           break;
 
+        // Truck Master data Delete Api 
+        case "truckMasterId":
+          try {
+            const response = await userRequest.delete(
+              "deleteShipmentPalletizingDataCL?TRANSFERID=" + rowdata.TRANSFERID
+            );
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
+          }
+          break;
+
 
         default:
           // do nothing

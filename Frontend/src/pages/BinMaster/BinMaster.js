@@ -14,7 +14,7 @@ const BinMaster = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/")
+                userRequest.get("/getAlltblBinLocations")
                     .then(response => {
                         console.log(response?.data);
 

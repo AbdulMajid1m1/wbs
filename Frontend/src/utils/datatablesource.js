@@ -2571,20 +2571,53 @@ export const WmsItemMappedColumn = [
 
 export const TruckMasterDataColumn = [
   {
-    field: "ItemCode",
-    headerName: "ITEMCODE",
+    field: "PlateNo",
+    headerName: "PLATE NO",
     width: 180,
 
   },
   {
-    field: "ItemDesc",
-    headerName: "ITENDESC",
+    field: "BarcodeSerialNumber",
+    headerName: "BARCODE SERIAL NUMBER",
     width: 180,
 
   },
   {
-    field: "GTIN",
-    headerName: "GTIN",
+    field: "TransportationCompanyName",
+    headerName: "TRANSPORTATION COMPANY NAME",
+    width: 180,
+
+  },
+ 
+
+
+
+]
+
+
+
+export const ZoneMasterColumn = [
+  {
+    field: "GroupWarehouse",
+    headerName: "GROUP WAREHOUSE",
+    width: 180,
+
+  },
+  {
+    field: "Zones",
+    headerName: "ZONES",
+    width: 180,
+
+  },
+  {
+    field: "BinNumber",
+    headerName: "BIN NUMBER",
+    width: 180,
+
+  },
+  {
+    field: "ZoneType",
+    headerName: "ZONE TYPE",
     width: 180,
 
   },
@@ -2598,26 +2631,62 @@ export const TruckMasterDataColumn = [
 
 export const BinMasterColumn = [
   {
-    field: "ItemCode",
-    headerName: "ITEMCODE",
+    field: "GroupWarehouse",
+    headerName: "GROUP WAREHOUSE",
     width: 180,
 
   },
   {
-    field: "ItemDesc",
-    headerName: "ITEMDESC",
+    field: "Zones",
+    headerName: "Zones",
     width: 180,
 
   },
   {
-    field: "GTIN",
-    headerName: "GTIN",
+    field: "BinNumber",
+    headerName: "BinNumber",
     width: 180,
 
   },
+  {
+    field: "ZoneType",
+    headerName: "ZONE TYPE",
+    width: 180,
+
+  },
+  {
+    field: "BinHeight",
+    headerName: "BIN HEIGHT",
+    width: 180,
+
+  },
+  {
+    field: "BinRow",
+    headerName: "BIN ROW",
+    width: 180,
+
+  },
+  {
+    field: "BinWidth",
+    headerName: "BIN WIDTH",
+    width: 180,
+
+  },
+  {
+    field: "BinTotalSize",
+    headerName: "BIN TOTAL SIZE",
+    width: 180,
+
+  },
+  {
+    field: "BinType",
+    headerName: "BIN TYPE",
+    width: 180,
+
+  },
+
+
  
-
-
 
 ]
 
@@ -2648,27 +2717,6 @@ export const TransactionHistoryColumn = [
 
 ]
 
-export const ZoneMasterColumn = [
-  {
-    field: "ItemCode",
-    headerName: "ITEMCODE",
-    width: 180,
-
-  },
-  {
-    field: "ItemDesc",
-    headerName: "ITEMDESC",
-    width: 180,
-
-  },
-  {
-    field: "GTIN",
-    headerName: "GTIN",
-    width: 180,
-
-  },
- 
 
 
 
-]

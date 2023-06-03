@@ -42,7 +42,7 @@ const TruckMasterData = () => {
             <UserDataTable data={alldata} addNewNavigation="" title="Truck Master Data" 
                 columnsName={TruckMasterDataColumn} 
                   backButton={true}
-                    uniqueId=""
+                    uniqueId="truckMasterId"
                       
             />
 

@@ -14,7 +14,7 @@ const ZoneMaster = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/")
+                userRequest.get("/getAlltblZones")
                     .then(response => {
                         console.log(response?.data);
 

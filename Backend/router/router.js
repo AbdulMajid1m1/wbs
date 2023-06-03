@@ -515,6 +515,12 @@ router.put("/updateTruckMasterData", checkAuthentication, WBSDB.updateTruckMaste
 
 router.get("/getAlltblZones", checkAuthentication, WBSDB.getAlltblZones);
 
+router.post("/insertZonesData", checkAuthentication, WBSDB.insertZonesData);
+
+router.put("/updateZonesData", checkAuthentication, WBSDB.updateZonesData);
+
+router.delete("/deleteZonesData", checkAuthentication, WBSDB.deleteZonesData);
+
 // --------- tblBinLocation APIs start ---------
 
 router.get("/getAlltblBinLocations", checkAuthentication, WBSDB.getAlltblBinLocation);

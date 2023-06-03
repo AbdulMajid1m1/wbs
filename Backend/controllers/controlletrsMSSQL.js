@@ -6329,27 +6329,6 @@ const WBSDB = {
 
 
 
-  // --------- tblZones ---------
-  async getAlltblZones(req, res, next) {
-
-    try {
-      let query = `
-      SELECT * FROM dbo.tblZones
-      `;
-      let request = pool2.request();
-      const data = await request.query(query);
-      if (data.recordsets[0].length === 0) {
-        return res.status(404).send({ message: "N0 data found." });
-      }
-      return res.status(200).send(data.recordsets[0]);
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
-
-
-    }
-  },
-
 
 
 
@@ -6912,7 +6891,169 @@ const WBSDB = {
 
 
 
+  // --------- tblZones controller start ---------
+  async getAlltblZones(req, res, next) {
 
+    try {
+      let query = `
+      SELECT * FROM dbo.tblZones
+      `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "N0 data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+
+
+  // Create
+  async insertZonesData(req, res, next) {
+    try {
+      const zonesDataArray = req.body;
+      if (!Array.isArray(zonesDataArray) || zonesDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < zonesDataArray.length; i++) {
+        const {
+          GroupWarehouse,
+          Zones,
+          BinNumber,
+          ZoneType
+        } = zonesDataArray[i];
+
+        // Dynamic SQL query construction
+        let fields = [
+          "GroupWarehouse",
+          "Zones",
+          "BinNumber",
+          "ZoneType"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+        INSERT INTO [WBSSQL].[dbo].[tblZones]
+          (${fields.join(', ')}) 
+        VALUES 
+          (${values.join(', ')})
+      `;
+
+        let request = pool2.request();
+        request.input('GroupWarehouse', sql.NVarChar, GroupWarehouse);
+        request.input('Zones', sql.NVarChar, Zones);
+        request.input('BinNumber', sql.NVarChar, BinNumber);
+        request.input('ZoneType', sql.NVarChar, ZoneType);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted into tblZones successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+  
+ 
+  async updateZonesData(req, res, next) {
+    try {
+      const {
+        GroupWarehouse,
+        Zones,
+        BinNumber,
+        ZoneType
+      } = req.body;
+  
+      if (!Zones) {
+        return res.status(400).send({ message: 'Zones is required.' });
+      }
+  
+      let query = `
+        UPDATE [WBSSQL].[dbo].[tblZones]
+        SET `;
+  
+      const updateFields = [];
+      const request = pool2.request();
+  
+      if (GroupWarehouse !== undefined) {
+        updateFields.push('GroupWarehouse = @GroupWarehouse');
+        request.input('GroupWarehouse', sql.NVarChar, GroupWarehouse);
+      }
+  
+      if (BinNumber !== undefined) {
+        updateFields.push('BinNumber = @BinNumber');
+        request.input('BinNumber', sql.NVarChar, BinNumber);
+      }
+  
+      if (ZoneType !== undefined) {
+        updateFields.push('ZoneType = @ZoneType');
+        request.input('ZoneType', sql.NVarChar, ZoneType);
+      }
+  
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+  
+      query += updateFields.join(', ');
+  
+      query += `
+        WHERE Zones = @Zones
+      `;
+  
+      request.input('Zones', sql.NVarChar, Zones);
+  
+      const result = await request.query(query);
+  
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Zones record not found.' });
+      }
+  
+      res.status(200).send({ message: 'Zones updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },  
+
+
+  async deleteZonesData(req, res, next) {
+    try {
+      const { Zones } = req.query;
+  
+      if (!Zones) {
+        return res.status(400).send({ message: "Zones is required." });
+      }
+  
+      const query = `
+        DELETE FROM [WBSSQL].[dbo].[tblZones]
+        WHERE Zones = @Zones
+      `;
+  
+      let request = pool2.request();
+      request.input('Zones', sql.NVarChar, Zones);
+  
+      const result = await request.query(query);
+  
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: "No data found with the given Zones." });
+      }
+  
+      res.status(200).send({ message: 'Zones data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },  
 
 
 };

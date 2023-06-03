@@ -233,6 +233,14 @@
   margin-bottom: 20px;
 }
 
+.popup select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #e69138;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 .popup button {
   background-color: #e69138;
   color: #ffffff;
@@ -271,6 +279,10 @@
   }
   
   .popup input[type="email"] {
+    font-size: 14px;
+  }
+
+  .popup select[type="email"] {
     font-size: 14px;
   }
   

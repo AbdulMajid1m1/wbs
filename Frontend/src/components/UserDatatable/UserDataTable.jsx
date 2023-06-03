@@ -699,7 +699,7 @@ const UserDataTable = ({
   const [subject, setSubject] = useState("");
   const [sendTo, setSendTo] = useState("");
   const [remarks, setRemarks] = useState("");
-
+  const [roles, setRoles] = useState([]);
 
   const handleOpenPopup = () => {
     setIsOpen(true);
@@ -724,6 +724,18 @@ const UserDataTable = ({
 
     };
   };
+
+
+  useEffect(() => {
+    userRequest
+      .get("/getAllUsers")
+      .then((response) => {
+        setRoles(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+}, []);
 
 
 
@@ -998,14 +1010,21 @@ const UserDataTable = ({
               </div>
               <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email:</label>
-                <input
+                <select
                   type="email"
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="Email"
-                />
+                >
+                  <option value="">--Select Email--</option>
+                  {roles.map((role) => (
+                    <option key={role.UserID} value={role.Email}>
+                      {role.Email}
+                    </option>
+                  ))}
+                  </select>
 
                 <label htmlFor="subject">Subject:</label>
                 <input

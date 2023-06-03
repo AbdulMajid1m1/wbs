@@ -6328,7 +6328,7 @@ const WBSDB = {
   },
 
 
-// --------- WMS_TruckMaster ---------
+  // --------- WMS_TruckMaster ---------
   async getAllWmsTruckMaster(req, res, next) {
 
     try {
@@ -6350,7 +6350,7 @@ const WBSDB = {
   },
 
 
-// --------- tblZones ---------
+  // --------- tblZones ---------
   async getAlltblZones(req, res, next) {
 
     try {
@@ -6373,7 +6373,7 @@ const WBSDB = {
 
 
 
-// --------- tblBinLocation Controller start ---------
+  // --------- tblBinLocation Controller start ---------
   async getAlltblBinLocation(req, res, next) {
 
     try {
@@ -6395,6 +6395,147 @@ const WBSDB = {
   },
 
 
+  async insertTruckMasterData(req, res, next) {
+    try {
+      const truckMasterDataArray = req.body;
+      if (!Array.isArray(truckMasterDataArray) || truckMasterDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < truckMasterDataArray.length; i++) {
+        const {
+          PlateNo,
+          BarcodeSerialNumber,
+          TransportationCompanyName
+        } = truckMasterDataArray[i];
+
+        // Check if a record with the same BarcodeSerialNumber or PlateNo already exists
+        let checkQuery = `
+          SELECT * FROM [WBSSQL].[dbo].[WMS_TruckMaster]
+          WHERE BarcodeSerialNumber = @BarcodeSerialNumber OR PlateNo = @PlateNo
+        `;
+        let checkRequest = pool2.request();
+        checkRequest.input('BarcodeSerialNumber', sql.NVarChar, BarcodeSerialNumber);
+        checkRequest.input('PlateNo', sql.NVarChar, PlateNo);
+        let checkResult = await checkRequest.query(checkQuery);
+        if (checkResult.recordset.length > 0) {
+          return res.status(400).send({ message: `A record with the with BarcodeSerialNumber ${BarcodeSerialNumber} or PlateNo ${PlateNo} already exists.` });
+        }
+
+        // Dynamic SQL query construction
+        let fields = [
+          "PlateNo",
+          "BarcodeSerialNumber",
+          "TransportationCompanyName"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+          INSERT INTO [WBSSQL].[dbo].[WMS_TruckMaster]
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool2.request();
+        request.input('PlateNo', sql.NVarChar, PlateNo);
+        request.input('BarcodeSerialNumber', sql.NVarChar, BarcodeSerialNumber);
+        request.input('TransportationCompanyName', sql.NVarChar, TransportationCompanyName);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted into WMS_TruckMaster successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+  async deleteTruckMasterData(req, res, next) {
+    try {
+      const { PlateNo } = req.query;
+
+      if (!PlateNo) {
+        return res.status(400).send({ message: "PlateNo is required." });
+      }
+
+      const query = `
+        DELETE FROM [WBSSQL].[dbo].[WMS_TruckMaster]
+        WHERE PlateNo = @PlateNo
+      `;
+
+      let request = pool2.request();
+      request.input('PlateNo', sql.NVarChar, PlateNo);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: "No data found with the given PlateNo." });
+      }
+
+      res.status(200).send({ message: 'TruckMaster data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async updateTruckMasterData(req, res, next) {
+    try {
+      const {
+        PlateNo,
+        BarcodeSerialNumber,
+        TransportationCompanyName
+      } = req.body;
+
+      if (!PlateNo) {
+        return res.status(400).send({ message: 'PlateNo is required.' });
+      }
+
+      let query = `
+        UPDATE [WBSSQL].[dbo].[WMS_TruckMaster]
+        SET `;
+
+      const updateFields = [];
+      const request = pool2.request();
+
+      if (BarcodeSerialNumber !== undefined) {
+        updateFields.push('BarcodeSerialNumber = @BarcodeSerialNumber');
+        request.input('BarcodeSerialNumber', sql.NVarChar, BarcodeSerialNumber);
+      }
+
+      if (TransportationCompanyName !== undefined) {
+        updateFields.push('TransportationCompanyName = @TransportationCompanyName');
+        request.input('TransportationCompanyName', sql.NVarChar, TransportationCompanyName);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+        WHERE PlateNo = @PlateNo
+      `;
+
+      request.input('PlateNo', sql.NVarChar, PlateNo);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'TruckMaster record not found.' });
+      }
+
+      res.status(200).send({ message: 'TruckMaster updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

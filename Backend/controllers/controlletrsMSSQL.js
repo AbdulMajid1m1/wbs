@@ -2320,23 +2320,25 @@ const WBSDB = {
         Fullname,
         UserLevel,
         Loc,
+        Email
       } = req.query;
 
       const hashedPassword = await bcrypt.hash(UserPassword, saltRounds);
 
       const query = `
       INSERT INTO dbo.tblUsers
-      (UserID, UserPassword, Fullname, UserLevel, Loc)
+      (UserID, UserPassword, Fullname, UserLevel, Loc,Email)
       VALUES
-      (@UserID, @UserPassword, @Fullname, @UserLevel, @Loc)
+      (@UserID, @UserPassword, @Fullname, @UserLevel, @Loc,@Email)
     `;
 
       let request = pool2.request();
       request.input('UserID', sql.VarChar(255), UserID);
       request.input('UserPassword', sql.VarChar(255), hashedPassword);
       request.input('Fullname', sql.VarChar(255), Fullname);
-      request.input('UserLevel', sql.VarChar(255), UserLevel);
+      request.input('UserLevel', sql.VarChar(255), UserLevel.toLowerCase());
       request.input('Loc', sql.VarChar(255), Loc);
+      request.input('Email', sql.VarChar(255), Email);
 
       await request.query(query);
 
@@ -2351,6 +2353,7 @@ const WBSDB = {
         Fullname,
         UserLevel,
         Loc,
+        Email
       }
       const token = jwt.sign(tokenPayload, jwtSecret, { expiresIn: jwtExpiration });
 
@@ -2365,6 +2368,28 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
+  async getAllUsers(req, res, next) {
+    try {
+      const query = `
+        SELECT * FROM dbo.tblUsers
+      `;
+
+      let request = pool2.request();
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'no Data found.' });
+      }
+
+      res.status(200).send(result.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
   // POST request to authenticate user
   async loginUser(req, res, next) {
     try {
@@ -6334,6 +6359,29 @@ const WBSDB = {
 
 
 
+  // --------- tblRoles controller start ---------
+
+  async getAlltblRoles(req, res, next) {
+
+    try {
+      let query = `
+        SELECT * FROM dbo.tblRoles
+        `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+
   // --------- WMS_TruckMaster controller start ---------
   async getAllWmsTruckMaster(req, res, next) {
 
@@ -6963,8 +7011,8 @@ const WBSDB = {
     }
   },
 
-  
- 
+
+
   async updateZonesData(req, res, next) {
     try {
       const {
@@ -6973,87 +7021,87 @@ const WBSDB = {
         BinNumber,
         ZoneType
       } = req.body;
-  
+
       if (!Zones) {
         return res.status(400).send({ message: 'Zones is required.' });
       }
-  
+
       let query = `
         UPDATE [WBSSQL].[dbo].[tblZones]
         SET `;
-  
+
       const updateFields = [];
       const request = pool2.request();
-  
+
       if (GroupWarehouse !== undefined) {
         updateFields.push('GroupWarehouse = @GroupWarehouse');
         request.input('GroupWarehouse', sql.NVarChar, GroupWarehouse);
       }
-  
+
       if (BinNumber !== undefined) {
         updateFields.push('BinNumber = @BinNumber');
         request.input('BinNumber', sql.NVarChar, BinNumber);
       }
-  
+
       if (ZoneType !== undefined) {
         updateFields.push('ZoneType = @ZoneType');
         request.input('ZoneType', sql.NVarChar, ZoneType);
       }
-  
+
       if (updateFields.length === 0) {
         return res.status(400).send({ message: 'At least one field is required to update.' });
       }
-  
+
       query += updateFields.join(', ');
-  
+
       query += `
         WHERE Zones = @Zones
       `;
-  
+
       request.input('Zones', sql.NVarChar, Zones);
-  
+
       const result = await request.query(query);
-  
+
       if (result.rowsAffected[0] === 0) {
         return res.status(404).send({ message: 'Zones record not found.' });
       }
-  
+
       res.status(200).send({ message: 'Zones updated successfully.' });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  },  
+  },
 
 
   async deleteZonesData(req, res, next) {
     try {
       const { Zones } = req.query;
-  
+
       if (!Zones) {
         return res.status(400).send({ message: "Zones is required." });
       }
-  
+
       const query = `
         DELETE FROM [WBSSQL].[dbo].[tblZones]
         WHERE Zones = @Zones
       `;
-  
+
       let request = pool2.request();
       request.input('Zones', sql.NVarChar, Zones);
-  
+
       const result = await request.query(query);
-  
+
       if (result.rowsAffected[0] === 0) {
         return res.status(404).send({ message: "No data found with the given Zones." });
       }
-  
+
       res.status(200).send({ message: 'Zones data deleted successfully.' });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  },  
+  },
 
 
 };

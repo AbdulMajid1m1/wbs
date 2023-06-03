@@ -6325,9 +6325,74 @@ const WBSDB = {
       console.error(error);
       return res.status(500).json({ message: 'An error occurred while updating QTYSCANNED.' });
     }
-  }
+  },
 
 
+// --------- WMS_TruckMaster ---------
+  async getAllWmsTruckMaster(req, res, next) {
+
+    try {
+      let query = `
+      SELECT * FROM dbo.WMS_TruckMaster
+      `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "N0 data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+
+// --------- tblZones ---------
+  async getAlltblZones(req, res, next) {
+
+    try {
+      let query = `
+      SELECT * FROM dbo.tblZones
+      `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "N0 data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+
+
+// --------- tblBinLocation Controller start ---------
+  async getAlltblBinLocation(req, res, next) {
+
+    try {
+      let query = `
+      SELECT * FROM dbo.tblBinLocation
+      `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "N0 data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
 
 
 

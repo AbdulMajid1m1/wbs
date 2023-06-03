@@ -502,3 +502,14 @@ router.post("/validateItemSerialNumberForJournalCountingOnlyCLDets", checkAuthen
 
 
 
+// ---------- WMS_TruckMaster API Start ----------
+
+router.get("/getAllWmsTruckMaster", checkAuthentication, WBSDB.getAllWmsTruckMaster);
+
+// ---------- tblZones API Start ----------
+
+router.get("/getAlltblZones", checkAuthentication, WBSDB.getAlltblZones);
+
+// --------- tblBinLocation APIs start ---------
+
+router.get("/getAlltblBinLocations", checkAuthentication, WBSDB.getAlltblBinLocation);

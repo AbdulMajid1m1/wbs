@@ -2565,3 +2565,110 @@ export const WmsItemMappedColumn = [
 
 
 ]
+
+
+
+
+export const TruckMasterDataColumn = [
+  {
+    field: "ItemCode",
+    headerName: "ITEMCODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "ITENDESC",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+ 
+
+
+
+]
+
+
+
+export const BinMasterColumn = [
+  {
+    field: "ItemCode",
+    headerName: "ITEMCODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "ITEMDESC",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+ 
+
+
+
+]
+
+
+
+export const TransactionHistoryColumn = [
+  {
+    field: "ItemCode",
+    headerName: "ITEMCODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "ITEMDESC",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+ 
+
+
+
+]
+
+export const ZoneMasterColumn = [
+  {
+    field: "ItemCode",
+    headerName: "ITEMCODE",
+    width: 180,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "ITEMDESC",
+    width: 180,
+
+  },
+  {
+    field: "GTIN",
+    headerName: "GTIN",
+    width: 180,
+
+  },
+ 
+
+
+
+]

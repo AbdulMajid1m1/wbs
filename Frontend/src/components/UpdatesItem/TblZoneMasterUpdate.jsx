@@ -2,12 +2,12 @@ import "../AddNew/AddNew.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { TblTruckMasterDataUpdate } from "../../utils/formSource";
+import { TblZoneMasterUpdateColumn } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 
 
-const TblTruckMasterUpdate = ({ inputs, title,
+const TblZoneMasterUpdate = ({ inputs, title,
 }) => {
 //     const params = useParams();
 //     // get id from url
@@ -193,7 +193,7 @@ const handleSubmit = async event => {
 
                             <div className="right">
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {TblTruckMasterDataUpdate.map((input) => (
+                                    {TblZoneMasterUpdateColumn.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
@@ -230,4 +230,4 @@ const handleSubmit = async event => {
     );
 };
 
-export default TblTruckMasterUpdate;
+export default TblZoneMasterUpdate;

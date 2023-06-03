@@ -14,7 +14,7 @@ const TransactionHistory = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/")
+                userRequest.get("/getTransactionHistoryData")
                     .then(response => {
                         console.log(response?.data);
 

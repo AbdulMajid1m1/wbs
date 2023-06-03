@@ -95,6 +95,10 @@ import BinMaster from './pages/BinMaster/BinMaster'
 import TransactionHistory from './pages/TransactionHistory/TransactionHistory'
 import TblTruckMasterUpdate from './components/UpdatesItem/TblTruckMasterUpdate'
 import AddTruckMaster from './components/AddNew/AddTruckMaster'
+import TblBinMasterUpdate from './components/UpdatesItem/TblBinMasterUpdate'
+import AddNewBinMaster from './components/AddNew/AddNewBinMaster'
+import TblZoneMasterUpdate from './components/UpdatesItem/TblZoneMasterUpdate'
+import PrintingPalletLabels from './pages/PrintingPalletLabels/PrintingPalletLabels'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -239,15 +243,22 @@ const App = () => {
 
                 <Route path='/warehouseinventory' element={<WarehouseWmsInventory />} />
 
+                <Route path='/printinglabels' element={<PrintingPalletLabels />} />
+
                 <Route path='/truckdata' element={<TruckMasterData />} />
-
-                <Route path='/zonemaster' element={<ZoneMaster />} />
-
-                <Route path='/binmaster' element={<BinMaster />} />
-
-                <Route path='/transhistory' element={<TransactionHistory />} />
                 <Route path='/tbltrcukupdate/:id' element={<TblTruckMasterUpdate title="Truck Master Data Update" />} />
                 <Route path='/tbltrcuknew' element={<AddTruckMaster title="Add Truck Master" />} />
+
+                <Route path='/binmaster' element={<BinMaster />} />
+                <Route path='/tblbinupdate/:id' element={<TblBinMasterUpdate title="Bin Master Data Update" />} />
+                <Route path='/tblbinnew' element={<AddNewBinMaster title="Add Bin Master Data" />} />
+
+
+                <Route path='/zonemaster' element={<ZoneMaster />} />
+                <Route path='/tblzoneupdate/:id' element={<TblZoneMasterUpdate title="Zone Master Data Update" />} />
+
+
+                <Route path='/transhistory' element={<TransactionHistory />} />
 
 
 

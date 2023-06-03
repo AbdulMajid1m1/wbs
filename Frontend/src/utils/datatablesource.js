@@ -2694,20 +2694,32 @@ export const BinMasterColumn = [
 
 export const TransactionHistoryColumn = [
   {
-    field: "ItemCode",
-    headerName: "ITEMCODE",
+    field: "TrxNo",
+    headerName: "TRX NO",
     width: 180,
 
   },
   {
-    field: "ItemDesc",
-    headerName: "ITEMDESC",
+    field: "TrxDateTime",
+    headerName: "TRX DATE TIME",
     width: 180,
 
   },
   {
-    field: "GTIN",
-    headerName: "GTIN",
+    field: "TrxUserID",
+    headerName: "TRX USER ID",
+    width: 180,
+
+  },
+  {
+    field: "TransactionName",
+    headerName: "TRANSACTION NAME",
+    width: 180,
+
+  },
+  {
+    field: "ItemID",
+    headerName: "ITEM ID",
     width: 180,
 
   },

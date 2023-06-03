@@ -424,6 +424,38 @@ const UserDataTable = ({
           }
           break;
 
+           // Bin Master data Delete Api 
+        case "binMasterId":
+          try {
+            const response = await userRequest.delete(
+              "/deleteBinLocationData?BinNumber=" + rowdata.BinNumber
+            );
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
+          }
+          break;
+
+
+        // Bin Master data Delete Api 
+        case "zoneMasterId":
+          try {
+            const response = await userRequest.delete(
+              "/deleteZonesData?Zones=" + rowdata.Zones
+            );
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
+          }
+          break;
+
+
 
         default:
           // do nothing
@@ -475,7 +507,13 @@ const UserDataTable = ({
       case "truckMasterId":
           navigate("/tbltrcukupdate/" + rowData.PlateNo)
           break;
-
+      case "binMasterId":
+          navigate("/tblbinupdate/" + rowData.BinNumber)
+          break;
+      case "zoneMasterId":
+          navigate("/tblzoneupdate/" + rowData.BinNumber)
+          break;
+  
       default:
         // do nothing
         break;

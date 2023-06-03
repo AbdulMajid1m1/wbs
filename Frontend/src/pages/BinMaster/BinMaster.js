@@ -39,10 +39,10 @@ const BinMaster = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="" title="Bin Master" 
+            <UserDataTable data={alldata} addNewNavigation="/tblbinnew" title="Bin Master" 
                 columnsName={BinMasterColumn} 
                   backButton={true}
-                    uniqueId=""
+                    uniqueId="binMasterId"
                       
             />
 

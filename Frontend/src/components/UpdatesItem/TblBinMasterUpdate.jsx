@@ -2,89 +2,13 @@ import "../AddNew/AddNew.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { TblTruckMasterDataUpdate } from "../../utils/formSource";
+import { TblBinMasterUpdateColumn, TblTruckMasterDataUpdate } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 
 
-const TblTruckMasterUpdate = ({ inputs, title,
+const TblBinMasterUpdate = ({ inputs, title,
 }) => {
-//     const params = useParams();
-//     // get id from url
-//     const { id } = params;
-//     const [rowData, setstateRowData] = useState([]);
-
-//     const [isLoading, setIsLoading] = useState(false);
-//     const [formData, setFormData] = useState({});
-
-//     // get state data from navigation 
-
-//     const [error, setError] = useState(false);
-//     const [message, setMessage] = useState("");
-//     const navigate = useNavigate();
-//     // to reset snakebar messages
-//     const resetSnakeBarMessages = () => {
-//         setError(null);
-//         setMessage(null);
-
-//     };
-
-
-
-//     const [rowdata, setRowData] = useState(() => {
-//         const storedData = sessionStorage.getItem('edit');
-//         const parsedData = JSON.parse(storedData);
-//         // console.log(parsedData)
-//         return parsedData
-//     })
-//     console.log(rowdata)
-
-//  // Handle Submit
-//  const handleSubmit = async event => {
-//     event.preventDefault();
-//     setIsLoading(true);
-
-//     try {
-//         const updatedData = {};
-
-//         for (const input of TblTruckMasterDataUpdate) {
-//             const inputName = input.name;
-//             if (formData[inputName] !== undefined && formData[inputName] !== rowdata[inputName]) {
-//                 updatedData[inputName] = formData[inputName];
-//             }
-//         }
-
-//         updatedData["PlateNo"] = id;
-
-//         if (Object.keys(updatedData).length <= 1) {
-//             setError("No changes detected.");
-//             setIsLoading(false);
-//             return;
-//         }
-
-//         const queryParameters = new URLSearchParams(updatedData).toString();
-
-//         userRequest
-//             .put(`/updateTruckMasterData?${queryParameters}`)
-//             .then((response) => {
-//                 setIsLoading(false);
-//                 console.log(response.data);
-//                 setMessage("Successfully Updated");
-//                 setTimeout(() => {
-//                     navigate(-1);
-//                 }, 1000);
-//             })
-//             .catch((error) => {
-//                 setIsLoading(false);
-//                 console.log(error);
-//                 setError(error?.response?.data?.message ?? "Failed to Update");
-//             });
-//     } catch (error) {
-//         setIsLoading(false);
-//         console.log(error);
-//         setError("Failed to Update");
-//     }
-// };
 
 const params = useParams();
 const { id } = params;
@@ -115,7 +39,7 @@ const handleSubmit = async event => {
 
   try {
     const updatedData = {
-      PlateNo: id,
+        BinNumber: id,
       ...formData
     };
 
@@ -126,7 +50,7 @@ const handleSubmit = async event => {
     }
 
     userRequest
-      .put("/updateTruckMasterData", updatedData)
+      .put("/updateBinLocationData", updatedData)
       .then(response => {
         setIsLoading(false);
         console.log(response.data);
@@ -193,7 +117,7 @@ const handleSubmit = async event => {
 
                             <div className="right">
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {TblTruckMasterDataUpdate.map((input) => (
+                                    {TblBinMasterUpdateColumn.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
@@ -205,9 +129,8 @@ const handleSubmit = async event => {
                                                         [input.name]: e.target.value,
                                                     })
                                                 }
-                                                disabled={input.name === "PlateNo"} // Add the disabled attribute conditionally
-                                          
-                                          />
+                                                disabled={input.name === "BinNumber"} // Add the disabled attribute conditionally
+                                            />
                                         </div>
                                     ))}
 
@@ -230,4 +153,4 @@ const handleSubmit = async event => {
     );
 };
 
-export default TblTruckMasterUpdate;
+export default TblBinMasterUpdate;

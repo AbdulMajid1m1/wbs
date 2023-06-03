@@ -798,3 +798,114 @@ export const TblTruckMasterDataUpdate = [
 
   
 ];
+
+
+
+
+export const TblBinMasterUpdateColumn = [
+  {
+    id: "binMasterIdInput1",
+    label: "GroupWarehouse*",
+    name: "GroupWarehouse",
+    type: "text",
+    placeholder: "GroupWare house",
+  },
+  {
+    id: "binmasterIdInput2",
+    label: "Zones*",
+    name: "Zones",
+    type: "text",
+    placeholder: "Zones",
+  },
+  {
+    id: "binmasterIdInput3",
+    label: "BinNumber*",
+    name: "BinNumber",
+    type: "text",
+    placeholder: "Bin Number",
+  },
+  {
+    id: "binmasterIdInput4",
+    label: "ZoneType*",
+    name: "ZoneType",
+    type: "text",
+    placeholder: "Zone Type",
+  },
+  {
+    id: "binmasterIdInput5",
+    label: "BinHeight*",
+    name: "BinHeight",
+    type: "text",
+    placeholder: "Bin Height",
+  },
+  {
+    id: "binmasterIdInput6",
+    label: "BinRow*",
+    name: "BinRow",
+    type: "text",
+    placeholder: "Bin Row",
+  },
+  {
+    id: "binmasterIdInput7",
+    label: "BinWidth*",
+    name: "BinWidth",
+    type: "text",
+    placeholder: "Bin Width",
+  },
+  {
+    id: "binmasterIdInput8",
+    label: "BinTotalSize*",
+    name: "BinTotalSize",
+    type: "text",
+    placeholder: "Bin Total Size",
+  },
+  {
+    id: "binmasterIdInput9",
+    label: "BinType*",
+    name: "BinType",
+    type: "text",
+    placeholder: "Bin Type",
+  },
+
+  
+
+  
+];
+
+
+
+export const TblZoneMasterUpdateColumn = [
+  {
+    id: "zoneMasterIdInput1",
+    label: "GroupWarehouse*",
+    name: "GroupWarehouse",
+    type: "text",
+    placeholder: "Group Warehouse",
+  },
+  {
+    id: "zoneMasterIdInput2",
+    label: "Zones*",
+    name: "Zones",
+    type: "text",
+    placeholder: "Zones",
+  },
+  {
+    id: "zoneMasterIdInput3",
+    label: "BinNumber*",
+    name: "BinNumber",
+    type: "text",
+    placeholder: "Bin Number",
+  },
+  {
+    id: "zoneMasterIdInput4",
+    label: "ZoneType*",
+    name: "ZoneType",
+    type: "text",
+    placeholder: "Zone Type",
+  },
+
+  
+
+  
+];
+

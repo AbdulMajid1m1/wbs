@@ -42,7 +42,7 @@ const ZoneMaster = () => {
             <UserDataTable data={alldata} addNewNavigation="" title="Zone Master" 
                 columnsName={ZoneMasterColumn} 
                   backButton={true}
-                    uniqueId=""
+                    uniqueId="zoneMasterId"
                       
             />
 

@@ -99,6 +99,7 @@ import TblBinMasterUpdate from './components/UpdatesItem/TblBinMasterUpdate'
 import AddNewBinMaster from './components/AddNew/AddNewBinMaster'
 import TblZoneMasterUpdate from './components/UpdatesItem/TblZoneMasterUpdate'
 import PrintingPalletLabels from './pages/PrintingPalletLabels/PrintingPalletLabels'
+import AddNewZoneMaster from './components/AddNew/AddNewZoneMaster'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -256,7 +257,8 @@ const App = () => {
 
                 <Route path='/zonemaster' element={<ZoneMaster />} />
                 <Route path='/tblzoneupdate/:id' element={<TblZoneMasterUpdate title="Zone Master Data Update" />} />
-
+                <Route path='/tblzonenew' element={<AddNewZoneMaster title="Add Zones Master Data" />} />
+                
 
                 <Route path='/transhistory' element={<TransactionHistory />} />
 

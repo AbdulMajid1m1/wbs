@@ -115,7 +115,7 @@ const handleSubmit = async event => {
 
   try {
     const updatedData = {
-      PlateNo: id,
+        Zones: id,
       ...formData
     };
 
@@ -126,7 +126,7 @@ const handleSubmit = async event => {
     }
 
     userRequest
-      .put("/updateTruckMasterData", updatedData)
+      .put("/updateZonesData", updatedData)
       .then(response => {
         setIsLoading(false);
         console.log(response.data);
@@ -205,7 +205,7 @@ const handleSubmit = async event => {
                                                         [input.name]: e.target.value,
                                                     })
                                                 }
-                                                disabled={input.name === "PlateNo"} // Add the disabled attribute conditionally
+                                                disabled={input.name === "Zones"} // Add the disabled attribute conditionally
                                           
                                           />
                                         </div>

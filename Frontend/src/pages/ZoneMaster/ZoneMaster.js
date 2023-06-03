@@ -39,7 +39,7 @@ const ZoneMaster = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="" title="Zone Master" 
+            <UserDataTable data={alldata} addNewNavigation="/tblzonenew" title="Zone Master" 
                 columnsName={ZoneMasterColumn} 
                   backButton={true}
                     uniqueId="zoneMasterId"

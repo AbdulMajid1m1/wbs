@@ -511,7 +511,7 @@ const UserDataTable = ({
           navigate("/tblbinupdate/" + rowData.BinNumber)
           break;
       case "zoneMasterId":
-          navigate("/tblzoneupdate/" + rowData.BinNumber)
+          navigate("/tblzoneupdate/" + rowData.Zones)
           break;
   
       default:

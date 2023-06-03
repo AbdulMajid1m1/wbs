@@ -6361,7 +6361,7 @@ const WBSDB = {
 
   // --------- tblRoles controller start ---------
 
-  async getAlltblRoles(req, res, next) {
+  async getAlltblRoles(req, res) {
 
     try {
       let query = `

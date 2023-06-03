@@ -549,4 +549,4 @@ router.delete("/deleteTransactionHistoryData", checkAuthentication, WBSDB.delete
 
 // ---------- tblRoles API Start ----------
 
-router.get("/getAlltblRoles", checkAuthentication, WBSDB.getAlltblRoles);
+router.get("/getAlltblRoles", WBSDB.getAlltblRoles);

@@ -49,6 +49,7 @@ const TblShipmentReceivedCl = () => {
         actionColumnVisibility={true}
         emailButton={true}
         printButton={true}
+        PrintName={"Print Shipment"}
 
       />
 

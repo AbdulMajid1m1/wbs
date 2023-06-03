@@ -35,6 +35,7 @@ const UserDataTable = ({
   checkboxSelection,
   handleRowClickInParent, // this is for journal movement cl function to get the row data on click
   handleSaveData,
+  PrintName
   
 }) => {
   const navigate = useNavigate();
@@ -965,7 +966,7 @@ const UserDataTable = ({
               <button onClick={() => handleExport(false)}>Export to Excel</button>
               <button onClick={() => handlePdfExport(false)}
               >Export to Pdf</button>
-              {printButton && <button onClick={handlePrint}>Print Shipment</button>}
+              {printButton && <button onClick={handlePrint}>{PrintName}</button>}
             </span>
             }
             {AddUser && <button onClick={handleAddUserPopup}>{UserName}</button>}
@@ -1095,9 +1096,9 @@ const UserDataTable = ({
 
 
 
-        {updatedRows.length > 0 && (
+        {selectedRow.length > 0 && (
           <div id="barcode">
-            {updatedRows.map((selectedRow, index) => (
+            {selectedRow.map((selectedRow, index) => (
               <div id="barcode" className='hidden' key={index}>
                 <div id='header'>
                   <div>

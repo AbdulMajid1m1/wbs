@@ -27,6 +27,7 @@ import zonemaster from "../../images/zonemaster.png"
 import binmaster from "../../images/binmaster.png"
 import history from "../../images/history.png"
 import printinglabel from "../../images/printinglabel.png"
+import printing from "../../images/printing.png"
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
@@ -126,6 +127,11 @@ const FigmaSidebar = () => {
                     <div className='main-images-container' onClick={() => navigate('/printinglabels')}>
                         <img src={printinglabel} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Printing Pallet Labels</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/printingbarcode')}>
+                        <img src={printing} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Printing Item Barcode</p>
                     </div>
 
                     <div className='main-images-container'>

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { MappedItemsColumn } from '../../utils/datatablesource'
+import { MappedItemsColumn, TblShipmentReceivedClColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
 
-const PrintingPalletLabels = () => {
-    const [alldata, setAllData] = useState([]);
+const PrintingItemBarcode = () => {
+    const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
 
@@ -14,10 +14,11 @@ const PrintingPalletLabels = () => {
             try {
 
                 userRequest.get("/getAllTblMappedBarcodes")
+                // userRequest.get("/getAllTblShipmentReceivedCL")
                     .then(response => {
                         console.log(response?.data);
 
-                        setAllData(response?.data ?? [])
+                        setData(response?.data ?? [])
                         setIsLoading(false)
 
                     })
@@ -38,13 +39,27 @@ const PrintingPalletLabels = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata}
-             addNewNavigation="/insert-mapped-barcode" title="Printing Pallet Labels"
+            <UserDataTable data={data}
+             addNewNavigation="/insert-mapped-barcode" title="Printing Item Barcode"
               columnsName={MappedItemsColumn} backButton={true}
-               uniqueId="ItemCode"
-               printButton={true}
-                PrintName={"Print Pallet Labels"}
-            />  
+               uniqueId="PrintBarCode"
+                actionColumnVisibility={true}
+                printButton={true}
+                PrintName={"Print Barcode"}
+                
+            />
+
+        {/* <UserDataTable data={data} title="Printing Item Barcode" columnsName={TblShipmentReceivedClColumn}
+            backButton={true}
+            uniqueId="SERIALNUM"
+            addNewNavigation="/receipts"
+            ShipmentIdSearchEnable={true}
+            actionColumnVisibility={true}
+            emailButton={true}
+            printButton={true}
+            PrintName={"Print Shipment"}
+
+      /> */}
 
             {isLoading &&
 
@@ -70,4 +85,4 @@ const PrintingPalletLabels = () => {
     )
 }
 
-export default PrintingPalletLabels
+export default PrintingItemBarcode

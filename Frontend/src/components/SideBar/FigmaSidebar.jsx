@@ -24,6 +24,8 @@ import move from "../../images/Move.png"
 import physical from "../../images/physical.png"
 import truckdata from "../../images/truckdata.png"
 import zonemaster from "../../images/zonemaster.png"
+import binmaster from "../../images/binmaster.png"
+import history from "../../images/history.png"
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
@@ -168,6 +170,16 @@ const FigmaSidebar = () => {
                     <div className='main-images-container' onClick={() => navigate('/zonemaster')}>
                         <img src={zonemaster} className='main-inside-image bg-white rounded-full' alt='' />
                         <p className='sidebar-text'>Zone Master</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/binmaster')}>
+                        <img src={binmaster} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Bin Master</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/transhistory')}>
+                        <img src={history} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Transaction History</p>
                     </div>
 
                     <div className='main-images-container'>

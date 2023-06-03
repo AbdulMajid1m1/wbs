@@ -39,7 +39,7 @@ const TruckMasterData = () => {
     return (
         <div>
 
-            <UserDataTable data={alldata} addNewNavigation="" title="Truck Master Data" 
+            <UserDataTable data={alldata} addNewNavigation="/tbltrcuknew" title="Truck Master Data" 
                 columnsName={TruckMasterDataColumn} 
                   backButton={true}
                     uniqueId="truckMasterId"

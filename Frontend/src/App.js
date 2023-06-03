@@ -93,6 +93,8 @@ import TruckMasterData from './pages/TruckMasterData/TruckMasterData'
 import ZoneMaster from './pages/ZoneMaster/ZoneMaster'
 import BinMaster from './pages/BinMaster/BinMaster'
 import TransactionHistory from './pages/TransactionHistory/TransactionHistory'
+import TblTruckMasterUpdate from './components/UpdatesItem/TblTruckMasterUpdate'
+import AddTruckMaster from './components/AddNew/AddTruckMaster'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -244,7 +246,9 @@ const App = () => {
                 <Route path='/binmaster' element={<BinMaster />} />
 
                 <Route path='/transhistory' element={<TransactionHistory />} />
-                
+                <Route path='/tbltrcukupdate/:id' element={<TblTruckMasterUpdate title="Truck Master Data Update" />} />
+                <Route path='/tbltrcuknew' element={<AddTruckMaster title="Add Truck Master" />} />
+
 
 
 

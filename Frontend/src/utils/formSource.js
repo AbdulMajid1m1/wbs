@@ -768,3 +768,33 @@ export const shipmentPalletizingInput = [
 
 
 ];
+
+
+
+export const TblTruckMasterDataUpdate = [
+  {
+    id: "truckMasetrIdInput1",
+    label: "PlateNo*",
+    name: "PlateNo",
+    type: "text",
+    placeholder: "Plate No",
+  },
+  {
+    id: "truckMasetrIdInput2",
+    label: "Barcode Serial Number*",
+    name: "BarcodeSerialNumber",
+    type: "text",
+    placeholder: "Barcode Serial Number",
+  },
+  {
+    id: "truckMasetrIdInput3",
+    label: "Transportation Company Name*",
+    name: "TransportationCompanyName",
+    type: "text",
+    placeholder: "Transportation Company Name",
+  },
+
+  
+
+  
+];

@@ -413,7 +413,7 @@ const UserDataTable = ({
         case "truckMasterId":
           try {
             const response = await userRequest.delete(
-              "deleteShipmentPalletizingDataCL?TRANSFERID=" + rowdata.TRANSFERID
+              "/deleteTruckMasterData?PlateNo=" + rowdata.PlateNo
             );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");
@@ -472,6 +472,9 @@ const UserDataTable = ({
       case "TRANSFERID":
         navigate("/updatepalletizing/" + rowData.ALS_PACKINGSLIPREF)
         break;
+      case "truckMasterId":
+          navigate("/tbltrcukupdate/" + rowData.PlateNo)
+          break;
 
       default:
         // do nothing

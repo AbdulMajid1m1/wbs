@@ -518,3 +518,22 @@ router.get("/getAlltblZones", checkAuthentication, WBSDB.getAlltblZones);
 // --------- tblBinLocation APIs start ---------
 
 router.get("/getAlltblBinLocations", checkAuthentication, WBSDB.getAlltblBinLocation);
+
+router.post("/insertBinLocationData", checkAuthentication, WBSDB.insertBinLocationData);
+
+router.put("/updateBinLocationData", checkAuthentication, WBSDB.updateBinLocationData);
+
+router.delete("/deleteBinLocationData", checkAuthentication, WBSDB.deleteBinLocationData);
+
+
+// --------- tbl_TransactionHistory APIs start ---------
+
+
+router.post("/insertTransactionHistoryData", checkAuthentication, WBSDB.insertTransactionHistoryData);
+
+router.get("/getTransactionHistoryData", checkAuthentication, WBSDB.getTransactionHistoryData);
+
+
+router.put("/updateTransactionHistoryData", checkAuthentication, WBSDB.updateTransactionHistoryData);
+
+router.delete("/deleteTransactionHistoryData", checkAuthentication, WBSDB.deleteTransactionHistoryData);

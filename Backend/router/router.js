@@ -184,6 +184,8 @@ router.get("/getSingleTblUsers", checkAuthentication, WBSDB.getSingleTblUsers);
 
 router.post("/insertTblUsersData", WBSDB.insertTblUsersData);
 
+router.get("/getAllUsers", checkAuthentication, WBSDB.getAllUsers);
+
 router.delete("/deleteTblUsersData", checkAuthentication, WBSDB.deleteTblUsersData);
 
 router.put("/updateTblUsersData", checkAuthentication, WBSDB.updateTblUsersData);
@@ -543,3 +545,8 @@ router.get("/getTransactionHistoryData", checkAuthentication, WBSDB.getTransacti
 router.put("/updateTransactionHistoryData", checkAuthentication, WBSDB.updateTransactionHistoryData);
 
 router.delete("/deleteTransactionHistoryData", checkAuthentication, WBSDB.deleteTransactionHistoryData);
+
+
+// ---------- tblRoles API Start ----------
+
+router.get("/getAlltblRoles", checkAuthentication, WBSDB.getAlltblRoles);

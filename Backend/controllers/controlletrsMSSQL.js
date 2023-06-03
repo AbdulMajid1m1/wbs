@@ -6328,27 +6328,6 @@ const WBSDB = {
   },
 
 
-  // --------- WMS_TruckMaster ---------
-  async getAllWmsTruckMaster(req, res, next) {
-
-    try {
-      let query = `
-      SELECT * FROM dbo.WMS_TruckMaster
-      `;
-      let request = pool2.request();
-      const data = await request.query(query);
-      if (data.recordsets[0].length === 0) {
-        return res.status(404).send({ message: "N0 data found." });
-      }
-      return res.status(200).send(data.recordsets[0]);
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
-
-
-    }
-  },
-
 
   // --------- tblZones ---------
   async getAlltblZones(req, res, next) {
@@ -6373,13 +6352,16 @@ const WBSDB = {
 
 
 
-  // --------- tblBinLocation Controller start ---------
-  async getAlltblBinLocation(req, res, next) {
+
+
+
+  // --------- WMS_TruckMaster controller start ---------
+  async getAllWmsTruckMaster(req, res, next) {
 
     try {
       let query = `
-      SELECT * FROM dbo.tblBinLocation
-      `;
+        SELECT * FROM dbo.WMS_TruckMaster
+        `;
       let request = pool2.request();
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
@@ -6393,7 +6375,6 @@ const WBSDB = {
 
     }
   },
-
 
   async insertTruckMasterData(req, res, next) {
     try {
@@ -6536,6 +6517,401 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
+
+  // -------------------- tbl_TransactionHistory Controller --------------------
+
+  // Create
+  async insertTransactionHistoryData(req, res, next) {
+    try {
+      const transactionHistoryDataArray = req.body;
+      if (!Array.isArray(transactionHistoryDataArray) || transactionHistoryDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < transactionHistoryDataArray.length; i++) {
+        const {
+          TrxDateTime,
+          TrxUserID,
+          TransactionName,
+          ItemID
+        } = transactionHistoryDataArray[i];
+
+        // Dynamic SQL query construction
+        let fields = [
+          "TrxDateTime",
+          "TrxUserID",
+          "TransactionName",
+          "ItemID"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+        INSERT INTO tbl_TransactionHistory
+          (${fields.join(', ')}) 
+        VALUES 
+          (${values.join(', ')})
+      `;
+
+        let request = pool2.request();
+        request.input('TrxDateTime', sql.DateTime, TrxDateTime);
+        request.input('TrxUserID', sql.Int, TrxUserID);
+        request.input('TransactionName', sql.NVarChar, TransactionName);
+        request.input('ItemID', sql.Int, ItemID);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted into tbl_TransactionHistory successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+  // Read
+  async getTransactionHistoryData(req, res, next) {
+    try {
+      const { TrxNo } = req.query;
+
+      let query = `
+      SELECT * FROM tbl_TransactionHistory
+    `;
+
+      if (TrxNo) {
+        query += `
+        WHERE TrxNo = @TrxNo
+      `;
+      }
+
+      let request = pool2.request();
+      if (TrxNo) {
+        request.input('TrxNo', sql.Int, TrxNo);
+      }
+
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: 'No data found.' });
+      }
+
+      res.status(200).send(result.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async updateTransactionHistoryData(req, res, next) {
+    try {
+      const {
+        TrxNo,
+        TrxDateTime,
+        TrxUserID,
+        TransactionName,
+        ItemID
+      } = req.body;
+
+      if (!TrxNo) {
+        return res.status(400).send({ message: 'TrxNo is required.' });
+      }
+
+      let query = `
+        UPDATE tbl_TransactionHistory
+        SET `;
+
+      const updateFields = [];
+      const request = pool2.request();
+
+      if (TrxDateTime !== undefined) {
+        updateFields.push('TrxDateTime = @TrxDateTime');
+        request.input('TrxDateTime', sql.DateTime, TrxDateTime);
+      }
+
+      if (TrxUserID !== undefined) {
+        updateFields.push('TrxUserID = @TrxUserID');
+        request.input('TrxUserID', sql.Int, TrxUserID);
+      }
+
+      if (TransactionName !== undefined) {
+        updateFields.push('TransactionName = @TransactionName');
+        request.input('TransactionName', sql.NVarChar, TransactionName);
+      }
+
+      if (ItemID !== undefined) {
+        updateFields.push('ItemID = @ItemID');
+        request.input('ItemID', sql.Int, ItemID);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+        WHERE TrxNo = @TrxNo
+      `;
+
+      request.input('TrxNo', sql.Int, TrxNo);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Transaction history record not found.' });
+      }
+
+      res.status(200).send({ message: 'Transaction history updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async deleteTransactionHistoryData(req, res, next) {
+    try {
+      const { TrxNo } = req.query;
+
+      if (!TrxNo) {
+        return res.status(400).send({ message: "TrxNo is required." });
+      }
+
+      const query = `
+        DELETE FROM tbl_TransactionHistory
+        WHERE TrxNo = @TrxNo
+      `;
+
+      let request = pool2.request();
+      request.input('TrxNo', sql.Int, TrxNo);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: "No data found with the given TrxNo." });
+      }
+
+      res.status(200).send({ message: 'Transaction history data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  // --------- tblBinLocation Controller start ---------
+  async getAlltblBinLocation(req, res, next) {
+
+    try {
+      let query = `
+        SELECT * FROM dbo.tblBinLocation
+        `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "N0 data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+
+
+  // Create
+  async insertBinLocationData(req, res, next) {
+    try {
+      const binLocationDataArray = req.body;
+      if (!Array.isArray(binLocationDataArray) || binLocationDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < binLocationDataArray.length; i++) {
+        const {
+          GroupWarehouse,
+          Zones,
+          BinNumber,
+          ZoneType,
+          BinHeight,
+          BinRow,
+          BinWidth,
+          BinTotalSize,
+          BinType
+        } = binLocationDataArray[i];
+
+        // Dynamic SQL query construction
+        let fields = [
+          "GroupWarehouse",
+          "Zones",
+          "BinNumber",
+          "ZoneType",
+          "BinHeight",
+          "BinRow",
+          "BinWidth",
+          "BinTotalSize",
+          "BinType"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+        INSERT INTO [WBSSQL].[dbo].[tblBinLocation]
+          (${fields.join(', ')}) 
+        VALUES 
+          (${values.join(', ')})
+      `;
+
+        let request = pool2.request();
+        request.input('GroupWarehouse', sql.NVarChar, GroupWarehouse);
+        request.input('Zones', sql.NVarChar, Zones);
+        request.input('BinNumber', sql.NVarChar, BinNumber);
+        request.input('ZoneType', sql.NVarChar, ZoneType);
+        request.input('BinHeight', sql.Float, BinHeight);
+        request.input('BinRow', sql.Int, BinRow);
+        request.input('BinWidth', sql.Float, BinWidth);
+        request.input('BinTotalSize', sql.Float, BinTotalSize);
+        request.input('BinType', sql.NVarChar, BinType);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted into tblBinLocation successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async updateBinLocationData(req, res, next) {
+    try {
+      const {
+        GroupWarehouse,
+        Zones,
+        BinNumber,
+        ZoneType,
+        BinHeight,
+        BinRow,
+        BinWidth,
+        BinTotalSize,
+        BinType
+      } = req.body;
+
+      if (!BinNumber) {
+        return res.status(400).send({ message: 'BinNumber is required.' });
+      }
+
+      let query = `
+        UPDATE [WBSSQL].[dbo].[tblBinLocation]
+        SET `;
+
+      const updateFields = [];
+      const request = pool2.request();
+
+      if (GroupWarehouse !== undefined) {
+        updateFields.push('GroupWarehouse = @GroupWarehouse');
+        request.input('GroupWarehouse', sql.NVarChar, GroupWarehouse);
+      }
+
+      if (Zones !== undefined) {
+        updateFields.push('Zones = @Zones');
+        request.input('Zones', sql.NVarChar, Zones);
+      }
+
+      if (ZoneType !== undefined) {
+        updateFields.push('ZoneType = @ZoneType');
+        request.input('ZoneType', sql.NVarChar, ZoneType);
+      }
+
+      if (BinHeight !== undefined) {
+        updateFields.push('BinHeight = @BinHeight');
+        request.input('BinHeight', sql.Float, BinHeight);
+      }
+
+      if (BinRow !== undefined) {
+        updateFields.push('BinRow = @BinRow');
+        request.input('BinRow', sql.Int, BinRow);
+      }
+
+      if (BinWidth !== undefined) {
+        updateFields.push('BinWidth = @BinWidth');
+        request.input('BinWidth', sql.Float, BinWidth);
+      }
+
+      if (BinTotalSize !== undefined) {
+        updateFields.push('BinTotalSize = @BinTotalSize');
+        request.input('BinTotalSize', sql.Float, BinTotalSize);
+      }
+
+      if (BinType !== undefined) {
+        updateFields.push('BinType = @BinType');
+        request.input('BinType', sql.NVarChar, BinType);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send({ message: 'At least one field is required to update.' });
+      }
+
+      query += updateFields.join(', ');
+
+      query += `
+        WHERE BinNumber = @BinNumber
+      `;
+
+      request.input('BinNumber', sql.NVarChar, BinNumber);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Bin location record not found.' });
+      }
+
+      res.status(200).send({ message: 'Bin location updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async deleteBinLocationData(req, res, next) {
+    try {
+      const { BinNumber } = req.query;
+
+      if (!BinNumber) {
+        return res.status(400).send({ message: "BinNumber is required." });
+      }
+
+      const query = `
+        DELETE FROM [WBSSQL].[dbo].[tblBinLocation]
+        WHERE BinNumber = @BinNumber
+      `;
+
+      let request = pool2.request();
+      request.input('BinNumber', sql.NVarChar, BinNumber);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: "No data found with the given BinNumber." });
+      }
+
+      res.status(200).send({ message: 'Bin location data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
+
 
 
 

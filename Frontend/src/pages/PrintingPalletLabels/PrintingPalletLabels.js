@@ -43,6 +43,7 @@ const PrintingPalletLabels = () => {
               columnsName={MappedItemsColumn} backButton={true}
                uniqueId="PrintPalletBarcode"
                actionColumnVisibility={false}
+               emailButton={false}
                printButton={true}
                PrintName={"Print Pallet Labels"}
             //    printBarCode={true}

@@ -1002,7 +1002,7 @@ const UserDataTable = ({
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
-              <button onClick={handleOpenPopup}>Send to Email</button>
+              {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
               <button onClick={() => handleExport(false)}>Export to Excel</button>
               <button onClick={() => handlePdfExport(false)}
               >Export to Pdf</button>

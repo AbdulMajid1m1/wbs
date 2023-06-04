@@ -5812,7 +5812,7 @@ const WBSDB = {
 
     try {
 
-      let query = `SELECT * FROM WMS_Journal_Counting_CL `
+      let query = `SELECT * FROM WMS_Journal_Counting_CLDets `
 
       let request = pool2.request();
 

@@ -31,55 +31,42 @@ const PhysicalInventoryBinLocation = () => {
 
   };
 
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   userRequest.get('/getWmsJournalCountingOnlyCLByAssignedToUserId')
-  //     .then(response => {
-  //       console.log(response?.data);
-  //       setDataList(response?.data ?? []);
-  //       setIsLoading(false);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //       setIsLoading(false);
-  //     });
-
-  // }, []);
 
 
-      const [options, setOptions] = useState([]);
 
-      useEffect(() => {
-        userRequest.get('/getBinLocationByUserIdFromJournalCountingOnlyCL')
-          .then(response => {
-            // Set the retrieved data as options
-            setOptions(response.data);
-          })
-          .catch(error => {
-            // Handle errors
-            console.error('Error fetching options:', error);
-          });
-      }, []);
-    
-    
-    const handleBySelection = (event, value) => {
-      setIsLoading(true);
-      console.log('Selected value:', value);
-      
-      // Make the API request to fetch the table data based on the selected value
-      userRequest.get(`/getWmsJournalCountingOnlyCLByBinLocation?binloacation=${value.BINLOCATION}`)
-        .then(response => {
-          // Set the retrieved data as the table data
-          setDataList(response.data);
-          setIsLoading(false);
-        })
-        .catch(error => {
-          // Handle errors
-          console.error('Error fetching table data:', error);
-          setIsLoading(false);
-        });
-    };
-    
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    userRequest.get('/getBinLocationByUserIdFromJournalCountingOnlyCL')
+      .then(response => {
+        // Set the retrieved data as options
+        setOptions(response.data);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error('Error fetching options:', error);
+      });
+  }, []);
+
+
+  const handleBySelection = (event, value) => {
+    setIsLoading(true);
+    console.log('Selected value:', value);
+
+    // Make the API request to fetch the table data based on the selected value
+    userRequest.get(`/getWmsJournalCountingOnlyCLByBinLocation?binloacation=${value.BINLOCATION}`)
+      .then(response => {
+        // Set the retrieved data as the table data
+        setDataList(response.data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error('Error fetching table data:', error);
+        setIsLoading(false);
+      });
+  };
+
 
   const handleInputUser = async (e) => {
     let itemSerialNo = e.target.value;
@@ -102,17 +89,17 @@ const PhysicalInventoryBinLocation = () => {
       //    item.BINLOCATION === mappedData.BinLocation
       //   console.log(item.BINLOCATION+" "+  " equal to  "+" "+ mappedData.BinLocation)
       //   });
-    //   let foundRecord = dataList.find(item => {
-    //     console.log(item.BINLOCATION + " equal to " + mappedData.BinLocation);
-    //     return item.BINLOCATION === mappedData.BinLocation;
-    // });
+      //   let foundRecord = dataList.find(item => {
+      //     console.log(item.BINLOCATION + " equal to " + mappedData.BinLocation);
+      //     return item.BINLOCATION === mappedData.BinLocation;
+      // });
 
-    let foundRecord = dataList.find(item => {
-      console.log(item.BINLOCATION + " equal to " + mappedData.BinLocation);
-  console.log(item.BINLOCATION === mappedData.BinLocation);
-      return item.BINLOCATION === mappedData.BinLocation;
-  });
-      
+      let foundRecord = dataList.find(item => {
+        console.log(item.BINLOCATION + " equal to " + mappedData.BinLocation);
+        console.log(item.BINLOCATION === mappedData.BinLocation);
+        return item.BINLOCATION === mappedData.BinLocation;
+      });
+
       console.log(foundRecord);
       if (!foundRecord) {
         setError("Mapped BinLocation not found in the list");
@@ -143,8 +130,9 @@ const PhysicalInventoryBinLocation = () => {
           ITEMSERIALNO: mappedData?.ItemSerialNo,
           ITEMID: mappedData?.ItemCode,
           ITEMNAME: mappedData?.ItemDesc,
+          eventName: "physicalInventoryBinLocation",
         }
-        
+
         console.log(apiData);
         try {
           const insertApiResponse = await userRequest.post("/insertIntoWmsJournalCountingOnlyCLDets", [apiData])
@@ -284,7 +272,7 @@ const PhysicalInventoryBinLocation = () => {
               />
 
             </div>
-           
+
             <div className='mb-6'>
               {/* // creae excel like Tables  */}
               <div className="table-location-generate1">
@@ -410,7 +398,7 @@ const PhysicalInventoryBinLocation = () => {
                         <th>TRXUSERIDASSIGNEDBY</th>
                         <th>CONFIGID</th>
                         <th>ITEMSERIALNO</th>
-                       
+
                         <th>QTYSCANNED</th>
                         <th>BINLOCATION</th>
                       </tr>
@@ -429,7 +417,7 @@ const PhysicalInventoryBinLocation = () => {
                           <td>{item.TRXUSERIDASSIGNEDBY}</td>
                           <td>{item.CONFIGID}</td>
                           <td>{item.ITEMSERIALNO}</td>
-                         
+
                           <td>{item.QTYSCANNED}</td>
                           <td>{item.BINLOCATION}</td>
                         </tr>

@@ -135,6 +135,8 @@ const WmsInventory = () => {
           INVENTORYBY: selectedBy,
         }
       });
+
+      
       const res = await userRequest.post('/insertIntoWmsJournalCountingOnlyCL', apiData)
       console.log(res);
       setMessage(res?.data?.message ?? 'Data saved successfully!');

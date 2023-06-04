@@ -87,8 +87,9 @@ const WmsPhysicalInventory = () => {
           BINLOCATION: mappedData?.BinLocation,
           QTYSCANNED: updatedData?.QTYSCANNED,
           ITEMSERIALNO: mappedData?.ItemSerialNo,
+          eventName: "wmsPhysicalInventory",
         }
-        
+
         console.log(apiData);
         try {
           const insertApiResponse = await userRequest.post("/insertIntoWmsJournalCountingOnlyCLDets", [apiData])
@@ -311,7 +312,7 @@ const WmsPhysicalInventory = () => {
                         <th>TRXUSERIDASSIGNEDBY</th>
                         <th>CONFIGID</th>
                         <th>ITEMSERIALNO</th>
-                       
+
                         <th>QTYSCANNED</th>
                         <th>BINLOCATION</th>
                       </tr>
@@ -330,7 +331,7 @@ const WmsPhysicalInventory = () => {
                           <td>{item.TRXUSERIDASSIGNEDBY}</td>
                           <td>{item.CONFIGID}</td>
                           <td>{item.ITEMSERIALNO}</td>
-                         
+
                           <td>{item.QTYSCANNED}</td>
                           <td>{item.BINLOCATION}</td>
                         </tr>

@@ -173,50 +173,6 @@ const PutAwayLastScreen = () => {
                 </table>
               </div>
 
-              {/* <Autocomplete
-                id="serial"
-                options={serialNumbers}
-                onChange={handleAutoComplete}
-                // onChange={(event, value) => {
-                //   if (value) {
-                //     console.log(`Selected: ${value}`);
-
-                //   }
-                // }}
-                onInputChange={(event, value) => {
-                  if (!value) {
-                    // perform operation when input is cleared
-                    console.log("Input cleared");
-
-                  }
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    InputProps={{
-                      ...params.InputProps,
-                      className: "text-white",
-                    }}
-                    InputLabelProps={{
-                      ...params.InputLabelProps,
-                      style: { color: "white" },
-                    }}
-
-                    className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                    placeholder="SN"
-                    required
-                  />
-                )}
-                classes={{
-                  endAdornment: "text-white",
-                }}
-                sx={{
-                  '& .MuiAutocomplete-endAdornment': {
-                    color: 'white',
-                  },
-                }}
-              /> */}
-
 
             </div>
 

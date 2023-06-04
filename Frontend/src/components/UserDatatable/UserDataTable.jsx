@@ -1244,7 +1244,7 @@ const PrintLabelsBarCode = ({selectedRow, index}) => {
                   </div>
                 </div>
                 <div id='inside-BRCode'>
-              <Barcode value={selectedRow.data.PalletCode} width={1.3} height={60} />
+              <Barcode value={selectedRow.data.GTIN} width={1.3} height={60} />
             </div>
           </div>
         </div>
@@ -1265,7 +1265,8 @@ const PrintPalletBarCode = ({selectedRow, index}) => {
                   </div>
                 </div>
                 <div id='inside-BRCode'>
-              <Barcode value={selectedRow.data.GTIN} width={1.3} height={60} />
+              <Barcode value={selectedRow.data.PalletCode} width={1.3} height={60} />
+              {/* <Barcode value={selectedRow.data.GTIN} width={1.3} height={60} /> */}
             </div>
           </div>
         </div>

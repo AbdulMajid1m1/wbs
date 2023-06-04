@@ -34,7 +34,7 @@ const JournalMovement = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-                        setError(error?.response?.data?.error)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
                     });
 
             }

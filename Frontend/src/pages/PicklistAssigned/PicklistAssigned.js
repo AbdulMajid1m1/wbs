@@ -4,10 +4,19 @@ import { PickListColumn, PicklistAssignedColumn, SalesPickingListColumn } from '
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const PicklistAssigned = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
 
 
     useEffect(() => {
@@ -16,7 +25,6 @@ const PicklistAssigned = () => {
 
                 userRequest.get("/getAllWmsSalesPickingListClFromAlessia")
                     .then(response => {
-                        // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
 
                         setAllData(response?.data ?? [])
@@ -24,10 +32,9 @@ const PicklistAssigned = () => {
 
                     })
                     .catch(error => {
-                        // handleUserError(error)
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.message ?? "Something went wrong")
                     });
 
             }
@@ -40,6 +47,10 @@ const PicklistAssigned = () => {
 
     return (
         <div>
+
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
 
 
             <UserDataTable data={alldata} title="Pick List" columnsName={PicklistAssignedColumn}

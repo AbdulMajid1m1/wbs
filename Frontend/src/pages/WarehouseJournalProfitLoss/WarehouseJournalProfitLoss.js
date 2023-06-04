@@ -33,10 +33,10 @@ const WarehouseJournalProfitLost = () => {
 
                     })
                     .catch(error => {
-                        // handleUserError(error)
                         console.error(error);
                         setIsLoading(false)
-                        setError(error?.response?.data?.error)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
+
                     });
 
             }
@@ -59,7 +59,8 @@ const WarehouseJournalProfitLost = () => {
                     })
                     .catch(error => {
                         console.error(error);
-                        setError(error?.response?.data?.error)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
+
 
                     });
 

@@ -5002,7 +5002,7 @@ const WBSDB = {
   async generateBarcodeForRma(req, res, next) {
     try {
 
-      const { RETURNITEMNUM, ITEMID, MODELNO } = req.body;
+      const { RETURNITEMNUM, MODELNO } = req.body;
       // Fetch the last SSCC_AutoCounter from TblSysNo using pool2
       const query = `
       SELECT TOP 1 SSCC_AutoCounter AS LastSSCCAutoCounter FROM TblSysNo ORDER BY SSCC_AutoCounter DESC
@@ -5020,7 +5020,7 @@ const WBSDB = {
       }
       //logic for code here
 
-      let RMASERIALNO = RETURNITEMNUM + "-" + ITEMID + "-" + MODELNO + "-" + SSCC_AutoCounter;
+      let RMASERIALNO = RETURNITEMNUM + "-" + MODELNO + "-" + SSCC_AutoCounter;
 
 
       // Update or insert SSCC_AutoCounter in TblSysNo

@@ -115,7 +115,6 @@ const ReturnRMALast = () => {
       const response = await userRequest.post("/generateBarcodeForRma",
         {
           RETURNITEMNUM: parsedData?.RETURNITEMNUM,
-          ITEMID: parsedData?.ITEMID,
           MODELNO: modelNumber,
         }
       )

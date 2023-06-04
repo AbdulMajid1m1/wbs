@@ -43,7 +43,7 @@ const PrintingItemBarcode = () => {
              title="Printing Item Barcode"
               columnsName={MappedItemsColumn} backButton={true}
                uniqueId="PrintBarCode"
-                actionColumnVisibility={true}
+                actionColumnVisibility={false}
                 printButton={false}
                 printBarCode={true}
                 PrintBarCodeName={"Print Item Barcode"}

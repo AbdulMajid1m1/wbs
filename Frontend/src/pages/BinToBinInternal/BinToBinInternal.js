@@ -38,8 +38,7 @@ const BinToBinInternal = () => {
     e.preventDefault();
     setIsLoading(true)
 
-    userRequest.get(`/
-    ?BinLocation=${transferTag}`)
+    userRequest.get(`/getmapBarcodeDataByBinLocation?BinLocation=${transferTag}`)
       .then(response => {
         console.log(response?.data);
 

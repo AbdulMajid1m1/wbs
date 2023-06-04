@@ -15,10 +15,7 @@ const TblItemCl = () => {
             try {
 
                 userRequest.get("/getAllTblShipmentPalletizingCL")
-                    // axios.get("http://localhost:7008/api/getAllTblItems")
-                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
-                        // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
 
                         setAllData(response?.data ?? [])

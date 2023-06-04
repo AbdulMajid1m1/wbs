@@ -4,25 +4,21 @@ import { AllItems } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
-// import SideBar from '../../components/SideBar/SideBar'
-import SideBar2 from '../../components/SideBar/SideBar2'
+
+
 
 const TblItemCl = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
- 
-    
+
+
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
 
-                // userRequest.get("/getAllTblItemsCL")
                 userRequest.get("/getAllTblStockMaster")
-                    // axios.get("http://localhost:7008/api/getAllTblItems")
-                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
-                        // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
 
                         setAllData(response?.data ?? [])
@@ -48,7 +44,7 @@ const TblItemCl = () => {
         <div>
 
             <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="Stock Master (Warehouse Operation)" columnsName={AllItems} backButton={true}
-             uniqueId="itemTableId"
+                uniqueId="itemTableId"
 
 
             />

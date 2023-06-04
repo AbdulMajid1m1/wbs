@@ -29,9 +29,7 @@ const ReceiptsManagement = () => {
     updateData(rowData); // update context data
   };
 
-  // useEffect(() => {
-  //   console.log('Updated data:', statedata);
-  // }, [statedata]);
+
 
 
 
@@ -50,7 +48,7 @@ const ReceiptsManagement = () => {
         setSelectedRow(response?.data[0] ?? []);
         // save data in session storage
         sessionStorage.setItem('receiptsData', JSON.stringify(response?.data ?? []));
-     
+
       })
 
       .catch(error => {
@@ -70,9 +68,9 @@ const ReceiptsManagement = () => {
             <div className="w-full flex justify-center text-black font-semibold text-xl mb:2 md:mb-5">
               Receipts Management
             </div>
-              <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm text-[#fff] bg-[#e69138]'>
-                  Back
-              </button>
+            <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm text-[#fff] bg-[#e69138]'>
+              Back
+            </button>
             <form onSubmit={handleForm}>
               <div className="mt-6 md:mt-10 flex justify-between items-center w-full text-sm md:text-xl py-2 rounded-md">
                 <label htmlFor="total" className="block text-xs font-medium text-black">SHIPMENT ID</label>

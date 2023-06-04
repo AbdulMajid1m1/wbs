@@ -1,10 +1,11 @@
 import express from "express";
 const router = express.Router();
 import WBSDB from "../controllers/controlletrsMSSQL.js";
-import { checkAuthentication } from "../helpers/apiAuth.js";
+import { checkAuthentication, checkRole } from "../helpers/apiAuth.js";
 
 import dotenv from "dotenv";
 import upload from "../config/multerConfig.js";
+import roles from "../utils/roles.js";
 dotenv.config();
 
 const userEmail = process.env.USER_EMAIL;
@@ -16,31 +17,31 @@ const userPassword = process.env.USER_PASSWORD;
 
 
 // not using this api
-router.post("/getShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceiving);
+router.post("/getShipmentDataFromtShipmentReceiving", checkAuthentication, checkRole([roles[31]]), WBSDB.getShipmentDataFromtShipmentReceiving);
 router.post("/getShipmentDataFromtShipmentReceivingCL", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceivingCL);
 // not using this api
 // getShipmentReceivingCLByShipmentId
 
 
-router.get("/getAllShipmentDataFromtShipmentReceiving", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceiving);
+router.get("/getAllShipmentDataFromtShipmentReceiving", checkAuthentication, checkRole([roles[20], roles[31]]), WBSDB.getAllShipmentDataFromtShipmentReceiving);
 
-router.get("/getTblShipmentReceivingQty", checkAuthentication, WBSDB.getTblShipmentReceivingQty);
+router.get("/getTblShipmentReceivingQty", checkAuthentication, checkRole([roles[20], roles[31]]), WBSDB.getTblShipmentReceivingQty);
 
 
 router.get("/getAllShipmentDataFromtShipmentReceived", checkAuthentication, WBSDB.getAllShipmentDataFromtShipmentReceived);
-router.get("/getAllTblItems", checkAuthentication, WBSDB.getAllTblItems);
+
 
 // dbo.expectedShipments APIS Start
-router.get("/getAllExpectedShipments", checkAuthentication, WBSDB.getAllExpectedShipments);
+router.get("/getAllExpectedShipments", checkAuthentication, checkRole([roles[19]]), WBSDB.getAllExpectedShipments);
 
 
 // dbo.expectedShipments APIS End
 
 // expectedTransferOrder APIS Start
 
-router.get("/getAllExpectedTransferOrder", checkAuthentication, WBSDB.getAllExpectedTransferOrder);
+router.get("/getAllExpectedTransferOrder", checkAuthentication, checkRole([roles[21], roles[32]]), WBSDB.getAllExpectedTransferOrder);
 // TODO: uncommit the original query
-router.get("/getExpectedTransferOrderByTransferId", checkAuthentication, WBSDB.getExpectedTransferOrderByTransferId);
+router.get("/getExpectedTransferOrderByTransferId", checkAuthentication, checkRole([roles[21], roles[32]]), WBSDB.getExpectedTransferOrderByTransferId);
 
 // expectedTransferOrder APIS End
 
@@ -51,13 +52,13 @@ router.get("/getAllPickingList", checkAuthentication, WBSDB.getAllPickingList);
 
 
 // to get all the packing slips from the PackingSlipTable  
-router.get("/getAllPackingSlips", checkAuthentication, WBSDB.getAllPackingSlips);
+router.get("/getAllPackingSlips", checkAuthentication, checkRole([roles[22]]), WBSDB.getAllPackingSlips);
 
 // to get all the dispatching data from the tbl_Dispatching
 router.get("/getAllTblDispatchingData", checkAuthentication, WBSDB.getAllTblDispatchingData);
 
 // to get all the palletizing data from the tbl_Shipment_Palletizing
-router.get("/getAllTblShipmentPalletizing", checkAuthentication, WBSDB.getAllTblShipmentPalletizing);
+router.get("/getAllTblShipmentPalletizing", checkAuthentication, checkRole([roles[23]]), WBSDB.getAllTblShipmentPalletizing);
 
 
 
@@ -97,7 +98,7 @@ router.put("/updateTblItemsCLData", checkAuthentication, WBSDB.updateTblItemsCLD
 
 // ----------- tbl_Shipment_Received_CL APIS Start -----------------
 
-router.get("/getAllTblShipmentReceivedCL", checkAuthentication, WBSDB.getAllTblShipmentReceivedCL);
+router.get("/getAllTblShipmentReceivedCL", checkAuthentication, checkRole([roles[2]]), WBSDB.getAllTblShipmentReceivedCL);
 router.get("/getTblShipmentReceivedCLStats", checkAuthentication, WBSDB.getTblShipmentReceivedCLStats);
 
 router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
@@ -124,13 +125,13 @@ router.put("/updateShipmentRecievedDataCL", checkAuthentication, WBSDB.updateShi
 // ----------- tbl_Shipment_Palletizing_CL APIS Start -----------------
 
 // to get all the palletizing data from the tbl_Shipment_Palletizing_CL
-router.get("/getAllTblShipmentPalletizingCL", checkAuthentication, WBSDB.getAllTblShipmentPalletizingCL);
+router.get("/getAllTblShipmentPalletizingCL", checkAuthentication, checkRole([roles[12]]), WBSDB.getAllTblShipmentPalletizingCL);
 
-router.post("/insertShipmentPalletizingDataCL", checkAuthentication, WBSDB.insertShipmentPalletizingDataCL);
+router.post("/insertShipmentPalletizingDataCL", checkAuthentication, checkRole([roles[12]]), WBSDB.insertShipmentPalletizingDataCL);
 
-router.delete("/deleteShipmentPalletizingDataCL", checkAuthentication, WBSDB.deleteShipmentPalletizingDataCL);
+router.delete("/deleteShipmentPalletizingDataCL", checkAuthentication, checkRole([roles[12]]), WBSDB.deleteShipmentPalletizingDataCL);
 
-router.put("/updateShipmentPalletizingDataCL", checkAuthentication, WBSDB.updateShipmentPalletizingDataCL);
+router.put("/updateShipmentPalletizingDataCL", checkAuthentication, checkRole([roles[12]]), WBSDB.updateShipmentPalletizingDataCL);
 
 
 // ----------- tbl_Shipment_Palletizing_CL APIS End -----------------
@@ -138,25 +139,26 @@ router.put("/updateShipmentPalletizingDataCL", checkAuthentication, WBSDB.update
 
 // ----------- tbL_Picking_CL APIS Start -----------------
 
-router.get("/getAllTblPickingCL", checkAuthentication, WBSDB.getAllTblPickingCL);
+router.get("/getAllTblPickingCL", checkAuthentication, checkRole([roles[11]]), WBSDB.getAllTblPickingCL);
 
-router.post("/insertTblPickingDataCL", checkAuthentication, WBSDB.insertTblPickingDataCL);
+router.post("/insertTblPickingDataCL", checkAuthentication, checkRole([roles[11]]), WBSDB.insertTblPickingDataCL);
 
-router.delete("/deleteTblPickingDataCL", checkAuthentication, WBSDB.deleteTblPickingDataCL);
-router.put("/updateTblPickingDataCL", checkAuthentication, WBSDB.updateTblPickingDataCL);
+router.delete("/deleteTblPickingDataCL", checkAuthentication, checkRole([roles[11]]), WBSDB.deleteTblPickingDataCL);
+
+router.put("/updateTblPickingDataCL", checkAuthentication, checkRole([roles[11]]), WBSDB.updateTblPickingDataCL);
 
 
 // ----------- tbL_Picking_CL APIS End -----------------
 
 // ----------- tbl_Dispatching_CL APIS Start -----------------
 
-router.get("/getAllTblDispatchingCL", checkAuthentication, WBSDB.getAllTblDispatchingCL);
+router.get("/getAllTblDispatchingCL", checkAuthentication, checkRole([roles[3]]), WBSDB.getAllTblDispatchingCL);
 
-router.post("/insertTblDispatchingDataCL", checkAuthentication, WBSDB.insertTblDispatchingDataCL);
+router.post("/insertTblDispatchingDataCL", checkAuthentication, checkRole([roles[3]]), WBSDB.insertTblDispatchingDataCL);
 
-router.delete("/deleteTblDispatchingDataCL", checkAuthentication, WBSDB.deleteTblDispatchingDataCL);
+router.delete("/deleteTblDispatchingDataCL", checkAuthentication, checkRole([roles[3]]), WBSDB.deleteTblDispatchingDataCL);
 
-router.put("/updateTblDispatchingDataCL", checkAuthentication, WBSDB.updateTblDispatchingDataCL);
+router.put("/updateTblDispatchingDataCL", checkAuthentication, checkRole([roles[3]]), WBSDB.updateTblDispatchingDataCL);
 
 
 
@@ -165,13 +167,13 @@ router.put("/updateTblDispatchingDataCL", checkAuthentication, WBSDB.updateTblDi
 
 // ----------- tbl_locations_CL  APIS Start -----------------
 
-router.get("/getAllTblLocationsCL", checkAuthentication, WBSDB.getAllTblLocationsCL);
+router.get("/getAllTblLocationsCL", checkAuthentication, checkRole([roles[4]]), WBSDB.getAllTblLocationsCL);
 
-router.post("/insertTblLocationsDataCL", checkAuthentication, WBSDB.insertTblLocationsDataCL);
+router.post("/insertTblLocationsDataCL", checkAuthentication, checkRole([roles[4]]), WBSDB.insertTblLocationsDataCL);
 
-router.delete("/deleteTblLocationsDataCL", checkAuthentication, WBSDB.deleteTblLocationsDataCL);
+router.delete("/deleteTblLocationsDataCL", checkAuthentication, checkRole([roles[4]]), WBSDB.deleteTblLocationsDataCL);
 
-router.put("/updateTblLocationsDataCL", checkAuthentication, WBSDB.updateTblLocationsDataCL);
+router.put("/updateTblLocationsDataCL", checkAuthentication, checkRole([roles[4]]), WBSDB.updateTblLocationsDataCL);
 
 // ----------- tbl_locations_CL  APIS End -----------------
 
@@ -202,53 +204,59 @@ router.post("/logout", WBSDB.logout);
 router.post("/getDispatchingDataByPackingSlipId", checkAuthentication, WBSDB.getDispatchingDataByPackingSlipId);// tbl_Dispatching
 
 
+// InventTableWMS controller -------
 
-router.post("/getInventTableWMSDataByItemId", checkAuthentication, WBSDB.getInventTableWMSDataByItemId); // InventTableWMS 
+router.get("/getAllTblItems", checkAuthentication, checkRole([roles[18]]), WBSDB.getAllTblItems);
+
+router.post("/getInventTableWMSDataByItemId", checkAuthentication, checkRole([roles[18]]), WBSDB.getInventTableWMSDataByItemId); // InventTableWMS 
+
+router.get("/getStockMasterDataByItemId", checkAuthentication, checkRole([roles[18]]), WBSDB.getStockMasterDataByItemId);
+
 
 // --------------- tblMappedBarcodes APIS Start ------
 
-router.get("/getAllTblMappedBarcodes", checkAuthentication, WBSDB.getAllTblMappedBarcodes);
+router.get("/getAllTblMappedBarcodes", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getAllTblMappedBarcodes);
 
-router.post("/getmapBarcodeDataByItemCode", checkAuthentication, WBSDB.getmapBarcodeDataByItemCode); // tblMappedBarcodes
+router.post("/getmapBarcodeDataByItemCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]], [roles[32]]), WBSDB.getmapBarcodeDataByItemCode); // tblMappedBarcodes
 
-router.get("/getmapBarcodeDataByuser", checkAuthentication, WBSDB.getmapBarcodeDataByuser); // tblMappedBarcodes
+router.get("/getmapBarcodeDataByuser", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getmapBarcodeDataByuser); // tblMappedBarcodes
 
-router.get("/getmapBarcodeDataByBinLocation", checkAuthentication, WBSDB.getmapBarcodeDataByBinLocation);
+router.get("/getmapBarcodeDataByBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getmapBarcodeDataByBinLocation);
 
-router.post("/insertIntoMappedBarcode", checkAuthentication, WBSDB.insertIntoMappedBarcode);
+router.post("/insertIntoMappedBarcode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.insertIntoMappedBarcode);
 
-router.post("/insertManyIntoMappedBarcode", checkAuthentication, WBSDB.insertManyIntoMappedBarcode);
+router.post("/insertManyIntoMappedBarcode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.insertManyIntoMappedBarcode);
 
-router.put("/updateTblMappedBarcodeByItemCode", checkAuthentication, WBSDB.updateTblMappedBarcodeByItemCode);
+router.put("/updateTblMappedBarcodeByItemCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.updateTblMappedBarcodeByItemCode);
 
-router.put("/updateTblMappedBarcodeBinLocation", checkAuthentication, WBSDB.updateTblMappedBarcodeBinLocation);
+router.put("/updateTblMappedBarcodeBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.updateTblMappedBarcodeBinLocation);
 
-router.put("/updateTblMappedBarcodeBinLocationWithSelectionType", checkAuthentication, WBSDB.updateTblMappedBarcodeBinLocationWithSelectionType);
+router.put("/updateTblMappedBarcodeBinLocationWithSelectionType", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.updateTblMappedBarcodeBinLocationWithSelectionType);
 
-router.put("/updateTblMappedBarcodeByGtin", checkAuthentication, WBSDB.updateTblMappedBarcodeByGtin);
+router.put("/updateTblMappedBarcodeByGtin", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.updateTblMappedBarcodeByGtin);
 
-router.post("/checkBarcodeValidityByItemSerialNo", checkAuthentication, WBSDB.checkBarcodeValidityByItemSerialNo);
+router.post("/checkBarcodeValidityByItemSerialNo", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.checkBarcodeValidityByItemSerialNo);
 
-router.post("/getItemInfoByItemSerialNo", checkAuthentication, WBSDB.getItemInfoByItemSerialNo);
+router.post("/getItemInfoByItemSerialNo", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getItemInfoByItemSerialNo);
 
-router.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByItemSerialNoAndBinLocation);
+router.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getMappedBarcodedsByItemSerialNoAndBinLocation);
 
-router.put("/updateMappedBarcodesBinLocationBySerialNo", checkAuthentication, WBSDB.updateMappedBarcodesBinLocationBySerialNo);
+router.put("/updateMappedBarcodesBinLocationBySerialNo", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.updateMappedBarcodesBinLocationBySerialNo);
 
-router.post("/insertIntoMappedBarcodeOrUpdateBySerialNo", checkAuthentication, WBSDB.insertIntoMappedBarcodeOrUpdateBySerialNo);
+router.post("/insertIntoMappedBarcodeOrUpdateBySerialNo", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.insertIntoMappedBarcodeOrUpdateBySerialNo);
 
-router.put("/updateMappedBarcodesBinLocationByPalletCode", checkAuthentication, WBSDB.updateMappedBarcodesBinLocationByPalletCode);
+router.put("/updateMappedBarcodesBinLocationByPalletCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.updateMappedBarcodesBinLocationByPalletCode);
 
-router.post("/getItemInfoByPalletCode", checkAuthentication, WBSDB.getItemInfoByPalletCode);
+router.post("/getItemInfoByPalletCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getItemInfoByPalletCode);
 
-router.post("/getMappedBarcodedsByPalletCodeAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByPalletCodeAndBinLocation);
+router.post("/getMappedBarcodedsByPalletCodeAndBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getMappedBarcodedsByPalletCodeAndBinLocation);
 
-router.post("/getMappedBarcodedsByItemCodeAndBinLocation", checkAuthentication, WBSDB.getMappedBarcodedsByItemCodeAndBinLocation);
+router.post("/getMappedBarcodedsByItemCodeAndBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getMappedBarcodedsByItemCodeAndBinLocation);
 
-router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, WBSDB.deleteTblMappedBarcodesDataByItemCode);
+router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.deleteTblMappedBarcodesDataByItemCode);
 
 
-router.get("/getDistinctMappedBarcodeBinLocations", checkAuthentication, WBSDB.getDistinctMappedBarcodeBinLocations);
+router.get("/getDistinctMappedBarcodeBinLocations", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34]]), WBSDB.getDistinctMappedBarcodeBinLocations);
 
 // ------------- tblMappedBarcodes APIS End -------- 
 
@@ -306,9 +314,9 @@ router.post("/insertTblTransferBinToBinCL", checkAuthentication, WBSDB.insertTbl
 
 // ----------------- tbl_TransferJournal APIS Start -----------------
 
-router.get("/getTransferJournalCLByJournalId", checkAuthentication, WBSDB.getTransferJournalCLByJournalId);
+router.get("/getTransferJournalCLByJournalId", checkAuthentication, checkRole([roles[34]]), WBSDB.getTransferJournalCLByJournalId);
 
-router.get("/getAllTransferJournal", checkAuthentication, WBSDB.getAllTransferJournal);
+router.get("/getAllTransferJournal", checkAuthentication, checkRole([roles[25]]), WBSDB.getAllTransferJournal);
 
 
 // ----------------- tbl_TransferJournal_CL APIS End -----------------
@@ -331,10 +339,9 @@ router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsRe
 // ------- tbl_Stock_Master APIS Start --------
 
 
-router.get("/getAllTblStockMaster", checkAuthentication, WBSDB.getAllTblStockMaster);
+router.get("/getAllTblStockMaster", checkAuthentication, checkRole([roles[1]]), WBSDB.getAllTblStockMaster);
 
 router.get("/getTblStockMasterByItemId", checkAuthentication, WBSDB.getTblStockMasterByItemId);
-router.get("/getStockMasterDataByItemId", checkAuthentication, WBSDB.getStockMasterDataByItemId);
 
 router.post("/insertStockMasterData", checkAuthentication, WBSDB.insertStockMasterData);
 
@@ -345,24 +352,24 @@ router.put("/updateQtyReceivedInTblStockMaster", checkAuthentication, WBSDB.upda
 
 router.delete("/deleteStockMasterDataByItemId", checkAuthentication, WBSDB.deleteStockMasterDataByItemId);
 // --- tbl_ItemsReAllocationPicked APIS Start ---
-router.get("/getAllItemsReAllocationPicked", checkAuthentication, WBSDB.getAllItemsReAllocationPicked);
+router.get("/getAllItemsReAllocationPicked", checkAuthentication, checkRole([roles[14]]), WBSDB.getAllItemsReAllocationPicked);
 
 
 // --- tbl_ItemsReAllocationPicked APIS End ---
 
 
 /// ----- tbl_TransferBinToBin_CL APIS Start -----
-router.get("/getAllTransferBinToBinCL", checkAuthentication, WBSDB.getAllTransferBinToBinCL);
+router.get("/getAllTransferBinToBinCL", checkAuthentication, checkRole([roles[15]]), WBSDB.getAllTransferBinToBinCL);
 
 // ----- WMS_Sales_PickingList_CL APIS Start -----
 
-router.get("/getAllWmsSalesPickingListClFromAlessia", checkAuthentication, WBSDB.getAllWmsSalesPickingListClFromAlessia);
+router.get("/getAllWmsSalesPickingListClFromAlessia", checkAuthentication, checkRole([roles[15], roles[24]]), WBSDB.getAllWmsSalesPickingListClFromAlessia);
 
-router.get("/getAllWmsSalesPickingListClFromWBS", checkAuthentication, WBSDB.getAllWmsSalesPickingListClFromWBS);
+router.get("/getAllWmsSalesPickingListClFromWBS", checkAuthentication, checkRole([roles[15], roles[26]]), WBSDB.getAllWmsSalesPickingListClFromWBS);
 
-router.post("/insertPickingListDataCLIntoWBS", checkAuthentication, WBSDB.insertPickingListDataCLIntoWBS);
+router.post("/insertPickingListDataCLIntoWBS", checkAuthentication, checkRole([roles[15]]), WBSDB.insertPickingListDataCLIntoWBS);
 
-router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentication, WBSDB.getAllWmsSalesPickingListClFromWBSByPickingRouteId);
+router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentication, checkRole([roles[15]], roles[26]), WBSDB.getAllWmsSalesPickingListClFromWBSByPickingRouteId);
 
 
 // packingsliptable_CL APIS Start -----
@@ -383,29 +390,29 @@ export default router;
 
 router.get("/getWmsReturnSalesOrderByReturnItemNum", checkAuthentication, WBSDB.getWmsReturnSalesOrderByReturnItemNum);
 
-router.get("/getAllWmsReturnSalesOrder", checkAuthentication, WBSDB.getAllWmsReturnSalesOrder);
+router.get("/getAllWmsReturnSalesOrder", checkAuthentication, checkRole([roles[27]]), WBSDB.getAllWmsReturnSalesOrder);
 
 
 
 // WMS_ReturnSalesOrder_CL APIS Start -----
 
-router.get("/getAllWmsReturnSalesOrderCl", checkAuthentication, WBSDB.getAllWmsReturnSalesOrderCl);
+router.get("/getAllWmsReturnSalesOrderCl", checkAuthentication, checkRole([roles[8]]), WBSDB.getAllWmsReturnSalesOrderCl);
 
-router.post("/insertIntoWmsReturnSalesOrderCl", checkAuthentication, WBSDB.insertIntoWmsReturnSalesOrderCl);
+router.post("/insertIntoWmsReturnSalesOrderCl", checkAuthentication, checkRole([roles[8]]), WBSDB.insertIntoWmsReturnSalesOrderCl);
 
-router.get("/getWmsReturnSalesOrderClByAssignedToUserId", checkAuthentication, WBSDB.getWmsReturnSalesOrderClByAssignedToUserId);
+router.get("/getWmsReturnSalesOrderClByAssignedToUserId", checkAuthentication, checkRole([roles[8]]), WBSDB.getWmsReturnSalesOrderClByAssignedToUserId);
 
 // WMS_Journal_ProfitLost APIS Start -----
 
 
-router.get("/getAllWmsJournalProfitLost", checkAuthentication, WBSDB.getAllWmsJournalProfitLost);
+router.get("/getAllWmsJournalProfitLost", checkAuthentication, checkRole([roles[28]]), WBSDB.getAllWmsJournalProfitLost);
 
 
 
 // WMS_Journal_Movement APIS Start -----
 
 
-router.get("/getAllWmsJournalMovement", checkAuthentication, WBSDB.getAllWmsJournalMovement);
+router.get("/getAllWmsJournalMovement", checkAuthentication, checkRole([roles[29]]), WBSDB.getAllWmsJournalMovement);
 
 
 
@@ -413,7 +420,7 @@ router.get("/getAllWmsJournalMovement", checkAuthentication, WBSDB.getAllWmsJour
 // WMS_Journal_Counting APIS Start ----- .
 
 
-router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);
+router.get("/getAllWmsJournalCounting", checkAuthentication, checkRole([roles[30]]), WBSDB.getAllWmsJournalCounting);
 
 router.post("/generateBarcodeForRma", checkAuthentication, WBSDB.generateBarcodeForRma);
 
@@ -421,13 +428,13 @@ router.post("/generateBarcodeForRma", checkAuthentication, WBSDB.generateBarcode
 
 //  ---------- WMS_Journal_Movement_CL API Start ----------
 
-router.post("/insertJournalMovementCLData", checkAuthentication, WBSDB.insertJournalMovementCLData);
+router.post("/insertJournalMovementCLData", checkAuthentication, checkRole([roles[5]]), WBSDB.insertJournalMovementCLData);
 
-router.get("/getAllWmsJournalMovementCl", checkAuthentication, WBSDB.getAllWmsJournalMovementCl);
+router.get("/getAllWmsJournalMovementCl", checkAuthentication, checkRole([roles[5]]), WBSDB.getAllWmsJournalMovementCl);
 
-router.get("/getWmsJournalMovementClByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalMovementClByAssignedToUserId);
+router.get("/getWmsJournalMovementClByAssignedToUserId", checkAuthentication, checkRole([roles[5]]), WBSDB.getWmsJournalMovementClByAssignedToUserId);
 
-router.put("/updateWmsJournalMovementClQtyScanned", checkAuthentication, WBSDB.updateWmsJournalMovementClQtyScanned);
+router.put("/updateWmsJournalMovementClQtyScanned", checkAuthentication, checkRole([roles[5]]), WBSDB.updateWmsJournalMovementClQtyScanned);
 
 
 
@@ -441,13 +448,13 @@ router.get("/getAllWmsJournalMovementClDets", checkAuthentication, WBSDB.getAllW
 
 // ---- WMS_Journal_ProfitLost_CL APIS Start ----
 
-router.post("/insertJournalProfitLostCL", checkAuthentication, WBSDB.insertJournalProfitLostCL);
+router.post("/insertJournalProfitLostCL", checkAuthentication, checkRole([roles[6]]), WBSDB.insertJournalProfitLostCL);
 
-router.get("/getAllWmsJournalProfitLostCL", checkAuthentication, WBSDB.getAllWmsJournalProfitLostCL);
+router.get("/getAllWmsJournalProfitLostCL", checkAuthentication, checkRole([roles[6]]), WBSDB.getAllWmsJournalProfitLostCL);
 
-router.get("/getWmsJournalProfitLostCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalProfitLostCLByAssignedToUserId);
+router.get("/getWmsJournalProfitLostCLByAssignedToUserId", checkAuthentication, checkRole([roles[6]]), WBSDB.getWmsJournalProfitLostCLByAssignedToUserId);
 
-router.put("/updateWmsJournalProfitLostClQtyScanned", checkAuthentication, WBSDB.updateWmsJournalProfitLostClQtyScanned);
+router.put("/updateWmsJournalProfitLostClQtyScanned", checkAuthentication, checkRole([roles[6]]), WBSDB.updateWmsJournalProfitLostClQtyScanned);
 
 // ---- WMS_Journal_ProfitLost_CLDets APIS Start ----
 
@@ -459,37 +466,39 @@ router.post("/insertJournalProfitLostClDets", checkAuthentication, WBSDB.insertJ
 /// ---------- WMS_Journal_Counting and CL API Start ----
 router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);
 
-router.get("/getAllWmsJournalCountingCL", checkAuthentication, WBSDB.getAllWmsJournalCountingCL);
+router.get("/getAllWmsJournalCountingCL", checkAuthentication, checkRole([roles[7]]), WBSDB.getAllWmsJournalCountingCL);
 
 
 
-router.post("/insertWMSJournalCountingCL", checkAuthentication, WBSDB.insertWMSJournalCountingCL);
+router.post("/insertWMSJournalCountingCL", checkAuthentication, checkRole([roles[7]]), WBSDB.insertWMSJournalCountingCL);
 
-router.get("/getWmsJournalCountingCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalCountingCLByAssignedToUserId);
+router.get("/getWmsJournalCountingCLByAssignedToUserId", checkAuthentication, checkRole([roles[7]]), WBSDB.getWmsJournalCountingCLByAssignedToUserId);
 
-router.put("/updateWmsJournalCountingCLQtyScanned", checkAuthentication, WBSDB.updateWmsJournalCountingCLQtyScanned);
+router.put("/updateWmsJournalCountingCLQtyScanned", checkAuthentication, checkRole([roles[7]]), WBSDB.updateWmsJournalCountingCLQtyScanned);
 
 
 // ---------- WMS_Journal_CountingCLDets API End ----------
 
 router.get("/getAllWmsJournalCountingCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingCLDets);
+
 router.post("/insertWMSJournalCountingCLDets", checkAuthentication, WBSDB.insertWMSJournalCountingCLDets);
 
 
 // -------------- WMS_Journal_Counting_OnlyCL API Start --------------
 
-router.post("/insertIntoWmsJournalCountingOnlyCL", checkAuthentication, WBSDB.insertIntoWmsJournalCountingOnlyCL);
+router.post("/insertIntoWmsJournalCountingOnlyCL", checkAuthentication, checkRole([roles[9]]), WBSDB.insertIntoWmsJournalCountingOnlyCL);
 
-router.get("/getAllWmsJournalCountingOnlyCl", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCl);
+router.get("/getAllWmsJournalCountingOnlyCl", checkAuthentication, checkRole([roles[9]]), WBSDB.getAllWmsJournalCountingOnlyCl);
 
-router.get("/getWmsJournalCountingOnlyCLByAssignedToUserId", checkAuthentication, WBSDB.getWmsJournalCountingOnlyCLByAssignedToUserId);
+router.get("/getWmsJournalCountingOnlyCLByAssignedToUserId", checkAuthentication, checkRole([roles[9]]), WBSDB.getWmsJournalCountingOnlyCLByAssignedToUserId);
 
-router.put("/incrementQTYSCANNEDInJournalCountingOnlyCL", checkAuthentication, WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCL);
+router.put("/incrementQTYSCANNEDInJournalCountingOnlyCL", checkAuthentication, checkRole([roles[9]]), WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCL);
 
-router.put("/incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation", checkAuthentication, WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation);
+router.put("/incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation", checkAuthentication, checkRole([roles[9]]), WBSDB.incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation);
 
-router.get("/getWmsJournalCountingOnlyCLByBinLocation", checkAuthentication, WBSDB.getWmsJournalCountingOnlyCLByBinLocation);
-router.get("/getBinLocationByUserIdFromJournalCountingOnlyCL", checkAuthentication, WBSDB.getBinLocationByUserIdFromJournalCountingOnlyCL);
+router.get("/getWmsJournalCountingOnlyCLByBinLocation", checkAuthentication, checkRole([roles[9]]), WBSDB.getWmsJournalCountingOnlyCLByBinLocation);
+
+router.get("/getBinLocationByUserIdFromJournalCountingOnlyCL", checkAuthentication, checkRole([roles[9]]), WBSDB.getBinLocationByUserIdFromJournalCountingOnlyCL);
 
 
 // -------------- WMS_Journal_Counting_OnlyCLDets API Start --------------

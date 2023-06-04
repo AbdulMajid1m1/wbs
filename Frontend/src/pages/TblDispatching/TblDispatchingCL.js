@@ -16,8 +16,8 @@ const TblDispatchingCL = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
     useEffect(() => {
@@ -35,7 +35,8 @@ const TblDispatchingCL = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-                        setError(error?.response?.data?.error)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
+
                     });
 
             }
@@ -53,7 +54,7 @@ const TblDispatchingCL = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable data={alldata} addNewNavigation="/tbl-new-dispatch" title="TBL DISPATCHING CL (Warehouse Operation)" columnsName={TblDispatchingCLColumn} backButton={true} uniqueId="PACKINGSLIPID"/>
+            <UserDataTable data={alldata} addNewNavigation="/tbl-new-dispatch" title="TBL DISPATCHING CL (Warehouse Operation)" columnsName={TblDispatchingCLColumn} backButton={true} uniqueId="PACKINGSLIPID" />
 
 
             {isLoading &&

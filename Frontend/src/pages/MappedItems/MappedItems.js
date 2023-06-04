@@ -15,8 +15,8 @@ const MappedItems = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
 
@@ -35,7 +35,7 @@ const MappedItems = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-                        setError(error?.response?.data?.error)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
                     });
 
             }
@@ -53,11 +53,11 @@ const MappedItems = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
             <UserDataTable data={alldata}
-             addNewNavigation="/insert-mapped-barcode" title="MAPPED ITEMS (Warehouse Operation) "
-              columnsName={MappedItemsColumn} backButton={true}
-               uniqueId="ItemCode"
-    
-                
+                addNewNavigation="/insert-mapped-barcode" title="MAPPED ITEMS (Warehouse Operation) "
+                columnsName={MappedItemsColumn} backButton={true}
+                uniqueId="ItemCode"
+
+
             />
 
             {isLoading &&

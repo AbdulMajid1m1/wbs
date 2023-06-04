@@ -16,8 +16,8 @@ const WarehouseMovement = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
     useEffect(() => {
@@ -35,7 +35,8 @@ const WarehouseMovement = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-                        setError(error?.response?.data?.error)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
+
                     });
 
             }
@@ -57,7 +58,8 @@ const WarehouseMovement = () => {
                     })
                     .catch(error => {
                         console.error(error);
-                        setError(error?.response?.data?.error)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
+
                     });
 
             }

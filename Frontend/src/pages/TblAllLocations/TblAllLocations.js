@@ -14,8 +14,8 @@ const TblAllLocations = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
     useEffect(() => {
@@ -33,7 +33,8 @@ const TblAllLocations = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-                        setError(error?.response?.data?.error)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
+
                     });
 
             }
@@ -52,7 +53,7 @@ const TblAllLocations = () => {
 
 
             <UserDataTable data={alldata} addNewNavigation="/tbl-new-location" title="TBL ALL LOCATIONS (Warehouse Operation)" columnsName={TblAllLocationColumn} backButton={true}
-             uniqueId="locationTableId" />
+                uniqueId="locationTableId" />
 
 
             {isLoading &&

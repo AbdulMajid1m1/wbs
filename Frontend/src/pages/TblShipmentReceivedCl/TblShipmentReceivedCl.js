@@ -15,10 +15,10 @@ const TblShipmentReceivedCl = () => {
   const [message, setMessage] = useState(null);
 
   const resetSnakeBarMessages = () => {
-      setError(null);
-      setMessage(null);
-  
-    };
+    setError(null);
+    setMessage(null);
+
+  };
 
 
   useEffect(() => {
@@ -37,7 +37,8 @@ const TblShipmentReceivedCl = () => {
           .catch(error => {
             console.error(error);
             setIsLoading(false)
-            setError(error?.response?.data?.error)
+            setError(error?.response?.data?.message ?? "Something went wrong")
+
 
           });
 
@@ -52,9 +53,9 @@ const TblShipmentReceivedCl = () => {
   return (
     <div>
 
-      
-        {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
-        {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
+      {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
       {/* <SideBar2 /> */}

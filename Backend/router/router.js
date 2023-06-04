@@ -443,7 +443,7 @@ router.put("/updateWmsJournalMovementClQtyScanned", checkAuthentication, checkRo
 
 router.post("/insertJournalMovementCLDets", checkAuthentication, WBSDB.insertJournalMovementCLDets);
 
-router.get("/getAllWmsJournalMovementClDets", checkAuthentication, WBSDB.getAllWmsJournalMovementClDets);
+router.get("/getAllWmsJournalMovementClDets", checkAuthentication, checkRole([roles[5]]), WBSDB.getAllWmsJournalMovementClDets);
 
 
 // ---- WMS_Journal_ProfitLost_CL APIS Start ----

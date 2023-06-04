@@ -39,11 +39,12 @@ const PrintingPalletLabels = () => {
         <div>
 
             <UserDataTable data={alldata}
-             addNewNavigation="/insert-mapped-barcode" title="Printing Pallet Labels"
+             title="Printing Pallet Labels"
               columnsName={MappedItemsColumn} backButton={true}
-               uniqueId="ItemCode"
-               printButton={true}
-                PrintName={"Print Pallet Labels"}
+               uniqueId="PrintPalletBarcode"
+               printButton={false}
+               printBarCode={true}
+               PrintBarCodeName={"Print Pallet Barcode"}
             />  
 
             {isLoading &&

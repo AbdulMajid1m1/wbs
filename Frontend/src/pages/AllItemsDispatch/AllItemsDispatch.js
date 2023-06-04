@@ -2,19 +2,27 @@ import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
 import { PackingSlipTableColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
-import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const AllItemsDispatch = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
+
 
 
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
 
-                // userRequest.get("/getAllTblDispatchingData")
                 userRequest.get("/getAllPackingSlips")
                     .then(response => {
                         console.log(response?.data);
@@ -26,7 +34,7 @@ const AllItemsDispatch = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -40,8 +48,9 @@ const AllItemsDispatch = () => {
     return (
         <div>
 
-            {/* <SideBar /> */}
-            {/* <SideBar2 /> */}
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
 
             <UserDataTable data={alldata} title="Items For Dispatch" columnsName={PackingSlipTableColumn} backButton={true}
                 actionColumnVisibility={false}

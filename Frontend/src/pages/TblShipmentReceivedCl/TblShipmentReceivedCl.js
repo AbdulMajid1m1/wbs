@@ -4,10 +4,22 @@ import { TblShipmentReceivedClColumn } from '../../utils/datatablesource'
 // import userRequest from "../utils/userRequest";
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
+
 
 const TblShipmentReceivedCl = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+
+  const resetSnakeBarMessages = () => {
+      setError(null);
+      setMessage(null);
+  
+    };
+
 
   useEffect(() => {
     const getAllAssetsList = async () => {
@@ -17,16 +29,16 @@ const TblShipmentReceivedCl = () => {
         userRequest.get("/getAllTblShipmentReceivedCL")
 
           .then(response => {
-            // response.data == "no data available" ? setData([]) : setData(response.data);
             console.log(response?.data);
             setData(response?.data ?? [])
             setIsLoading(false)
 
           })
           .catch(error => {
-            // handleUserError(error)
             console.error(error);
             setIsLoading(false)
+            setError(error?.response?.data?.error)
+
           });
 
       }
@@ -39,6 +51,11 @@ const TblShipmentReceivedCl = () => {
 
   return (
     <div>
+
+      
+        {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+        {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
 
       {/* <SideBar2 /> */}
       <UserDataTable data={data} title="SHIPMENT RECEIVED (Warehouse Operation)" columnsName={TblShipmentReceivedClColumn}

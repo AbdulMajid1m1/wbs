@@ -2,12 +2,21 @@ import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
 import { InternalTransferColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
-import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const InternalTransfer = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
+
 
 
     useEffect(() => {
@@ -22,10 +31,9 @@ const InternalTransfer = () => {
 
                     })
                     .catch(error => {
-                        // handleUserError(error)
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -38,6 +46,9 @@ const InternalTransfer = () => {
 
     return (
         <div>
+
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
             <UserDataTable data={alldata} title="Internal Tranfer" columnsName={InternalTransferColumn} backButton={true}
                 actionColumnVisibility={false}

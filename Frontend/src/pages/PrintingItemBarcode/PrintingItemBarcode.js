@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { MappedItemsColumn, TblShipmentReceivedClColumn } from '../../utils/datatablesource'
+import { MappedItemsColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
+
 
 const PrintingItemBarcode = () => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
 
 
     useEffect(() => {
@@ -14,7 +24,6 @@ const PrintingItemBarcode = () => {
             try {
 
                 userRequest.get("/getAllTblMappedBarcodes")
-                // userRequest.get("/getAllTblShipmentReceivedCL")
                     .then(response => {
                         console.log(response?.data);
 
@@ -25,7 +34,7 @@ const PrintingItemBarcode = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -38,6 +47,10 @@ const PrintingItemBarcode = () => {
 
     return (
         <div>
+
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
 
             <UserDataTable data={data}
              title="Printing Item Barcode"

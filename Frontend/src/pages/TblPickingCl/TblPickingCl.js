@@ -2,14 +2,21 @@ import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
 import { TblPickingClColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
-import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
-// import SideBar from '../../components/SideBar/SideBar'
-import SideBar2 from '../../components/SideBar/SideBar2'
+import CustomSnakebar from '../../utils/CustomSnakebar';
+
 
 const TblPickingCl = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
 
 
     useEffect(() => {
@@ -17,10 +24,7 @@ const TblPickingCl = () => {
             try {
 
                 userRequest.get("/getAllTblPickingCL")
-                    // axios.get("http://localhost:7008/api/getAllTblItems")
-                    // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
                     .then(response => {
-                        // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
 
                         setAllData(response?.data ?? [])
@@ -28,10 +32,9 @@ const TblPickingCl = () => {
 
                     })
                     .catch(error => {
-                        // handleUserError(error)
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -44,6 +47,10 @@ const TblPickingCl = () => {
 
     return (
         <div>
+
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
 
             <UserDataTable data={alldata} addNewNavigation="/tbl-new-picking" title="PICKING (Warehouse Operation)" columnsName={TblPickingClColumn} backButton={true} uniqueId="PICKINGROUTEID"
 

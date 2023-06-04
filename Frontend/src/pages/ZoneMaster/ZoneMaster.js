@@ -3,10 +3,21 @@ import UserDataTable from '../../components/UserDatatable/UserDataTable'
 import { ZoneMasterColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
+
 
 const ZoneMaster = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
+
 
 
      
@@ -25,7 +36,7 @@ const ZoneMaster = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -38,6 +49,10 @@ const ZoneMaster = () => {
 
     return (
         <div>
+
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+            
 
             <UserDataTable data={alldata} addNewNavigation="/tblzonenew" title="Zone Master" 
                 columnsName={ZoneMasterColumn} 

@@ -3,11 +3,19 @@ import UserDataTable from '../../components/UserDatatable/UserDataTable'
 import { MappedItemsColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const PrintingPalletLabels = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
 
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
 
     useEffect(() => {
         const getAllAssetsList = async () => {
@@ -24,7 +32,7 @@ const PrintingPalletLabels = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -38,13 +46,21 @@ const PrintingPalletLabels = () => {
     return (
         <div>
 
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
+
             <UserDataTable data={alldata}
-             addNewNavigation="/insert-mapped-barcode" title="Printing Pallet Labels"
+             title="Printing Pallet Labels"
               columnsName={MappedItemsColumn} backButton={true}
-               uniqueId="ItemCode"
-    
-                
-            />
+               uniqueId="PrintPalletBarcode"
+               actionColumnVisibility={false}
+               emailButton={false}
+               printButton={true}
+               PrintName={"Print Pallet Labels"}
+            //    printBarCode={true}
+            //    PrintBarCodeName={"Print Pallet Barcode"}
+            />  
 
             {isLoading &&
 

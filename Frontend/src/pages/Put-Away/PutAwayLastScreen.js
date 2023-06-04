@@ -116,7 +116,6 @@ const PutAwayLastScreen = () => {
                   </div>
 
                   <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
-                    {/* Cancel */}
                     <span>
                       <img src={icon} className='h-auto w-8 object-contain' alt='' />
                     </span>
@@ -158,14 +157,16 @@ const PutAwayLastScreen = () => {
               <div className="table-location-generate1">
                 <table>
                   <thead>
-                    {/* <tr>
+                    <tr>
                       <th>Serial Number</th>
-                    </tr> */}
+                      <th>GTIN</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    {serialNumbers.map((serialNumber, index) => (
+                    {serialNumbers.map((serialNumber, GTIN, index) => (
                       <tr key={index}>
                         <td>{serialNumber}</td>
+                        <td>{GTIN}</td>
                       </tr>
                     ))}
                   </tbody>

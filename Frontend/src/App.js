@@ -100,6 +100,7 @@ import AddNewBinMaster from './components/AddNew/AddNewBinMaster'
 import TblZoneMasterUpdate from './components/UpdatesItem/TblZoneMasterUpdate'
 import PrintingPalletLabels from './pages/PrintingPalletLabels/PrintingPalletLabels'
 import AddNewZoneMaster from './components/AddNew/AddNewZoneMaster'
+import PrintingItemBarcode from './pages/PrintingItemBarcode/PrintingItemBarcode'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -245,6 +246,7 @@ const App = () => {
                 <Route path='/warehouseinventory' element={<WarehouseWmsInventory />} />
 
                 <Route path='/printinglabels' element={<PrintingPalletLabels />} />
+                <Route path='/printingbarcode' element={<PrintingItemBarcode />} />
 
                 <Route path='/truckdata' element={<TruckMasterData />} />
                 <Route path='/tbltrcukupdate/:id' element={<TblTruckMasterUpdate title="Truck Master Data Update" />} />

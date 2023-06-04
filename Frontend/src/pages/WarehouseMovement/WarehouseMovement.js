@@ -2,16 +2,22 @@ import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
 import { AllItems, WarehouseMovementColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
-import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
-// import SideBar from '../../components/SideBar/SideBar'
-import SideBar2 from '../../components/SideBar/SideBar2'
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const WarehouseMovement = () => {
     const [alldata, setAllData] = useState([]);
     const [secondGridData, setSecondGridData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
 
 
     useEffect(() => {
@@ -29,7 +35,7 @@ const WarehouseMovement = () => {
                     .catch(error => {
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -51,7 +57,7 @@ const WarehouseMovement = () => {
                     })
                     .catch(error => {
                         console.error(error);
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -74,6 +80,9 @@ const WarehouseMovement = () => {
 
     return (
         <div>
+
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
             <UserDataTable data={alldata} title="Journal Movement CL (Warehouse Operation)" columnsName={WarehouseMovementColumn} backButton={true}

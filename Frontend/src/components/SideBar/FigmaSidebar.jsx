@@ -27,6 +27,20 @@ import zonemaster from "../../images/zonemaster.png"
 import binmaster from "../../images/binmaster.png"
 import history from "../../images/history.png"
 import printinglabel from "../../images/printinglabel.png"
+import printing from "../../images/printing.png"
+// Mobile icons
+import wmspicking from "../../images/wmspicking.png"
+import wmslogin from "../../images/wmslogin.png"
+import wmsjournal from "../../images/wmsjournal.png"
+import wmsallocation from "../../images/wmsallocation.png"
+import wmsputaway from "../../images/wmsputaway.png"
+import wmsinventory from "../../images/wmsinventory.png"
+import wmslocation from "../../images/wmslocation.png"
+import wmsbarcode from "../../images/wmsbarcode.png"
+import wmspallet from "../../images/wmspallet.png"
+import wmsdispatch from "../../images/wmsdispatch.png"
+import wmsbintobin from "../../images/wmsbintobin.png"
+
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
@@ -126,6 +140,11 @@ const FigmaSidebar = () => {
                     <div className='main-images-container' onClick={() => navigate('/printinglabels')}>
                         <img src={printinglabel} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Printing Pallet Labels</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/printingbarcode')}>
+                        <img src={printing} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Printing Item Barcode</p>
                     </div>
 
                     <div className='main-images-container'>
@@ -309,22 +328,22 @@ const FigmaSidebar = () => {
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/transferpage1')}>
-                        <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmsbintobin} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Bin To Bin (Axapta)</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/bintobin')}>
-                        <img src={receipts} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmslogin} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Bin To Bin (Internal)</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/bintobin2')}>
-                        <img src={dispatch} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmsjournal} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Bin To Bin (Journal)</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/itemallocation')}>
-                        <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmsallocation} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Item Re Allocation</p>
                     </div>
 
@@ -334,12 +353,12 @@ const FigmaSidebar = () => {
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/wmsphysical')}>
-                        <img src={physical} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmsinventory} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>WMS Physical Inventory</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}>
-                        <img src={items} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmslocation} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Inventory By BinLocation</p>
                     </div>
 
@@ -354,22 +373,22 @@ const FigmaSidebar = () => {
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/wmsmapping')}>
-                        <img src={barcode} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmsbarcode} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Product Barcode Mapping</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/palletscreen1')}>
-                        <img src={picklist} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Palletizing</p>
+                        <img src={wmspallet} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Palletization</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/dispatchingslip')}>
-                        <img src={productreturn} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmsdispatch} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Dispatching</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/pickinglistfrom')}>
-                        <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmspicking} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Picking Slip</p>
                     </div>
 
@@ -379,7 +398,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/rmaputaway')}>
-                        <img src={move} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={wmsputaway} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>RMA PutAway</p>
                     </div>
 

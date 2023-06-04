@@ -35,6 +35,9 @@ const UserDataTable = ({
   checkboxSelection,
   handleRowClickInParent, // this is for journal movement cl function to get the row data on click
   handleSaveData,
+  PrintName,
+  printBarCode,
+  PrintBarCodeName
   
 }) => {
   const navigate = useNavigate();
@@ -699,7 +702,7 @@ const UserDataTable = ({
   const [subject, setSubject] = useState("");
   const [sendTo, setSendTo] = useState("");
   const [remarks, setRemarks] = useState("");
-
+  const [roles, setRoles] = useState([]);
 
   const handleOpenPopup = () => {
     setIsOpen(true);
@@ -724,6 +727,18 @@ const UserDataTable = ({
 
     };
   };
+
+
+  useEffect(() => {
+    userRequest
+      .get("/getAllUsers")
+      .then((response) => {
+        setRoles(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+}, []);
 
 
 
@@ -895,6 +910,44 @@ const UserDataTable = ({
   ]
 
 
+  // Last Two Prinitng Buttons
+  const handlePrintBarCode = () => {
+    if (selectedRow.length === 0) {
+      // If no row is selected, show an alert message
+      // alert('Please select a row to print.');
+      setError('Please select a row to print.');
+      return;
+    }
+    const printWindow = window.open('', 'Print Window', 'height=400,width=800');
+    const html = '<html><head><title>Print Barcode</title>' +
+      '<style>' +
+      '@page { size: 3in 2in; margin: 0; }' +
+      'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
+      '#header { display: flex; justify-content: center; padding: 1px;}' +
+      '#imglogo {height: 40px; width: 100px;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;}' +
+      '#paragh { font-size: 15px; font-weight: 600; }' +
+      '</style>' +
+      '</head><body>' +
+      '<div id="printBarcode"></div>' +
+      '</body></html>';
+
+    printWindow.document.write(html);
+    const barcodeContainer = printWindow.document.getElementById('printBarcode');
+    const barcode = document.getElementById('barcode').cloneNode(true);
+    barcodeContainer.appendChild(barcode);
+
+    const logoImg = new Image();
+    logoImg.src = logo;
+
+    logoImg.onload = function () {
+      printWindow.document.getElementById('imglogo').src = logoImg.src;
+
+      printWindow.print();
+      printWindow.close();
+    };
+  }
+
 
 
   return (
@@ -949,14 +1002,15 @@ const UserDataTable = ({
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
-              <button onClick={handleOpenPopup}>Send to Email</button>
+              {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
               <button onClick={() => handleExport(false)}>Export to Excel</button>
               <button onClick={() => handlePdfExport(false)}
               >Export to Pdf</button>
-              {printButton && <button onClick={handlePrint}>Print Shipment</button>}
             </span>
             }
+            {printButton && <button onClick={handlePrint}>{PrintName}</button>}
             {AddUser && <button onClick={handleAddUserPopup}>{UserName}</button>}
+            {printBarCode && <button onClick={handlePrintBarCode}>{PrintBarCodeName}</button>}
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>
@@ -998,14 +1052,21 @@ const UserDataTable = ({
               </div>
               <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email:</label>
-                <input
+                <select
                   type="email"
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="Email"
-                />
+                >
+                  <option value="">--Select Email--</option>
+                  {roles.map((role) => (
+                    <option key={role.UserID} value={role.Email}>
+                      {role.Email}
+                    </option>
+                  ))}
+                  </select>
 
                 <label htmlFor="subject">Subject:</label>
                 <input
@@ -1074,73 +1135,20 @@ const UserDataTable = ({
 
 
 
-
-
-        {updatedRows.length > 0 && (
+        {selectedRow.length > 0 && (
           <div id="barcode">
-            {updatedRows.map((selectedRow, index) => (
+            {selectedRow.map((selectedRow, index) => (
               <div id="barcode" className='hidden' key={index}>
-                <div id='header'>
-                  <div>
-                    <img src={logo} id='imglogo' alt='' />
-                  </div>
-                  <div id='first-QRCode'>
-                    <QRCodeSVG value="http://localhost:3006/" width={20} height={20} />
-                  </div>
-                </div>
-                <div id='inside-heading'>
-                  <div>
-                    <p>PO NUMBER</p>
-                    <p id='paragh'>{selectedRow.data.PURCHID}</p>
-                  </div>
-                  <div>
-                    <p>GROUP NAME</p>
-                    {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
-                    <p id='paragh'>{selectedRow.itemGroup}</p>
-                  </div>
-                </div>
-
-                <div id='inside-header-second'>
-                  <div>
-                    <p>BATCH/LOT</p>
-                    <p id='paragh'>Batch</p>
-                  </div>
-                  <div>
-                    <p>COUNT</p>
-                    <p id='paragh'>{selectedRow.data.USERID}</p>
-                  </div>
-                  <div>
-                    <p>PROD DATE</p>
-                    <p id='paragh'>{selectedRow.data.PALLET_DATE}</p>
-                  </div>
-                </div>
-
-                <div id='inside-header-third'>
-                  <p>SSCC</p>
-                  <p id='paragh-header'>{selectedRow.data.PALLETCODE}</p>
-                </div>
-                <hr />
-
-                <div id='inside-body'>
-                  <div>
-                    <p id='paragh-body'>{selectedRow.data.SHIPMENTID}</p>
-                    <p id='paragh'>{selectedRow.data.ITEMID}</p>
-                    <br />
-                    <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
-                  </div>
-                  <div id='inside-QRCode'>
-                    <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />
-                  </div>
-                </div>
-                <hr />
-
-                <div id='inside-BRCode'>
-                  <Barcode value={selectedRow.data.PALLETCODE} width={2.3} height={100} />
-                </div>
+                  {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
+                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
+                   uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :  null}
+                
               </div>
             ))}
           </div>
         )}
+
+
       </div >
     </>
 
@@ -1148,3 +1156,182 @@ const UserDataTable = ({
 };
 
 export default UserDataTable;
+
+
+const PrintingShipmentReceived = ({selectedRow, index}) => {
+  return (
+    <div>
+      {/* {selectedRow.length > 0 && ( */}
+        <div id="barcode">
+          {/* {selectedRow.map((selectedRow, index) => ( */}
+            <div id="barcode" className='hidden' key={index + "barcode"}>
+              <div id='header'>
+                <div>
+                  <img src={logo} id='imglogo' alt='' />
+                </div>
+                <div id='first-QRCode'>
+                  <QRCodeSVG value="http://localhost:3006/" width={20} height={20} />
+                </div>
+              </div>
+              <div id='inside-heading'>
+                <div>
+                  <p>PO NUMBER</p>
+                  <p id='paragh'>{selectedRow.data.PURCHID}</p>
+                </div>
+                <div>
+                  <p>GROUP NAME</p>
+                  {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
+                  <p id='paragh'>{selectedRow.itemGroup}</p>
+                </div>
+              </div>
+
+              <div id='inside-header-second'>
+                <div>
+                  <p>BATCH/LOT</p>
+                  <p id='paragh'>Batch</p>
+                </div>
+                <div>
+                  <p>COUNT</p>
+                  <p id='paragh'>{selectedRow.data.USERID}</p>
+                </div>
+                <div>
+                  <p>PROD DATE</p>
+                  <p id='paragh'>{selectedRow.data.PALLET_DATE}</p>
+                </div>
+              </div>
+
+              <div id='inside-header-third'>
+                <p>SSCC</p>
+                <p id='paragh-header'>{selectedRow.data.PALLETCODE}</p>
+              </div>
+              <hr />
+
+              <div id='inside-body'>
+                <div>
+                  <p id='paragh-body'>{selectedRow.data.SHIPMENTID}</p>
+                  <p id='paragh'>{selectedRow.data.ITEMID}</p>
+                  <br />
+                  <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
+                </div>
+                <div id='inside-QRCode'>
+                  <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />
+                </div>
+              </div>
+              <hr />
+
+              <div id='inside-BRCode'>
+                <Barcode value={selectedRow.data.PALLETCODE} width={2.3} height={100} />
+              </div>
+            </div>
+          {/* ))} */}
+        </div>
+      {/* )} */}
+    </div>
+  );
+};
+
+
+
+
+const PrintLabelsBarCode = ({selectedRow, index}) => {
+  return (
+    <div>
+       <div id="barcode" key={index}>
+          <div id="barcode" className='hidden'>
+                <div id='header'>
+                  <div>
+                    <img src={logo} id='imglogo' alt='' />
+                  </div>
+                </div>
+                <div id='inside-BRCode'>
+              <Barcode value={selectedRow.data.GTIN} width={1.3} height={60} />
+            </div>
+          </div>
+        </div>
+    </div>
+  );
+};
+
+
+
+const PrintPalletBarCode = ({selectedRow, index}) => {
+  return (
+    <div>
+       {/* <div id="barcode" key={index}>
+          <div id="barcode" className='hidden'>
+                <div id='header'>
+                  <div>
+                    <img src={logo} id='imglogo' alt='' />
+                  </div>
+                </div>
+                <div id='inside-BRCode'>
+              <Barcode value={selectedRow.data.PalletCode} width={1.3} height={60} />
+            </div>
+          </div>
+        </div> */}
+
+          <div id="barcode">
+            <div id="barcode" className='hidden' key={index + "barcode"}>
+              <div id='header'>
+                <div>
+                  <img src={logo} id='imglogo' alt='' />
+                </div>
+                <div id='first-QRCode'>
+                  <QRCodeSVG value="http://gs1ksa.org:3006/" width={20} height={20} />
+                </div>
+              </div>
+              <div id='inside-heading'>
+                <div>
+                  <p>PO NUMBER</p>
+                  <p id='paragh'>{selectedRow.data.PO}</p>
+                </div>
+                <div>
+                  <p>GROUP NAME</p>
+                  {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
+                  <p id='paragh'>{selectedRow.itemGroup}</p>
+                </div>
+              </div>
+
+              <div id='inside-header-second'>
+                <div>
+                  <p>BATCH/LOT</p>
+                  <p id='paragh'>Batch</p>
+                </div>
+                <div>
+                  <p>COUNT</p>
+                  <p id='paragh'>{selectedRow.data.USERID}</p>
+                </div>
+                <div>
+                  <p>PROD DATE</p>
+                  <p id='paragh'>{selectedRow.data.MapDate}</p>
+                </div>
+              </div>
+
+              <div id='inside-header-third'>
+                <p>SSCC</p>
+                <p id='paragh-header'>{selectedRow.data.PalletCode}</p>
+              </div>
+              <hr />
+
+              <div id='inside-body'>
+                <div>
+                  <p id='paragh-body'>{selectedRow.data.SID}</p>
+                  <p id='paragh'>{selectedRow.data.ItemCode}</p>
+                  <br />
+                  <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
+                </div>
+                <div id='inside-QRCode'>
+                  <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />
+                </div>
+              </div>
+              <hr />
+
+              <div id='inside-BRCode'>
+                <Barcode value={selectedRow.data.PalletCode} width={2.3} height={100} />
+              </div>
+            </div>
+        </div>
+    
+    </div>
+  );
+};

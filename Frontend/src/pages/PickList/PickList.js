@@ -2,24 +2,29 @@ import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
 import { PickListColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
-import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
+
 
 const PickList = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+    
+      };
+
 
 
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
-
-                // userRequest.get("/getAllPickingList")
-                // axios.get("http://localhost:7008/api/getAllTblItems")
-                // axios.get("http://37.224.47.116:7474/api/getAllTblItems")
-                userRequest.get("/getAllWmsSalesPickingListClFromAlessia")
+               userRequest.get("/getAllWmsSalesPickingListClFromAlessia")
                     .then(response => {
-                        // response.data == "no data available" ? setAllData([]) : setAllData(response.data);
                         console.log(response?.data);
 
                         setAllData(response?.data ?? [])
@@ -27,10 +32,9 @@ const PickList = () => {
 
                     })
                     .catch(error => {
-                        // handleUserError(error)
                         console.error(error);
                         setIsLoading(false)
-
+                        setError(error?.response?.data?.error)
                     });
 
             }
@@ -43,6 +47,9 @@ const PickList = () => {
 
     return (
         <div>
+
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
             <UserDataTable data={alldata} title="Pick List" columnsName={PickListColumn} backButton={true}
                 actionColumnVisibility={false}

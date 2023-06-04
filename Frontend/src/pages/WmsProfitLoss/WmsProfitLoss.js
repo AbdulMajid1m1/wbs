@@ -55,7 +55,6 @@ const WmsProfitLoss = () => {
     e.preventDefault();
     setIsLoading(true)
 
-    // userRequest.get(`/getAllWmsSalesPickingListClFromWBSByPickingRouteId?PICKINGROUTEID=${transferTag}`)
     userRequest.get(`/getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=${transferTag}`)
       .then(response => {
         console.log(response?.data);

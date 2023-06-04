@@ -81,40 +81,6 @@ const PutAwayLastScreen = () => {
     await updateShipments(serialNumbers, zonecode);
 
 
-    // Call the insertIntoMappedBarcode API
-    // try {
-    //   const insertResponse = await userRequest.post('/insertIntoMappedBarcode', null, {
-
-    //     headers: {
-    //       itemcode: selectedShipmentReceivedClData.ITEMID,
-    //       itemdesc: selectedShipmentReceivedClData.ITEMNAME,
-    //       gtin: selectedShipmentReceivedClData.GTIN,
-    //       remarks: selectedShipmentReceivedClData.REMARKS,
-    //       classification: selectedShipmentReceivedClData.CLASSIFICATION,
-    //       // Provide the correct values for mainlocation, binlocation, intcode, itemserialno, mapdate, reference, sid, cid, po, and trans based on your data.
-    //       mainlocation: selectedShipmentReceivedClData.ARRIVALWAREHOUSE,
-    //       binlocation: zonecode, // it will be updated in received cl table too.
-    //       intcode: selectedShipmentReceivedClData.RCVDCONFIGID,
-    //       itemserialno: selectedShipmentReceivedClData.SERIALNUM,
-    //       mapdate: selectedShipmentReceivedClData.PALLET_DATE,
-    //       palletcode: palletCode,
-    //       reference: selectedShipmentReceivedClData.SHIPMENTID,
-    //       sid: selectedShipmentReceivedClData.SHIPMENTID,
-    //       cid: selectedShipmentReceivedClData.CONTAINERID,
-    //       po: selectedShipmentReceivedClData.POQTY,
-    //       // trans: selectedShipmentReceivedClData.PURCHID,
-    //       trans: selectedShipmentReceivedClData.POQTY
-    //     }
-    //   });
-    //   console.log(insertResponse.data);
-
-    //   setMessage(insertResponse?.data?.message ?? 'Insert successfull');
-    // } catch (err) {
-    //   console.log(err);
-    //   setError(err?.response?.data?.message ?? 'Error in insertIntoMappedBarcode API');
-    // }
-
-    // reset the state
     setPalletCode('');
     setSerialNumbers([]);
 

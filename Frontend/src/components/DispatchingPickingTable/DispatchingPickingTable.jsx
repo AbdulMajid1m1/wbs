@@ -68,21 +68,6 @@ const DispatchingPickingSlipTable = ({
     ];
 
 
-    // const handleRowClick = (rowData, idx) => {
-    //     if (uniqueId === "pickinglistfrom") {
-    //       console.log("rowData", rowData);
-    //       sessionStorage.setItem("pickingRowdata", JSON.stringify(rowData));
-    //       navigate("/pickinglistlast");
-    //     } else {
-    //       return;
-    //     }
-    //   };
-    
-    //   const handleRowClickInternal = (params, rowIdx) => {
-    //     handleRowClick(params.row, rowIdx);
-    //   };
-      
- 
     return (
         <>
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}

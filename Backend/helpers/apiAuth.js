@@ -79,7 +79,7 @@ const checkRole = (roleNames) => {
         const isAuthorized = userRoles.some(roleName => roleNames.includes(roleName));
 
         if (!isAuthorized) {
-          return res.status(403).json({ error: 'Not authorized to access this resource' });
+          return res.status(403).json({ message: 'Not authorized to access this resource' });
         }
 
         // User is authorized, proceed to the next middleware or route handler

@@ -76,7 +76,7 @@ const WmsInventory = () => {
     // if the selected option is not null then set the selected option and if it already exists in the array then show error
     if (value) {
       // check in array of objects for same ITEMID
-      if (selectedOption.some(item => item?.ITEMID === value?.ITEMID)) {
+      if (selectedOption.some(item => item?.ITEMID === value[value.length - 1]?.ITEMID)) {
         setError('Item already selected!');
         return;
       }

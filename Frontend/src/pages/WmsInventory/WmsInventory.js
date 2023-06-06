@@ -108,7 +108,7 @@ const WmsInventory = () => {
       return;
     }
     try {
-      let apiData = data.map(row => {
+      let apiData = selectedOption.map(row => {
         return {
           ...row,
           TRXUSERIDASSIGNED: assignedTo,

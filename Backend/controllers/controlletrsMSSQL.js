@@ -2659,6 +2659,31 @@ const WBSDB = {
   },
 
 
+  async getInventTableWMSDataByItemIdOrItemName(req, res, next) {
+    try {
+      const serachText = req.headers['serachtext']; // Get itemid from headers
+      if (!serachText) {
+        return res.status(400).send({ message: "Serach text is required." });
+      }
+      console.log(serachText);
+      let query = `
+        SELECT * FROM dbo.InventTableWMS
+        WHERE ITEMID LIKE @serachTextVar OR ITEMNAME LIKE @serachTextVar
+      `;
+      let request = pool1.request();
+      request.input('serachTextVar', sql.NVarChar(255), '%' + serachText + '%');
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
   async getmapBarcodeDataByItemCode(req, res, next) {
     try {
       const ItemCode = req.headers['itemcode']; // Get ITEMID from headers
@@ -3368,6 +3393,26 @@ const WBSDB = {
       `;
       let request = pool2.request();
       request.input('ItemSerialNo', sql.NVarChar(100), ItemSerialNo);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  async getMappedBarcodedsByItemDesc(req, res, next) {
+    try {
+      const ItemDesc = req.headers['itemdesc']; // Get itemdesc from headers
+      console.log(ItemDesc);
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE ItemDesc = @ItemDesc
+      `;
+      let request = pool2.request();
+      request.input('ItemDesc', sql.NVarChar, ItemDesc);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });

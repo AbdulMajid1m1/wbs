@@ -210,6 +210,9 @@ router.get("/getAllTblItems", checkAuthentication, checkRole([roles[18]]), WBSDB
 
 router.post("/getInventTableWMSDataByItemId", checkAuthentication, checkRole([roles[18]]), WBSDB.getInventTableWMSDataByItemId); // InventTableWMS 
 
+router.post("/getInventTableWMSDataByItemIdOrItemName", checkAuthentication, checkRole([roles[41]]), WBSDB.getInventTableWMSDataByItemIdOrItemName); // InventTableWMS 
+
+
 router.get("/getStockMasterDataByItemId", checkAuthentication, checkRole([roles[18]]), WBSDB.getStockMasterDataByItemId);
 
 
@@ -238,6 +241,8 @@ router.put("/updateTblMappedBarcodeByGtin", checkAuthentication, checkRole([role
 router.post("/checkBarcodeValidityByItemSerialNo", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.checkBarcodeValidityByItemSerialNo);
 
 router.post("/getItemInfoByItemSerialNo", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getItemInfoByItemSerialNo);
+
+router.post("/getMappedBarcodedsByItemDesc", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getMappedBarcodedsByItemDesc);
 
 router.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getMappedBarcodedsByItemSerialNoAndBinLocation);
 

@@ -73,6 +73,14 @@ const WmsInventory = () => {
     console.log('Selected value:', value);
     console.log(value);
     setIsOptionSelected(true);
+    // if the selected option is not null then set the selected option and if it already exists in the array then show error
+    if (value) {
+      // check in array of objects for same ITEMID
+      if (selectedOption.some(item => item?.ITEMID === value?.ITEMID)) {
+        setError('Item already selected!');
+        return;
+      }
+    }
     setSelectedOption(value); // store current selected option
     if (value) {
       // check in array of objects for same ITEMID
@@ -104,7 +112,7 @@ const WmsInventory = () => {
 
   // handle the save button click
   const handleSaveBtnClick = async () => {
-   
+
     if (assignedTo === '') {
       setError('Please select the assigned to user!');
       return;

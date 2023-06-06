@@ -71,10 +71,9 @@ const WmsInventory = () => {
 
   const handleSearchAutoComplete = (event, value) => {
     console.log('Selected value:', value);
-    console.log(value);
     setIsOptionSelected(true);
-    // if the selected option is not null then set the selected option and if it already exists in the array then show error
-    if (value) {
+    // if a new option was selected
+    if (value.length > selectedOption.length) {
       // check in array of objects for same ITEMID
       if (selectedOption.some(item => item?.ITEMID === value[value.length - 1]?.ITEMID)) {
         setError('Item already selected!');
@@ -82,17 +81,8 @@ const WmsInventory = () => {
       }
     }
     setSelectedOption(value); // store current selected option
-    if (value) {
-      // check in array of objects for same ITEMID
-      if (data.some(item => item?.ITEMID === value?.ITEMID)) {
-        setError('Item already selected!');
-        return;
-      }
-      // setData(prevSelectedRows => [...prevSelectedRows, value]); // append the selected option to the selected rows array for datatable
-      setData(value); // append the selected option to the selected rows array for datatable
-    };
-  }
-
+  };
+  
 
 
   const handleRowClickInParent = (row) => {
@@ -329,7 +319,7 @@ const WmsInventory = () => {
 
 
             <div className='-mt-6'>
-              <UserDataTable data={data} columnsName={AllItems} backButton={false}
+              <UserDataTable data={selectedOption} columnsName={AllItems} backButton={false}
                 handleRowClickInParent={handleRowClickInParent}
                 actionColumnVisibility={false}
                 buttonVisibility={false}

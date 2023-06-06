@@ -28,7 +28,7 @@ const WmsInventory = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [searchText, setSearchText] = useState('');
   const abortControllerRef = useRef(null);
-  const [selectedOption, setSelectedOption] = useState();
+  const [selectedOption, setSelectedOption] = useState([]);
 
   const [data, setData] = useState([]);
   const [selectedBy, setSelectedBy] = useState('itemid');
@@ -89,34 +89,28 @@ const WmsInventory = () => {
 
   const handleRowClickInParent = (row) => {
     // check if the selected row is already selected using ITEMID
-    if (selectedRows.some(item => item?.ITEMID === row?.ITEMID)) {
-      // If the clicked row is already selected, deselect it
-      setSelectedRows(prevSelectedRows => prevSelectedRows.filter(item => item?.ITEMID !== row?.ITEMID));
+    // if (selectedRows.some(item => item?.ITEMID === row?.ITEMID)) {
+    //   // If the clicked row is already selected, deselect it
+    //   setSelectedRows(prevSelectedRows => prevSelectedRows.filter(item => item?.ITEMID !== row?.ITEMID));
 
-    } else {
-      // If the clicked row is not selected, select it
-      setSelectedRows(prevSelectedRows => [...prevSelectedRows, row]);
-    }
+    // } else {
+    //   // If the clicked row is not selected, select it
+    //   setSelectedRows(prevSelectedRows => [...prevSelectedRows, row]);
+    // }
+    return;
   }
 
 
 
   // handle the save button click
   const handleSaveBtnClick = async () => {
-    if (selectedBy === '') {
-      setError('Please select the selected by type!');
-      return;
-    }
-    if (selectedRows.length === 0) {
-      setError('Please select at least one row!');
-      return;
-    }
+   
     if (assignedTo === '') {
       setError('Please select the assigned to user!');
       return;
     }
     try {
-      let apiData = selectedRows.map(row => {
+      let apiData = data.map(row => {
         return {
           ...row,
           TRXUSERIDASSIGNED: assignedTo,
@@ -131,8 +125,9 @@ const WmsInventory = () => {
       setSelectedRows([]);
       setSelectedData([]);
       // filter out the selected rows from the data array on the basis of ITEMID on both arrays of objects
-      setData(data.filter(item => !selectedRows.some(row => row?.ITEMID === item?.ITEMID)));
-
+      // setData(data.filter(item => !selectedRows.some(row => row?.ITEMID === item?.ITEMID)));
+      setData([])
+      setSelectedOption([]);
 
     } catch (error) {
       console.error(error);
@@ -265,7 +260,7 @@ const WmsInventory = () => {
                 multiple
                 id="searchInput"
                 options={dataList}
-
+                value={selectedOption}
                 getOptionLabel={(option) => `${option?.ITEMID} - ${option?.ITEMNAME}`}
                 onChange={handleSearchAutoComplete}
                 onInputChange={(event, newInputValue) => handleAutoCompleteInputChnage(event, newInputValue)}
@@ -331,6 +326,7 @@ const WmsInventory = () => {
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 uniqueId={"mobileWmsInventoryId"}
+                checkboxSelection={"disabled"}
 
               />
             </div>

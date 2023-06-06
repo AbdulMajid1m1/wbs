@@ -18,12 +18,9 @@ const WmsItemMapping = () => {
   const initialUser = storedUser ? JSON.parse(storedUser) : {};
 
   const [currentUser, setCurrentUser] = useState(initialUser);
-  const [selectionType, setSelectionType] = useState('byItemNo');
   const [selectedOption, setSelectedOption] = useState();
   const [dataList, setDataList] = useState([]);
   const [isOptionSelected, setIsOptionSelected] = useState(false);
-
-  const [data, setData] = useState([]);
   const [userserial, setUserSerial] = useState("");
   const [usergtin, setUserGtin] = useState("");
   const [userconfig, setUserConfig] = useState("");
@@ -47,41 +44,6 @@ const WmsItemMapping = () => {
 
   // const autocompleteLoading = open && dataList.length === 0;
   const [autocompleteLoading, setAutocompleteLoading] = useState(false);
-
-  const handleSearch = (e) => {
-    if (e.target.value.length === 0) {
-      return;
-    }
-    console.log(e.target.value);
-    setIsLoading(true);
-    if (selectionType === 'byItemNo') {
-      userRequest.post('/getItemInfoByItemSerialNo', {}, { headers: { itemserialno: e.target.value } })
-        .then(response => {
-          console.log(response?.data);
-          setData(response?.data ?? []);
-          setIsLoading(false);
-        })
-        .catch(error => {
-          console.error(error);
-          setIsLoading(false);
-        });
-    }
-    else if (selectionType === 'byDescription') {
-      userRequest.post("getMappedBarcodedsByItemDesc", {}, { headers: { itemdesc: e.target.value } })
-        .then(response => {
-          console.log(response?.data);
-          setData(response?.data ?? []);
-          setIsLoading(false);
-        }
-        )
-        .catch(error => {
-          console.error(error);
-          setIsLoading(false);
-        }
-        );
-
-    }
-  }
 
 
 

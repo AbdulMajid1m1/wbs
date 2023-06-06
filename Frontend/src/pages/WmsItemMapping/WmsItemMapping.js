@@ -116,6 +116,11 @@ const WmsItemMapping = () => {
       setIsOptionSelected(false);
       return;
     }
+    if (!newInputValue || newInputValue.trim() === '') {
+      // perform operation when input is cleared
+      setDataList([]);
+      return;
+    }
 
     if (!newInputValue || newInputValue.trim() === '') {
       setDataList([]); // Clear the data list if there is no input

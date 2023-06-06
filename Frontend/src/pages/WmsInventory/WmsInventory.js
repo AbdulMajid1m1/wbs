@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { json, useNavigate } from 'react-router-dom';
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
@@ -7,7 +7,7 @@ import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
 import { AllItems } from '../../utils/datatablesource';
-import { FormControl, InputLabel, Select, MenuItem, TextField, Autocomplete } from '@mui/material';
+import { TextField, Autocomplete, CircularProgress } from '@mui/material';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { useQuery } from '@tanstack/react-query';
 
@@ -21,13 +21,17 @@ const WmsInventory = () => {
   const initialUser = storedUser ? JSON.parse(storedUser) : {};
 
   const [currentUser, setCurrentUser] = useState(initialUser);
-
+  const [dataList, setDataList] = useState([]);
+  const [isOptionSelected, setIsOptionSelected] = useState(false);
   const [assignedTo, setAssignedTo] = useState(initialUser?.UserID ?? '');
   const [selectedData, setSelectedData] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const abortControllerRef = useRef(null);
+  const [selectedOption, setSelectedOption] = useState();
 
   const [data, setData] = useState([]);
-  const [selectedBy, setSelectedBy] = useState([]);
+  const [selectedBy, setSelectedBy] = useState('itemid');
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   // to reset snakebar messages
@@ -36,13 +40,12 @@ const WmsInventory = () => {
     setMessage(null);
 
   };
-
-  const [dataList, setDataList] = useState([]);
+  const [userList, setUserList] = useState([]);
   useEffect(() => {
     userRequest.get('/getAllTblUsers')
       .then(response => {
         console.log(response?.data);
-        setDataList(response?.data ?? []);
+        setUserList(response?.data ?? []);
       })
       .catch(error => {
         console.error(error);
@@ -54,34 +57,10 @@ const WmsInventory = () => {
 
   }, []);
 
-  const {
-    isLoading: stockMasterLoading,
-    error: stockMasterError,
-    data: stockMasterData
-  } = useQuery({
-    queryKey: ['stockMaster'],
-    queryFn: () =>
-      userRequest.get("/getAllTblStockMaster").then(
-        (res) => res.data,
-      ),
-  })
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
+  const [autocompleteLoading, setAutocompleteLoading] = useState(false);
 
-  if (stockMasterData) {
-    console.log(stockMasterData)
-  }
-
-  useEffect(() => {
-    if (stockMasterData) {
-      console.log(stockMasterData);
-      setData(stockMasterData);
-    }
-  }, [stockMasterData]);
-
-  useEffect(() => {
-    if (stockMasterError) {
-      setError('An error has occurred: ' + stockMasterError.message);
-    }
-  }, [stockMasterError]);
 
   const handleAutoComplete = (event, value) => {
     console.log('Selected value:', value?.UserID);
@@ -89,33 +68,42 @@ const WmsInventory = () => {
     setAssignedTo(value?.UserID ?? '');
   };
 
-  const handleBySelection = (event, value) => {
-    setSelectedBy(value?.item ?? '');
+
+  const handleSearchAutoComplete = (event, value) => {
+    console.log('Selected value:', value);
     console.log(value);
-  };
+    setIsOptionSelected(true);
+    setSelectedOption(value); // store current selected option
+    if (value) {
+      // check in array of objects for same ITEMID
+      if (data.some(item => item?.ITEMID === value?.ITEMID)) {
+        setError('Item already selected!');
+        return;
+      }
+      // setData(prevSelectedRows => [...prevSelectedRows, value]); // append the selected option to the selected rows array for datatable
+      setData(value); // append the selected option to the selected rows array for datatable
+    };
+  }
+
 
 
   const handleRowClickInParent = (row) => {
-    console.log(row);
-    if (selectedRows.includes(row.id)) {
-      // If the clicked row is selected, deselect it
-      setSelectedRows(selectedRows.filter(id => id !== row.id));
+    // check if the selected row is already selected using ITEMID
+    if (selectedRows.some(item => item?.ITEMID === row?.ITEMID)) {
+      // If the clicked row is already selected, deselect it
+      setSelectedRows(prevSelectedRows => prevSelectedRows.filter(item => item?.ITEMID !== row?.ITEMID));
+
     } else {
       // If the clicked row is not selected, select it
       setSelectedRows(prevSelectedRows => [...prevSelectedRows, row]);
     }
   }
-  useEffect(() => {
-    console.log("selected Rew sata")
-    console.log(selectedRows);
-  }, [selectedRows]);
-
 
 
 
   // handle the save button click
   const handleSaveBtnClick = async () => {
-    if(selectedBy === ''){
+    if (selectedBy === '') {
       setError('Please select the selected by type!');
       return;
     }
@@ -136,23 +124,74 @@ const WmsInventory = () => {
         }
       });
 
-      
+
       const res = await userRequest.post('/insertIntoWmsJournalCountingOnlyCL', apiData)
       console.log(res);
       setMessage(res?.data?.message ?? 'Data saved successfully!');
       setSelectedRows([]);
       setSelectedData([]);
-      setData([]);
-      setTimeout(() => {
-        setData(stockMasterData);
-      }, 500);
-
-      // setData(stockMasterData)
+      // filter out the selected rows from the data array on the basis of ITEMID on both arrays of objects
+      setData(data.filter(item => !selectedRows.some(row => row?.ITEMID === item?.ITEMID)));
 
 
     } catch (error) {
       console.error(error);
       setError(error?.response?.data?.message ?? 'Something went wrong!');
+    }
+  }
+
+  const handleAutoCompleteInputChnage = async (event, newInputValue) => {
+    if (isOptionSelected) {
+      setIsOptionSelected(false);
+      return;
+    }
+    if (!newInputValue || newInputValue.trim() === '') {
+      // perform operation when input is cleared
+      setDataList([]);
+      return;
+    }
+
+    if (!newInputValue || newInputValue.trim() === '') {
+      setDataList([]); // Clear the data list if there is no input
+      return;
+    }
+    setAutocompleteLoading(true);
+    setOpen(true);
+
+
+    console.log(newInputValue);
+    setSearchText(newInputValue);
+    console.log("querying...")
+    try {
+
+      // Cancel any pending requests
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // Create a new AbortController
+      abortControllerRef.current = new AbortController();
+      const res = await userRequest.post("getInventTableWMSDataByItemIdOrItemName", {}, {
+        headers: { serachtext: newInputValue }
+        , signal: abortControllerRef?.current?.signal
+      })
+
+      console.log(res);
+      setDataList(res?.data ?? []);
+      setOpen(true);
+    }
+    catch (error) {
+      if (error?.name === 'AbortError') {
+        // Ignore abort errors
+        setDataList([]); // Clear the data list if there is no input
+        return;
+      }
+      console.error(error);
+      setDataList([]); // Clear the data list if an error occurs
+      setOpen(false);
+    }
+    finally {
+      setAutocompleteLoading(false);
     }
   }
 
@@ -198,65 +237,92 @@ const WmsInventory = () => {
 
                 <h2 className='text-center text-[#fff]'>WMS Inventory</h2>
 
+
+
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>
                     <img src={icon} className='h-auto w-8 object-contain' alt='' />
                   </span>
                 </button>
               </div>
+              <h2 className='text-center text-[#fff]'>By Item ID</h2>
+
             </div>
+
 
             <div className=''>
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
-            <div className='mb-6'>
-              <label className='text-[#00006A] text-center font-semibold'>BY</label>
+
+            <div className="mb-6">
+              <label htmlFor="searchInput" className="text-[#00006A] text-center font-semibold"
+                style={{ marginBottom: "10px" }}
+              >Search Bar</label>
 
               <Autocomplete
-                id="by"
-                options={[
-                  { item: 'itemid' },
-                  { item: 'binlocation' },
-                ]}
-                getOptionLabel={(option) => option.item ?? ''}
-                onChange={handleBySelection}
 
-                onInputChange={(event, value) => {
-                  if (!value) {
-                    // perform operation when input is cleared
-                    console.log("Input cleared");
+                multiple
+                id="searchInput"
+                options={dataList}
 
-                  }
+                getOptionLabel={(option) => `${option?.ITEMID} - ${option?.ITEMNAME}`}
+                onChange={handleSearchAutoComplete}
+                onInputChange={(event, newInputValue) => handleAutoCompleteInputChnage(event, newInputValue)}
+                loading={autocompleteLoading}
+                sx={{ marginTop: '10px' }}
+                open={open}
+                onOpen={() => {
+                  // setOpen(true);
                 }}
+                onClose={() => {
+                  setOpen(false);
+                }}
+                renderOption={(props, option) => (
+                  <li {...props}>
+                    {option ? `${option?.ITEMID} - ${option?.ITEMNAME}` : 'No options'}
+                  </li>
+                )}
+
                 renderInput={(params) => (
                   <TextField
+                    required
                     {...params}
+                    label="Search Item Number or Description here"
                     InputProps={{
                       ...params.InputProps,
-                      className: "text-white",
+                      endAdornment: (
+                        <React.Fragment>
+                          {autocompleteLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                          {params.InputProps.endAdornment}
+                        </React.Fragment>
+                      ),
                     }}
-                    InputLabelProps={{
-                      ...params.InputLabelProps,
-                      style: { color: "white" },
+                    sx={{
+                      '& label.Mui-focused': {
+                        color: '#00006A',
+                      },
+                      '& .MuiInput-underline:after': {
+                        borderBottomColor: '#00006A',
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '&:hover fieldset': {
+                          borderColor: '#000000',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#000000',
+                        },
+                      },
                     }}
-
-                    className="bg-gray-50 border border-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                    placeholder="ItemID/Binlocation"
-                    required
                   />
                 )}
-                classes={{
-                  endAdornment: "text-white",
-                }}
-                sx={{
-                  '& .MuiAutocomplete-endAdornment': {
-                    color: 'white',
-                  },
-                }}
+
               />
 
             </div>
+
+
+
 
 
             <div className='-mt-6'>
@@ -274,7 +340,7 @@ const WmsInventory = () => {
 
               <Autocomplete
                 id="userid"
-                options={dataList}
+                options={userList}
                 //   getOptionLabel={(option) => option.Fullname ?? ''}
                 getOptionLabel={(option) => option.Fullname ? `${option.Fullname} - ${option.UserID}` : ''}
                 onChange={handleAutoComplete}

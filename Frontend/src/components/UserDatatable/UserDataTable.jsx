@@ -1170,7 +1170,7 @@ const PrintingShipmentReceived = ({selectedRow, index}) => {
                   <img src={logo} id='imglogo' alt='' />
                 </div>
                 <div id='first-QRCode'>
-                  <QRCodeSVG value="http://localhost:3006/" width={20} height={20} />
+                  <QRCodeSVG value="http://localhost:3006/" width={40} height={40} />
                 </div>
               </div>
               <div id='inside-heading'>
@@ -1211,7 +1211,10 @@ const PrintingShipmentReceived = ({selectedRow, index}) => {
                   <p id='paragh-body'>{selectedRow.data.SHIPMENTID}</p>
                   <p id='paragh'>{selectedRow.data.ITEMID}</p>
                   <br />
-                  <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
+                  {/* <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p> */}
+                 {/* Add this line */}
+                  <p id='paragh' style={{ width: '250px', lineHeight: '1', marginTop: '-0.5px'}}>{selectedRow.data.ITEMNAME}</p>
+    
                 </div>
                 <div id='inside-QRCode'>
                   <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />

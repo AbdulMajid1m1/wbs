@@ -4467,9 +4467,11 @@ const WBSDB = {
           TRANSREFID,
           EXPEDITIONSTATUS,
           ASSIGNEDTOUSERID,
-          PICKSTATUS,
+
           QTYPICKED,
         } = pickingListDataArray[i];
+
+        let PICKSTATUS = 'Partial';
 
         // Check if a record already exists
         let checkQuery = `

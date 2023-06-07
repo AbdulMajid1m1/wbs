@@ -1212,7 +1212,7 @@ const PrintingShipmentReceived = ({selectedRow, index}) => {
                   <p id='paragh'>{selectedRow.data.ITEMID}</p>
                   <br />
                   {/* <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p> */}
-                  <p id='paragh' style={{ width: '250px', lineHeight: '1', marginTop: '-1px'}}>{selectedRow.data.ITEMNAME}</p>
+                  <p id='paragh' style={{ width: '250px', lineHeight: '1', marginTop: '-0.5px'}}>{selectedRow.data.ITEMNAME}</p>
     
                 </div>
                 <div id='inside-QRCode'>

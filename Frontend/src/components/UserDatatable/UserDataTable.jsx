@@ -139,7 +139,7 @@ const UserDataTable = ({
       '<style>' +
       '@page { size: 4in 6in; margin: 0; }' +
       'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
-      '#header { display: flex; justify-content: space-between; padding: 10px;}' +
+      '#header { display: flex; justify-content: space-between; padding: 10px; border-top: 1px solid black;}' +
       '#imglogo {height: 40px; width: 100px;}' +
       '#inside-heading { display: flex; justify-content: space-between; align-items: center; padding: 25px; margin-top: -30px; font-weight: 500; font-family: AwanZaman Regular;}' +
       '#first-QRCode { padding: 10px;}' +
@@ -147,7 +147,7 @@ const UserDataTable = ({
       '#inside-header-third { padding: 25px; gap: 5px; margin-top: -50px; font-weight: 500; font-family: AwanZaman Regular;}' +
       '#inside-body { display: flex; justify-content: space-between; padding: 15px;}' +
       '#inside-QRCode { display: flex; justify-content: center; align-items: center; padding: 5px;}' +
-      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px; border-bottom: 1px solid black;}' +
 
       //    '#from { padding: 25px; margin-top: -50px; font-weight: 500; font-family: AwanZaman Regular;}' +
       '#paragh { font-size: 15px; font-weight: 600; }' +
@@ -1211,7 +1211,9 @@ const PrintingShipmentReceived = ({selectedRow, index}) => {
                   <p id='paragh-body'>{selectedRow.data.SHIPMENTID}</p>
                   <p id='paragh'>{selectedRow.data.ITEMID}</p>
                   <br />
-                  <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
+                  {/* <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p> */}
+                  <p id='paragh' style={{ width: '250px', lineHeight: '1' }}>{selectedRow.data.ITEMNAME}</p>
+    
                 </div>
                 <div id='inside-QRCode'>
                   <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />

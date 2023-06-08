@@ -82,7 +82,7 @@ const WmsInventory = () => {
     }
     setSelectedOption(value); // store current selected option
   };
-  
+
 
 
   const handleRowClickInParent = (row) => {
@@ -172,20 +172,21 @@ const WmsInventory = () => {
       console.log(res);
       setDataList(res?.data ?? []);
       setOpen(true);
+      setAutocompleteLoading(false);
     }
     catch (error) {
-      if (error?.name === 'AbortError') {
+      if (error?.name === 'CanceledError') {
         // Ignore abort errors
         setDataList([]); // Clear the data list if there is no input
+        setAutocompleteLoading(true);
         return;
       }
       console.error(error);
       setDataList([]); // Clear the data list if an error occurs
       setOpen(false);
-    }
-    finally {
       setAutocompleteLoading(false);
     }
+
   }
 
 

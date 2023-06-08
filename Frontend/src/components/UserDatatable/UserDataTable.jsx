@@ -37,8 +37,9 @@ const UserDataTable = ({
   handleSaveData,
   PrintName,
   printBarCode,
-  PrintBarCodeName
-  
+  PrintBarCodeName,
+  tableHeight,
+
 }) => {
   const navigate = useNavigate();
   const [qrcodeValue, setQRCodeValue] = useState('');
@@ -191,8 +192,7 @@ const UserDataTable = ({
       return;
     }
 
-    if (uniqueId === "wmsItemMappingId")
-    {
+    if (uniqueId === "wmsItemMappingId") {
       handleSaveData(item);
       return;
     }
@@ -427,7 +427,7 @@ const UserDataTable = ({
           }
           break;
 
-           // Bin Master data Delete Api 
+        // Bin Master data Delete Api 
         case "binMasterId":
           try {
             const response = await userRequest.delete(
@@ -508,15 +508,15 @@ const UserDataTable = ({
         navigate("/updatepalletizing/" + rowData.ALS_PACKINGSLIPREF)
         break;
       case "truckMasterId":
-          navigate("/tbltrcukupdate/" + rowData.PlateNo)
-          break;
+        navigate("/tbltrcukupdate/" + rowData.PlateNo)
+        break;
       case "binMasterId":
-          navigate("/tblbinupdate/" + rowData.BinNumber)
-          break;
+        navigate("/tblbinupdate/" + rowData.BinNumber)
+        break;
       case "zoneMasterId":
-          navigate("/tblzoneupdate/" + rowData.Zones)
-          break;
-  
+        navigate("/tblzoneupdate/" + rowData.Zones)
+        break;
+
       default:
         // do nothing
         break;
@@ -738,7 +738,7 @@ const UserDataTable = ({
       .catch((error) => {
         console.log(error);
       });
-}, []);
+  }, []);
 
 
 
@@ -1018,7 +1018,7 @@ const UserDataTable = ({
 
         <DataGrid
           slots={{ toolbar: GridToolbar }}
-
+          style={tableHeight ? { height: tableHeight } : null}
           className="datagrid"
           rows={filteredData}
 
@@ -1066,7 +1066,7 @@ const UserDataTable = ({
                       {role.Email}
                     </option>
                   ))}
-                  </select>
+                </select>
 
                 <label htmlFor="subject">Subject:</label>
                 <input
@@ -1139,10 +1139,10 @@ const UserDataTable = ({
           <div id="barcode">
             {selectedRow.map((selectedRow, index) => (
               <div id="barcode" className='hidden' key={index}>
-                  {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
-                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
-                   uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :  null}
-                
+                {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
+                  uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
+                    uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> : null}
+
               </div>
             ))}
           </div>
@@ -1158,76 +1158,76 @@ const UserDataTable = ({
 export default UserDataTable;
 
 
-const PrintingShipmentReceived = ({selectedRow, index}) => {
+const PrintingShipmentReceived = ({ selectedRow, index }) => {
   return (
     <div>
       {/* {selectedRow.length > 0 && ( */}
-        <div id="barcode">
-          {/* {selectedRow.map((selectedRow, index) => ( */}
-            <div id="barcode" className='hidden' key={index + "barcode"}>
-              <div id='header'>
-                <div>
-                  <img src={logo} id='imglogo' alt='' />
-                </div>
-                <div id='first-QRCode'>
-                  <QRCodeSVG value="http://localhost:3006/" width={40} height={40} />
-                </div>
-              </div>
-              <div id='inside-heading'>
-                <div>
-                  <p>PO NUMBER</p>
-                  <p id='paragh'>{selectedRow.data.PURCHID}</p>
-                </div>
-                <div>
-                  <p>GROUP NAME</p>
-                  {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
-                  <p id='paragh'>{selectedRow.itemGroup}</p>
-                </div>
-              </div>
-
-              <div id='inside-header-second'>
-                <div>
-                  <p>BATCH/LOT</p>
-                  <p id='paragh'>Batch</p>
-                </div>
-                <div>
-                  <p>COUNT</p>
-                  <p id='paragh'>{selectedRow.data.USERID}</p>
-                </div>
-                <div>
-                  <p>PROD DATE</p>
-                  <p id='paragh'>{selectedRow.data.PALLET_DATE}</p>
-                </div>
-              </div>
-
-              <div id='inside-header-third'>
-                <p>SSCC</p>
-                <p id='paragh-header'>{selectedRow.data.PALLETCODE}</p>
-              </div>
-              <hr />
-
-              <div id='inside-body'>
-                <div>
-                  <p id='paragh-body'>{selectedRow.data.SHIPMENTID}</p>
-                  <p id='paragh'>{selectedRow.data.ITEMID}</p>
-                  <br />
-                  {/* <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p> */}
-                 {/* Add this line */}
-                  <p id='paragh' style={{ width: '250px', lineHeight: '1', marginTop: '-0.5px'}}>{selectedRow.data.ITEMNAME}</p>
-    
-                </div>
-                <div id='inside-QRCode'>
-                  <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />
-                </div>
-              </div>
-              <hr />
-
-              <div id='inside-BRCode'>
-                <Barcode value={selectedRow.data.PALLETCODE} width={2.3} height={100} />
-              </div>
+      <div id="barcode">
+        {/* {selectedRow.map((selectedRow, index) => ( */}
+        <div id="barcode" className='hidden' key={index + "barcode"}>
+          <div id='header'>
+            <div>
+              <img src={logo} id='imglogo' alt='' />
             </div>
-          {/* ))} */}
+            <div id='first-QRCode'>
+              <QRCodeSVG value="http://localhost:3006/" width={40} height={40} />
+            </div>
+          </div>
+          <div id='inside-heading'>
+            <div>
+              <p>PO NUMBER</p>
+              <p id='paragh'>{selectedRow.data.PURCHID}</p>
+            </div>
+            <div>
+              <p>GROUP NAME</p>
+              {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
+              <p id='paragh'>{selectedRow.itemGroup}</p>
+            </div>
+          </div>
+
+          <div id='inside-header-second'>
+            <div>
+              <p>BATCH/LOT</p>
+              <p id='paragh'>Batch</p>
+            </div>
+            <div>
+              <p>COUNT</p>
+              <p id='paragh'>{selectedRow.data.USERID}</p>
+            </div>
+            <div>
+              <p>PROD DATE</p>
+              <p id='paragh'>{selectedRow.data.PALLET_DATE}</p>
+            </div>
+          </div>
+
+          <div id='inside-header-third'>
+            <p>SSCC</p>
+            <p id='paragh-header'>{selectedRow.data.PALLETCODE}</p>
+          </div>
+          <hr />
+
+          <div id='inside-body'>
+            <div>
+              <p id='paragh-body'>{selectedRow.data.SHIPMENTID}</p>
+              <p id='paragh'>{selectedRow.data.ITEMID}</p>
+              <br />
+              {/* <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p> */}
+              {/* Add this line */}
+              <p id='paragh' style={{ width: '250px', lineHeight: '1', marginTop: '-0.5px' }}>{selectedRow.data.ITEMNAME}</p>
+
+            </div>
+            <div id='inside-QRCode'>
+              <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />
+            </div>
+          </div>
+          <hr />
+
+          <div id='inside-BRCode'>
+            <Barcode value={selectedRow.data.PALLETCODE} width={2.3} height={100} />
+          </div>
         </div>
+        {/* ))} */}
+      </div>
       {/* )} */}
     </div>
   );
@@ -1236,31 +1236,31 @@ const PrintingShipmentReceived = ({selectedRow, index}) => {
 
 
 
-const PrintLabelsBarCode = ({selectedRow, index}) => {
+const PrintLabelsBarCode = ({ selectedRow, index }) => {
   return (
     <div>
-       <div id="barcode" key={index}>
-          <div id="barcode" className='hidden'>
-                <div id='header'>
-                  <div>
-                    <img src={logo} id='imglogo' alt='' />
-                  </div>
-                </div>
-                <div id='inside-BRCode'>
-              <Barcode value={selectedRow.data.GTIN} width={1.3} height={60} />
+      <div id="barcode" key={index}>
+        <div id="barcode" className='hidden'>
+          <div id='header'>
+            <div>
+              <img src={logo} id='imglogo' alt='' />
             </div>
           </div>
+          <div id='inside-BRCode'>
+            <Barcode value={selectedRow.data.GTIN} width={1.3} height={60} />
+          </div>
         </div>
+      </div>
     </div>
   );
 };
 
 
 
-const PrintPalletBarCode = ({selectedRow, index}) => {
+const PrintPalletBarCode = ({ selectedRow, index }) => {
   return (
     <div>
-       {/* <div id="barcode" key={index}>
+      {/* <div id="barcode" key={index}>
           <div id="barcode" className='hidden'>
                 <div id='header'>
                   <div>
@@ -1273,68 +1273,68 @@ const PrintPalletBarCode = ({selectedRow, index}) => {
           </div>
         </div> */}
 
-          <div id="barcode">
-            <div id="barcode" className='hidden' key={index + "barcode"}>
-              <div id='header'>
-                <div>
-                  <img src={logo} id='imglogo' alt='' />
-                </div>
-                <div id='first-QRCode'>
-                  <QRCodeSVG value="http://gs1ksa.org:3006/" width={20} height={20} />
-                </div>
-              </div>
-              <div id='inside-heading'>
-                <div>
-                  <p>PO NUMBER</p>
-                  <p id='paragh'>{selectedRow.data.PO}</p>
-                </div>
-                <div>
-                  <p>GROUP NAME</p>
-                  {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
-                  <p id='paragh'>{selectedRow.itemGroup}</p>
-                </div>
-              </div>
-
-              <div id='inside-header-second'>
-                <div>
-                  <p>BATCH/LOT</p>
-                  <p id='paragh'>Batch</p>
-                </div>
-                <div>
-                  <p>COUNT</p>
-                  <p id='paragh'>{selectedRow.data.USERID}</p>
-                </div>
-                <div>
-                  <p>PROD DATE</p>
-                  <p id='paragh'>{selectedRow.data.MapDate}</p>
-                </div>
-              </div>
-
-              <div id='inside-header-third'>
-                <p>SSCC</p>
-                <p id='paragh-header'>{selectedRow.data.PalletCode}</p>
-              </div>
-              <hr />
-
-              <div id='inside-body'>
-                <div>
-                  <p id='paragh-body'>{selectedRow.data.SID}</p>
-                  <p id='paragh'>{selectedRow.data.ItemCode}</p>
-                  <br />
-                  <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
-                </div>
-                <div id='inside-QRCode'>
-                  <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />
-                </div>
-              </div>
-              <hr />
-
-              <div id='inside-BRCode'>
-                <Barcode value={selectedRow.data.PalletCode} width={2.3} height={100} />
-              </div>
+      <div id="barcode">
+        <div id="barcode" className='hidden' key={index + "barcode"}>
+          <div id='header'>
+            <div>
+              <img src={logo} id='imglogo' alt='' />
             </div>
+            <div id='first-QRCode'>
+              <QRCodeSVG value="http://gs1ksa.org:3006/" width={20} height={20} />
+            </div>
+          </div>
+          <div id='inside-heading'>
+            <div>
+              <p>PO NUMBER</p>
+              <p id='paragh'>{selectedRow.data.PO}</p>
+            </div>
+            <div>
+              <p>GROUP NAME</p>
+              {/* <p id='paragh'>{selectedRow.data.ITEMID}</p> */}
+              <p id='paragh'>{selectedRow.itemGroup}</p>
+            </div>
+          </div>
+
+          <div id='inside-header-second'>
+            <div>
+              <p>BATCH/LOT</p>
+              <p id='paragh'>Batch</p>
+            </div>
+            <div>
+              <p>COUNT</p>
+              <p id='paragh'>{selectedRow.data.USERID}</p>
+            </div>
+            <div>
+              <p>PROD DATE</p>
+              <p id='paragh'>{selectedRow.data.MapDate}</p>
+            </div>
+          </div>
+
+          <div id='inside-header-third'>
+            <p>SSCC</p>
+            <p id='paragh-header'>{selectedRow.data.PalletCode}</p>
+          </div>
+          <hr />
+
+          <div id='inside-body'>
+            <div>
+              <p id='paragh-body'>{selectedRow.data.SID}</p>
+              <p id='paragh'>{selectedRow.data.ItemCode}</p>
+              <br />
+              <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
+            </div>
+            <div id='inside-QRCode'>
+              <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />
+            </div>
+          </div>
+          <hr />
+
+          <div id='inside-BRCode'>
+            <Barcode value={selectedRow.data.PalletCode} width={2.3} height={100} />
+          </div>
         </div>
-    
+      </div>
+
     </div>
   );
 };

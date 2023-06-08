@@ -14,8 +14,8 @@ const PrintingPalletLabels = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
     useEffect(() => {
         const getAllAssetsList = async () => {
@@ -51,16 +51,17 @@ const PrintingPalletLabels = () => {
 
 
             <UserDataTable data={alldata}
-             title="Printing Pallet Labels"
-              columnsName={MappedItemsColumn} backButton={true}
-               uniqueId="PrintPalletBarcode"
-               actionColumnVisibility={false}
-               emailButton={false}
-               printButton={true}
-               PrintName={"Print Pallet Labels"}
+                title="Printing Pallet Labels"
+                tableHeight={"90dvh"}
+                columnsName={MappedItemsColumn} backButton={true}
+                uniqueId="PrintPalletBarcode"
+                actionColumnVisibility={false}
+                emailButton={false}
+                printButton={true}
+                PrintName={"Print Pallet Labels"}
             //    printBarCode={true}
             //    PrintBarCodeName={"Print Pallet Barcode"}
-            />  
+            />
 
             {isLoading &&
 

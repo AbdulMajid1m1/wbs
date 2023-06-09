@@ -141,7 +141,7 @@ const UserDataTable = ({
       '<style>' +
       '@page { size: 4in 6in; margin: 0; }' +
       'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
-      '#header { display: flex; justify-content: space-between; padding: 10px;}' +
+      '#header { display: flex; justify-content: space-between; padding: 10px; border-top: 1px solid black;}' +
       '#imglogo {height: 40px; width: 100px;}' +
       '#inside-heading { display: flex; justify-content: space-between; align-items: center; padding: 25px; margin-top: -30px; font-weight: 500; font-family: AwanZaman Regular;}' +
       '#first-QRCode { padding: 10px;}' +
@@ -1270,7 +1270,7 @@ const PrintingShipmentReceived = ({ selectedRow, index }) => {
               <img src={logo} id='imglogo' alt='' />
             </div>
             <div id='first-QRCode'>
-              <QRCodeSVG value="http://localhost:3006/" width={40} height={40} />
+              <QRCodeSVG value="http://localhost:3006/" width={40} height={32} />
             </div>
           </div>
           <div id='inside-heading'>
@@ -1380,7 +1380,7 @@ const PrintPalletBarCode = ({ selectedRow, index }) => {
               <img src={logo} id='imglogo' alt='' />
             </div>
             <div id='first-QRCode'>
-              <QRCodeSVG value="http://gs1ksa.org:3006/" width={20} height={20} />
+              <QRCodeSVG value="http://gs1ksa.org:3006/" width={40} height={32} />
             </div>
           </div>
           <div id='inside-heading'>
@@ -1421,7 +1421,10 @@ const PrintPalletBarCode = ({ selectedRow, index }) => {
               <p id='paragh-body'>{selectedRow.data.SID}</p>
               <p id='paragh'>{selectedRow.data.ItemCode}</p>
               <br />
-              <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p>
+              {/* <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p> */}
+              {/* Add this line Pallet Code */}
+              <p id='paragh' style={{ width: '250px', lineHeight: '1' }}>{selectedRow.data.ItemSerialNo}</p>
+
             </div>
             <div id='inside-QRCode'>
               <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />

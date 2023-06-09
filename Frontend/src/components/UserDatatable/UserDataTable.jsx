@@ -591,7 +591,7 @@ const UserDataTable = ({
       detectAddRole();
     }).catch((error) => {
 
-      setError(error?.message ?? "Something went wrong");
+      setError(error?.response?.data?.message ?? "Something went wrong!")
     }
     )
 
@@ -1048,7 +1048,7 @@ const UserDataTable = ({
 
       <div className="datatable"
         style={
-          smallHeightTableScreens.includes(uniqueId) ? { height: '450px' } : mediumHeightTableScreens.includes(uniqueId) ? { height: '600px' } : { height: '93vh' } 
+          smallHeightTableScreens.includes(uniqueId) ? { height: '450px' } : mediumHeightTableScreens.includes(uniqueId) ? { height: '600px' } : { height: '93vh' }
         }
       >
         <div className="datatableTitle">
@@ -1115,7 +1115,7 @@ const UserDataTable = ({
 
 
           slots={{ toolbar: GridToolbar }}
-          className="datatable"
+          // className="datatable"
 
           rows={filteredData}
 

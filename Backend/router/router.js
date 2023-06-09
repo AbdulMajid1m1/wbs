@@ -575,8 +575,8 @@ router.post("/insertUserRoleData", checkAuthentication, WBSDB.insertUserRoleData
 
 // ----------- tblUserRolesAssignedToUser API Start ------------
 
-router.get("/getRolesAssignedToUser", checkAuthentication, WBSDB.getRolesAssignedToUser);
+router.get("/getRolesAssignedToUser", checkAuthentication, checkRole([roles[51]]), WBSDB.getRolesAssignedToUser);
 
-router.post("/insertUserRoleAssignedData", checkAuthentication, WBSDB.insertUserRoleAssignedData);
+router.post("/insertUserRoleAssignedData", checkAuthentication, checkRole([roles[51]]), WBSDB.insertUserRoleAssignedData);
 
-router.delete("/deleteUserRoleAssignedData/:RoleId", checkAuthentication, WBSDB.deleteUserRoleAssignedData);
+router.delete("/deleteUserRoleAssignedData/:RoleId", checkAuthentication, checkRole([roles[51]]), WBSDB.deleteUserRoleAssignedData);

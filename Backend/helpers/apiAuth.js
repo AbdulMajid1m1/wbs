@@ -64,27 +64,27 @@ const checkRole = (roleNames) => {
     const userId = req?.token?.UserID;
 
     try {
-      // Check if the user is an admin
-      const isAdmin = await fetchIsAdminFromDatabase(userId);
 
+
+      // User is not an admin, continue with role-based authorization check
+      // Fetch user roles from the database
+      const userRoles = await fetchUserRolesFromDatabase(userId);
+      // check if userRoles contain Admin role
+      const isAdmin = userRoles.includes('Admin');
       if (isAdmin) {
-        // User is an admin, proceed to the next middleware or route handler
-        next();
-      } else {
-        // User is not an admin, continue with role-based authorization check
-        // Fetch user roles from the database
-        const userRoles = await fetchUserRolesFromDatabase(userId);
-
-        // Check if any of the user's roleNames match the allowed roleNames
-        const isAuthorized = userRoles.some(roleName => roleNames.includes(roleName));
-
-        if (!isAuthorized) {
-          return res.status(403).json({ message: 'Not authorized to access this resource' });
-        }
-
-        // User is authorized, proceed to the next middleware or route handler
-        next();
+        return next();
       }
+
+      // Check if any of the user's roleNames match the allowed roleNames
+      const isAuthorized = userRoles.some(roleName => roleNames.includes(roleName));
+
+      if (!isAuthorized) {
+        return res.status(403).json({ message: 'Not authorized to access this resource' });
+      }
+
+      // User is authorized, proceed to the next middleware or route handler
+      next();
+
     } catch (error) {
       console.error('Error checking user roles:', error);
       res.status(500).json({ error: 'Internal server error' });

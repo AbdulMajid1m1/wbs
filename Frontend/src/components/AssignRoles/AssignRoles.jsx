@@ -20,6 +20,13 @@ const AssignRoles = () => {
 
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const [message, setMessage] = useState("");
+    // to reset snakebar messages
+    const resetSnakeBarMessages = () => {
+        setError(null);
+        setMessage(null);
+
+    };
     const [userRolesList, setUserRolesList] = useState([]);
     const [allRolesList, setAllRolesList] = useState([]);
     // const [Snakebar, setSnakebar] = useState(false);
@@ -36,7 +43,7 @@ const AssignRoles = () => {
                 console.log(error);
                 // check if the error is 401
                 setAllRolesList([]);
-                setError(error?.response?.data?.message ?? "Something went wrong");
+                setError(error?.response?.data?.message ?? "Woops something went wrong");
             }
         };
         const getUserRoles = async () => {
@@ -50,7 +57,7 @@ const AssignRoles = () => {
             catch (error) {
                 console.log(error)
                 setUserRolesList([]);
-                setError(error?.response?.data?.message ?? "Something went wrong");
+                setError(error?.response?.data?.message ?? "woops something went wrong");
             }
         };
 
@@ -65,7 +72,7 @@ const AssignRoles = () => {
     return (
         <>
 
-            {error && <CustomSnakebar message={error?.message} severity="error" />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
             <div className="userRoleHeadingContainer">
                 <span className='mainSpain'>
 

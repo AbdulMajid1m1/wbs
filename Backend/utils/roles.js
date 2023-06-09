@@ -48,7 +48,8 @@ const roles = {
     47: 'WMS Journal Movement Counting',
     48: 'WMS Profit and Loss',
     49: 'WMS Cycle Counting',
-    50: 'Settings'
+    50: 'Settings',
+    51: 'Admin',
 };
 
 export default roles;

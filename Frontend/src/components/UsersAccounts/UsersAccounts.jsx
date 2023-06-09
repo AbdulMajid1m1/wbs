@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { MappedItemsColumn } from '../../utils/datatablesource'
+import { UserTableColumns } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 
-const PrintingPalletLabels = () => {
+
+const UsersAccounts = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -17,11 +18,13 @@ const PrintingPalletLabels = () => {
 
     };
 
+
+
     useEffect(() => {
-        const getAllAssetsList = async () => {
+        const getAllUsers = async () => {
             try {
 
-                userRequest.get("/getAllTblMappedBarcodes")
+                userRequest.get("/getAllTblUsers")
                     .then(response => {
                         console.log(response?.data);
 
@@ -31,6 +34,7 @@ const PrintingPalletLabels = () => {
                     })
                     .catch(error => {
                         console.error(error);
+
                         setIsLoading(false)
                         setError(error?.response?.data?.message ?? "Something went wrong")
                     });
@@ -40,7 +44,7 @@ const PrintingPalletLabels = () => {
                 console.log(error);
             }
         };
-        getAllAssetsList();
+        getAllUsers();
     }, []);
 
     return (
@@ -49,17 +53,10 @@ const PrintingPalletLabels = () => {
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
-
-            <UserDataTable data={alldata}
-                title="Printing Pallet Labels"
-                columnsName={MappedItemsColumn} backButton={true}
-                uniqueId="PrintPalletBarcode"
-                actionColumnVisibility={false}
-                emailButton={false}
-                printButton={true}
-                PrintName={"Print Pallet Labels"}
-            //    printBarCode={true}
-            //    PrintBarCodeName={"Print Pallet Barcode"}
+            <UserDataTable data={alldata} title="User Accounts" columnsName={UserTableColumns}
+                backButton={true}
+                uniqueId="usersAccountsId"
+           
             />
 
             {isLoading &&
@@ -86,4 +83,4 @@ const PrintingPalletLabels = () => {
     )
 }
 
-export default PrintingPalletLabels
+export default UsersAccounts

@@ -389,6 +389,87 @@ export const AllItems = [
   },
 ]
 
+export const AllRoleColumns = [
+  {
+    field: "RoleId",
+    headerName: "ROLE ID",
+    width: 100,
+
+  },
+  {
+    field: "RoleName",
+    headerName: "ROLE NAME",
+    width: 200,
+
+  },
+
+]
+
+export const AllRolesAssignedColumns = [
+  {
+    field: "RoleId",
+    headerName: "ROLE ID",
+    width: 100,
+
+  },
+
+  {
+
+    field: "RoleName",
+    headerName: "ROLE NAME",
+    width: 200,
+
+  },
+
+  {
+    field: "UserID",
+    headerName: "USER ID",
+    width: 100,
+
+  },
+]
+
+
+export const UserTableColumns = [
+  {
+    field: "UserID",
+    headerName: "USER ID",
+    width: 180,
+
+  },
+  {
+    field: "UserPassword",
+    headerName: "USER PASSWORD",
+    width: 180,
+
+  },
+  {
+    field: "Fullname",
+    headerName: "FULL NAME",
+    width: 180,
+
+  },
+  {
+    field: "UserLevel",
+    headerName: "USER LEVEL",
+    width: 180,
+
+  },
+  {
+    field: "Loc",
+    headerName: "LOCATION",
+    width: 180,
+
+  },
+
+  {
+    field: "Email",
+    headerName: "EMAIL",
+    width: 180,
+
+  },
+]
+
 
 export const TblAllLocationColumn = [
   {
@@ -1767,7 +1848,7 @@ export const SalesPickingListColumn = [
     width: 180,
 
   },
- 
+
 
 
 
@@ -1830,7 +1911,7 @@ export const ReturnSalesOrderColumn = [
     headerName: "WMS LOCATION ID",
     width: 180,
 
-  }, 
+  },
 
 
 
@@ -1892,7 +1973,7 @@ export const JournalProfitLostColumn = [
     headerName: "WMS LOCATION ID",
     width: 180,
 
-  }, 
+  },
 
 
 
@@ -1961,7 +2042,7 @@ export const JournalMovementColumn = [
     headerName: "WMS LOCATION ID",
     width: 180,
 
-  }, 
+  },
 
 
 
@@ -2035,7 +2116,7 @@ export const JournalCountingTableColumn = [
     headerName: "WMS LOCATION ID",
     width: 180,
 
-  }, 
+  },
 
 
 
@@ -2140,8 +2221,8 @@ export const WarehouseMovementColumn = [
     headerName: "QTY DIFFERENCE",
     width: 180,
 
-  },  
-    
+  },
+
 
 
 
@@ -2221,7 +2302,7 @@ export const WarehouseProfitLostColumn = [
     headerName: "TRX USERID ASSIGNED BY",
     width: 180,
 
-  }, 
+  },
   {
     field: "ITEMSERIALNO",
     headerName: "ITEM SERIAL NO",
@@ -2233,14 +2314,14 @@ export const WarehouseProfitLostColumn = [
     headerName: "QTY SCANNED",
     width: 180,
 
-  }, 
+  },
   {
     field: "QTYDIFFERENCE",
     headerName: "QTY DIFFERENCE",
     width: 180,
 
-  }, 
- 
+  },
+
 
 
 
@@ -2333,7 +2414,7 @@ export const WarehouseJournalCountingColumn = [
     headerName: "TRX USERID ASSIGNED BY",
     width: 180,
 
-  }, 
+  },
   {
     field: "ITEMSERIALNO",
     headerName: "ITEM SERIAL NO",
@@ -2345,14 +2426,14 @@ export const WarehouseJournalCountingColumn = [
     headerName: "QTY SCANNED",
     width: 180,
 
-  }, 
+  },
   {
     field: "QTYDIFFERENCE",
     headerName: "QTY DIFFERENCE",
     width: 180,
 
-  }, 
- 
+  },
+
 
 
 
@@ -2434,7 +2515,7 @@ export const WarehouseWmsInventoryColumn = [
     width: 180,
 
   },
- 
+
 
 
 
@@ -2449,7 +2530,7 @@ export const WmsByBinlocationColumn = [
     width: 180,
 
   },
- 
+
 
 
 
@@ -2560,7 +2641,7 @@ export const WmsItemMappedColumn = [
     width: 180,
 
   },
- 
+
 
 
 
@@ -2588,7 +2669,7 @@ export const TruckMasterDataColumn = [
     width: 180,
 
   },
- 
+
 
 
 
@@ -2621,7 +2702,7 @@ export const ZoneMasterColumn = [
     width: 180,
 
   },
- 
+
 
 
 
@@ -2686,7 +2767,7 @@ export const BinMasterColumn = [
   },
 
 
- 
+
 
 ]
 
@@ -2723,7 +2804,7 @@ export const TransactionHistoryColumn = [
     width: 180,
 
   },
- 
+
 
 
 

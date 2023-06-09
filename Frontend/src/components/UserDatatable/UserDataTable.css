@@ -1,10 +1,19 @@
 .datatable {
-  height: 600px;
+  /* height: 100dvh; */
   padding: 20px;
-  padding-bottom: 50px;
+  padding-bottom: 0px;
   /* margin-left: 20%; */
   /* width: 80%; */
 }
+
+/*  MUI Classes  */
+.css-ptiqhd-MuiSvgIcon-root {
+  color: #ffffff !important;
+}
+.css-1iyq7zh-MuiDataGrid-columnHeaders {
+  background: #0079ff;
+}
+
 .datatable .datatableTitle {
   width: 100%;
   font-size: 22px;
@@ -132,7 +141,6 @@
   padding: 5px;
   font-size: 16px;
   outline: none;
-
 }
 
 /* serInput placeHodler */
@@ -151,8 +159,6 @@
 .datatableTitle .left-div > span {
   flex: 1;
 }
-
-
 
 .popup-container {
   position: fixed;
@@ -250,8 +256,6 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   margin-top: 10px;
- 
-  
 }
 
 .popup button:hover {
@@ -273,11 +277,11 @@
     padding: 20px;
     max-width: 90%;
   }
-  
+
   .popup .header h2 {
     font-size: 22px;
   }
-  
+
   .popup input[type="email"] {
     font-size: 14px;
   }
@@ -285,7 +289,7 @@
   .popup select[type="email"] {
     font-size: 14px;
   }
-  
+
   .popup button[type="submit"] {
     font-size: 14px;
     padding: 8px 16px;

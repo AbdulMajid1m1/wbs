@@ -7197,7 +7197,189 @@ const WBSDB = {
   },
 
 
+
+
+  // --------- tblUserRoles controller start ---------
+  async getAlltblUserRoles(req, res, next) {
+
+    try {
+      let query = `
+      SELECT * FROM dbo.tblUserRoles
+      `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+
+    }
+  },
+
+  async insertUserRoleData(req, res, next) {
+    try {
+      const userRoleDataArray = req.body;
+      if (!Array.isArray(userRoleDataArray) || userRoleDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < userRoleDataArray.length; i++) {
+        const {
+          RoleName
+        } = userRoleDataArray[i];
+
+        // Dynamic SQL query construction
+        let fields = [
+          "RoleName"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+          INSERT INTO tblUserRoles
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool2.request();
+        request.input('RoleName', sql.NVarChar, RoleName);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted into tblUserRoles successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  // -------- tblUserRolesAssigned controller start ---------
+
+  async getRolesAssignedToUser(req, res, next,) {
+    try {
+      let query = `
+      SELECT * FROM tblUserRolesAssigned WHERE UserID = @userId
+      `;
+      const { userId } = req.query;
+      let request = pool2.request();
+      request.input('userId', sql.NVarChar, userId);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Role Found!" });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async insertUserRoleAssignedData(req, res, next) {
+    try {
+      const userRoleAssignedDataArray = req.body;
+      if (!Array.isArray(userRoleAssignedDataArray) || userRoleAssignedDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < userRoleAssignedDataArray.length; i++) {
+        const {
+          RoleName,
+          UserID
+        } = userRoleAssignedDataArray[i];
+
+        // Check if record with same RoleName and UserID already exists
+        let checkQuery = `
+          SELECT * FROM tblUserRolesAssigned
+          WHERE RoleName = @RoleName AND UserID = @UserID
+        `;
+
+        let checkRequest = pool2.request();
+        checkRequest.input('RoleName', sql.NVarChar, RoleName);
+        checkRequest.input('UserID', sql.VarChar, UserID);
+        let checkResult = await checkRequest.query(checkQuery);
+
+        if (checkResult.recordset.length > 0) {
+          return res.status(400).send({ message: `Record with RoleName '${RoleName}' and UserID '${UserID}' already exists.` });
+        }
+
+        // Dynamic SQL query construction
+        let fields = [
+          "RoleName",
+          "UserID"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+          INSERT INTO tblUserRolesAssigned
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool2.request();
+        request.input('RoleName', sql.NVarChar, RoleName);
+        request.input('UserID', sql.VarChar, UserID);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted into tblUserRolesAssigned successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async deleteUserRoleAssignedData(req, res, next) {
+    try {
+      const { RoleId } = req.params;
+      if (!RoleId) {
+        return res.status(400).send({ message: "Please provide RoleId to delete." });
+      }
+
+      // Dynamic SQL query construction
+      let query = `
+        DELETE FROM tblUserRolesAssigned
+        WHERE RoleId = @RoleId
+      `;
+
+      let request = pool2.request();
+      request.input('RoleId', sql.Int, RoleId);
+      await request.query(query);
+
+      return res.status(200).send({ message: 'Record deleted from tblUserRolesAssigned successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
+
+  // -------- tblUserRolesAssigned controller end ---------
+
+
+
+
+
+
+
+
 };
+
 
 
 export default WBSDB;

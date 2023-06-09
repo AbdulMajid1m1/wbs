@@ -1,6 +1,5 @@
 // import "./UserDataTable.scss";
 import "./UserDataTable.css"
-// import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import userRequest from "../../utils/userRequest";
@@ -11,9 +10,11 @@ import Barcode from "react-barcode";
 import { QRCodeSVG } from "qrcode.react";
 import logo from "../../images/alessalogo2.png"
 
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-
+import { GridToolbar } from "@mui/x-data-grid";
 import * as XLSX from 'xlsx';
+import { MuiCustomTable } from "../../utils/MuiCustomTable";
+
+
 const UserDataTable = ({
   columnsName = [],
   data,
@@ -29,7 +30,6 @@ const UserDataTable = ({
   addNewNavigation,
   printButton,
   emailButton,
-  detectAddRole,
   AddUser,
   UserName,
   checkboxSelection,
@@ -38,7 +38,8 @@ const UserDataTable = ({
   PrintName,
   printBarCode,
   PrintBarCodeName,
-  tableHeight,
+  detectAddRole,
+  height,
 
 }) => {
   const navigate = useNavigate();
@@ -481,41 +482,44 @@ const UserDataTable = ({
     console.log(rowData)
     switch (uniqueId) {
       case "SERIALNUM":
-        navigate("/shipmentupdate/" + rowData.SHIPMENTID)
+        navigate("/shipmentupdate/" + rowData?.SHIPMENTID)
         break;
       case "SHIPMENTID":
-        navigate("/update/" + rowData.SHIPMENTID)
+        navigate("/update/" + rowData?.SHIPMENTID)
         break;
       case "ITEMNAME":
-        navigate("/allitems/" + rowData.ITEMNAME)
+        navigate("/allitems/" + rowData?.ITEMNAME)
         break;
       case "itemTableId":
-        navigate("/allitems/" + rowData.ITEMID)
+        navigate("/allitems/" + rowData?.ITEMID)
         break;
       case "locationTableId":
-        navigate("/tblLocationupdate/" + rowData.LOCATIONS_HFID)
+        navigate("/tblLocationupdate/" + rowData?.LOCATIONS_HFID)
         break;
       case "PACKINGSLIPID":
-        navigate("/tbldispatchingupdates/" + rowData.PACKINGSLIPID)
+        navigate("/tbldispatchingupdates/" + rowData?.PACKINGSLIPID)
         break;
       case "PICKINGROUTEID":
-        navigate("/tblpickingupdates/" + rowData.PICKINGROUTEID)
+        navigate("/tblpickingupdates/" + rowData?.PICKINGROUTEID)
         break;
       case "ItemCode":
-        navigate("/tblmappedbarcodesupdates/" + rowData.ItemCode)
+        navigate("/tblmappedbarcodesupdates/" + rowData?.ItemCode)
         break;
       case "TRANSFERID":
-        navigate("/updatepalletizing/" + rowData.ALS_PACKINGSLIPREF)
+        navigate("/updatepalletizing/" + rowData?.ALS_PACKINGSLIPREF)
         break;
       case "truckMasterId":
-        navigate("/tbltrcukupdate/" + rowData.PlateNo)
+        navigate("/tbltrcukupdate/" + rowData?.PlateNo)
         break;
       case "binMasterId":
-        navigate("/tblbinupdate/" + rowData.BinNumber)
+        navigate("/tblbinupdate/" + rowData?.BinNumber)
         break;
       case "zoneMasterId":
-        navigate("/tblzoneupdate/" + rowData.Zones)
+        navigate("/tblzoneupdate/" + rowData?.Zones)
         break;
+
+      case "usersAccountsId":
+        navigate("/user-accounts/" + rowData?.UserID + "/" + rowData?.Fullname)
 
       default:
         // do nothing
@@ -555,13 +559,91 @@ const UserDataTable = ({
       width: 30,
     },
   ];
+  const handleAddRole = async (rowdata) => {
+    console.log(rowdata);
+    // get userloginid from local session
+    userRequest.post("/insertUserRoleAssignedData",
+      [{
+        "UserID": sessionStorage.getItem("assignRoleId"),
+        "RoleName": rowdata?.RoleName,
+
+      }]
+    ).then((response) => {
+      console.log(response);
+      setMessage("Role added successfully");
+
+      detectAddRole();
+    }).catch((error) => {
+      setError(error?.response?.data?.message ?? "Something went wrong")
+    }
+    )
+  };
+
+  const handleRemoveRole = async (rowdata) => {
+    console.log(rowdata.RoleID);
+
+    userRequest.delete("/deleteUserRoleAssignedData/" + rowdata?.RoleId,
+    ).then((response) => {
+      console.log(response);
+      setMessage("Role removed successfully");
+
+      // refresh the data table after adding the role
+      detectAddRole();
+    }).catch((error) => {
+
+      setError(error?.message ?? "Something went wrong");
+    }
+    )
+
+  };
 
 
+  const RemoveBtn = [
+    {
+      field: "action",
+      headerName: "Action",
+      width: 130,
+      renderCell: (params) => {
+        return (
+          <div className="cellAction">
+            <div
+              className="deleteButton"
+              onClick={() => handleRemoveRole(params.row)}
+            >
+              REMOVE ROLE
+            </div>
+
+          </div>
+        );
+      },
+    },
+  ];
+  const AddBtn = [
+    {
+      field: "action",
+      headerName: "Action",
+      width: 130,
+      renderCell: (params) => {
+        return (
+          <div className="cellAction">
+            <div
+              className="deleteButton"
+              onClick={() => handleAddRole(params.row)}
+            >
+              ADD ROLE
+            </div>
+
+          </div>
+        );
+      },
+    },
+  ];
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: uniqueId === "usersAccountsId" ? 200 : 150,
+
       renderCell: (params) => {
         return (
           <div className="cellAction">
@@ -575,7 +657,9 @@ const UserDataTable = ({
               onClick={() => handleEdit(params.row)}
               style={{ textDecoration: "none" }}
             >
-              <div className="viewButton">Update</div>
+              <div className="viewButton">
+                {uniqueId === "usersAccountsId" ? "Update Roles" : "Update"}
+              </div>
             </span>
           </div>
         );
@@ -908,6 +992,13 @@ const UserDataTable = ({
     'wmsInventoryClDetsId',
 
   ]
+  let mediumHeightTableScreens = [
+
+    'userRolesAssignedId',
+    'userAccountRoleId',
+
+  ]
+
 
 
   // Last Two Prinitng Buttons
@@ -957,7 +1048,7 @@ const UserDataTable = ({
 
       <div className="datatable"
         style={
-          smallHeightTableScreens.includes(uniqueId) ? { height: '450px' } : null
+          smallHeightTableScreens.includes(uniqueId) ? { height: '450px' } : mediumHeightTableScreens.includes(uniqueId) ? { height: '600px' } : { height: '93vh' } 
         }
       >
         <div className="datatableTitle">
@@ -1016,17 +1107,24 @@ const UserDataTable = ({
         </div>
 
 
-        <DataGrid
+        <MuiCustomTable
+          getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+          }
+
+
+
           slots={{ toolbar: GridToolbar }}
-          style={tableHeight ? { height: tableHeight } : null}
-          className="datagrid"
+          className="datatable"
+
           rows={filteredData}
 
           columns={
             actionColumnVisibility !== false
               ? idColumn.concat(columnsWithCustomCell.concat(actionColumn))
-              // ? idColumn.concat(columnsWithCustomCell.concat(RemoveBtn))
-              : idColumn.concat(columnsWithCustomCell)
+              : uniqueId === "userAccountRoleId" ? idColumn.concat(columnsWithCustomCell.concat(AddBtn))
+                : uniqueId === "userRolesAssignedId" ? idColumn.concat(columnsWithCustomCell.concat(RemoveBtn))
+                  : idColumn.concat(columnsWithCustomCell)
           }
           pageSize={30}
           rowsPerPageOptions={[30, 50, 100]}
@@ -1039,8 +1137,10 @@ const UserDataTable = ({
             handleRowClick(params.row, rowIdx);
           }}
 
-
         />
+
+
+
 
 
         {/* Email Screen */}

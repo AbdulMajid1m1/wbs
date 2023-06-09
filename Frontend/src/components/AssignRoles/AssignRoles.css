@@ -1,0 +1,56 @@
+.userRolesContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.userRolesContainer span {
+  flex: 1;
+}
+
+.userRoleHeadingContainer {
+  padding: 10px 20px 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userRoleHeadingContainer h1 {
+  font-size: 24px;
+  color: gray;
+  margin-bottom: 10px;
+}
+
+.userRoleHeadingContainer .mainSpain {
+  display: flex;
+  justify-content: flex-start;
+  width: 65%;
+}
+
+.userRoleHeadingContainer .mainSpain div {
+  display: flex;
+  font-size: 24px;
+  color: gray;
+  justify-content: flex-start;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.userRoleHeadingContainer .backBtnDiv {
+  display: flex;
+  justify-content: flex-end;
+  width: 100px;
+}
+
+.userRoleHeadingContainer .backBtnDiv .backBtn {
+  font-size: 1.2rem;
+  width: 100%;
+  padding: 2px 5px;
+  border-radius: 5px;
+  height: 50px;
+  color: crimson;
+  border: 1px dotted rgba(220, 20, 60, 0.6);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

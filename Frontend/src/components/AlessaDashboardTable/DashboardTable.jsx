@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 // import logo from "../../../images/download.png";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import { ReceiptsContext } from "../../contexts/ReceiptsContext";
+import { MuiCustomTable } from "../../utils/MuiCustomTable";
 
 const DashboardTable = ({
     columnsName,
@@ -110,8 +111,7 @@ const DashboardTable = ({
 
                 </div>
 
-                <DataGrid
-
+                <MuiCustomTable
                     getRowHeight={({ }) => {
                         let x;
                         x = 50;

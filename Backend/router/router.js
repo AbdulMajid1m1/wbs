@@ -564,3 +564,19 @@ router.delete("/deleteTransactionHistoryData", checkAuthentication, WBSDB.delete
 // ---------- tblRoles API Start ----------
 
 router.get("/getAlltblRoles", WBSDB.getAlltblRoles);
+
+
+// ---------- tblUserRoles API Start ----------
+
+
+router.get("/getAlltblUserRoles", checkAuthentication, WBSDB.getAlltblUserRoles);
+
+router.post("/insertUserRoleData", checkAuthentication, WBSDB.insertUserRoleData);
+
+// ----------- tblUserRolesAssignedToUser API Start ------------
+
+router.get("/getRolesAssignedToUser", checkAuthentication, WBSDB.getRolesAssignedToUser);
+
+router.post("/insertUserRoleAssignedData", checkAuthentication, WBSDB.insertUserRoleAssignedData);
+
+router.delete("/deleteUserRoleAssignedData/:RoleId", checkAuthentication, WBSDB.deleteUserRoleAssignedData);

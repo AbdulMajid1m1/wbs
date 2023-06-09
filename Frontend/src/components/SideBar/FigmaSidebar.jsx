@@ -450,6 +450,13 @@ const FigmaSidebar = () => {
                 <p className='sidebar-text'>Settings</p>
             </div>
 
+            <div className='main-images-container'
+                onClick={() => navigate('/user-accounts')}
+            >
+                <img src={setting} className='main-inside-image' alt='' />
+                <p className='sidebar-text'>Users Account</p>
+            </div>
+
             <div className='main-images-container' onClick={handleLogout}>
                 <img src={exit} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Log-Out</p>

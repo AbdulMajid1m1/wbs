@@ -97,6 +97,8 @@ import TblZoneMasterUpdate from './components/UpdatesItem/TblZoneMasterUpdate'
 import PrintingPalletLabels from './pages/PrintingPalletLabels/PrintingPalletLabels'
 import AddNewZoneMaster from './components/AddNew/AddNewZoneMaster'
 import PrintingItemBarcode from './pages/PrintingItemBarcode/PrintingItemBarcode'
+import UsersAccounts from './components/UsersAccounts/UsersAccounts'
+import AssignRoles from './components/AssignRoles/AssignRoles'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -165,7 +167,7 @@ const App = () => {
         <Route path='/wmsphysical' element={<WmsPhysicalInventory />} />
 
         <Route path='/wmsphysicalbinlocation' element={<PhysicalInventoryBinLocation />} />
-        
+
         <Route path='/wmsbinlocation' element={<WmsBinlocation />} />
 
         <Route path='/wmsmapping' element={<WmsItemMapping />} />
@@ -234,7 +236,7 @@ const App = () => {
                 <Route path='/warehousereturn' element={<WarehouseReturnSalesOrder />} />
 
                 <Route path='/warehousemovement' element={<WarehouseMovement />} />
-                
+
                 <Route path='/warehouseprofitloss' element={<WarehouseJournalProfitLoss />} />
 
                 <Route path='/warehousecounting' element={<WarehouseJournalCounting />} />
@@ -256,9 +258,14 @@ const App = () => {
                 <Route path='/zonemaster' element={<ZoneMaster />} />
                 <Route path='/tblzoneupdate/:id' element={<TblZoneMasterUpdate title="Zone Master Data Update" />} />
                 <Route path='/tblzonenew' element={<AddNewZoneMaster title="Add Zones Master Data" />} />
-                
+
 
                 <Route path='/transhistory' element={<TransactionHistory />} />
+
+                <Route path='/user-accounts' element={<UsersAccounts />} />
+                <Route path='/user-accounts/:id/:name' element={<AssignRoles />} />
+
+                {/* <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
 
 
 

@@ -1,13 +1,12 @@
 import "./DashboardTable.css";
-import { DataGrid } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 // import logo from "../../../images/download.png";
 import CustomSnakebar from "../../utils/CustomSnakebar";
-import { ReceiptsContext } from "../../contexts/ReceiptsContext";
 import { MuiCustomTable } from "../../utils/MuiCustomTable";
+import { RecevingByContainerId } from "../../contexts/RecevingByContainerId";
 
-const DashboardTable = ({
+const ContainerDashBoard = ({
     columnsName,
     data,
     title,
@@ -18,7 +17,7 @@ const DashboardTable = ({
     const [record, setRecord] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
     // Temporary Comment
-    const { statedata, updateData } = useContext(ReceiptsContext);
+    const { statedata, updateData } = useContext(RecevingByContainerId);
     const [qrcodeValue, setQRCodeValue] = useState('');
     const [selectedRow, setSelectedRow] = useState([]);
     const [selectedRowIndex, setSelectedRowIndex] = useState(null);
@@ -86,14 +85,14 @@ const DashboardTable = ({
         return rowData;
     };
     const handleRowClick = (rowData, idx) => {
-        if (uniqueId === "receiptsManagement") {
+        if (uniqueId === "receivingByContainerId") {
             console.log("rowData", rowData);
 
             let newData = updateRowData(rowData);
             console.log("newData", newData);
             // temporary Comment
             updateData(newData);
-            navigate("/receiptsecond")
+            navigate("/receiving-by-containerid-second")
         }
         else {
             return
@@ -113,14 +112,14 @@ const DashboardTable = ({
                 </div>
 
                 <MuiCustomTable
-                    secondaryColor={secondaryColor ? secondaryColor : null}
                     getRowClassName={(params) =>
                         params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
                     }
+                    secondaryColor={secondaryColor === 'secondary' ? secondaryColor : null}
 
                     getRowHeight={({ }) => {
                         let x;
-                        x = 50;
+                        x = 45;
                         return x;
                     }
                     }
@@ -161,7 +160,7 @@ const DashboardTable = ({
     );
 };
 
-export default DashboardTable;
+export default ContainerDashBoard;
 
 
 

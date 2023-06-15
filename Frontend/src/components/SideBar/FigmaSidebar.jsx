@@ -327,6 +327,15 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Receipts Management</p>
                     </div>
 
+                    <div className='main-images-container' onClick={() => {
+                        // remove item from session storage
+                        sessionStorage.removeItem('receivingBycontainerIdData');
+                        navigate('/receiving-by-containerid-first')
+                    }}>
+                        <img src={receipts} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>RECEIVING BY CONTAINER</p>
+                    </div>
+
                     <div className='main-images-container' onClick={() => navigate('/transferpage1')}>
                         <img src={wmsbintobin} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Bin To Bin (Axapta)</p>

@@ -1,0 +1,43 @@
+.table-location-generate {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* // give width accourding to colums and then make it scoll  */
+  height: 250px;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 2px solid gray;
+  border-radius: 5px;
+}
+
+.table-location-generate table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  font-size: 10px;
+}
+
+.table-location-generate table thead {
+  background-color: #e69138;
+  color: white;
+}
+.table-location-generate table thead tr th {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.table-location-generate table tbody tr td {
+  padding: 10px;
+  border: 1px solid black;
+  /* min height should be 30 */
+  color: black;
+  text-align: center;
+  font-size: 12px;
+  height: 25px;
+}
+/* change table row background */
+.table-location-generate table tbody tr:nth-child(even) {
+  background-color: rgb(242, 242, 221);
+}

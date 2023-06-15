@@ -1,12 +1,8 @@
 import React, { useContext, useState } from 'react'
-import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import accept from "../../images/success.png"
 import userRequest from "../../utils/userRequest"
 import "./ReceiptsManagement.css";
-import Swal from 'sweetalert2';
 import { ReceiptsContext } from '../../contexts/ReceiptsContext';
-import UserDataTable from '../../components/UserDatatable/UserDataTable';
 import { TblReceiptsManagementColumn } from '../../utils/datatablesource';
 import DashboardTable from '../../components/AlessaDashboardTable/DashboardTable';
 
@@ -96,6 +92,7 @@ const ReceiptsManagement = () => {
 
                 <DashboardTable data={data} title={"Receipts Management"} columnsName={TblReceiptsManagementColumn}
                   uniqueId="receiptsManagement"
+                  secondaryColor="secondary" // to get orange color in table
 
                 />
               </div >

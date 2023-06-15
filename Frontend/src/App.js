@@ -40,6 +40,7 @@ import ReceiptsManagement from './pages/ReceiptsManagement/ReceiptsManagement'
 import ReceiptsSecond from './pages/ReceiptsManagement/ReceiptsSecond'
 import ReceiptsThirdScreen from './pages/ReceiptsManagement/ReceiptsThirdScreen'
 import { ReceiptsProvider } from './contexts/ReceiptsContext'
+import { RecevingByContainerIdProvider } from './contexts/RecevingByContainerId';
 import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 import TblShipmentUpdate from './components/UpdatesItem/TblShipmentUpdate'
 import KPIDashboardReceiving from './pages/KPIDashboardReceiving/KPIDashboardReceiving'
@@ -99,6 +100,9 @@ import AddNewZoneMaster from './components/AddNew/AddNewZoneMaster'
 import PrintingItemBarcode from './pages/PrintingItemBarcode/PrintingItemBarcode'
 import UsersAccounts from './components/UsersAccounts/UsersAccounts'
 import AssignRoles from './components/AssignRoles/AssignRoles'
+import ReceivingByContainerId from './pages/ReceivingByContainerId/ReceivingByContainerId'
+import ReceivingByContainerIdSecond from './pages/ReceivingByContainerId/ReceivingByContainerIdSecond'
+import ReceivingByContainerIdThird from './pages/ReceivingByContainerId/ReceivingByContainerIdThird'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -129,6 +133,11 @@ const App = () => {
         <Route path="/receipts" element={<ReceiptsProvider><ReceiptsManagement /></ReceiptsProvider>} />
         <Route path="/receiptsecond" element={<ReceiptsProvider><ReceiptsSecond /></ReceiptsProvider>} />
         <Route path="/receiptsthird" element={<ReceiptsProvider><ReceiptsThirdScreen /></ReceiptsProvider>} />
+
+        {/* <Route path='/receiving-by-containerid-first' element={<ReceivingByContainerId />} /> */}
+        <Route path='/receiving-by-containerid-first' element={<RecevingByContainerIdProvider><ReceivingByContainerId /></RecevingByContainerIdProvider>} />
+        <Route path='/receiving-by-containerid-second' element={<RecevingByContainerIdProvider><ReceivingByContainerIdSecond /></RecevingByContainerIdProvider>} />
+        <Route path='/receiving-by-containerid-third' element={<RecevingByContainerIdProvider><ReceivingByContainerIdThird /></RecevingByContainerIdProvider>} />
         {/* <Route path='/putaway' element={<PutAway />}/> */}
         <Route path='/transferpage1' element={<TransferIDPage />} />
         <Route path='/transferid' element={<TransferID />} />

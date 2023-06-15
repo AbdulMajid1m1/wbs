@@ -136,6 +136,30 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+  async getShipmentDataFromtShipmentReceivingByContainerId(req, res, next) {
+    try {
+      if (!req.query.CONTAINERID) {
+        return res.status(400).send({ message: "CONTAINERID is required." });
+      }
+
+      const query = `
+        SELECT * FROM dbo.tbl_Shipment_Receiving
+        WHERE CONTAINERID = @CONTAINERID
+      `;
+      let request = pool1.request();
+      request.input("CONTAINERID", sql.VarChar, req.query.CONTAINERID);
+      const data = await request.query(query);
+
+      if (data.recordset.length === 0) {
+        return res.status(404).send({ message: "Data not found." });
+      }
+
+      return res.status(200).send(data.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
   async getShipmentDataFromtShipmentReceivingCL(req, res, next) {
     try {
@@ -3619,7 +3643,7 @@ const WBSDB = {
       const query = `
         SELECT * FROM dbo.tbl_RZONES
       `;
-      const data = await pool1.query(query);
+      const data = await pool2.query(query);
       res.status(200).send(data.recordset);
     } catch (error) {
       console.log(error);
@@ -6906,6 +6930,8 @@ const WBSDB = {
       return res.status(500).send({ message: error.message });
     }
   },
+
+
 
 
   async updateBinLocationData(req, res, next) {

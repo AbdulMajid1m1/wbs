@@ -18,6 +18,9 @@ const userPassword = process.env.USER_PASSWORD;
 
 // not using this api
 router.post("/getShipmentDataFromtShipmentReceiving", checkAuthentication, checkRole([roles[31]]), WBSDB.getShipmentDataFromtShipmentReceiving);
+
+router.get("/getShipmentDataFromtShipmentReceivingByContainerId", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceivingByContainerId);
+
 router.post("/getShipmentDataFromtShipmentReceivingCL", checkAuthentication, WBSDB.getShipmentDataFromtShipmentReceivingCL);
 // not using this api
 // getShipmentReceivingCLByShipmentId

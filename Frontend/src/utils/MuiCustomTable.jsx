@@ -49,64 +49,105 @@ function customCheckbox(theme) {
     };
 }
 
+export const MuiCustomTable = styled(DataGrid)(({ theme, secondaryColor }) => {
+    const defaultColors = {
+        oddRow: '#B4E4FF',
+        oddRowHover: alpha('#B4E4FF', 0.5),
+        oddRowSelected: alpha('#9AC5F4', 0.8),
+        evenRow: '#FFFFFF',
+        evenRowHover: alpha('#F8F6F4', 1),
+        evenRowSelected: alpha('#9AC5F4', 0.8),
+        columnHeader: '#0079FF',
+        columnHeaderText: '#FFFFFF',
+        columnMenuIcon: '#FFFFFF',
+        iconButton: '#FFFFFF',
+        sortIcon: '#FFFFFF',
+        columnsContainer: theme.palette.mode === 'light' ? '#1d1d1d' : '#1d1d1d',
+        cellBorderBottom: '1px solid #0079FF',
+        cellText: 'rgba(0,0,0,.85)',
+        paginationItem: {
+            borderRadius: 0,
+        },
+        iconSeparator: '#FFFFFF',
+    };
 
-export const MuiCustomTable = styled(DataGrid)(({ theme }) => ({
-    [`& .${gridClasses.row}`]: {
-        '&.odd': {
-            backgroundColor: '#B4E4FF',
-            '&:hover': {
-                backgroundColor: alpha('#B4E4FF', 0.5),
+    const colorOptions = {
+        primary: defaultColors,
+        secondary: {
+            oddRow: '#e69138',
+            oddRowHover: alpha('#e69138', 0.5),
+            oddRowSelected: alpha('#e69138', 0.8),
+            evenRow: '#FFFFFF',
+            evenRowHover: alpha('#F8F6F4', 1),
+            evenRowSelected: alpha('#e69138', 0.8),
+            columnHeader: '#e69138',
+            columnHeaderText: '#FFFFFF',
+            columnMenuIcon: '#FFFFFF',
+            iconButton: '#FFFFFF',
+            sortIcon: '#FFFFFF',
+            columnsContainer: theme.palette.mode === 'light' ? '#1d1d1d' : '#1d1d1d',
+            cellBorderBottom: '1px solid #e69138',
+            cellText: 'rgba(0,0,0,.85)',
+            paginationItem: {
+                borderRadius: 0,
             },
-            '&.Mui-selected': {
-                backgroundColor: alpha('#9AC5F4', 0.8),
+            iconSeparator: '#FFFFFF',
+        },
+    };
+
+    const colors = secondaryColor === 'secondary' ? colorOptions['secondary'] : defaultColors;
+
+    return {
+        [`& .${gridClasses.row}`]: {
+            '&.odd': {
+                backgroundColor: colors.oddRow,
+                '&:hover': {
+                    backgroundColor: colors.oddRowHover,
+                },
+                '&.Mui-selected': {
+                    backgroundColor: colors.oddRowSelected,
+                },
+            },
+            '&.even': {
+                backgroundColor: colors.evenRow,
+                '&:hover': {
+                    backgroundColor: colors.evenRowHover,
+                },
+                '&.Mui-selected': {
+                    backgroundColor: colors.evenRowSelected,
+                },
             },
         },
-        '&.even': {
-            backgroundColor: '#FFFFFF',
-            '&:hover': {
-                backgroundColor: alpha("#F8F6F4", 1),
-            },
-            '&.Mui-selected': {
-                backgroundColor: alpha('#9AC5F4', 0.8),
+        [`& .${gridClasses.columnHeader}`]: {
+            backgroundColor: colors.columnHeader,
+            color: colors.columnHeaderText,
+            '& .MuiDataGrid-columnMenuIcon': {
+                color: colors.columnMenuIcon,
             },
         },
-    },
-    [`& .${gridClasses.columnHeader}`]: {
-        backgroundColor: '#0079FF',
-        color: '#FFFFFF',
-        '& .MuiDataGrid-columnMenuIcon': {
-            color: '#FFFFFF',
+        [`& .${gridClasses.iconButtonContainer}`]: {
+            color: colors.iconButton,
         },
-    },
-
-    [`& .${gridClasses.iconButtonContainer}`]: {
-        color: '#FFFFFF',
-    },
-    [`& .${gridClasses.sortIcon}`]: {
-        color: '#FFFFFF !important',
-    },
-    [`& .${gridClasses.columnMenuIcon}`]: {
-        color: '#FFFFFF !important',
-    },
-    WebkitFontSmoothing: 'auto',
-    letterSpacing: 'normal',
-    '& .MuiDataGrid-columnsContainer': {
-        backgroundColor: theme.palette.mode === 'light' ? '#1d1d1d' : '#1d1d1d',
-    },
-
-
-    '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-        borderBottom: "1px solid #0079FF",
-    },
-    '& .MuiDataGrid-cell': {
-        color: 'rgba(0,0,0,.85)'
-    },
-    '& .MuiPaginationItem-root': {
-        borderRadius: 0,
-    },
-    // make three dot filter icon white
-    '& .MuiDataGrid-iconSeparator': {
-        color: '#FFFFFF',
-    },
-    ...customCheckbox(theme),
-}));
+        [`& .${gridClasses.sortIcon}`]: {
+            color: colors.sortIcon,
+        },
+        WebkitFontSmoothing: 'auto',
+        letterSpacing: 'normal',
+        '& .MuiDataGrid-columnsContainer': {
+            backgroundColor: colors.columnsContainer,
+        },
+        '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
+            borderBottom: colors.cellBorderBottom,
+        },
+        '& .MuiDataGrid-cell': {
+            color: colors.cellText,
+        },
+        '& .MuiPaginationItem-root': {
+            borderRadius: colors.paginationItem.borderRadius,
+        },
+        '& .MuiDataGrid-iconSeparator': {
+            color: colors.iconSeparator,
+        },
+        ...customCheckbox(theme),
+    };
+});

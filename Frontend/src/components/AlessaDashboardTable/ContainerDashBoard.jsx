@@ -11,6 +11,7 @@ const ContainerDashBoard = ({
     data,
     title,
     uniqueId,
+
     secondaryColor,
 }) => {
     const navigate = useNavigate();
@@ -34,11 +35,15 @@ const ContainerDashBoard = ({
     // Retrieve the value with the key "myKey" from localStorage getvalue
     const myValue = localStorage.getItem("userId");
     useEffect(() => {
+        console.log("data", data);
         if (data) {
-            setRecord(
-                data.map((item, index) => ({ ...item, id: index + 1 }))
-            );
+            if (Array.isArray(data)) {
+                setRecord(
+                    data.map((item, index) => ({ ...item, id: index + 1 }))
+                );
+            }
         }
+
     }, [data]);
 
 

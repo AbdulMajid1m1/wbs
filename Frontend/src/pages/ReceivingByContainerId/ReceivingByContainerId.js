@@ -21,7 +21,7 @@ const ReceivingByContainerId = () => {
     const navigate = useNavigate();
     const { statedata, updateData } = useContext(RecevingByContainerId);
     const [data, setData] = useState(
-        JSON.parse(sessionStorage.getItem('receivingBycontainerIdData')) || []
+        JSON.parse(sessionStorage.getItem('receivingsBycontainerIdData')) || []
 
     );
     const [selectedRow, setSelectedRow] = useState(null);
@@ -53,13 +53,13 @@ const ReceivingByContainerId = () => {
                 setData(response?.data ?? []);
                 setSelectedRow(response?.data[0] ?? []);
                 // save data in session storage
-                sessionStorage.setItem('receivingBycontainerIdData', JSON.stringify(response?.data ?? []));
+                sessionStorage.setItem('receivingsBycontainerIdData', JSON.stringify(response?.data ?? []));
 
             })
 
             .catch(error => {
                 console.error(error);
-                sessionStorage.removeItem('receivingBycontainerIdData');
+                sessionStorage.removeItem('receivingsBycontainerIdData');
                 setData([]);
                 setError(error?.response?.data?.message ?? 'Something went wrong')
 

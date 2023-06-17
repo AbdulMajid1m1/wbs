@@ -80,19 +80,11 @@ const DashboardTable = ({
         },
     ];
 
-    const updateRowData = rowData => {
-        rowData.POQTY = rowData.QTY;
-        delete rowData.QTY;
-        return rowData;
-    };
+
     const handleRowClick = (rowData, idx) => {
         if (uniqueId === "receiptsManagement") {
             console.log("rowData", rowData);
-
-            let newData = updateRowData(rowData);
-            console.log("newData", newData);
-            // temporary Comment
-            updateData(newData);
+            updateData(rowData);
             navigate("/receiptsecond")
         }
         else {

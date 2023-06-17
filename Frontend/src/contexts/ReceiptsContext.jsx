@@ -7,7 +7,7 @@ export const ReceiptsProvider = ({ children }) => {
     // get ios date format
     const date = new Date().toISOString();
     const [serialNumLength, setSerialNumLength] = useState('');
-
+    const [receivedQty, setReceivedQty] = useState(null);
     console.log(date);
     const initialData = JSON.parse(sessionStorage.getItem('receiptData')) || {
         ARRIVALWAREHOUSE: '',
@@ -57,9 +57,20 @@ export const ReceiptsProvider = ({ children }) => {
     const updateData = (newData) => {
         setSateData({ ...statedata, ...newData });
     };
+    const fetchItemCount = async () => {
+        try {
+            console.log(statedata);
+            const res = await userRequest.get(`getShipmentRecievedClCountByPoqtyShipmentIdAndItemId?POQTY=${statedata?.POQTY || ""}&SHIPMENTID=${statedata?.SHIPMENTID || ''}&ITEMID=${statedata?.ITEMID || ''}`)
+            console.log(res?.data);
+            setReceivedQty(res?.data?.itemCount ?? null);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 
     return (
-        <ReceiptsContext.Provider value={{ serialNumLength, statedata, updateData }}>
+        <ReceiptsContext.Provider value={{ serialNumLength, statedata, updateData, receivedQty, fetchItemCount }}>
             {children}
         </ReceiptsContext.Provider>
     );

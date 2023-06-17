@@ -107,18 +107,18 @@ const WBSDB = {
       let query;
       if (req.query.CONTAINERID) {
         query = `
-          SELECT * FROM dbo.tbl_Shipment_Receiving
+          SELECT * FROM dbo.tbl_Shipment_Received_CL
           WHERE SHIPMENTID = @SHIPMENTID AND CONTAINERID = @CONTAINERID
         `;
       } else {
         console.log("req.query.SHIPMENTID", req.query.SHIPMENTID);
         query = `
-          SELECT * FROM dbo.tbl_Shipment_Receiving
+          SELECT * FROM dbo.tbl_Shipment_Received_CL
           WHERE SHIPMENTID = @SHIPMENTID
         `;
       }
 
-      let request = pool1.request().input("SHIPMENTID", sql.VarChar, req.query.SHIPMENTID);
+      let request = pool2.request().input("SHIPMENTID", sql.VarChar, req.query.SHIPMENTID);
 
       if (req.query.CONTAINERID) {
         request = request.input("CONTAINERID", sql.VarChar, req.query.CONTAINERID);
@@ -143,10 +143,10 @@ const WBSDB = {
       }
 
       const query = `
-        SELECT * FROM dbo.tbl_Shipment_Receiving
+        SELECT * FROM dbo.tbl_Shipment_Received_CL
         WHERE CONTAINERID = @CONTAINERID
       `;
-      let request = pool1.request();
+      let request = pool2.request();
       request.input("CONTAINERID", sql.VarChar, req.query.CONTAINERID);
       const data = await request.query(query);
 
@@ -1204,6 +1204,65 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
 
+    }
+  },
+
+  async getShipmentRecievedClCountByPoqtyContainerIdAndItemId(req, res, next) {
+    try {
+      const { POQTY, CONTAINERID, ITEMID } = req.query;
+
+      if (!POQTY || !CONTAINERID || !ITEMID) {
+        return res.status(400).send({ message: "POQTY, CONTAINERID and ITEMID are required." });
+      }
+
+      const query = `
+        SELECT COUNT(*) as itemCount FROM dbo.tbl_Shipment_Received_CL
+        WHERE POQTY = @POQTY AND CONTAINERID = @CONTAINERID AND ITEMID = @ITEMID
+      `;
+
+      let request = pool2.request();
+      request.input('POQTY', sql.Int, POQTY);
+      request.input('CONTAINERID', sql.NVarChar(255), CONTAINERID);
+      request.input('ITEMID', sql.NVarChar(255), ITEMID);
+
+      const data = await request.query(query);
+      if (data.recordset[0].itemCount === 0) {
+        return res.status(404).send({ message: "No matching records found." });
+      }
+      return res.status(200).send({ itemCount: data.recordset[0].itemCount });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async getShipmentRecievedClCountByPoqtyShipmentIdAndItemId(req, res, next) {
+    try {
+      const { POQTY, SHIPMENTID, ITEMID } = req.query;
+
+      if (!POQTY || !SHIPMENTID || !ITEMID) {
+        return res.status(400).send({ message: "POQTY, SHIPMENTID and ITEMID are required." });
+      }
+
+      const query = `
+        SELECT COUNT(*) as itemCount FROM dbo.tbl_Shipment_Received_CL
+        WHERE POQTY = @POQTY AND SHIPMENTID = @SHIPMENTID AND ITEMID = @ITEMID
+      `;
+
+      let request = pool2.request();
+      request.input('POQTY', sql.Int, POQTY);
+      request.input('SHIPMENTID', sql.NVarChar(255), SHIPMENTID);
+      request.input('ITEMID', sql.NVarChar(255), ITEMID);
+
+      const data = await request.query(query);
+      if (data.recordset[0].itemCount === 0) {
+        return res.status(404).send({ message: "No matching records found." });
+      }
+      return res.status(200).send({ itemCount: data.recordset[0].itemCount });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
     }
   },
   async getShipmentRecievedCLDataCBySerialNumber(req, res, next) {

@@ -104,6 +104,10 @@ router.put("/updateTblItemsCLData", checkAuthentication, WBSDB.updateTblItemsCLD
 router.get("/getAllTblShipmentReceivedCL", checkAuthentication, checkRole([roles[2]]), WBSDB.getAllTblShipmentReceivedCL);
 router.get("/getTblShipmentReceivedCLStats", checkAuthentication, WBSDB.getTblShipmentReceivedCLStats);
 
+router.get("/getShipmentRecievedClCountByPoqtyContainerIdAndItemId", checkAuthentication, WBSDB.getShipmentRecievedClCountByPoqtyContainerIdAndItemId);
+
+router.get("/getShipmentRecievedClCountByPoqtyShipmentIdAndItemId", checkAuthentication, WBSDB.getShipmentRecievedClCountByPoqtyShipmentIdAndItemId);
+
 router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
 
 router.get("/getShipmentRecievedCLDataCBySerialNumber", checkAuthentication, WBSDB.getShipmentRecievedCLDataCBySerialNumber)

@@ -34,7 +34,7 @@ const ReceivingByContainerId = () => {
         setSelectedRow(rowData);
         updateData(rowData); // update context data
     };
-
+   
 
 
 

@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { RecevingByContainerId } from '../../contexts/RecevingByContainerId';
 
 const ReceivingByContainerIdThird = () => {
-    const { serialNumLength, statedata, updateData } = useContext(RecevingByContainerId);
+    const { serialNumLength, statedata, updateData, receivedQty, fetchItemCount } = useContext(RecevingByContainerId);
     const [quantity, setQuantity] = useState(null);
     const [SERIALNUM, setSERIALNUM] = useState('');
 
@@ -19,6 +19,7 @@ const ReceivingByContainerIdThird = () => {
     useEffect(() => {
 
         updateData({ REMARKS: '' });
+        fetchItemCount();
 
     }, [])
 
@@ -40,7 +41,9 @@ const ReceivingByContainerIdThird = () => {
                 `/insertShipmentRecievedDataCL?${queryParameters}`)
 
             console.log(response?.data);
+            fetchItemCount();
             setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID, REMARKS: statedata.REMARKS }]);
+
         }
         catch (error) {
 
@@ -100,7 +103,7 @@ const ReceivingByContainerIdThird = () => {
                                     </div>
                                     <div className='flex flex-col justify-center items-center text-center sm:text-lg gap-2'>
                                         <span>Received Qty</span>
-                                        <span>{Number(serialNumLength) + Number(tableData.length)}</span>
+                                        <span>{receivedQty}</span>
                                     </div>
 
                                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>

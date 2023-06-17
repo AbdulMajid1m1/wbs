@@ -8,11 +8,12 @@ import { RecevingByContainerId } from '../../contexts/RecevingByContainerId';
 const ReceivingByContainerIdSecond = () => {
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(null);
-    const { serialNumLength, statedata, updateData } = useContext(RecevingByContainerId);
+    const { serialNumLength, statedata, updateData, receivedQty, fetchItemCount } = useContext(RecevingByContainerId);
 
 
     const [dataList, setDataList] = useState([]);
     useEffect(() => {
+        fetchItemCount();
         console.log('Updated data:', statedata);
         userRequest.get('/getAllTblRZones')
             .then(response => {
@@ -24,6 +25,14 @@ const ReceivingByContainerIdSecond = () => {
             });
 
     }, []);
+
+
+
+
+
+
+
+
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -71,12 +80,12 @@ const ReceivingByContainerIdSecond = () => {
 
                                 <div className='flex gap-4'>
                                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>
-                                        <span>Qty</span>
+                                        <span>PO Qty</span>
                                         <span>{statedata?.POQTY ?? ""}</span>
                                     </div>
                                     <div className='flex flex-col justify-center items-center text-center sm:text-lg gap-2'>
                                         <span>Received Qty</span>
-                                        <span>{serialNumLength}</span>
+                                        <span>{receivedQty}</span>
                                     </div>
 
                                     <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>

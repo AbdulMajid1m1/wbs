@@ -294,7 +294,7 @@ export const TblReceiptsManagementColumn = [
 
   },
   {
-    field: "QTY",
+    field: "POQTY",
     headerName: "PO QTY",
     width: 180,
 

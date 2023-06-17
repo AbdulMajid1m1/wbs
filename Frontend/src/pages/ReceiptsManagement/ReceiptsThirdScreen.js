@@ -6,7 +6,7 @@ import userRequest from '../../utils/userRequest';
 import Swal from 'sweetalert2';
 
 const ReceiptsThirdScreen = () => {
-  const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
+  const { serialNumLength, statedata, updateData, receivedQty, fetchItemCount } = useContext(ReceiptsContext);
   const [quantity, setQuantity] = useState(null);
   const [SERIALNUM, setSERIALNUM] = useState('');
 
@@ -19,7 +19,7 @@ const ReceiptsThirdScreen = () => {
   useEffect(() => {
 
     updateData({ REMARKS: '' });
-
+    fetchItemCount();
   }, [])
 
 
@@ -40,6 +40,7 @@ const ReceiptsThirdScreen = () => {
         `/insertShipmentRecievedDataCL?${queryParameters}`)
 
       console.log(response?.data);
+      fetchItemCount();
       setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID, REMARKS: statedata.REMARKS }]);
     }
     catch (error) {
@@ -95,12 +96,12 @@ const ReceiptsThirdScreen = () => {
 
                 <div className='flex gap-4'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>
-                    <span>Qty</span>
+                    <span>POQty</span>
                     <span>{statedata?.POQTY ?? ""}</span>
                   </div>
                   <div className='flex flex-col justify-center items-center text-center sm:text-lg gap-2'>
                     <span>Received Qty</span>
-                    <span>{Number(serialNumLength) + Number(tableData.length)}</span>
+                    <span>{receivedQty}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>

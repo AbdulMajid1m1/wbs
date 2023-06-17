@@ -84,19 +84,19 @@ const ContainerDashBoard = ({
         },
     ];
 
-    const updateRowData = rowData => {
-        rowData.POQTY = rowData.QTY;
-        delete rowData.QTY;
-        return rowData;
-    };
+    // const updateRowData = rowData => {
+    //     rowData.POQTY = rowData.QTY;
+    //     delete rowData.QTY;
+    //     return rowData;
+    // };
     const handleRowClick = (rowData, idx) => {
         if (uniqueId === "receivingByContainerId") {
             console.log("rowData", rowData);
 
-            let newData = updateRowData(rowData);
-            console.log("newData", newData);
+            // let newData = updateRowData(rowData);
+            console.log("newData", rowData);
             // temporary Comment
-            updateData(newData);
+            updateData(rowData);
             navigate("/receiving-by-containerid-second")
         }
         else {

@@ -7,6 +7,7 @@ export const RecevingByContainerIdProvider = ({ children }) => {
     const date = new Date().toISOString();
     const [serialNumLength, setSerialNumLength] = useState('');
     const [statedata, setSateData] = useState(null); // Set initial state to null
+    const [receivedQty, setReceivedQty] = useState(null);
 
     useEffect(() => {
         const initialData = JSON.parse(sessionStorage.getItem('receivingBycontainerIdData')) || {
@@ -38,29 +39,29 @@ export const RecevingByContainerIdProvider = ({ children }) => {
         }
     }, [statedata]);
 
-    useEffect(() => {
-        const getAllAssetsList = async () => {
-            try {
-                const response = await userRequest.get("/getAllTblShipmentReceivedCL");
-                console.log(response?.data);
-                setSerialNumLength(response?.data?.length ?? '');
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        getAllAssetsList();
-    }, []);
+
 
     const updateData = (newData) => {
         setSateData({ ...statedata, ...newData });
     };
+
+
+    const fetchItemCount = async () => {
+        try {
+            const res = await userRequest.get(`getShipmentRecievedClCountByPoqtyContainerIdAndItemId?POQTY=${statedata?.POQTY || ""}&CONTAINERID=${statedata?.CONTAINERID || ''}&ITEMID=${statedata?.ITEMID || ''}`)
+            console.log(res?.data);
+            setReceivedQty(res?.data?.itemCount ?? null);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     if (statedata === null) { // Render null or a loading indicator while the initial data is being fetched
         return null;
     }
 
     return (
-        <RecevingByContainerId.Provider value={{ serialNumLength, statedata, updateData }}>
+        <RecevingByContainerId.Provider value={{ serialNumLength, statedata, updateData, receivedQty, fetchItemCount }}>
             {children}
         </RecevingByContainerId.Provider>
     );

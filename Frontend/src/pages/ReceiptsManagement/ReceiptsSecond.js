@@ -8,10 +8,11 @@ import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 const ReceiptsSecond = () => {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(null);
-  const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
+  const { serialNumLength, statedata, updateData, receivedQty, fetchItemCount } = useContext(ReceiptsContext);
 
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
+    fetchItemCount();
     console.log('Updated data:', statedata);
     userRequest.get('/getAllTblRZones')
       .then(response => {
@@ -70,12 +71,12 @@ const ReceiptsSecond = () => {
 
                 <div className='flex gap-4'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>
-                    <span>Qty</span>
+                    <span>POQty</span>
                     <span>{statedata?.POQTY ?? ""}</span>
                   </div>
                   <div className='flex flex-col justify-center items-center text-center sm:text-lg gap-2'>
                     <span>Received Qty</span>
-                    <span>{serialNumLength}</span>
+                    <span>{receivedQty}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2'>

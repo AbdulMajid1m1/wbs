@@ -107,18 +107,18 @@ const WBSDB = {
       let query;
       if (req.query.CONTAINERID) {
         query = `
-          SELECT * FROM dbo.tbl_Shipment_Received_CL
+          SELECT * FROM dbo.expectedShipments
           WHERE SHIPMENTID = @SHIPMENTID AND CONTAINERID = @CONTAINERID
         `;
       } else {
         console.log("req.query.SHIPMENTID", req.query.SHIPMENTID);
         query = `
-          SELECT * FROM dbo.tbl_Shipment_Received_CL
+          SELECT * FROM dbo.expectedShipments
           WHERE SHIPMENTID = @SHIPMENTID
         `;
       }
 
-      let request = pool2.request().input("SHIPMENTID", sql.VarChar, req.query.SHIPMENTID);
+      let request = pool1.request().input("SHIPMENTID", sql.VarChar, req.query.SHIPMENTID);
 
       if (req.query.CONTAINERID) {
         request = request.input("CONTAINERID", sql.VarChar, req.query.CONTAINERID);
@@ -143,10 +143,10 @@ const WBSDB = {
       }
 
       const query = `
-        SELECT * FROM dbo.tbl_Shipment_Received_CL
+        SELECT * FROM dbo.expectedShipments
         WHERE CONTAINERID = @CONTAINERID
       `;
-      let request = pool2.request();
+      let request = pool1.request();
       request.input("CONTAINERID", sql.VarChar, req.query.CONTAINERID);
       const data = await request.query(query);
 
@@ -1137,7 +1137,7 @@ const WBSDB = {
       request4.input("ITEMNAME", sql.NVarChar, ITEMNAME);
       request4.input("ITEMID", sql.NVarChar, ITEMID);
       request4.input("PURCHID", sql.NVarChar, PURCHID);
-      request4.input("CLASSIFICATION", sql.Float, CLASSIFICATION);
+      request4.input("CLASSIFICATION", sql.NVarChar, CLASSIFICATION);
       request4.input("SERIALNUM", sql.NVarChar, SERIALNUM);
       request4.input("RCVDCONFIGID", sql.NVarChar, RCVDCONFIGID);
       request4.input("RCVD_DATE", sql.Date, RCVD_DATE);

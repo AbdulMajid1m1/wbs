@@ -1202,13 +1202,17 @@ const WBSDB = {
     try {
       const { POQTY, CONTAINERID, ITEMID } = req.query;
 
-      if (!POQTY || !CONTAINERID || !ITEMID) {
+      if (!CONTAINERID || !ITEMID) {
         return res.status(400).send({ message: "POQTY, CONTAINERID and ITEMID are required." });
       }
 
+      // const query = `
+      //   SELECT COUNT(*) as itemCount FROM dbo.tbl_Shipment_Received_CL
+      //   WHERE POQTY = @POQTY AND CONTAINERID = @CONTAINERID AND ITEMID = @ITEMID
+      // `;
       const query = `
         SELECT COUNT(*) as itemCount FROM dbo.tbl_Shipment_Received_CL
-        WHERE POQTY = @POQTY AND CONTAINERID = @CONTAINERID AND ITEMID = @ITEMID
+        WHERE CONTAINERID = @CONTAINERID AND ITEMID = @ITEMID
       `;
 
       let request = pool2.request();

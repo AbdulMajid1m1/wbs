@@ -105,24 +105,15 @@ const WBSDB = {
       }
 
       let query;
-      if (req.query.CONTAINERID) {
-        query = `
-          SELECT * FROM dbo.expectedShipments
-          WHERE SHIPMENTID = @SHIPMENTID AND CONTAINERID = @CONTAINERID
-        `;
-      } else {
+      
+   
         console.log("req.query.SHIPMENTID", req.query.SHIPMENTID);
         query = `
           SELECT * FROM dbo.expectedShipments
           WHERE SHIPMENTID = @SHIPMENTID
         `;
-      }
 
       let request = pool1.request().input("SHIPMENTID", sql.VarChar, req.query.SHIPMENTID);
-
-      if (req.query.CONTAINERID) {
-        request = request.input("CONTAINERID", sql.VarChar, req.query.CONTAINERID);
-      }
 
       const data = await request.query(query);
 
@@ -1241,13 +1232,17 @@ const WBSDB = {
     try {
       const { POQTY, SHIPMENTID, ITEMID } = req.query;
 
-      if (!POQTY || !SHIPMENTID || !ITEMID) {
+      if ( !SHIPMENTID || !ITEMID) {
         return res.status(400).send({ message: "POQTY, SHIPMENTID and ITEMID are required." });
       }
 
+      // const query = `
+      //   SELECT COUNT(*) as itemCount FROM dbo.tbl_Shipment_Received_CL
+      //   WHERE POQTY = @POQTY AND SHIPMENTID = @SHIPMENTID AND ITEMID = @ITEMID
+      // `;
       const query = `
         SELECT COUNT(*) as itemCount FROM dbo.tbl_Shipment_Received_CL
-        WHERE POQTY = @POQTY AND SHIPMENTID = @SHIPMENTID AND ITEMID = @ITEMID
+        WHERE SHIPMENTID = @SHIPMENTID AND ITEMID = @ITEMID
       `;
 
       let request = pool2.request();

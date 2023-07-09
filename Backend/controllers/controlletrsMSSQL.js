@@ -2791,6 +2791,27 @@ const WBSDB = {
     }
   },
 
+  async getOneMapBarcodeDataByItemCode(req, res, next) {
+    try {
+      const ItemCode = req.headers['itemcode']; // Get ITEMID from headers
+      console.log(ItemCode);
+      let query = `
+        SELECT Top(1) * FROM dbo.tblMappedBarcodes
+        WHERE ItemCode  = @ItemCode
+      `;
+      let request = pool2.request();
+      request.input('ItemCode', sql.NVarChar(100), ItemCode);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
 
   async getmapBarcodeDataByuser(req, res, next) {
     try {
@@ -3971,6 +3992,9 @@ const WBSDB = {
   // -------------- tbl_Item-Master CONTROLLERS START --------------
 
 
+
+
+
   async updateTblItemMaster(req, res, next) {
     try {
       const fieldTypes = {
@@ -4044,40 +4068,7 @@ const WBSDB = {
     }
   },
 
-  // async updateQtyReceivedInTblItemMaster(req, res, next) {
-  //   try {
-  //     const { itemid, qty } = req.body;
 
-  //     if (!itemid) {
-  //       return res.status(400).send({ message: 'ITEMID is required.' });
-  //     }
-  //     if (qty === undefined) {
-  //       return res.status(400).send({ message: 'qty is required.' });
-  //     }
-
-  //     const query = `
-  //       UPDATE dbo.[tbl_Item_Master]
-  //       SET QTYRECEIVED = QTYRECEIVED + @qty
-  //       OUTPUT INSERTED.*
-  //       WHERE ITEMID = @itemid
-  //     `;
-
-  //     const request = pool2.request();
-  //     request.input('itemid', sql.NVarChar(255), itemid);
-  //     request.input('qty', sql.Numeric(18, 0), qty);
-
-  //     const result = await request.query(query);
-
-  //     if (result.rowsAffected[0] === 0) {
-  //       return res.status(404).send({ message: 'Data not found.' });
-  //     }
-
-  //     res.status(200).send({ message: 'Data updated successfully.', data: result.recordset[0] });
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // },
 
   async updateQtyReceivedInTblStockMaster(req, res, next) {
     try {

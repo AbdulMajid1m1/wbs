@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import { MuiCustomTable } from "../../utils/MuiCustomTable";
 import { RecevingByContainerId } from "../../contexts/RecevingByContainerId";
+import userRequest from "../../utils/userRequest";
 
 const ContainerDashBoard = ({
     columnsName,
@@ -101,17 +102,18 @@ const ContainerDashBoard = ({
             updateData({ ...rowData, POQTY: rowData?.QTY });
             try {
 
-                const itemData = await userRequest.post("/InventTableWMSDataByItemId",
+                const itemData = await userRequest.post("/getOneMapBarcodeDataByItemCode", {},
                     {
                         headers: {
-                            itemid: rowData?.ITEMID,
+                            itemcode: rowData?.ITEMID,
                         }
-                    },
+                    }
 
                 );
                 console.log(itemData);
-                let itemName = itemData?.data[0]?.ITEMNAME;
-                updateData({ ...rowData, ITEMNAME: itemName });
+                let itemName = itemData?.data[0]?.ItemDesc;
+                let itemDesc = itemData?.data[0]?.Classification;
+                updateData({ ...rowData, ITEMNAME: itemName, CLASSIFICATION: itemDesc });
             }
             catch (err) {
                 console.log(err);

@@ -87,19 +87,21 @@ const DashboardTable = ({
             console.log("rowData", rowData);
             updateData(rowData);
             updateData({ ...rowData, POQTY: rowData?.QTY });
+            console.log("itemcode", rowData?.ITEMID);
             try {
 
-                const itemData = await userRequest.post("/InventTableWMSDataByItemId",
+                const itemData = await userRequest.post("/getOneMapBarcodeDataByItemCode", {},
                     {
                         headers: {
-                            itemid: rowData?.ITEMID,
+                            itemcode: rowData?.ITEMID,
                         }
                     },
 
                 );
                 console.log(itemData);
-                let itemName = itemData?.data[0]?.ITEMNAME;
-                updateData({ ...rowData, ITEMNAME: itemName });
+                let itemName = itemData?.data[0]?.ItemDesc;
+                let itemDesc = itemData?.data[0]?.Classification;
+                updateData({ ...rowData, ITEMNAME: itemName, CLASSIFICATION: itemDesc });
             }
             catch (err) {
                 console.log(err);

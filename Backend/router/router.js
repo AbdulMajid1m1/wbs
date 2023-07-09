@@ -228,6 +228,7 @@ router.get("/getStockMasterDataByItemId", checkAuthentication, checkRole([roles[
 router.get("/getAllTblMappedBarcodes", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[41]]), WBSDB.getAllTblMappedBarcodes);
 
 router.post("/getmapBarcodeDataByItemCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]], [roles[32], roles[49]]), WBSDB.getmapBarcodeDataByItemCode); // tblMappedBarcodes
+router.post("/getOneMapBarcodeDataByItemCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]], [roles[32], roles[49]]), WBSDB.getOneMapBarcodeDataByItemCode); // tblMappedBarcodes
 
 router.get("/getmapBarcodeDataByuser", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getmapBarcodeDataByuser); // tblMappedBarcodes
 

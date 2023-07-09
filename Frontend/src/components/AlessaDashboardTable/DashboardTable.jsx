@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import { ReceiptsContext } from "../../contexts/ReceiptsContext";
 import { MuiCustomTable } from "../../utils/MuiCustomTable";
+import userRequest from "../../utils/userRequest";
 
 const DashboardTable = ({
     columnsName,
@@ -81,11 +82,33 @@ const DashboardTable = ({
     ];
 
 
-    const handleRowClick = (rowData, idx) => {
+    const handleRowClick = async (rowData, idx) => {
         if (uniqueId === "receiptsManagement") {
             console.log("rowData", rowData);
             updateData(rowData);
-            navigate("/receiptsecond")
+            updateData({ ...rowData, POQTY: rowData?.QTY });
+            try {
+
+                const itemData = await userRequest.post("/InventTableWMSDataByItemId",
+                    {
+                        headers: {
+                            itemid: rowData?.ITEMID,
+                        }
+                    },
+
+                );
+                console.log(itemData);
+                let itemName = itemData?.data[0]?.ITEMNAME;
+                updateData({ ...rowData, ITEMNAME: itemName });
+            }
+            catch (err) {
+                console.log(err);
+            }
+            finally {
+
+                navigate("/receiptsecond")
+            }
+
         }
         else {
             return

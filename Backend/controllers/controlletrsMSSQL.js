@@ -105,10 +105,14 @@ const WBSDB = {
       }
 
       let query;
-      
-   
-        console.log("req.query.SHIPMENTID", req.query.SHIPMENTID);
-        query = `
+
+
+      console.log("req.query.SHIPMENTID", req.query.SHIPMENTID);
+      // query = `
+      //   SELECT * FROM dbo.tbl_Shipment_Receiving
+      //   WHERE SHIPMENTID = @SHIPMENTID
+      // `;
+      query = `
           SELECT * FROM dbo.expectedShipments
           WHERE SHIPMENTID = @SHIPMENTID
         `;
@@ -1236,7 +1240,7 @@ const WBSDB = {
     try {
       const { POQTY, SHIPMENTID, ITEMID } = req.query;
 
-      if ( !SHIPMENTID || !ITEMID) {
+      if (!SHIPMENTID || !ITEMID) {
         return res.status(400).send({ message: "POQTY, SHIPMENTID and ITEMID are required." });
       }
 

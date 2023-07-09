@@ -31,6 +31,7 @@ const ReceiptsThirdScreen = () => {
     }
 
     console.log(statedata);
+    console.log(statedata?.POQTY)
     statedata.REMAININGQTY = statedata.POQTY - 1;
 
     const queryParameters = new URLSearchParams(statedata).toString();

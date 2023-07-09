@@ -89,7 +89,7 @@ const ContainerDashBoard = ({
     //     delete rowData.QTY;
     //     return rowData;
     // };
-    const handleRowClick = (rowData, idx) => {
+    const handleRowClick = async (rowData, idx) => {
         if (uniqueId === "receivingByContainerId") {
             console.log("rowData", rowData);
 
@@ -97,7 +97,32 @@ const ContainerDashBoard = ({
             console.log("newData", rowData);
             // temporary Comment
             updateData(rowData);
-            navigate("/receiving-by-containerid-second")
+
+            updateData({ ...rowData, POQTY: rowData?.QTY });
+            try {
+
+                const itemData = await userRequest.post("/InventTableWMSDataByItemId",
+                    {
+                        headers: {
+                            itemid: rowData?.ITEMID,
+                        }
+                    },
+
+                );
+                console.log(itemData);
+                let itemName = itemData?.data[0]?.ITEMNAME;
+                updateData({ ...rowData, ITEMNAME: itemName });
+            }
+            catch (err) {
+                console.log(err);
+            }
+            finally {
+
+                navigate("/receiving-by-containerid-second")
+            }
+
+
+
         }
         else {
             return

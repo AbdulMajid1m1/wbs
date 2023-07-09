@@ -52,7 +52,7 @@ export const RecevingByContainerIdProvider = ({ children }) => {
             console.log(res?.data);
             setReceivedQty(res?.data?.itemCount ?? null);
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
     }
 

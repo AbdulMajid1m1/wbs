@@ -25,7 +25,7 @@ export const ReceiptsProvider = ({ children }) => {
         RZONE: '',
         SERIALNUM: '',
         SHIPMENTID: '',
-        POQTY: '',
+        POQTY: null,
         RCVQTY: 1,
         REMAININGQTY: '',
     };

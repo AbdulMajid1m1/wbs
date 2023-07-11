@@ -57,7 +57,7 @@ const ReceiptsManagement = () => {
   const handleAutoComplete = (event, value) => {
 
     let containerId = value?.CONTAINERID.trim();
-    if(!containerId) {
+    if (!containerId) {
       setFilterData(data);
       return;
     }
@@ -103,55 +103,59 @@ const ReceiptsManagement = () => {
 
               </form>
 
+              {filterData.length > 0 && (
 
-              <div className="mb-6 mt-6">
-                <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By CONTINERID</label>
-                <Autocomplete
-                  id="zone"
-                  options={data}
-                  getOptionLabel={(option) => option?.CONTAINERID || ""}
-                  onChange={handleAutoComplete}
 
-                  // onChange={(event, value) => {
-                  //   if (value) {
-                  //     console.log(`Selected: ${value}`);
 
-                  //   }
-                  // }}
-                  onInputChange={(event, value) => {
-                    if (!value) {
-                      // perform operation when input is cleared
-                      console.log("Input cleared");
+                <div className="mb-6 mt-6">
+                  <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By CONTINERID</label>
+                  <Autocomplete
+                    id="zone"
+                    options={data}
+                    getOptionLabel={(option) => option?.CONTAINERID || ""}
+                    onChange={handleAutoComplete}
 
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        className: "text-white",
-                      }}
-                      InputLabelProps={{
-                        ...params.InputLabelProps,
-                        style: { color: "white" },
-                      }}
+                    // onChange={(event, value) => {
+                    //   if (value) {
+                    //     console.log(`Selected: ${value}`);
 
-                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Enter/Scan Receiving Zone"
-                      required
-                    />
-                  )}
-                  classes={{
-                    endAdornment: "text-white",
-                  }}
-                  sx={{
-                    '& .MuiAutocomplete-endAdornment': {
-                      color: 'white',
-                    },
-                  }}
-                />
-              </div>
+                    //   }
+                    // }}
+                    onInputChange={(event, value) => {
+                      if (!value) {
+                        // perform operation when input is cleared
+                        console.log("Input cleared");
+
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          className: "text-white",
+                        }}
+                        InputLabelProps={{
+                          ...params.InputLabelProps,
+                          style: { color: "white" },
+                        }}
+
+                        className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                        placeholder="Enter/Scan Receiving Zone"
+                        required
+                      />
+                    )}
+                    classes={{
+                      endAdornment: "text-white",
+                    }}
+                    sx={{
+                      '& .MuiAutocomplete-endAdornment': {
+                        color: 'white',
+                      },
+                    }}
+                  />
+                </div>
+              )}
 
 
               <div className="mb-6 -mx-5">

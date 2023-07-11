@@ -5,6 +5,7 @@ import "./ReceiptsManagement.css";
 import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 import { TblReceiptsManagementColumn } from '../../utils/datatablesource';
 import DashboardTable from '../../components/AlessaDashboardTable/DashboardTable';
+import { Autocomplete, TextField } from '@mui/material';
 
 
 const ReceiptsManagement = () => {
@@ -14,6 +15,8 @@ const ReceiptsManagement = () => {
     JSON.parse(sessionStorage.getItem('receiptsData')) ?? []
 
   );
+
+  const [filterData, setFilterData] = useState(data);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState(0);
   const [shipmentTag, setShipmentTag] = useState('');
@@ -24,9 +27,6 @@ const ReceiptsManagement = () => {
     setSelectedRow(rowData);
     updateData(rowData); // update context data
   };
-
-
-
 
 
   const handleChangeValue = (e) => {
@@ -41,6 +41,7 @@ const ReceiptsManagement = () => {
         console.log(response?.data);
 
         setData(response?.data ?? []);
+        setFilterData(response?.data ?? []);
         setSelectedRow(response?.data[0] ?? []);
         // save data in session storage
         sessionStorage.setItem('receiptsData', JSON.stringify(response?.data ?? []));
@@ -52,6 +53,19 @@ const ReceiptsManagement = () => {
 
       });
   }
+
+  const handleAutoComplete = (event, value) => {
+
+    let containerId = value?.CONTAINERID.trim();
+    if(!containerId) {
+      setFilterData(data);
+      return;
+    }
+    console.log(value);
+    const newData = data.filter(item => item.CONTAINERID.trim() === containerId);
+    setFilterData(newData);
+  };
+
 
 
 
@@ -67,9 +81,9 @@ const ReceiptsManagement = () => {
             <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm text-[#fff] bg-[#e69138]'>
               Back
             </button>
-            <form onSubmit={handleForm}>
-              <div className="mt-6 md:mt-10 flex justify-between items-center w-full text-sm md:text-xl py-2 rounded-md">
-                <label htmlFor="total" className="block text-xs font-medium text-black">SHIPMENT ID</label>
+            <div>
+              <form onSubmit={handleForm} className="mt-6 md:mt-10 flex justify-between items-center w-full text-sm md:text-xl py-2 rounded-md">
+                <label htmlFor="total" className="block text-xs font-medium text-[#00006A]">SHIPMENT ID</label>
                 <input
                   id="total"
                   onChange={handleChangeValue}
@@ -86,11 +100,63 @@ const ReceiptsManagement = () => {
                   </span>
                 </button>
 
+
+              </form>
+
+
+              <div className="mb-6 mt-6">
+                <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By CONTINERID</label>
+                <Autocomplete
+                  id="zone"
+                  options={data}
+                  getOptionLabel={(option) => option?.CONTAINERID || ""}
+                  onChange={handleAutoComplete}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Enter/Scan Receiving Zone"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
               </div>
 
-              <div className="mb-6">
 
-                <DashboardTable data={data} title={"Receipts Management"} columnsName={TblReceiptsManagementColumn}
+              <div className="mb-6 -mx-5">
+
+                <DashboardTable data={filterData} title={"Receipts Management"} columnsName={TblReceiptsManagementColumn}
                   uniqueId="receiptsManagement"
                   secondaryColor="secondary" // to get orange color in table
 
@@ -106,7 +172,7 @@ const ReceiptsManagement = () => {
                   className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[15%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
-            </form >
+            </div >
           </div >
         </div >
       </div >

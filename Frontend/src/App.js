@@ -274,7 +274,7 @@ const App = () => {
                 <Route path='/user-accounts' element={<UsersAccounts />} />
                 <Route path='/user-accounts/:id/:name' element={<AssignRoles />} />
 
-                {/* <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
+                {/*  <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
 
 
 

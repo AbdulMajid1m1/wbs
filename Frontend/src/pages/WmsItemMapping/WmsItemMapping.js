@@ -409,7 +409,7 @@ const WmsItemMapping = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor='height' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Height<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='height'  className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Height<span className='text-[#FF0404]'>*</span></label>
               <input
                 // required
                 id="height"

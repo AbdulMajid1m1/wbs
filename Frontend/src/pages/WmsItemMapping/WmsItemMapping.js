@@ -172,7 +172,10 @@ const WmsItemMapping = () => {
 
   }
 
-
+  useEffect(() => {
+    const currentDate = new Date().toISOString().substr(0, 10);
+    setUserDate(currentDate);
+  }, []);
 
   return (
     <>

@@ -4187,6 +4187,9 @@ const WBSDB = {
           ITEMNAME,
           ITEMGROUPID,
           GROUPNAME,
+          Length,
+          Width,
+          Height,
         } = stockMasterDataArray[i];
 
         // Check if a record already exists
@@ -4208,6 +4211,9 @@ const WBSDB = {
           "ITEMNAME",
           "ITEMGROUPID",
           "GROUPNAME",
+          "Length",
+          "Width",
+          "Height",
         ];
 
         let values = fields.map((field) => "@" + field);
@@ -4224,6 +4230,9 @@ const WBSDB = {
         request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
         request.input('ITEMGROUPID', sql.NVarChar, ITEMGROUPID);
         request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
+        request.input('Length', sql.Numeric(10, 2), Length);
+        request.input('Width', sql.Numeric(10, 2), Width);
+        request.input('Height', sql.Numeric(10, 2), Height);
 
         await request.query(query);
       }

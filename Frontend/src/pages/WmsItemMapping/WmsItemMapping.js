@@ -298,7 +298,7 @@ const WmsItemMapping = () => {
               <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="scan"
-                required
+                // required
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan Serial'
                 value={userserial}
@@ -310,7 +310,7 @@ const WmsItemMapping = () => {
               <label htmlFor='gtin' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan GITN#<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="gtin"
-                required
+                // required
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan GTIN'
                 value={usergtin}
@@ -364,7 +364,7 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='binlocation' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Binlocation<span className='text-[#FF0404]'>*</span></label>
               <input
-                required
+                // required
                 id="binlocation"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan Binlocation'
@@ -375,7 +375,7 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='reference' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Reference<span className='text-[#FF0404]'>*</span></label>
               <input
-                required
+                // required
                 id="reference"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Binlocation'
@@ -387,7 +387,7 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='length' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Length<span className='text-[#FF0404]'>*</span></label>
               <input
-                required
+                // required
                 id="length"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Length'
@@ -399,7 +399,7 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='width' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Width<span className='text-[#FF0404]'>*</span></label>
               <input
-                required
+                // required
                 id="width"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Width'
@@ -411,7 +411,7 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='height' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Height<span className='text-[#FF0404]'>*</span></label>
               <input
-                required
+                // required
                 id="height"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Height'
@@ -423,7 +423,7 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='weight' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Weight<span className='text-[#FF0404]'>*</span></label>
               <input
-                required
+                // required
                 id="weight"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Weight'

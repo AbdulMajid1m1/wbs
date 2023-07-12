@@ -2981,7 +2981,12 @@ const WBSDB = {
         sid,
         cid,
         po,
-        trans
+        trans,
+        length,
+        width,
+        height,
+        weight,
+        qrcode,
       } = req.body;
 
       // Check if the required serial number exists
@@ -3008,13 +3013,20 @@ const WBSDB = {
               SID = @sid,
               CID = @cid,
               PO = @po,
-              Trans = @trans
+              Trans = @trans,
+              Length = @length,
+              Width = @width,
+              Height = @height,
+              Weight = @weight,
+              QRCode = @qrcode
+          
+
           WHERE ItemSerialNo = @itemSerialNo
         END
         ELSE
         BEGIN
-          INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
-          VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+          INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans,Length,Width,Height,Weight,QRCode)
+          VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans,@length,@width,@height,@weight,@qrcode)
         END
       `;
 
@@ -3036,6 +3048,11 @@ const WBSDB = {
       request.input('cid', sql.VarChar(50), cid);
       request.input('po', sql.VarChar(50), po);
       request.input('trans', sql.Numeric(10, 0), trans);
+      request.input("length", sql.Numeric(10, 2), length);
+      request.input("width", sql.Numeric(10, 2), width);
+      request.input("height", sql.Numeric(10, 2), height);
+      request.input("weight", sql.Numeric(10, 2), weight);
+      request.input("qrcode", sql.VarChar(255), qrcode);
 
       await request.query(query);
 

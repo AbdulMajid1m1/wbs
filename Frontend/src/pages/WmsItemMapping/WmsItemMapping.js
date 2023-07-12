@@ -24,20 +24,24 @@ const WmsItemMapping = () => {
   const [userserial, setUserSerial] = useState("");
   const [usergtin, setUserGtin] = useState("");
   const [userconfig, setUserConfig] = useState("");
-  const [userdate, setUserDate] = useState("");
+  const [userdate, setUserDate] = useState(null);
   const [userqrcode, setUserQrCode] = useState("");
   const [userbinlocation, setUserBinlocation] = useState("");
   const [reference, setReference] = useState("");
-  const [length, setLength] = useState("");
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
+  // const [length, setLength] = useState("");
+  // const [width, setWidth] = useState("");
+  // const [height, setHeight] = useState("");
+  // const [weight, setWeight] = useState("");
 
   const [rowData, setRowData] = useState();
   const [searchText, setSearchText] = useState('');
   const abortControllerRef = useRef(null);
   const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
+  const [length, setLength] = useState(null);
+  const [width, setWidth] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [weight, setWeight] = useState(null);
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -74,17 +78,23 @@ const WmsItemMapping = () => {
       "itemdesc": selectedOption?.ITEMNAME,
       "gtin": usergtin,
       // "remarks": rowData?.Remarks,
-      // "classification": rowData?.Classification,
+      "classification": userconfig,
       // "mainlocation": rowData?.MainLocation,
       "binlocation": userbinlocation,
       // "intcode": rowData?.IntCode,
       "itemserialno": userserial,
       "mapdate": userdate,
       // "palletcode": rowData?.PalletCode,
-      "reference": reference,
+      "reference": reference === "" ? null : reference,
       // "sid": rowData?.SID,
-      "cid": userconfig,
+      // "cid": userconfig,
       "po": rowData?.PO,
+      "qrcode": userqrcode === "" ? null : userqrcode,
+      "length": length,
+      "width": width,
+      "height": height,
+      "weight": weight,
+
       // "trans": rowData?.Trans
 
     }
@@ -96,10 +106,15 @@ const WmsItemMapping = () => {
         setUserSerial("");
         setUserGtin("");
         setUserConfig("");
-        setUserDate("");
+        setUserDate(null);
         setUserQrCode("");
         setUserBinlocation("");
         setReference("");
+        setHeight("");
+        setLength("");
+        setWidth("");
+        setWeight("");
+
 
       })
       .catch(error => {
@@ -331,10 +346,14 @@ const WmsItemMapping = () => {
                 onChange={(e) => setUserConfig(e.target.value)}
               >
                 <option value="">Select CONFIG</option>
-                <option value="1">G/WG</option>
-                <option value="2">D/WG</option>
-                <option value="2">S/WG</option>
-                <option value="2">PRMDL (V)</option>
+                <option value="G">G</option>
+                <option value="D">D</option>
+                <option value="S">S</option>
+                <option value="WG">WG</option>
+                <option value="WD">WD</option>
+                <option value="WS">WS</option>
+                <option value="V">V</option>
+                <option value="U">U</option>
               </select>
             </div>
 
@@ -348,7 +367,7 @@ const WmsItemMapping = () => {
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder='Manufacturing Date'
                   onChange={(e) => setUserDate(e.target.value)}
-                  value={userdate}
+                // value={userdate}
                 />
               </div>
 
@@ -378,8 +397,8 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='reference' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Reference<span className='text-[#FF0404]'>*</span></label>
               <input
-                // required
-                id="reference"
+
+                id="binlocation"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Binlocation'
                 onChange={(e) => setReference(e.target.value)}
@@ -387,8 +406,9 @@ const WmsItemMapping = () => {
               />
             </div>
 
+
             <div className="mb-6">
-              <label htmlFor='length' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Length<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='length' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Length<span className='text-[#FF0404]'>*</span></label>
               <input
                 // required
                 id="length"
@@ -400,7 +420,7 @@ const WmsItemMapping = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor='width' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Width<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='width' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Width<span className='text-[#FF0404]'>*</span></label>
               <input
                 // required
                 id="width"
@@ -412,7 +432,7 @@ const WmsItemMapping = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor='height'  className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Height<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='height' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Height<span className='text-[#FF0404]'>*</span></label>
               <input
                 // required
                 id="height"
@@ -424,7 +444,7 @@ const WmsItemMapping = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor='weight' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Weight<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='weight' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Weight<span className='text-[#FF0404]'>*</span></label>
               <input
                 // required
                 id="weight"
@@ -433,9 +453,8 @@ const WmsItemMapping = () => {
                 onChange={(e) => setWeight(e.target.value)}
                 value={weight}
               />
-            </div>  
+            </div>
 
-            
             <div className='mb-6'>
               <button
                 type='submit'

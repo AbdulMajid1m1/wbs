@@ -141,7 +141,7 @@ const ReceiptsManagement = () => {
                         }}
 
                         className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                        placeholder="Enter/Scan Receiving Zone"
+                        placeholder="Serach Container ID here"
                         required
                       />
                     )}

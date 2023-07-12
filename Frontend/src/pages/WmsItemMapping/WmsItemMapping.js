@@ -212,7 +212,7 @@ const WmsItemMapping = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>Barcode Mapping</h2>
+                <h2 className='text-center  text-[#fff]'>Barcode Mapping</h2>
 
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>

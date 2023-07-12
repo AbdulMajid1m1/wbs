@@ -28,6 +28,11 @@ const WmsItemMapping = () => {
   const [userqrcode, setUserQrCode] = useState("");
   const [userbinlocation, setUserBinlocation] = useState("");
   const [reference, setReference] = useState("");
+  const [length, setLength] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+
   const [rowData, setRowData] = useState();
   const [searchText, setSearchText] = useState('');
   const abortControllerRef = useRef(null);
@@ -207,7 +212,7 @@ const WmsItemMapping = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>Item Mapping</h2>
+                <h2 className='text-center text-[#fff]'>Barcode Mapping</h2>
 
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>
@@ -254,7 +259,7 @@ const WmsItemMapping = () => {
 
                 renderInput={(params) => (
                   <TextField
-                    required
+                    // required
                     {...params}
                     label="Search Item Number or Description here"
                     InputProps={{
@@ -368,10 +373,10 @@ const WmsItemMapping = () => {
               />
             </div>
             <div className="mb-6">
-              <label htmlFor='binlocation' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Reference<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='reference' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Reference<span className='text-[#FF0404]'>*</span></label>
               <input
                 required
-                id="binlocation"
+                id="reference"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan Binlocation'
                 onChange={(e) => setReference(e.target.value)}
@@ -379,6 +384,55 @@ const WmsItemMapping = () => {
               />
             </div>
 
+            <div className="mb-6">
+              <label htmlFor='length' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Length<span className='text-[#FF0404]'>*</span></label>
+              <input
+                required
+                id="length"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Enter/Scan Length'
+                onChange={(e) => setLength(e.target.value)}
+                value={length}
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor='width' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Width<span className='text-[#FF0404]'>*</span></label>
+              <input
+                required
+                id="width"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Enter/Scan Width'
+                onChange={(e) => setWidth(e.target.value)}
+                value={width}
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor='height' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Height<span className='text-[#FF0404]'>*</span></label>
+              <input
+                required
+                id="height"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Enter/Scan Height'
+                onChange={(e) => setHeight(e.target.value)}
+                value={height}
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor='weight' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Weight<span className='text-[#FF0404]'>*</span></label>
+              <input
+                required
+                id="weight"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Enter/Scan Weight'
+                onChange={(e) => setWeight(e.target.value)}
+                value={weight}
+              />
+            </div>  
+
+            
             <div className='mb-6'>
               <button
                 type='submit'

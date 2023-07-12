@@ -373,12 +373,12 @@ const WmsItemMapping = () => {
               />
             </div>
             <div className="mb-6">
-              <label htmlFor='reference' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Reference<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='reference' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Reference<span className='text-[#FF0404]'>*</span></label>
               <input
                 required
                 id="reference"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder='Scan Binlocation'
+                placeholder='Enter/Scan Binlocation'
                 onChange={(e) => setReference(e.target.value)}
                 value={reference}
               />

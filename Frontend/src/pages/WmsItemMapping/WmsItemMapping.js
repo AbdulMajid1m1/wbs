@@ -51,10 +51,26 @@ const WmsItemMapping = () => {
 
 
 
-  const handleAutoComplete = (event, value) => {
+  const handleAutoComplete = async (event, value) => {
     console.log('Selected value:');
     console.log(value);
     setIsOptionSelected(true);
+
+    if (value?.ITEMID) {
+      try {
+
+        const fetchDimensions = await userRequest.get('/getTblStockMasterByItemId?itemid=' + value?.ITEMID);
+
+        let fetchDimensionsData = fetchDimensions?.data[0];
+        console.log(fetchDimensionsData);
+        fetchDimensionsData?.Length !== null ? setLength(fetchDimensionsData?.Length) : setLength(null);
+        fetchDimensionsData?.Width !== null ? setWidth(fetchDimensionsData?.Width) : setWidth(null);
+        fetchDimensionsData?.Height !== null ? setHeight(fetchDimensionsData?.Height) : setHeight(null);
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }
 
     setSelectedOption(value);
   };
@@ -99,16 +115,15 @@ const WmsItemMapping = () => {
         setIsLoading(false);
         setMessage(response?.data?.message);
         setUserSerial("");
-        setUserGtin("");
-        setUserConfig("");
-        setUserDate(null);
-        setUserQrCode("");
-        setUserBinlocation("");
-        setReference("");
-        setHeight("");
-        setLength("");
-        setWidth("");
-        setWeight("");
+        // setUserConfig("");
+        // setUserDate(null);
+        // setUserQrCode("");
+        // setUserBinlocation("");
+        // setReference("");
+        // setHeight(null);
+        // setLength(null);
+        // setWidth(null);
+        // setWeight(null);
 
 
       })
@@ -402,7 +417,9 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='length' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Length<span className='text-[#FF0404]'>*</span></label>
               <input
-                // required
+                required
+                type='number'
+                min={0}
                 id="length"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Length'
@@ -414,8 +431,10 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='width' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Width<span className='text-[#FF0404]'>*</span></label>
               <input
-                // required
+                required
                 id="width"
+                type='number'
+                min={0}
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Width'
                 onChange={(e) => setWidth(e.target.value)}
@@ -426,7 +445,9 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='height' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Height<span className='text-[#FF0404]'>*</span></label>
               <input
-                // required
+                required
+                type='number'
+                min={0}
                 id="height"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Height'
@@ -437,9 +458,10 @@ const WmsItemMapping = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor='weight' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Weight<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='weight' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Weight</label>
               <input
-                // required
+                type='number'
+                min={0}
                 id="weight"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Weight'

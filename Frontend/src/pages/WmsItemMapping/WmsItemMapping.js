@@ -338,10 +338,14 @@ const WmsItemMapping = () => {
                 onChange={(e) => setUserConfig(e.target.value)}
               >
                 <option value="">Select CONFIG</option>
-                <option value="1">G/WG</option>
-                <option value="2">D/WG</option>
-                <option value="2">S/WG</option>
-                <option value="2">PRMDL (V)</option>
+                <option value="G">G</option>
+                <option value="D">D</option>
+                <option value="S">S</option>
+                <option value="WG">WG</option>
+                <option value="WD">WD</option>
+                <option value="WS">WS</option>
+                <option value="V">V</option>
+                <option value="U">U</option>
               </select>
             </div>
 

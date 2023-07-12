@@ -24,7 +24,7 @@ const WmsItemMapping = () => {
   const [userserial, setUserSerial] = useState("");
   const [usergtin, setUserGtin] = useState("");
   const [userconfig, setUserConfig] = useState("");
-  const [userdate, setUserDate] = useState("");
+  const [userdate, setUserDate] = useState(null);
   const [userqrcode, setUserQrCode] = useState("");
   const [userbinlocation, setUserBinlocation] = useState("");
   const [reference, setReference] = useState("");
@@ -32,7 +32,11 @@ const WmsItemMapping = () => {
   const [searchText, setSearchText] = useState('');
   const abortControllerRef = useRef(null);
   const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
+  const [length, setLength] = useState(null);
+  const [width, setWidth] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [weight, setWeight] = useState(null);
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -69,17 +73,23 @@ const WmsItemMapping = () => {
       "itemdesc": selectedOption?.ITEMNAME,
       "gtin": usergtin,
       // "remarks": rowData?.Remarks,
-      // "classification": rowData?.Classification,
+      "classification": userconfig,
       // "mainlocation": rowData?.MainLocation,
       "binlocation": userbinlocation,
       // "intcode": rowData?.IntCode,
       "itemserialno": userserial,
       "mapdate": userdate,
       // "palletcode": rowData?.PalletCode,
-      "reference": reference,
+      "reference": reference === "" ? null : reference,
       // "sid": rowData?.SID,
-      "cid": userconfig,
+      // "cid": userconfig,
       "po": rowData?.PO,
+      "qrcode": userqrcode === "" ? null : userqrcode,
+      "length": length,
+      "width": width,
+      "height": height,
+      "weight": weight,
+
       // "trans": rowData?.Trans
 
     }
@@ -91,10 +101,15 @@ const WmsItemMapping = () => {
         setUserSerial("");
         setUserGtin("");
         setUserConfig("");
-        setUserDate("");
+        setUserDate(null);
         setUserQrCode("");
         setUserBinlocation("");
         setReference("");
+        setHeight("");
+        setLength("");
+        setWidth("");
+        setWeight("");
+
 
       })
       .catch(error => {
@@ -340,7 +355,7 @@ const WmsItemMapping = () => {
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder='Manufacturing Date'
                   onChange={(e) => setUserDate(e.target.value)}
-                  value={userdate}
+                // value={userdate}
                 />
               </div>
 
@@ -370,12 +385,62 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='binlocation' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Reference<span className='text-[#FF0404]'>*</span></label>
               <input
-                required
+
                 id="binlocation"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan Binlocation'
                 onChange={(e) => setReference(e.target.value)}
                 value={reference}
+              />
+            </div>
+
+
+            <div className="mb-6">
+              <label htmlFor='length' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Length<span className='text-[#FF0404]'>*</span></label>
+              <input
+                // required
+                id="length"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Enter/Scan Length'
+                onChange={(e) => setLength(e.target.value)}
+                value={length}
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor='width' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Width<span className='text-[#FF0404]'>*</span></label>
+              <input
+                // required
+                id="width"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Enter/Scan Width'
+                onChange={(e) => setWidth(e.target.value)}
+                value={width}
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor='height' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Height<span className='text-[#FF0404]'>*</span></label>
+              <input
+                // required
+                id="height"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Enter/Scan Height'
+                onChange={(e) => setHeight(e.target.value)}
+                value={height}
+
+              />
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor='weight' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Weight<span className='text-[#FF0404]'>*</span></label>
+              <input
+                // required
+                id="weight"
+                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder='Enter/Scan Weight'
+                onChange={(e) => setWeight(e.target.value)}
+                value={weight}
               />
             </div>
 

@@ -367,7 +367,7 @@ const WmsItemMapping = () => {
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder='Manufacturing Date'
                   onChange={(e) => setUserDate(e.target.value)}
-                // value={userdate}
+                  value={userdate}
                 />
               </div>
 

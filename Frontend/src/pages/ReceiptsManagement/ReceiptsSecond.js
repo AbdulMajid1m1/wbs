@@ -7,6 +7,8 @@ import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 
 const ReceiptsSecond = () => {
   const navigate = useNavigate();
+
+  
   const [quantity, setQuantity] = useState(null);
   const { serialNumLength, statedata, updateData, receivedQty, fetchItemCount } = useContext(ReceiptsContext);
 

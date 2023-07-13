@@ -66,6 +66,7 @@ const WmsItemMapping = () => {
         fetchDimensionsData?.Length !== null ? setLength(fetchDimensionsData?.Length) : setLength(null);
         fetchDimensionsData?.Width !== null ? setWidth(fetchDimensionsData?.Width) : setWidth(null);
         fetchDimensionsData?.Height !== null ? setHeight(fetchDimensionsData?.Height) : setHeight(null);
+        fetchDimensionsData?.Weight !== null ? setWeight(fetchDimensionsData?.Weight) : setWeight(null);
       }
       catch (error) {
         console.log(error);
@@ -417,9 +418,11 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='length' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Length<span className='text-[#FF0404]'>*</span></label>
               <input
+
                 required
                 type='number'
                 min={0}
+                step="any"
                 id="length"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Length'
@@ -434,6 +437,7 @@ const WmsItemMapping = () => {
                 required
                 id="width"
                 type='number'
+                step="any"
                 min={0}
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Enter/Scan Width'
@@ -447,6 +451,7 @@ const WmsItemMapping = () => {
               <input
                 required
                 type='number'
+                step="any"
                 min={0}
                 id="height"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -461,6 +466,7 @@ const WmsItemMapping = () => {
               <label htmlFor='weight' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Weight</label>
               <input
                 type='number'
+                step='any'
                 min={0}
                 id="weight"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"

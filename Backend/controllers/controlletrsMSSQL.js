@@ -1062,6 +1062,10 @@ const WBSDB = {
         BIN,
         REMARKS,
         POQTY,
+        LENGTH,
+        WIDTH,
+        HEIGHT,
+        WEIGHT,
       } = req.query;
 
       const localDateString = new Date().toISOString();
@@ -1121,9 +1125,9 @@ const WBSDB = {
 
       const query = `
         INSERT INTO dbo.tbl_Shipment_Received_CL
-          (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN, REMARKS, POQTY, RCVQTY, REMAININGQTY, USERID, TRXDATETIME)
+          (SHIPMENTID, CONTAINERID, ARRIVALWAREHOUSE, ITEMNAME, ITEMID, PURCHID, CLASSIFICATION, SERIALNUM, RCVDCONFIGID, RCVD_DATE, GTIN, RZONE, PALLET_DATE, PALLETCODE, BIN, REMARKS, POQTY, RCVQTY, REMAININGQTY, USERID, TRXDATETIME, LENGTH, WIDTH, HEIGHT, WEIGHT)
           VALUES
-          (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS, @POQTY, @RCVQTY, @REMAININGQTY, @USERID, @TRXDATETIME)
+          (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS, @POQTY, @RCVQTY, @REMAININGQTY, @USERID, @TRXDATETIME , @LENGTH, @WIDTH, @HEIGHT, @WEIGHT)
           `;
       let request4 = pool2.request();
       request4.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
@@ -1147,6 +1151,11 @@ const WBSDB = {
       request4.input("REMAININGQTY", sql.Numeric(18, 0), REMAININGQTY - 1);
       request4.input("USERID", sql.NVarChar, req.token.UserID);
       request4.input("TRXDATETIME", sql.DateTime, localDateString);
+      request4.input("LENGTH", sql.Numeric(10, 2), LENGTH);
+      request4.input("WIDTH", sql.Numeric(10, 2), WIDTH);
+      request4.input("HEIGHT", sql.Numeric(10, 2), HEIGHT);
+      request4.input("WEIGHT", sql.Numeric(10, 2), WEIGHT);
+
 
       await request4.query(query);
 

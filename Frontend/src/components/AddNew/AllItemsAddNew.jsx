@@ -38,14 +38,18 @@ const AllItemsAddNew = ({ inputs, title,
                 ITEMID: event.target.ITEMID.value,
                 ITEMGROUPID: event.target.ITEMGROUPID.value,
                 GROUPNAME: event.target.GROUPNAME.value,
+                Length: event.target.LENGTH.value,
+                Width: event.target.WIDTH.value,
+                Height: event.target.HEIGHT.value,
+
             };
-            
+
             console.log(data);
 
-            const queryParameters = new URLSearchParams(data).toString();
+            // const queryParameters = new URLSearchParams(data).toString();
 
             userRequest.post(
-                `/insertStockMasterData?${queryParameters}`)
+                `/insertStockMasterData`, [data])
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);
@@ -117,7 +121,7 @@ const AllItemsAddNew = ({ inputs, title,
 
 
                             <div className="right">
-                                
+
                                 <form onSubmit={handleSubmit} id="myForm" >
                                     {allItemsInput.map((input) => (
 
@@ -131,10 +135,13 @@ const AllItemsAddNew = ({ inputs, title,
                                             />
                                         </div>
                                     ))}
+                                    <div className="formInput">
+
+                                    </div>
 
                                     <div className="buttonAdd" >
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{ background: '#e69138' }}
                                             type="submit"
                                         >Save</button>
                                     </div>

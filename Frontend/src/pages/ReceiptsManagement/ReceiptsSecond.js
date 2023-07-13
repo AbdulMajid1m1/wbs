@@ -8,7 +8,7 @@ import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 const ReceiptsSecond = () => {
   const navigate = useNavigate();
 
-  
+
   const [quantity, setQuantity] = useState(null);
   const [length, setLength] = useState(null);
   const [width, setWidth] = useState(null);
@@ -28,6 +28,26 @@ const ReceiptsSecond = () => {
       .catch(error => {
         console.error(error);
       });
+    const getDimensions = async () => {
+      if (statedata?.ITEMID) {
+        try {
+
+          const fetchDimensions = await userRequest.get('/getTblStockMasterByItemId?itemid=' + statedata?.ITEMID);
+
+          let fetchDimensionsData = fetchDimensions?.data[0];
+          console.log(fetchDimensionsData);
+          fetchDimensionsData?.Length !== null ? setLength(fetchDimensionsData?.Length) : setLength(null);
+          fetchDimensionsData?.Width !== null ? setWidth(fetchDimensionsData?.Width) : setWidth(null);
+          fetchDimensionsData?.Height !== null ? setHeight(fetchDimensionsData?.Height) : setHeight(null);
+          fetchDimensionsData?.Weight !== null ? setWeight(fetchDimensionsData?.Weight) : setWeight(null);
+          updateData({ ...statedata, LENGTH: fetchDimensionsData?.Length, WIDTH: fetchDimensionsData?.Width, HEIGHT: fetchDimensionsData?.Height, WEIGHT: fetchDimensionsData?.Weight });
+        }
+        catch (error) {
+          console.log(error);
+        }
+      }
+    }
+    getDimensions();
 
   }, []);
 
@@ -40,6 +60,28 @@ const ReceiptsSecond = () => {
     console.log('Selected value:', value);
     updateData({ ...statedata, RZONE: value.RZONE });
   };
+
+  const handleHeightChange = (e) => {
+    setHeight(e.target.value);
+    updateData({ ...statedata, HEIGHT: e.target.value });
+  }
+
+  const handleLengthChange = (e) => {
+    setLength(e.target.value);
+    updateData({ ...statedata, LENGTH: e.target.value });
+  }
+
+  const handleWidthChange = (e) => {
+    setWidth(e.target.value);
+    updateData({ ...statedata, WIDTH: e.target.value });
+  }
+
+  const handleWeightChange = (e) => {
+    setWeight(e.target.value);
+    updateData({ ...statedata, WEIGHT: e.target.value });
+  }
+
+
 
   return (
     <>
@@ -175,66 +217,70 @@ const ReceiptsSecond = () => {
 
 
               <div className='mb-6 flex justify-between gap-3'>
-              <div className='w-full'>
-                <label htmlFor='weight' className="mb-2 text-xs font-medium text-black">Weight</label>
-                <input
-                  type='number'
-                  step='any'
-                  min={0}
-                  id="weight"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Enter/Scan Weight'
-                  onChange={(e) => setWeight(e.target.value)}
-                  value={weight}
-              />
+                <div className='w-full'>
+                  <label htmlFor='weight' className="mb-2 text-xs font-medium text-black">Weight</label>
+                  <input
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="weight"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder='Enter/Scan Weight'
+                    // onChange={(e) => setWeight(e.target.value)}
+                    onChange={handleWeightChange}
+                    value={weight}
+                  />
+                </div>
+
+                <div className='w-full'>
+                  <label htmlFor='height' className="mb-2 text-xs font-medium text-black">Height</label>
+                  <input
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="height"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder='Enter/Scan Height'
+                    // onChange={(e) => setHeight(e.target.value)}
+                    onChange={handleHeightChange}
+                    value={height}
+                  />
+                </div>
               </div>
 
-              <div className='w-full'>
-              <label htmlFor='height' className="mb-2 text-xs font-medium text-black">Height</label>
-                <input
-                  type='number'
-                  step='any'
-                  min={0}
-                  id="height"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Enter/Scan Height'
-                  onChange={(e) => setHeight(e.target.value)}
-                  value={height}
-              />
-              </div>
-            </div>
 
-            
 
-            <div className='mb-6 flex justify-between gap-3'>
-              <div className='w-full'>
-                <label htmlFor='length' className="mb-2 text-xs font-medium text-black">Length</label>
-                <input
-                  type='number'
-                  step='any'
-                  min={0}
-                  id="length"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Enter/Scan Length'
-                  onChange={(e) => setLength(e.target.value)}
-                  value={length}
-              />
-              </div>
+              <div className='mb-6 flex justify-between gap-3'>
+                <div className='w-full'>
+                  <label htmlFor='length' className="mb-2 text-xs font-medium text-black">Length</label>
+                  <input
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="length"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder='Enter/Scan Length'
+                    // onChange={(e) => setLength(e.target.value)}
+                    onChange={handleLengthChange}
+                    value={length}
+                  />
+                </div>
 
-              <div className='w-full'>
-              <label htmlFor='width' className="mb-2 text-xs font-medium text-black">Width</label>
-                <input
-                  type='number'
-                  step='any'
-                  min={0}
-                  id="width"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Enter/Scan Width'
-                  onChange={(e) => setWidth(e.target.value)}
-                  value={width}
-              />
+                <div className='w-full'>
+                  <label htmlFor='width' className="mb-2 text-xs font-medium text-black">Width</label>
+                  <input
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="width"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder='Enter/Scan Width'
+                    // onChange={(e) => setWidth(e.target.value)}
+                    onChange={handleWidthChange}
+                    value={width}
+                  />
+                </div>
               </div>
-            </div>
 
               <div className="mt-4 md:mt-10 w-full flex justify-end text-sm md:text-xl py-2 rounded-md">
                 <button

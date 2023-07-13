@@ -28,6 +28,10 @@ export const ReceiptsProvider = ({ children }) => {
         POQTY: null,
         RCVQTY: 1,
         REMAININGQTY: '',
+        WEIGHT: null,
+        LENGTH: null,
+        WIDTH: null,
+        HEIGHT: null,
     };
 
     const [statedata, setSateData] = useState(initialData);

@@ -28,6 +28,11 @@ const WmsItemMapping = () => {
   const [userqrcode, setUserQrCode] = useState("");
   const [userbinlocation, setUserBinlocation] = useState("");
   const [reference, setReference] = useState("");
+  // const [length, setLength] = useState("");
+  // const [width, setWidth] = useState("");
+  // const [height, setHeight] = useState("");
+  // const [weight, setWeight] = useState("");
+
   const [rowData, setRowData] = useState();
   const [searchText, setSearchText] = useState('');
   const abortControllerRef = useRef(null);
@@ -198,7 +203,10 @@ const WmsItemMapping = () => {
 
   }
 
-
+  useEffect(() => {
+    const currentDate = new Date().toISOString().substr(0, 10);
+    setUserDate(currentDate);
+  }, []);
 
   return (
     <>
@@ -238,7 +246,7 @@ const WmsItemMapping = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>Item Mapping</h2>
+                <h2 className='text-center text-[#fff]'>Barcode Mapping</h2>
 
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>
@@ -285,7 +293,7 @@ const WmsItemMapping = () => {
 
                 renderInput={(params) => (
                   <TextField
-                    required
+                    // required
                     {...params}
                     label="Search Item Number or Description here"
                     InputProps={{
@@ -324,7 +332,7 @@ const WmsItemMapping = () => {
               <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="scan"
-                required
+                // required
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan Serial'
                 value={userserial}
@@ -336,7 +344,7 @@ const WmsItemMapping = () => {
               <label htmlFor='gtin' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan GITN#<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="gtin"
-                required
+                // required
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan GTIN'
                 value={usergtin}
@@ -375,7 +383,7 @@ const WmsItemMapping = () => {
                   className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder='Manufacturing Date'
                   onChange={(e) => setUserDate(e.target.value)}
-                // value={userdate}
+                  value={userdate}
                 />
               </div>
 
@@ -394,7 +402,7 @@ const WmsItemMapping = () => {
             <div className="mb-6">
               <label htmlFor='binlocation' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Binlocation<span className='text-[#FF0404]'>*</span></label>
               <input
-                required
+                // required
                 id="binlocation"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan Binlocation'
@@ -403,12 +411,12 @@ const WmsItemMapping = () => {
               />
             </div>
             <div className="mb-6">
-              <label htmlFor='binlocation' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Reference<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='reference' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Enter Reference<span className='text-[#FF0404]'>*</span></label>
               <input
 
                 id="binlocation"
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder='Scan Binlocation'
+                placeholder='Enter/Scan Binlocation'
                 onChange={(e) => setReference(e.target.value)}
                 value={reference}
               />
@@ -458,7 +466,6 @@ const WmsItemMapping = () => {
                 placeholder='Enter/Scan Height'
                 onChange={(e) => setHeight(e.target.value)}
                 value={height}
-
               />
             </div>
 

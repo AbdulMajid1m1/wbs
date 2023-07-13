@@ -10,6 +10,10 @@ const ReceiptsSecond = () => {
 
   
   const [quantity, setQuantity] = useState(null);
+  const [length, setLength] = useState(null);
+  const [width, setWidth] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [weight, setWeight] = useState(null);
   const { serialNumLength, statedata, updateData, receivedQty, fetchItemCount } = useContext(ReceiptsContext);
 
   const [dataList, setDataList] = useState([]);
@@ -169,6 +173,69 @@ const ReceiptsSecond = () => {
                 />
               </div>
 
+
+              <div className='mb-6 flex justify-between gap-3'>
+              <div className='w-full'>
+                <label htmlFor='weight' className="mb-2 text-xs font-medium text-black">Weight</label>
+                <input
+                  type='number'
+                  step='any'
+                  min={0}
+                  id="weight"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder='Enter/Scan Weight'
+                  onChange={(e) => setWeight(e.target.value)}
+                  value={weight}
+              />
+              </div>
+
+              <div className='w-full'>
+              <label htmlFor='height' className="mb-2 text-xs font-medium text-black">Height</label>
+                <input
+                  type='number'
+                  step='any'
+                  min={0}
+                  id="height"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder='Enter/Scan Height'
+                  onChange={(e) => setHeight(e.target.value)}
+                  value={height}
+              />
+              </div>
+            </div>
+
+            
+
+            <div className='mb-6 flex justify-between gap-3'>
+              <div className='w-full'>
+                <label htmlFor='length' className="mb-2 text-xs font-medium text-black">Length</label>
+                <input
+                  type='number'
+                  step='any'
+                  min={0}
+                  id="length"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder='Enter/Scan Length'
+                  onChange={(e) => setLength(e.target.value)}
+                  value={length}
+              />
+              </div>
+
+              <div className='w-full'>
+              <label htmlFor='width' className="mb-2 text-xs font-medium text-black">Width</label>
+                <input
+                  type='number'
+                  step='any'
+                  min={0}
+                  id="width"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder='Enter/Scan Width'
+                  onChange={(e) => setWidth(e.target.value)}
+                  value={width}
+              />
+              </div>
+            </div>
+
               <div className="mt-4 md:mt-10 w-full flex justify-end text-sm md:text-xl py-2 rounded-md">
                 <button
                   //  onClick={() => navigate('/receiptsthird')}
@@ -176,6 +243,9 @@ const ReceiptsSecond = () => {
                   Scan Serial Numbers
                 </button>
               </div>
+
+
+
             </form>
           </div>
         </div>

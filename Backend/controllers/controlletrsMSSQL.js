@@ -4429,6 +4429,9 @@ const WBSDB = {
       // Pool2 request for WBSSQL database
       const requestWBSSQL = pool2.request();
 
+      // Begin a transaction
+      await requestWBSSQL.beginTransaction();
+
       // Drop temporary table if it already exists
       await requestWBSSQL.query(`IF OBJECT_ID('tempdb..#ITEMIDs') IS NOT NULL DROP TABLE #ITEMIDs`);
 
@@ -4458,22 +4461,22 @@ const WBSDB = {
       const newItems = itemsInAxapta.recordset.filter(item => !existingItemIds.includes(item.ITEMID));
 
       if (newItems.length > 0) {
-        const insertValues = newItems
-          .map(item => `(@ITEMID_${item.ITEMID}, @ITEMNAME_${item.ITEMID}, @ITEMGROUPID_${item.ITEMID}, @GROUPNAME_${item.ITEMID})`)
-          .join(',');
-
-        // Bulk insert query with parameterized values
-        await requestWBSSQL.query(`
-          INSERT INTO [dbo].[tbl_Stock_Master] (ITEMID, ITEMNAME, ITEMGROUPID, GROUPNAME)
-          VALUES ${insertValues}
-        `, ...newItems.map(item => [
-          { name: `ITEMID_${item.ITEMID}`, type: sql.NVarChar, value: item.ITEMID },
-          { name: `ITEMNAME_${item.ITEMID}`, type: sql.NVarChar, value: item.ITEMNAME },
-          { name: `ITEMGROUPID_${item.ITEMID}`, type: sql.NVarChar, value: item.ITEMGROUPID },
-          { name: `GROUPNAME_${item.ITEMID}`, type: sql.NVarChar, value: item.GROUPNAME },
-        ]));
-
+        // Insert new items using parameterized queries within the transaction
+        for (let item of newItems) {
+          await requestWBSSQL.query(`
+            INSERT INTO [dbo].[tbl_Stock_Master] (ITEMID, ITEMNAME, ITEMGROUPID, GROUPNAME)
+            VALUES (@ITEMID, @ITEMNAME, @ITEMGROUPID, @GROUPNAME)
+          `, {
+            ITEMID: item.ITEMID,
+            ITEMNAME: item.ITEMNAME,
+            ITEMGROUPID: item.ITEMGROUPID,
+            GROUPNAME: item.GROUPNAME
+          });
+        }
       }
+
+      // Commit the transaction
+      await requestWBSSQL.commit();
 
       const insertedItems = newItems.length;
       const skippedItems = itemsInAxapta.recordset.length - insertedItems;

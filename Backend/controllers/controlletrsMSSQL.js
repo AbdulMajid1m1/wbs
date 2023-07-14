@@ -4416,29 +4416,29 @@ const WBSDB = {
   //   }
   // }
   // ,
-  async  insertDataFromInventTableWmsToStockMaster(req, res, next) {
+  async insertDataFromInventTableWmsToStockMaster(req, res, next) {
     try {
       // Pool1 request for Axapta database
       const requestAxapta = pool1.request();
-  
+
       // Get all items from Axapta database
       const itemsInAxapta = await requestAxapta.query(`SELECT * FROM [dbo].[InventTableWMS]`);
-  
+
       const itemIds = itemsInAxapta.recordset.map(item => item.ITEMID);
-  
+
       // Pool2 request for WBSSQL database
       const requestWBSSQL = pool2.request();
-  
+
       // Drop temporary table if it already exists
       await requestWBSSQL.query(`IF OBJECT_ID('tempdb..#ITEMIDs') IS NOT NULL DROP TABLE #ITEMIDs`);
-  
+
       // Create temporary table to hold ITEMID values
       await requestWBSSQL.query(`
         CREATE TABLE #ITEMIDs (
           ITEMID NVARCHAR(MAX)
         )
       `);
-  
+
       // Insert ITEMID values into temporary table
       for (let itemId of itemIds) {
         await requestWBSSQL.query(`
@@ -4446,39 +4446,38 @@ const WBSDB = {
           VALUES (@ITEMID)
         `, { ITEMID: itemId });
       }
-  
+
       // Check if the ITEMID exists in the WBSSQL database
       const existingItems = await requestWBSSQL.query(`
         SELECT ITEMID
         FROM [dbo].[tbl_Stock_Master]
         WHERE ITEMID IN (SELECT ITEMID FROM #ITEMIDs)
       `);
-  
+
       const existingItemIds = existingItems.recordset.map(item => item.ITEMID);
       const newItems = itemsInAxapta.recordset.filter(item => !existingItemIds.includes(item.ITEMID));
-  
+
       if (newItems.length > 0) {
         const insertValues = newItems
-          .map(item => `(@ITEMID, @ITEMNAME, @ITEMGROUPID, @GROUPNAME)`)
+          .map(item => `(@ITEMID_${item.ITEMID}, @ITEMNAME_${item.ITEMID}, @ITEMGROUPID_${item.ITEMID}, @GROUPNAME_${item.ITEMID})`)
           .join(',');
-  
-        // Bulk insert parameter definitions
-        requestWBSSQL.input('ITEMID', sql.NVarChar);
-        requestWBSSQL.input('ITEMNAME', sql.NVarChar);
-        requestWBSSQL.input('ITEMGROUPID', sql.NVarChar);
-        requestWBSSQL.input('GROUPNAME', sql.NVarChar);
-  
+
         // Bulk insert query with parameterized values
         await requestWBSSQL.query(`
           INSERT INTO [dbo].[tbl_Stock_Master] (ITEMID, ITEMNAME, ITEMGROUPID, GROUPNAME)
           VALUES ${insertValues}
-        `, newItems.map(item => [item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME]));
-  
+        `, ...newItems.map(item => [
+          { name: `ITEMID_${item.ITEMID}`, type: sql.NVarChar, value: item.ITEMID },
+          { name: `ITEMNAME_${item.ITEMID}`, type: sql.NVarChar, value: item.ITEMNAME },
+          { name: `ITEMGROUPID_${item.ITEMID}`, type: sql.NVarChar, value: item.ITEMGROUPID },
+          { name: `GROUPNAME_${item.ITEMID}`, type: sql.NVarChar, value: item.GROUPNAME },
+        ]));
+
       }
-  
+
       const insertedItems = newItems.length;
       const skippedItems = itemsInAxapta.recordset.length - insertedItems;
-  
+
       return res.status(200).send({ message: 'Sync completed successfully.', insertedItems, skippedItems });
     } catch (error) {
       console.log(error);

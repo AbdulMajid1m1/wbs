@@ -57,7 +57,22 @@ const ReceiptsThirdScreen = () => {
       setSERIALNUM('');
       document.getElementById('SERIALNUM').value = '';
     }
+    try {
+      const updateDimensions = await userRequest.put("/updateStockMasterData", {
+        ITEMID: statedata?.ITEMID,
+        Length: statedata?.LENGTH,
+        Width: statedata?.WIDTH,
+        Height: statedata?.HEIGHT,
+        Weight: statedata?.WEIGHT,
 
+      })
+      console.log(updateDimensions?.data);
+
+    }
+    catch (error) {
+      console.error(error);
+
+    }
 
   }
 

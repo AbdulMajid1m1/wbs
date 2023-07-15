@@ -1048,23 +1048,23 @@ const UserDataTable = ({
     setLoading(true);
     
     
-    userRequest.get('/insertDataFromInventTableWmsToStockMaster')
-      .then((response) => {
-        console.log(response.data)
-        setLoading(false)
-      })
-      .catch(error =>{
-        console.log(error)
-        setLoading(false)
-      })
+    // userRequest.get('/insertDataFromInventTableWmsToStockMaster')
+    //   .then((response) => {
+    //     console.log(response.data)
+    //     setLoading(false)
+    //   })
+    //   .catch(error =>{
+    //     console.log(error)
+    //     setLoading(false)
+    //   })
 
       
     // Perform your refresh logic or API call here
     // Once the refresh is complete, set setLoading(false)
     // You can use setTimeout as a placeholder for the asynchronous operation
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 2000);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
 
@@ -1121,17 +1121,16 @@ const UserDataTable = ({
                 Add New
               </Link>
               {Refresh && (
-                <span>
-                  {isLoading ? (
-                    <button onClick={handleRefresh} disabled style={{ width: '65px' }}>
-                        <ClipLoader color="#0079ff" loading={isLoading} size={20} />
-                    </button>
-                    ) : (
-                    // Show the button when not refreshing
-                    <button onClick={handleRefresh}>Refresh</button>
-                    )}
-                    {/* Rest of your code */}
-                  </span>
+                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                 {isLoading ? (
+                   <button onClick={handleRefresh} disabled style={{ width: '65px', position: 'relative' }}>
+                     <ClipLoader color="#DC143C" loading={isLoading} size={20} />
+                   </button>
+                 ) : (
+                   // Show the button when not refreshing
+                   <button onClick={handleRefresh}>Refresh</button>
+                 )}
+               </span>
                )}
               {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
               <button onClick={() => handleExport(false)}>Export to Excel</button>

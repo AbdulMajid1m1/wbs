@@ -1828,6 +1828,26 @@ export const ReturnSalesOrderColumn = [
     width: 180,
 
   },
+  {
+    field: "TRXDATETIME",
+    headerName: "TRANSACTION DATETIME",
+    width: 220,
+},
+{
+    field: "TRXUSERID",
+    headerName: "TRANSACTION USER ID",
+    width: 180,
+},
+{
+    field: "ITEMSERIALNO",
+    headerName: "ITEM SERIAL NO",
+    width: 200,
+},
+{
+    field: "ASSIGNEDTOUSERID",
+    headerName: "ASSIGNED TO USER ID",
+    width: 180,
+},
 
 
 

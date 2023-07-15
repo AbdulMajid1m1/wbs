@@ -1260,7 +1260,8 @@ const UserDataTable = ({
               <div id="barcode" className='hidden' key={index}>
                 {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
-                    uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> : null}
+                    uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
+                      uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> : null}
 
               </div>
             ))}
@@ -1367,6 +1368,27 @@ const PrintLabelsBarCode = ({ selectedRow, index }) => {
           </div>
           <div id='inside-BRCode'>
             <Barcode value={selectedRow.data.GTIN} width={1.3} height={60} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+
+const PrintReturnSalesOrder = ({ selectedRow, index }) => {
+  return (
+    <div>
+      <div id="barcode" key={index}>
+        <div id="barcode" className='hidden'>
+          <div id='header'>
+            <div>
+              <img src={logo} id='imglogo' alt='' />
+            </div>
+          </div>
+          <div id='inside-BRCode'>
+            <Barcode value={selectedRow.data.ITEMSERIALNO} width={1.3} height={60} />
           </div>
         </div>
       </div>

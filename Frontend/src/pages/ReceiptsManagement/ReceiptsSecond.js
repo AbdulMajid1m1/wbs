@@ -220,6 +220,7 @@ const ReceiptsSecond = () => {
                 <div className='w-full'>
                   <label htmlFor='weight' className="mb-2 text-xs font-medium text-black">Weight</label>
                   <input
+                    required
                     type='number'
                     step='any'
                     min={0}
@@ -235,6 +236,7 @@ const ReceiptsSecond = () => {
                 <div className='w-full'>
                   <label htmlFor='height' className="mb-2 text-xs font-medium text-black">Height</label>
                   <input
+                    required
                     type='number'
                     step='any'
                     min={0}
@@ -254,6 +256,7 @@ const ReceiptsSecond = () => {
                 <div className='w-full'>
                   <label htmlFor='length' className="mb-2 text-xs font-medium text-black">Length</label>
                   <input
+                    required
                     type='number'
                     step='any'
                     min={0}
@@ -269,6 +272,7 @@ const ReceiptsSecond = () => {
                 <div className='w-full'>
                   <label htmlFor='width' className="mb-2 text-xs font-medium text-black">Width</label>
                   <input
+                    required
                     type='number'
                     step='any'
                     min={0}

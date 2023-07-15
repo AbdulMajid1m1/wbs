@@ -4199,6 +4199,7 @@ const WBSDB = {
           Length,
           Width,
           Height,
+          Weight,
         } = stockMasterDataArray[i];
 
         // Check if a record already exists
@@ -4223,6 +4224,7 @@ const WBSDB = {
           "Length",
           "Width",
           "Height",
+          "Weight"
         ];
 
         let values = fields.map((field) => "@" + field);
@@ -4242,6 +4244,7 @@ const WBSDB = {
         request.input('Length', sql.Numeric(10, 2), Length);
         request.input('Width', sql.Numeric(10, 2), Width);
         request.input('Height', sql.Numeric(10, 2), Height);
+        request.input('Weight', sql.Numeric(10, 2), Weight);
 
         await request.query(query);
       }
@@ -4259,6 +4262,11 @@ const WBSDB = {
         ITEMNAME,
         ITEMGROUPID,
         GROUPNAME,
+        Length,
+        Width,
+        Height,
+        Weight,
+
       } = req.body;
       console.log(req.query);
 
@@ -4288,9 +4296,34 @@ const WBSDB = {
         request.input('GROUPNAME', sql.NVarChar, GROUPNAME);
       }
 
+      if (Length !== undefined) {
+        updateFields.push('Length = @Length');
+        request.input('Length', sql.Numeric(10, 2), Length);
+      }
+
+      if (Width !== undefined) {
+        updateFields.push('Width = @Width');
+        request.input('Width', sql.Numeric(10, 2), Width);
+      }
+
+      if (Height !== undefined) {
+        updateFields.push('Height = @Height');
+        request.input('Height', sql.Numeric(10, 2), Height);
+      }
+
+      if (Weight !== undefined) {
+        updateFields.push('Weight = @Weight');
+        request.input('Weight', sql.Numeric(10, 2), Weight);
+
+      }
+
+
+
       if (updateFields.length === 0) {
         return res.status(400).send({ message: 'At least one field is required to update.' });
       }
+
+
 
       query += updateFields.join(', ');
 
@@ -4340,8 +4373,121 @@ const WBSDB = {
     }
   },
 
+  // async insertDataFromInventTableWmsToStockMaster(req, res, next) {
+  //   try {
+  //     const existingItemsQuery = `SELECT [ITEMID] FROM [WBSSQL].[dbo].[tbl_Stock_Master]`;
+  //     const existingItemsResult = await pool2.request().query(existingItemsQuery);
+  //     const existingItemIds = new Set(existingItemsResult.recordset.map(record => record.ITEMID));
 
+  //     const selectQuery = `
+  //       SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME]
+  //       FROM [Alessa_Ax2009_Live].[dbo].[InventTableWMS]
+  //       ORDER BY ITEMID
+  //     `;
+  //     const selectResult = await pool1.request().query(selectQuery);
 
+  //     const bulkInsert = new sql.Table('tbl_Stock_Master');
+  //     bulkInsert.create = true;
+  //     bulkInsert.columns.add('ITEMID', sql.NVarChar, { nullable: true });
+  //     bulkInsert.columns.add('ITEMNAME', sql.NVarChar, { nullable: true });
+  //     bulkInsert.columns.add('ITEMGROUPID', sql.NVarChar, { nullable: true });
+  //     bulkInsert.columns.add('GROUPNAME', sql.NVarChar, { nullable: true });
+
+  //     for (let row of selectResult.recordset) {
+  //       if (!existingItemIds.has(row.ITEMID)) {
+  //         bulkInsert.rows.push([row.ITEMID, row.ITEMNAME, row.ITEMGROUPID, row.GROUPNAME]);
+  //       }
+  //     }
+
+  //     if (bulkInsert.rows.length > 0) {
+  //       const bulkInsertRequest = pool2.request();
+  //       await bulkInsertRequest.bulk(bulkInsert, (error, result) => {
+  //         if (error) {
+  //           console.log(error);
+  //           return res.status(500).send({ message: 'Error occurred during bulk insert.' });
+  //         }
+  //       });
+  //     }
+
+  //     return res.status(200).send({ message: 'Data checked and inserted successfully.' });
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(500).send({ message: error.message });
+  //   }
+  // }
+  // ,
+  async insertDataFromInventTableWmsToStockMaster(req, res, next) {
+    try {
+      // Pool1 request for Axapta database
+      const requestAxapta = pool1.request();
+
+      // Get all items from Axapta database
+      const itemsInAxapta = await requestAxapta.query(`SELECT * FROM [dbo].[InventTableWMS]`);
+
+      const itemIds = itemsInAxapta.recordset.map(item => item.ITEMID);
+
+      // Pool2 request for WBSSQL database
+      const requestWBSSQL = pool2.request();
+
+      // Begin a transaction
+      await requestWBSSQL.beginTransaction();
+
+      // Drop temporary table if it already exists
+      await requestWBSSQL.query(`IF OBJECT_ID('tempdb..#ITEMIDs') IS NOT NULL DROP TABLE #ITEMIDs`);
+
+      // Create temporary table to hold ITEMID values
+      await requestWBSSQL.query(`
+        CREATE TABLE #ITEMIDs (
+          ITEMID NVARCHAR(MAX)
+        )
+      `);
+
+      // Insert ITEMID values into temporary table
+      for (let itemId of itemIds) {
+        await requestWBSSQL.query(`
+          INSERT INTO #ITEMIDs (ITEMID)
+          VALUES (@ITEMID)
+        `, { ITEMID: itemId });
+      }
+
+      // Check if the ITEMID exists in the WBSSQL database
+      const existingItems = await requestWBSSQL.query(`
+        SELECT ITEMID
+        FROM [dbo].[tbl_Stock_Master]
+        WHERE ITEMID IN (SELECT ITEMID FROM #ITEMIDs)
+      `);
+
+      const existingItemIds = existingItems.recordset.map(item => item.ITEMID);
+      const newItems = itemsInAxapta.recordset.filter(item => !existingItemIds.includes(item.ITEMID));
+
+      if (newItems.length > 0) {
+        // Insert new items using parameterized queries within the transaction
+        for (let item of newItems) {
+          await requestWBSSQL.query(`
+            INSERT INTO [dbo].[tbl_Stock_Master] (ITEMID, ITEMNAME, ITEMGROUPID, GROUPNAME)
+            VALUES (@ITEMID, @ITEMNAME, @ITEMGROUPID, @GROUPNAME)
+          `, {
+            ITEMID: item.ITEMID,
+            ITEMNAME: item.ITEMNAME,
+            ITEMGROUPID: item.ITEMGROUPID,
+            GROUPNAME: item.GROUPNAME
+          });
+        }
+      }
+
+      // Commit the transaction
+      await requestWBSSQL.commit();
+
+      const insertedItems = newItems.length;
+      const skippedItems = itemsInAxapta.recordset.length - insertedItems;
+
+      return res.status(200).send({ message: 'Sync completed successfully.', insertedItems, skippedItems });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  }
+  ,
   async manageItemsReallocation(req, res, next) {
     try {
       const { availablePallet, serialNumber, selectionType } = req.body;

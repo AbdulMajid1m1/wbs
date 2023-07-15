@@ -353,6 +353,7 @@ router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsRe
 
 
 router.get("/getAllTblStockMaster", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.getAllTblStockMaster);
+router.get("/insertDataFromInventTableWmsToStockMaster", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.insertDataFromInventTableWmsToStockMaster);
 
 router.get("/getTblStockMasterByItemId", checkAuthentication, WBSDB.getTblStockMasterByItemId);
 

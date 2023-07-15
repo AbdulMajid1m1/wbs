@@ -121,6 +121,32 @@ const WmsItemMapping = () => {
         setIsLoading(false);
         setMessage(response?.data?.message);
         setUserSerial("");
+
+
+        userRequest.put("/updateStockMasterData", {
+          // ITEMID: statedata?.ITEMID,
+          // Length: statedata?.LENGTH,
+          // Width: statedata?.WIDTH,
+          // Height: statedata?.HEIGHT,
+          // Weight: statedata?.WEIGHT,
+          ITEMID: selectedOption?.ITEMID,
+          Length: length,
+          Width: width,
+          Height: height,
+          Weight: weight,
+        }).then(response => {
+          console.log(response?.data); 
+
+
+        })
+          .catch(error => {
+            console.error(error);
+          });
+
+
+
+
+
         // setUserConfig("");
         // setUserDate(null);
         // setUserQrCode("");

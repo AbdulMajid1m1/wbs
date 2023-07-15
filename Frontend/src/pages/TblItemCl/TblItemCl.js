@@ -13,12 +13,30 @@ const TblItemCl = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
+    const [refreshLoading, setRefreshLoading] = useState(false);
 
+    const handleRefresh = async () => {
+        setRefreshLoading(true);
+
+        try {
+
+            const res = await userRequest.get('/insertDataFromInventTableWmsToStockMaster');
+            console.log(res?.data);
+            setAllData(res?.data?.stockMasterData ?? [])
+        }
+        catch (error) {
+            console.error(error);
+            setError(error?.response?.data?.message ?? "Something went wrong")
+        }
+        finally {
+            setRefreshLoading(false);
+        }
+    };
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
     useEffect(() => {
@@ -59,6 +77,8 @@ const TblItemCl = () => {
             <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="Stock Master (Warehouse Operation)" columnsName={AllItems} backButton={true}
                 Refresh={true}
                 uniqueId="itemTableId"
+                handleRefresh={handleRefresh}
+                refreshLoading={refreshLoading}
 
 
             />

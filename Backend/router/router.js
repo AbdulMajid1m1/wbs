@@ -108,6 +108,8 @@ router.get("/getShipmentRecievedClCountByPoqtyContainerIdAndItemId", checkAuthen
 
 router.get("/getShipmentRecievedClCountByPoqtyShipmentIdAndItemId", checkAuthentication, WBSDB.getShipmentRecievedClCountByPoqtyShipmentIdAndItemId);
 
+router.get("/getRemainingQtyFromShipmentCounter", checkAuthentication, WBSDB.getRemainingQtyFromShipmentCounter);
+
 router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
 
 router.get("/getShipmentRecievedCLDataCBySerialNumber", checkAuthentication, WBSDB.getShipmentRecievedCLDataCBySerialNumber)
@@ -354,6 +356,7 @@ router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsRe
 
 router.get("/getAllTblStockMaster", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.getAllTblStockMaster);
 router.get("/insertDataFromInventTableWmsToStockMaster", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.insertDataFromInventTableWmsToStockMaster);
+router.get("/insertDataFromTable1ToTable2", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.insertDataFromTable1ToTable2);
 
 router.get("/getTblStockMasterByItemId", checkAuthentication, WBSDB.getTblStockMasterByItemId);
 

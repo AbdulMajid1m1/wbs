@@ -64,11 +64,12 @@ export const ReceiptsProvider = ({ children }) => {
     const fetchItemCount = async () => {
         try {
             console.log(statedata);
-            const res = await userRequest.get(`getShipmentRecievedClCountByPoqtyShipmentIdAndItemId?POQTY=${statedata?.POQTY || ""}&SHIPMENTID=${statedata?.SHIPMENTID || ''}&ITEMID=${statedata?.ITEMID || ''}`)
+            const res = await userRequest.get(`getRemainingQtyFromShipmentCounter?CONTAINERID=${statedata?.CONTAINERID || ""}&SHIPMENTID=${statedata?.SHIPMENTID || ''}&ITEMID=${statedata?.ITEMID || ''}`)
             console.log(res?.data);
             setReceivedQty(res?.data?.itemCount ?? null);
         } catch (error) {
             console.error(error);
+            setReceivedQty(null);
         }
     }
 

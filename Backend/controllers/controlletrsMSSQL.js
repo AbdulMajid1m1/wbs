@@ -57,6 +57,7 @@ function ssccCheckDigit(barcode) {
   }
 }
 
+
 // transaction history insert function 
 async function insertTransactionHistoryData(TransactionName, ItemID, userId) {
   try {
@@ -94,6 +95,23 @@ async function insertTransactionHistoryData(TransactionName, ItemID, userId) {
     console.log(error);
     return { message: error.message };
   }
+}
+
+async function getExistingItemIds(itemIds) {
+  const placeholders = itemIds.map((_, index) => `@itemId${index}`);
+  const parameters = itemIds.reduce((params, id, index) => {
+    params[`itemId${index}`] = id;
+    return params;
+  }, {});
+
+  const checkQuery = `SELECT ITEMID FROM dbo.tbl_Stock_Master WHERE ITEMID IN (${placeholders.join(',')})`;
+  const checkRequest = pool2.request();
+  for (const param in parameters) {
+    checkRequest.input(param, sql.NVarChar, parameters[param]);
+  }
+  const checkResult = await checkRequest.query(checkQuery);
+
+  return new Set(checkResult.recordset.map(item => item.ITEMID));
 }
 
 
@@ -640,7 +658,7 @@ const WBSDB = {
   async getShipmentPalletizingByTransferId(req, res, next,) {
     try {
       let query = `
-        SELECT * FROM dbo.tbl_Shipment_Palletizing
+        SELECT * FROM dbo.Transfer_Distribution
         WHERE TRANSFERID = @TRANSFERID
       `;
       const { TRANSFERID } = req.query;
@@ -1069,18 +1087,21 @@ const WBSDB = {
       } = req.query;
 
       const localDateString = new Date().toISOString();
-
+      // check if not found in tbl_Shipment_Received_CL then insert into tbl_Shipment_Received_CL
       const checkShipmentCounterQuery = `
         SELECT TOP 1 [REMAININGQTY]
         FROM [WBSSQL].[dbo].[tbl_Shipment_Counter]
-        WHERE [SHIPMENTID] = @SHIPMENTID AND [CONTAINERID] = @CONTAINERID
+        WHERE [SHIPMENTID] = @SHIPMENTID AND [CONTAINERID] = @CONTAINERID AND ITEMID=@ITEMID
       `;
 
       let request1 = pool2.request();
       request1.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
       request1.input("CONTAINERID", sql.NVarChar, CONTAINERID);
+      request1.input("ITEMID", sql.NVarChar, ITEMID);
 
       const checkShipmentCounterResult = await request1.query(checkShipmentCounterQuery);
+      console.log(checkShipmentCounterResult)
+      console.log("check qty")
       let REMAININGQTY;
 
       if (checkShipmentCounterResult.recordset.length === 0) {
@@ -1088,9 +1109,9 @@ const WBSDB = {
 
         const insertShipmentCounterQuery = `
           INSERT INTO [WBSSQL].[dbo].[tbl_Shipment_Counter]
-            ([SHIPMENTID], [CONTAINERID], [POQTY], [REMAININGQTY])
+            ([SHIPMENTID], [CONTAINERID], [POQTY], [REMAININGQTY], [ITEMID])
           VALUES
-            (@SHIPMENTID, @CONTAINERID, @POQTY, @REMAININGQTY)
+            (@SHIPMENTID, @CONTAINERID, @POQTY, @REMAININGQTY, @ITEMID)
         `;
 
         let request2 = pool2.request();
@@ -1098,6 +1119,7 @@ const WBSDB = {
         request2.input("CONTAINERID", sql.NVarChar, CONTAINERID);
         request2.input("POQTY", sql.Numeric(18, 0), POQTY);
         request2.input("REMAININGQTY", sql.Numeric(18, 0), REMAININGQTY);
+        request2.input("ITEMID", sql.NVarChar, ITEMID);
         await request2.query(insertShipmentCounterQuery);
 
       } else {
@@ -1277,6 +1299,41 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
+  async getRemainingQtyFromShipmentCounter(req, res, next) {
+    try {
+      const { SHIPMENTID, ITEMID, CONTAINERID } = req.query;
+
+      if (!SHIPMENTID || !ITEMID || !CONTAINERID) {
+        return res.status(400).send({ message: "CONTINERID, SHIPMENTID, and ITEMID are required." });
+      }
+
+      const query = `
+        SELECT [POQTY], [REMAININGQTY]
+        FROM [WBSSQL].[dbo].[tbl_Shipment_Counter]
+        WHERE [SHIPMENTID] = @SHIPMENTID AND [ITEMID] = @ITEMID AND [CONTAINERID] = @CONTAINERID
+      `;
+
+      const request = pool2.request();
+      request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('CONTAINERID', sql.NVarChar, CONTAINERID);
+
+      const result = await request.query(query);
+      if (result.recordset.length === 0) {
+        return res.status(404).send({ message: "No matching records found." });
+      }
+
+      const { POQTY, REMAININGQTY } = result.recordset[0];
+      const remainingQty = POQTY - REMAININGQTY;
+
+      return res.status(200).send({ itemCount: remainingQty });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  }
+  ,
   async getShipmentRecievedCLDataCBySerialNumber(req, res, next) {
 
     try {
@@ -4373,121 +4430,260 @@ const WBSDB = {
     }
   },
 
+
+
+
   // async insertDataFromInventTableWmsToStockMaster(req, res, next) {
   //   try {
-  //     const existingItemsQuery = `SELECT [ITEMID] FROM [WBSSQL].[dbo].[tbl_Stock_Master]`;
-  //     const existingItemsResult = await pool2.request().query(existingItemsQuery);
-  //     const existingItemIds = new Set(existingItemsResult.recordset.map(record => record.ITEMID));
+  //     // Declare a batch size
+  //     const batchSize = 1000;
 
-  //     const selectQuery = `
-  //       SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME]
-  //       FROM [Alessa_Ax2009_Live].[dbo].[InventTableWMS]
-  //       ORDER BY ITEMID
-  //     `;
-  //     const selectResult = await pool1.request().query(selectQuery);
+  //     // Get the total number of records
+  //     let totalRecordsRequest = pool1.request();
+  //     let totalRecordsResult = await totalRecordsRequest.query(`SELECT COUNT(*) AS TotalRecords FROM dbo.InventTableWMS_new`);
+  //     let totalRecords = totalRecordsResult.recordset[0].TotalRecords;
 
-  //     const bulkInsert = new sql.Table('tbl_Stock_Master');
-  //     bulkInsert.create = true;
-  //     bulkInsert.columns.add('ITEMID', sql.NVarChar, { nullable: true });
-  //     bulkInsert.columns.add('ITEMNAME', sql.NVarChar, { nullable: true });
-  //     bulkInsert.columns.add('ITEMGROUPID', sql.NVarChar, { nullable: true });
-  //     bulkInsert.columns.add('GROUPNAME', sql.NVarChar, { nullable: true });
+  //     // Calculate the number of batches
+  //     let batches = Math.ceil(totalRecords / batchSize);
 
-  //     for (let row of selectResult.recordset) {
-  //       if (!existingItemIds.has(row.ITEMID)) {
-  //         bulkInsert.rows.push([row.ITEMID, row.ITEMNAME, row.ITEMGROUPID, row.GROUPNAME]);
+  //     for (let i = 0; i < batches; i++) {
+  //       // Get the batch of records from dbo.InventTableWMS
+  //       let fetchRequest = pool1.request();
+  //       fetchRequest.input('offset', sql.Int, i * batchSize);
+  //       fetchRequest.input('batchSize', sql.Int, batchSize);
+  //       let fetchQuery = `
+  //         SELECT TOP (@batchSize) [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME]
+  //         FROM (
+  //           SELECT *, ROW_NUMBER() OVER (ORDER BY ITEMID) as row
+  //           FROM dbo.InventTableWMS_new
+  //         ) a
+  //         WHERE row > @offset
+  //       `;
+  //       let fetchResult = await fetchRequest.query(fetchQuery);
+
+  //       // Gather all ITEMIDs in the current batch
+  //       let itemIds = fetchResult.recordset.map(item => item.ITEMID);
+
+  //       // Create placeholders for the IN clause and parameters for the query
+  //       const placeholders = itemIds.map((_, index) => `@p${index}`);
+  //       const parameters = itemIds.reduce((params, id, index) => {
+  //         params[`p${index}`] = id;
+  //         return params;
+  //       }, {});
+
+  //       // Query tbl_Stock_Master for these ITEMIDs
+  //       let checkRequest = pool2.request();
+  //       for (const param in parameters) {
+  //         checkRequest.input(param, sql.NVarChar, parameters[param]);
+  //       }
+  //       let checkResult = await checkRequest.query(`SELECT ITEMID FROM dbo.tbl_Stock_Master_New WHERE ITEMID IN (${placeholders.join(',')})`);
+
+  //       // Store the existing ITEMIDs in a JavaScript Set for quick lookup
+  //       let existingItemIds = new Set(checkResult.recordset.map(item => item.ITEMID));
+
+  //       // Process each record in the batch
+  //       for (let item of fetchResult.recordset) {
+  //         // If the record does not exist in dbo.tbl_Stock_Master, insert it
+  //         if (!existingItemIds.has(item.ITEMID)) {
+  //           let insertRequest = pool2.request();
+  //           insertRequest.input('ITEMID', sql.NVarChar, item.ITEMID);
+  //           insertRequest.input('ITEMNAME', sql.NVarChar, item.ITEMNAME);
+  //           insertRequest.input('ITEMGROUPID', sql.NVarChar, item.ITEMGROUPID);
+  //           insertRequest.input('GROUPNAME', sql.NVarChar, item.GROUPNAME);
+  //           await insertRequest.query(`
+  //             INSERT INTO dbo.tbl_Stock_Master_New ([ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME])
+  //             VALUES (@ITEMID, @ITEMNAME, @ITEMGROUPID, @GROUPNAME)
+  //           `);
+  //         }
   //       }
   //     }
 
-  //     if (bulkInsert.rows.length > 0) {
-  //       const bulkInsertRequest = pool2.request();
-  //       await bulkInsertRequest.bulk(bulkInsert, (error, result) => {
-  //         if (error) {
-  //           console.log(error);
-  //           return res.status(500).send({ message: 'Error occurred during bulk insert.' });
-  //         }
-  //       });
+  //     res.status(200).send({ message: 'Inventory synchronized successfully.' });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // }, 
+
+  // async insertDataFromInventTableWmsToStockMaster(req, res, next) {
+  //   try {
+  //     // Declare a batch size
+  //     const batchSize = 1000;
+
+  //     // Get the total number of records
+  //     const totalRecordsQuery = 'SELECT COUNT(*) AS TotalRecords FROM dbo.InventTableWMS_new';
+  //     const { TotalRecords } = (await pool1.request().query(totalRecordsQuery)).recordset[0];
+
+  //     // Calculate the number of batches
+  //     const batches = Math.ceil(TotalRecords / batchSize);
+
+  //     for (let i = 0; i < batches; i++) {
+  //       // Get the batch of records from dbo.InventTableWMS_new
+  //       const offset = i * batchSize;
+  //       const fetchQuery = `
+  //         SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME]
+  //         FROM (
+  //           SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME], ROW_NUMBER() OVER (ORDER BY [ITEMID]) AS RowNum
+  //           FROM dbo.InventTableWMS_new
+  //         ) AS SubQuery
+  //         WHERE SubQuery.RowNum > @offset AND SubQuery.RowNum <= @endRow
+  //       `;
+  //       const fetchRequest = pool1.request();
+  //       fetchRequest.input('offset', sql.Int, offset);
+  //       fetchRequest.input('endRow', sql.Int, offset + batchSize);
+  //       const fetchResult = await fetchRequest.query(fetchQuery);
+
+  //       // Gather all ITEMIDs in the current batch
+  //       const itemIds = fetchResult.recordset.map(item => item.ITEMID);
+
+  //       // Query dbo.tbl_Stock_Master_New for existing ITEMIDs in the batch
+  //       const existingItemIds = await getExistingItemIds(itemIds);
+
+  //       // Filter out the records that already exist in dbo.tbl_Stock_Master_New
+  //       const recordsToInsert = fetchResult.recordset.filter(item => !existingItemIds.has(item.ITEMID));
+
+  //       // Bulk insert the filtered records into dbo.tbl_Stock_Master_New
+  //       if (recordsToInsert.length > 0) {
+  //         const table2 = new sql.Table('[tbl_Stock_Master_New]');
+  //         table2.create = true; // This means the table is already created.
+  //         table2.columns.add('ITEMID', sql.NVarChar(sql.MAX), { nullable: true });
+  //         table2.columns.add('ITEMNAME', sql.NVarChar(sql.MAX), { nullable: true });
+  //         table2.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX), { nullable: true });
+  //         table2.columns.add('GROUPNAME', sql.NVarChar(sql.MAX), { nullable: true });
+
+
+  //         recordsToInsert.forEach(item => {
+  //           console.log(item);
+  //           table2.rows.add(item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME);
+  //         });
+
+  //         const bulkRequest = pool2.request();
+  //         await bulkRequest.bulk(table2);
+  //       }
   //     }
 
-  //     return res.status(200).send({ message: 'Data checked and inserted successfully.' });
+  //     console.log('Inventory synchronized successfully.');
+  //     return res.status(200).send({ message: 'Inventory synchronized successfully.' });
   //   } catch (error) {
   //     console.log(error);
   //     return res.status(500).send({ message: error.message });
   //   }
-  // }
-  // ,
+  // },
+
   async insertDataFromInventTableWmsToStockMaster(req, res, next) {
     try {
-      // Pool1 request for Axapta database
-      const requestAxapta = pool1.request();
-
-      // Get all items from Axapta database
-      const itemsInAxapta = await requestAxapta.query(`SELECT * FROM [dbo].[InventTableWMS]`);
-
-      const itemIds = itemsInAxapta.recordset.map(item => item.ITEMID);
-
-      // Pool2 request for WBSSQL database
-      const requestWBSSQL = pool2.request();
-
-      // Begin a transaction
-      await requestWBSSQL.beginTransaction();
-
-      // Drop temporary table if it already exists
-      await requestWBSSQL.query(`IF OBJECT_ID('tempdb..#ITEMIDs') IS NOT NULL DROP TABLE #ITEMIDs`);
-
-      // Create temporary table to hold ITEMID values
-      await requestWBSSQL.query(`
-        CREATE TABLE #ITEMIDs (
-          ITEMID NVARCHAR(MAX)
-        )
-      `);
-
-      // Insert ITEMID values into temporary table
-      for (let itemId of itemIds) {
-        await requestWBSSQL.query(`
-          INSERT INTO #ITEMIDs (ITEMID)
-          VALUES (@ITEMID)
-        `, { ITEMID: itemId });
-      }
-
-      // Check if the ITEMID exists in the WBSSQL database
-      const existingItems = await requestWBSSQL.query(`
-        SELECT ITEMID
-        FROM [dbo].[tbl_Stock_Master]
-        WHERE ITEMID IN (SELECT ITEMID FROM #ITEMIDs)
-      `);
-
-      const existingItemIds = existingItems.recordset.map(item => item.ITEMID);
-      const newItems = itemsInAxapta.recordset.filter(item => !existingItemIds.includes(item.ITEMID));
-
-      if (newItems.length > 0) {
-        // Insert new items using parameterized queries within the transaction
-        for (let item of newItems) {
-          await requestWBSSQL.query(`
-            INSERT INTO [dbo].[tbl_Stock_Master] (ITEMID, ITEMNAME, ITEMGROUPID, GROUPNAME)
-            VALUES (@ITEMID, @ITEMNAME, @ITEMGROUPID, @GROUPNAME)
-          `, {
-            ITEMID: item.ITEMID,
-            ITEMNAME: item.ITEMNAME,
-            ITEMGROUPID: item.ITEMGROUPID,
-            GROUPNAME: item.GROUPNAME
+      // Declare a batch size
+      const batchSize = 1000;
+  
+      // Get the total number of records
+      const totalRecordsQuery = 'SELECT COUNT(*) AS TotalRecords FROM dbo.InventTableWMS';
+      const { TotalRecords } = (await pool1.request().query(totalRecordsQuery)).recordset[0];
+  
+      // Calculate the number of batches
+      const batches = Math.ceil(TotalRecords / batchSize);
+  
+      for (let i = 0; i < batches; i++) {
+        // Get the batch of records from dbo.InventTableWMS
+        const offset = i * batchSize;
+        const fetchQuery = `
+          SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME]
+          FROM (
+            SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME], ROW_NUMBER() OVER (ORDER BY [ITEMID]) AS RowNum
+            FROM dbo.InventTableWMS
+          ) AS SubQuery
+          WHERE SubQuery.RowNum > @offset AND SubQuery.RowNum <= @endRow
+        `;
+        const fetchRequest = pool1.request();
+        fetchRequest.input('offset', sql.Int, offset);
+        fetchRequest.input('endRow', sql.Int, offset + batchSize);
+        const fetchResult = await fetchRequest.query(fetchQuery);
+  
+        // Gather all ITEMIDs in the current batch
+        const itemIds = fetchResult.recordset.map(item => item.ITEMID);
+  
+        // Query dbo.tbl_Stock_Master for existing ITEMIDs in the batch
+        const existingItemIds = await getExistingItemIds(itemIds);
+  
+        // Filter out the records that already exist in dbo.tbl_Stock_Master
+        const recordsToInsert = fetchResult.recordset.filter(item => !existingItemIds.has(item.ITEMID));
+  
+        // Bulk insert the filtered records into dbo.tbl_Stock_Master
+        if (recordsToInsert.length > 0) {
+          const table2 = new sql.Table('[tbl_Stock_Master]');
+          table2.create = true; // This means the table is already created.
+          table2.columns.add('ITEMID', sql.NVarChar(sql.MAX), { nullable: true });
+          table2.columns.add('ITEMNAME', sql.NVarChar(sql.MAX), { nullable: true });
+          table2.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX), { nullable: true });
+          table2.columns.add('GROUPNAME', sql.NVarChar(sql.MAX), { nullable: true });
+  
+          recordsToInsert.forEach(item => {
+            console.log(item);
+            table2.rows.add(item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME);
           });
+  
+          const bulkRequest = pool2.request();
+          await bulkRequest.bulk(table2);
         }
       }
-
-      // Commit the transaction
-      await requestWBSSQL.commit();
-
-      const insertedItems = newItems.length;
-      const skippedItems = itemsInAxapta.recordset.length - insertedItems;
-
-      return res.status(200).send({ message: 'Sync completed successfully.', insertedItems, skippedItems });
+  
+      // Fetch all the data from tblstockmaster
+      const fetchAllQuery = 'SELECT * FROM tbl_Stock_Master';
+      const fetchAllResult = await pool2.request().query(fetchAllQuery);
+      const stockMasterData = fetchAllResult.recordset;
+  
+      console.log('Inventory synchronized successfully.');
+      return res.status(200).send({
+        message: 'Inventory synchronized successfully.',
+        stockMasterData: stockMasterData // Include the fetched data in the response
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },  
+
+  async insertDataFromTable1ToTable2(req, res, next) {
+    try {
+      // Fetch data from the first table
+      const query = 'SELECT ITEMID, ITEMNAME, ITEMGROUPID, GROUPNAME FROM [InventTableWMS]';
+      const result = await pool1.request().query(query);
+      const data = result.recordset;
+
+
+      // Bulk insert into the second table
+      const table2 = new sql.Table('[tbl_Stock_Master]');
+      table2.create = true; // Create the table if it doesn't exist
+      table2.columns.add('ITEMID', sql.NVarChar(sql.MAX), { nullable: true });
+      table2.columns.add('ITEMNAME', sql.NVarChar(sql.MAX), { nullable: true });
+      table2.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX), { nullable: true });
+      table2.columns.add('GROUPNAME', sql.NVarChar(sql.MAX), { nullable: true });
+
+      // Populate the table with data from the first table
+      data.forEach(row => {
+        console.log(row);
+        table2.rows.add(row.TEMID, row.ITEMNAME, row.ITEMGROUPID, row.GROUPNAME);
+      });
+
+      // Perform bulk insert
+      const request = pool2.request();
+      await request.bulk(table2);
+
+      // Close the connections
+      await pool1.close();
+      await pool2.close();
+
+      console.log('Data inserted successfully.');
+      return res.status(200).send({ message: 'Data inserted successfully.' });
+    } catch (error) {
+      console.log(error);
+
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
   async manageItemsReallocation(req, res, next) {
     try {
       const { availablePallet, serialNumber, selectionType } = req.body;

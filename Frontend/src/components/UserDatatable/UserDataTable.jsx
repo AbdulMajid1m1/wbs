@@ -42,6 +42,8 @@ const UserDataTable = ({
   detectAddRole,
   height,
   Refresh,
+  handleRefresh,
+  refreshLoading,
 
 }) => {
   const navigate = useNavigate();
@@ -1042,30 +1044,7 @@ const UserDataTable = ({
   }
 
 
-  const [isLoading, setLoading] = useState(false);
 
-  const handleRefresh = () => {
-    setLoading(true);
-    
-    
-    userRequest.get('/insertDataFromInventTableWmsToStockMaster')
-      .then((response) => {
-        console.log(response.data)
-        setLoading(false)
-      })
-      .catch(error =>{
-        console.log(error)
-        setLoading(false)
-      })
-
-      
-    // Perform your refresh logic or API call here
-    // Once the refresh is complete, set setLoading(false)
-    // You can use setTimeout as a placeholder for the asynchronous operation
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 2000);
-  };
 
 
   return (
@@ -1120,19 +1099,19 @@ const UserDataTable = ({
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
+
               {Refresh && (
-                <span>
-                  {isLoading ? (
-                    <button onClick={handleRefresh} disabled style={{ width: '65px' }}>
-                        <ClipLoader color="#0079ff" loading={isLoading} size={20} />
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {refreshLoading ? (
+                    <button onClick={handleRefresh} disabled style={{ width: '65px', position: 'relative' }}>
+                      <ClipLoader color="#DC143C" loading={refreshLoading} size={16} />
                     </button>
-                    ) : (
+                  ) : (
                     // Show the button when not refreshing
                     <button onClick={handleRefresh}>Refresh</button>
-                    )}
-                    {/* Rest of your code */}
-                  </span>
-               )}
+                  )}
+                </span>
+              )}
               {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
               <button onClick={() => handleExport(false)}>Export to Excel</button>
               <button onClick={() => handlePdfExport(false)}

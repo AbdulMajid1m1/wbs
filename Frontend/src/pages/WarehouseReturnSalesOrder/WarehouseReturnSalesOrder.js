@@ -55,6 +55,10 @@ const WarehouseReturnSalesOrder = () => {
             <UserDataTable data={data} title="Return Sales Order (Warehouse)" columnsName={ReturnSalesOrderColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                printButton={false}
+                printBarCode={true}
+                PrintBarCodeName={"Print"}
+                uniqueId="PrintReturnSalesOrder"
             />
 
             {isLoading &&

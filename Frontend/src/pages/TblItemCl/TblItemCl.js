@@ -57,6 +57,7 @@ const TblItemCl = () => {
 
 
             <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="Stock Master (Warehouse Operation)" columnsName={AllItems} backButton={true}
+                Refresh={true}
                 uniqueId="itemTableId"
 
 

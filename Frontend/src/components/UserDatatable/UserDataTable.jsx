@@ -13,6 +13,7 @@ import logo from "../../images/alessalogo2.png"
 import { GridToolbar } from "@mui/x-data-grid";
 import * as XLSX from 'xlsx';
 import { MuiCustomTable } from "../../utils/MuiCustomTable";
+import { ClipLoader } from 'react-spinners';
 
 
 const UserDataTable = ({
@@ -40,6 +41,7 @@ const UserDataTable = ({
   PrintBarCodeName,
   detectAddRole,
   height,
+  Refresh,
 
 }) => {
   const navigate = useNavigate();
@@ -1040,6 +1042,31 @@ const UserDataTable = ({
   }
 
 
+  const [isLoading, setLoading] = useState(false);
+
+  const handleRefresh = () => {
+    setLoading(true);
+    
+    
+    userRequest.get('/insertDataFromInventTableWmsToStockMaster')
+      .then((response) => {
+        console.log(response.data)
+        setLoading(false)
+      })
+      .catch(error =>{
+        console.log(error)
+        setLoading(false)
+      })
+
+      
+    // Perform your refresh logic or API call here
+    // Once the refresh is complete, set setLoading(false)
+    // You can use setTimeout as a placeholder for the asynchronous operation
+    // setTimeout(() => {
+    //   setLoading(false);
+    // }, 2000);
+  };
+
 
   return (
     <>
@@ -1093,6 +1120,19 @@ const UserDataTable = ({
               <Link to={addNewNavigation} className="link">
                 Add New
               </Link>
+              {Refresh && (
+                <span>
+                  {isLoading ? (
+                    <button onClick={handleRefresh} disabled style={{ width: '65px' }}>
+                        <ClipLoader color="#0079ff" loading={isLoading} size={20} />
+                    </button>
+                    ) : (
+                    // Show the button when not refreshing
+                    <button onClick={handleRefresh}>Refresh</button>
+                    )}
+                    {/* Rest of your code */}
+                  </span>
+               )}
               {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
               <button onClick={() => handleExport(false)}>Export to Excel</button>
               <button onClick={() => handlePdfExport(false)}

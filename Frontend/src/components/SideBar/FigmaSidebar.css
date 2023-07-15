@@ -83,3 +83,22 @@
       margin-top: -10px;
     }
   }
+
+
+  .context-menu {
+    position: fixed;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+  
+  .context-menu-option {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .context-menu-option:hover {
+    background: #f0f0f0;
+  }
+  

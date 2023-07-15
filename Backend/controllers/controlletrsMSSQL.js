@@ -4574,14 +4574,14 @@ const WBSDB = {
     try {
       // Declare a batch size
       const batchSize = 1000;
-  
+
       // Get the total number of records
       const totalRecordsQuery = 'SELECT COUNT(*) AS TotalRecords FROM dbo.InventTableWMS';
       const { TotalRecords } = (await pool1.request().query(totalRecordsQuery)).recordset[0];
-  
+
       // Calculate the number of batches
       const batches = Math.ceil(TotalRecords / batchSize);
-  
+
       for (let i = 0; i < batches; i++) {
         // Get the batch of records from dbo.InventTableWMS
         const offset = i * batchSize;
@@ -4597,16 +4597,16 @@ const WBSDB = {
         fetchRequest.input('offset', sql.Int, offset);
         fetchRequest.input('endRow', sql.Int, offset + batchSize);
         const fetchResult = await fetchRequest.query(fetchQuery);
-  
+
         // Gather all ITEMIDs in the current batch
         const itemIds = fetchResult.recordset.map(item => item.ITEMID);
-  
+
         // Query dbo.tbl_Stock_Master for existing ITEMIDs in the batch
         const existingItemIds = await getExistingItemIds(itemIds);
-  
+
         // Filter out the records that already exist in dbo.tbl_Stock_Master
         const recordsToInsert = fetchResult.recordset.filter(item => !existingItemIds.has(item.ITEMID));
-  
+
         // Bulk insert the filtered records into dbo.tbl_Stock_Master
         if (recordsToInsert.length > 0) {
           const table2 = new sql.Table('[tbl_Stock_Master]');
@@ -4615,22 +4615,22 @@ const WBSDB = {
           table2.columns.add('ITEMNAME', sql.NVarChar(sql.MAX), { nullable: true });
           table2.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX), { nullable: true });
           table2.columns.add('GROUPNAME', sql.NVarChar(sql.MAX), { nullable: true });
-  
+
           recordsToInsert.forEach(item => {
             console.log(item);
             table2.rows.add(item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME);
           });
-  
+
           const bulkRequest = pool2.request();
           await bulkRequest.bulk(table2);
         }
       }
-  
+
       // Fetch all the data from tblstockmaster
       const fetchAllQuery = 'SELECT * FROM tbl_Stock_Master';
       const fetchAllResult = await pool2.request().query(fetchAllQuery);
       const stockMasterData = fetchAllResult.recordset;
-  
+
       console.log('Inventory synchronized successfully.');
       return res.status(200).send({
         message: 'Inventory synchronized successfully.',
@@ -4640,7 +4640,7 @@ const WBSDB = {
       console.log(error);
       return res.status(500).send({ message: error.message });
     }
-  },  
+  },
 
   async insertDataFromTable1ToTable2(req, res, next) {
     try {
@@ -5541,6 +5541,59 @@ const WBSDB = {
         .query(updateTblSysNoQuery);
 
       res.status(200).send({ RMASERIALNO });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async generateSerialNumberforReceving(req, res, next) {
+    try {
+
+      const { ITEMID } = req.body;
+      // Fetch the last SSCC_AutoCounter from TblSysNo using pool2
+      const query = `
+      SELECT TOP 1 ITEMIDSeriesNo AS ITEMIDSeriesNoLasest FROM TblSysNo ORDER BY SSCC_AutoCounter DESC
+    `;
+
+
+      const result = await pool2.request().query(query);
+      let SSCC_AutoCounter = result.recordset[0].ITEMIDSeriesNoLasest;
+
+      // If there is no number in SSCC_AutoCounter, use 1 as the starting counter
+      if (!SSCC_AutoCounter) {
+        SSCC_AutoCounter = 1;
+      } else {
+        SSCC_AutoCounter = parseInt(SSCC_AutoCounter) + 1;
+      }
+      //logic for code here
+
+      const SSCC_AutoCounterStr = SSCC_AutoCounter.toString();
+      SSCC_AutoCounter = SSCC_AutoCounterStr.padStart(5, '0'); 
+
+      let SERIALNO = ITEMID + " " + SSCC_AutoCounter;
+
+
+
+
+      // Update or insert SSCC_AutoCounter in TblSysNo
+      const updateTblSysNoQuery = `
+       IF EXISTS (SELECT * FROM TblSysNo)
+       BEGIN
+         UPDATE TblSysNo SET ITEMIDSeriesNo = @SSCC_AutoCounter
+       END
+       ELSE
+       BEGIN
+         INSERT INTO TblSysNo (ITEMIDSeriesNo) VALUES (1)
+       END
+     `;
+
+      await pool2.request()
+        .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
+        .query(updateTblSysNoQuery);
+
+      res.status(200).send({ SERIALNO: SERIALNO });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: error.message });

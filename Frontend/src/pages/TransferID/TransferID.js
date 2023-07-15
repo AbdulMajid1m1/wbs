@@ -33,18 +33,21 @@ const TransferID = () => {
 
 
 
-  const [selectedOption, setSelectedOption] = useState("");
 
   const handleFromSelect = (event, value) => {
-    setSelectedOption(value || "");
+    // setSelectedOption(parsedData?.INVENTLOCATIONIDFROM);
+    console.log(value)
+    setLocationInputValue(value || "");
   }
-  
+
 
 
   // retrieve data from session storage
   const storedData = sessionStorage.getItem('transferData');
   const parsedData = JSON.parse(storedData);
+
   console.log(parsedData)
+  const [selectedOption, setSelectedOption] = useState(parsedData?.INVENTLOCATIONIDFROM);
 
   useEffect(() => {
     const getLocationData = async () => {
@@ -76,10 +79,10 @@ const TransferID = () => {
   const handleScan = (e) => {
     e.preventDefault();
     // check if selectedOption is empty
-    if (!selectedOption) {
-      setError("Please select an option for Bin/Location");
-      return;
-    }
+    // if (!selectedOption) {
+    //   setError("Please select an option for Bin/Location");
+    //   return;
+    // }
     if (!scanInputValue) return;
 
 
@@ -253,9 +256,13 @@ const TransferID = () => {
                   disabled
                 />
 
-                <div className='flex gap-2 justify-start items-center'>
-                  <span className='text-white'>FROM:</span>
-                  {/* <select
+                {/* <div className='flex gap-2 justify-start items-center'> */}
+                {/* <span className='text-white'>FROM:</span> */}
+                <div className='flex items-center sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>FROM:</span>
+                  <span>{parsedData?.INVENTLOCATIONIDFROM}</span>
+                </div>
+                {/* <select
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                       block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
                     onChange={handleFromSelect}
@@ -268,60 +275,8 @@ const TransferID = () => {
                         return <option key={index} value={item.BinLocation}>{item.BinLocation}</option>
                       })}
                   </select> */}
-                  <div className='w-full'>
-                    <Autocomplete
-                      ref={autocompleteRef}
-                      key={autocompleteKey}
-                      id="location"
-                      // options={location.filter(item => item.BinLocation)}
-                      // getOptionLabel={(option) => option.BinLocation}
-                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
-                      getOptionLabel={(option) => option}
-                      onChange={handleFromSelect}
 
-                      // onChange={(event, value) => {
-                      //   if (value) {
-                      //     console.log(`Selected: ${value}`);
-
-                      //   }
-                      // }}
-                      onInputChange={(event, value) => {
-                        if (!value) {
-                          // perform operation when input is cleared
-                          console.log("Input cleared");
-
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          InputProps={{
-                            ...params.InputProps,
-                            className: "text-white",
-                          }}
-                          InputLabelProps={{
-                            ...params.InputLabelProps,
-                            style: { color: "white" },
-                          }}
-
-                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                          placeholder="FROM"
-                          required
-                        />
-                      )}
-                      classes={{
-                        endAdornment: "text-white",
-                      }}
-                      sx={{
-                        '& .MuiAutocomplete-endAdornment': {
-                          color: 'white',
-                        },
-                      }}
-                    />
-
-                  </div>
-                </div>
+                {/* </div> */}
               </div>
 
               <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
@@ -464,13 +419,67 @@ const TransferID = () => {
 
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-              <input
+              {/* <input
                 id="enterscan"
                 value={locationInputValue}
                 onChange={e => setLocationInputValue(e.target.value)}
                 className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter/Scan Location"
-              />
+              /> */}
+
+              <div className='w-full'>
+                <Autocomplete
+                  ref={autocompleteRef}
+                  key={autocompleteKey}
+                  id="location"
+                  // options={location.filter(item => item.BinLocation)}
+                  // getOptionLabel={(option) => option.BinLocation}
+                  options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
+                  getOptionLabel={(option) => option}
+                  onChange={handleFromSelect}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="TO Location"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+
+              </div>
             </div >
 
             <div className='mb-6 flex justify-between items-center'>

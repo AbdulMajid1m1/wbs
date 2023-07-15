@@ -4,6 +4,7 @@ import "./ReceiptsThirdScreen.css";
 import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 import userRequest from '../../utils/userRequest';
 import Swal from 'sweetalert2';
+import { ClipLoader } from 'react-spinners';
 
 const ReceiptsThirdScreen = () => {
   const { serialNumLength, statedata, updateData, receivedQty, fetchItemCount } = useContext(ReceiptsContext);
@@ -22,17 +23,65 @@ const ReceiptsThirdScreen = () => {
     fetchItemCount();
   }, [])
 
+  //   const insertData = async () => {
+  //  if (SERIALNUM === null || SERIALNUM === '') {
+  //       return;
+  //     }
+  //     console.log(statedata);
+  //     console.log(statedata?.POQTY)
+  //     statedata.REMAININGQTY = statedata.POQTY - 1;
 
+  //     const queryParameters = new URLSearchParams(statedata).toString();
+  //     try {
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    if (SERIALNUM === null || SERIALNUM === '') {
-      return;
+  //       const response = await userRequest.post(
+  //         `/insertShipmentRecievedDataCL?${queryParameters}`)
+
+  //       console.log(response?.data);
+  //       fetchItemCount();
+  //       setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID, REMARKS: statedata.REMARKS }]);
+  //     }
+  //     catch (error) {
+
+  //       console.error(error);
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'Error',
+  //         text: error.response?.data?.message ?? 'Something went wrong!',
+  //       })
+  //     }
+  //     finally {
+  //       setSERIALNUM('');
+  //       document.getElementById('SERIALNUM').value = '';
+  //     }
+  //     try {
+  //       const updateDimensions = await userRequest.put("/updateStockMasterData", {
+  //         ITEMID: statedata?.ITEMID,
+  //         Length: statedata?.LENGTH,
+  //         Width: statedata?.WIDTH,
+  //         Height: statedata?.HEIGHT,
+  //         Weight: statedata?.WEIGHT,
+
+  //       })
+  //       console.log(updateDimensions?.data);
+
+  //     }
+  //     catch (error) {
+  //       console.error(error);
+
+  //     }
+
+  //   }
+
+  const insertData = async (InputSerialNum) => {
+    if (InputSerialNum === null || InputSerialNum === '') {
+      return Promise.reject('Serial Number is required');
     }
 
     console.log(statedata);
     console.log(statedata?.POQTY)
     statedata.REMAININGQTY = statedata.POQTY - 1;
+    statedata.SERIALNUM = InputSerialNum;
 
     const queryParameters = new URLSearchParams(statedata).toString();
     try {
@@ -42,7 +91,7 @@ const ReceiptsThirdScreen = () => {
 
       console.log(response?.data);
       fetchItemCount();
-      setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID, REMARKS: statedata.REMARKS }]);
+      setTableData((prev) => [...prev, { SERIALNUM: InputSerialNum, RCVDCONFIGID: statedata.RCVDCONFIGID, REMARKS: statedata.REMARKS }]);
     }
     catch (error) {
 
@@ -57,6 +106,7 @@ const ReceiptsThirdScreen = () => {
       setSERIALNUM('');
       document.getElementById('SERIALNUM').value = '';
     }
+
     try {
       const updateDimensions = await userRequest.put("/updateStockMasterData", {
         ITEMID: statedata?.ITEMID,
@@ -64,17 +114,52 @@ const ReceiptsThirdScreen = () => {
         Width: statedata?.WIDTH,
         Height: statedata?.HEIGHT,
         Weight: statedata?.WEIGHT,
-
       })
+
       console.log(updateDimensions?.data);
+
+    } catch (error) {
+      console.error(error);
+      setRefreshLoading(false);
+    }
+    return Promise.resolve(); // Return a Promise when the function completes
+  }
+
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    insertData(SERIALNUM);
+
+  }
+  const [refreshLoading, setRefreshLoading] = useState(false);
+
+  const handleGenerateSerialNumber = async () => {
+    setRefreshLoading(true);
+    try {
+      const response = await userRequest.post("/generateSerialNumberforReceving",
+        { ITEMID: statedata?.ITEMID })
+      console.log(response?.data);
+      setSERIALNUM(response?.data?.SERIALNO);
+      insertData(response?.data?.SERIALNO).then(() => {
+        console.log('Data inserted successfully');
+        setRefreshLoading(false); // Stop the spinner once data is inserted
+      }).catch(error => {
+        console.error(error);
+        // Handle the error as needed
+        setRefreshLoading(false);
+      });
 
     }
     catch (error) {
       console.error(error);
-
+      setRefreshLoading(false);
     }
-
+   
   }
+
+
+
 
 
   return (
@@ -82,18 +167,18 @@ const ReceiptsThirdScreen = () => {
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
-            <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#e69138] text-xl mb:2 md:mb-5">
+            <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
                 <div className='w-full flex justify-end'>
-                  <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm bg-[#fff] text-[#e69138]'>
+                  <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm bg-[#fff] text-[#F98E1A]'>
                     Back
                   </button>
                 </div>
                 <span className='text-white'>JOB ORDER NUMBER</span>
                 <input className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500
                   block w-full p-1.5 md:p-2.5 " placeholder="Job Order Number"
-                  value={statedata?.SHIPMENTID ?? ''}
+                  // value={statedata?.SHIPMENTID ?? ''}
                   disabled
                 />
                 <span className='text-white'>CONTAINER NUMBER</span>
@@ -157,7 +242,7 @@ const ReceiptsThirdScreen = () => {
                 <select
                   name="selectConfig"
                   id="selectCongigId"
-                  className="select-custom bg-gray-50 border-2 text-gray-900 text-xs rounded-lg focus:ring-bg-[#e69138]-500 focus:border-orange-500 block w-full p-2 md:p-3 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+                  className="select-custom bg-gray-50 border-2 text-gray-900 text-xs rounded-lg focus:ring-bg-[#F98E1A]-500 focus:border-orange-500 block w-full p-2 md:p-3 dark:focus:ring-orange-500 dark:focus:border-orange-500"
 
                   onChange={(e) => {
                     updateData({ ...statedata, RCVDCONFIGID: e.target.value });
@@ -173,7 +258,7 @@ const ReceiptsThirdScreen = () => {
 
               </div>
 
-              <div className="mb-6">
+              <div className="mb-3">
                 <label htmlFor="SERIALNUM" className="block mb-2 text-xs font-medium text-black">Enter Serial Number</label>
                 <input id="SERIALNUM" className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Scan/GTIN Number"
                   onChange={(e) => {
@@ -181,15 +266,36 @@ const ReceiptsThirdScreen = () => {
                     setSERIALNUM(e.target.value);
                   }}
                   onBlur={handleFormSubmit}
+
                 />
               </div>
 
-              {/* <div className="mb-6">
-                <button type='submit'
-                  className="bg-[#e69138] text-white font-semibold py-2 px-10 rounded-sm">
-                  Insert Serial Number
+              <h3 className="mb-3 block mb-2 text-xs font-medium text-black"
+                style={{ color: 'black' }}
+              >Or</h3>
+
+              {refreshLoading ? (
+
+                <button disabled style={{ width: '16rem', position: 'relative' }}
+                  onClick={handleGenerateSerialNumber}
+                  type='submit'
+                  className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm mb-3'
+                >
+                  <ClipLoader color="#ffff" loading={refreshLoading} size={16} />
+
                 </button>
-              </div> */}
+              ) : (
+                <button
+                  onClick={handleGenerateSerialNumber}
+                  type='submit'
+                  style={{ width: '16rem' }}
+                  className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm mb-3'
+                >
+                  GENERATE SERIAL NUMBER
+                </button>
+              )}
+
+
 
               <div className="mb-6">
                 {/* // creae excel like Tables  */}

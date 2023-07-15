@@ -108,7 +108,7 @@ const ReceiptsManagement = () => {
 
 
                 <div className="mb-6 mt-6">
-                  <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By CONTINERID</label>
+                  <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By CONTAINERID</label>
                   <Autocomplete
                     id="zone"
                     options={data}

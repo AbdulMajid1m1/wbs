@@ -5,12 +5,14 @@ import { useContext, useEffect, useState } from "react";
 // import logo from "../../../images/download.png";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import { ReceiptsContext } from "../../contexts/ReceiptsContext";
+import { MuiCustomTable } from "../../utils/MuiCustomTable";
 
 const PutAwayTable = ({
     columnsName,
     data,
     title,
     uniqueId,
+    secondaryColor,
 }) => {
     const navigate = useNavigate();
     const [record, setRecord] = useState([]);
@@ -102,8 +104,11 @@ const PutAwayTable = ({
 
                 </div>
 
-                <DataGrid
-
+                <MuiCustomTable
+                    secondaryColor={secondaryColor ? secondaryColor : null}
+                    getRowClassName={(params) =>
+                        params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                    }
                     getRowHeight={({ }) => {
                         let x;
                         x = 50;

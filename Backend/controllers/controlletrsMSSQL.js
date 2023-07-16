@@ -658,7 +658,7 @@ const WBSDB = {
   async getShipmentPalletizingByTransferId(req, res, next,) {
     try {
       let query = `
-        SELECT * FROM dbo.Transfer_Distribution
+        SELECT * FROM dbo.tbl_Shipment_Palletizing
         WHERE TRANSFERID = @TRANSFERID
       `;
       const { TRANSFERID } = req.query;

@@ -100,7 +100,7 @@ const WmsItemMapping = () => {
       "binlocation": userbinlocation,
       // "intcode": rowData?.IntCode,
       "itemserialno": userserial,
-      "mapdate": userdate,
+      "trxdate": userdate,
       // "palletcode": rowData?.PalletCode,
       "reference": reference === "" ? null : reference,
       // "sid": rowData?.SID,
@@ -229,10 +229,7 @@ const WmsItemMapping = () => {
 
   }
 
-  useEffect(() => {
-    const currentDate = new Date().toISOString().substr(0, 10);
-    setUserDate(currentDate);
-  }, []);
+  
 
   return (
     <>

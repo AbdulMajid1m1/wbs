@@ -3053,7 +3053,11 @@ const WBSDB = {
         height,
         weight,
         qrcode,
+        trxdate
       } = req.body;
+
+      let date = new Date().toISOString() // date for mysql type date
+
 
       // Check if the required serial number exists
       if (!itemserialno) {
@@ -3074,6 +3078,7 @@ const WBSDB = {
               BinLocation = @binLocation,
               IntCode = @intCode,
               MapDate = @mapDate,
+              TrxDate = @trxdate,
               PalletCode = @palletCode,
               Reference = @reference,
               SID = @sid,
@@ -3085,14 +3090,15 @@ const WBSDB = {
               Height = @height,
               Weight = @weight,
               QRCode = @qrcode
+
           
 
           WHERE ItemSerialNo = @itemSerialNo
         END
         ELSE
         BEGIN
-          INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans,Length,Width,Height,Weight,QRCode)
-          VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans,@length,@width,@height,@weight,@qrcode)
+          INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans,Length,Width,Height,Weight,QRCode,TrxDate)
+          VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans,@length,@width,@height,@weight,@qrcode,@trxdate)
         END
       `;
 
@@ -3107,7 +3113,8 @@ const WBSDB = {
       request.input('binLocation', sql.VarChar(200), binlocation);
       request.input('intCode', sql.VarChar(150), intcode);
       request.input('itemSerialNo', sql.VarChar(200), itemserialno);
-      request.input('mapDate', sql.Date, mapdate);
+      request.input('mapDate', sql.Date, date);
+      request.input('trxdate', sql.Date, trxdate);
       request.input('palletCode', sql.VarChar(255), palletcode);
       request.input('reference', sql.VarChar(100), reference);
       request.input('sid', sql.VarChar(50), sid);
@@ -5570,7 +5577,7 @@ const WBSDB = {
       //logic for code here
 
       const SSCC_AutoCounterStr = SSCC_AutoCounter.toString();
-      SSCC_AutoCounter = SSCC_AutoCounterStr.padStart(5, '0'); 
+      SSCC_AutoCounter = SSCC_AutoCounterStr.padStart(5, '0');
 
       let SERIALNO = ITEMID + " " + SSCC_AutoCounter;
 

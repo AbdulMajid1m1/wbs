@@ -8,7 +8,6 @@ import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 const ReceiptsSecond = () => {
   const navigate = useNavigate();
 
-
   const [quantity, setQuantity] = useState(null);
   const [length, setLength] = useState(null);
   const [width, setWidth] = useState(null);
@@ -85,6 +84,13 @@ const ReceiptsSecond = () => {
 
   return (
     <>
+      <style scoped>
+        {`
+          .css-ptiqhd-MuiSvgIcon-root {
+            color: black !important;
+          }
+        `}
+      </style>
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
@@ -207,11 +213,19 @@ const ReceiptsSecond = () => {
                   classes={{
                     endAdornment: "text-white",
                   }}
+
                   sx={{
                     '& .MuiAutocomplete-endAdornment': {
                       color: 'white',
+
+
+                    },
+                    '& .MuiAutocomplete-clearIndicator svg': {
+                      color: 'black !important',
                     },
                   }}
+
+
                 />
               </div>
 

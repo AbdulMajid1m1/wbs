@@ -550,6 +550,16 @@ router.put("/updateZonesData", checkAuthentication, WBSDB.updateZonesData);
 
 router.delete("/deleteZonesData", checkAuthentication, WBSDB.deleteZonesData);
 
+// ----- tblPalletMaster APIS Start -----
+
+router.get("/getAlltblPalletMaster", checkAuthentication, WBSDB.getAlltblPalletMaster);
+
+router.post("/insertPalletMasterData", checkAuthentication, WBSDB.insertPalletMasterData);
+
+router.put("/updatePalletMasterData", checkAuthentication, WBSDB.updatePalletMasterData);
+
+router.delete("/deletePalletMasterData", checkAuthentication, WBSDB.deletePalletMasterData);
+
 // --------- tblBinLocation APIs start ---------
 
 router.get("/getAlltblBinLocations", checkAuthentication, WBSDB.getAlltblBinLocation);

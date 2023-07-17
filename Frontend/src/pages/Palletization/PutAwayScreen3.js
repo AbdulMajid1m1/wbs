@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import {FaSearch,FaPrescriptionBottle} from "react-icons/fa"
+import { FaSearch, FaPrescriptionBottle } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
 import { Autocomplete, TextField } from '@mui/material';
 import icon from "../../images/close.png"
@@ -26,14 +26,30 @@ const PutAwayScreen3 = () => {
   console.log(parsedData);
   console.log(data)
 
-  const options = [
-    { label: "1000 x 1200" },
-    { label: "80 x 1200" }
-  ];
+
+
+  const [options, setOptions] = useState([]);
+  useEffect(() => {
+    userRequest.get('/getAlltblBinLocations')
+      .then(response => {
+        console.log(response?.data);
+        setOptions(response?.data ?? []);
+      })
+      .catch(error => {
+        console.error(error);
+        setError(error?.response?.data?.message ?? 'Something went wrong, please try again later');
+      });
+  }, []);
+
+
 
   const [serialnumberlist, setSerialNumberList] = useState([]);
+  const [row, setRow] = useState(null);
+  const [width, setWidth] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [size, setSize] = useState(null);
 
-
+  const [isOptionSelected, setIsOptionSelected] = useState(false);
   const handleSerialNumberInput = async (e) => {
     if (e.target.value.length == 0) return;
     const serialNumber = e.target.value;
@@ -66,11 +82,38 @@ const PutAwayScreen3 = () => {
 
   }
 
-
   const handleAutoComplete = (event, value) => {
     console.log('Selected value:', value);
-    // updateData({ ...statedata, RZONE: value.RZONE });
+    if (!value) {
+      setIsOptionSelected(false);
+      return;
+    }
+    setIsOptionSelected(true);
+
+    setHeight(value?.BinHeight);
+    setWidth(value?.BinWidth);
+    setSize(value?.BinTotalSize);
+    setRow(value?.BinRow);
+
   };
+
+
+  const handleHeightChange = (e) => {
+    setHeight(e.target.value);
+  }
+
+  const handleSizeChange = (e) => {
+    setSize(e.target.value);
+
+  }
+
+  const handleWidthChange = (e) => {
+    setWidth(e.target.value);
+  }
+
+  const handleRowChange = (e) => {
+    setRow(e.target.value);
+  }
 
   const handleClick = () => {
     userRequest.post('/generateAndUpdatePalletIds', null, {
@@ -165,7 +208,7 @@ const PutAwayScreen3 = () => {
               <Autocomplete
                 id="zone"
                 options={options}
-                getOptionLabel={(option) => option.label}
+                getOptionLabel={(option) => option?.BinTotalSize + ' x  ' + option?.BinType}
                 onChange={handleAutoComplete}
 
                 // onChange={(event, value) => {
@@ -210,6 +253,82 @@ const PutAwayScreen3 = () => {
 
 
             </div>
+            {isOptionSelected && (
+
+              <div className='mb-6 flex justify-between gap-3'>
+
+
+
+                <div className='w-full'>
+                  <label htmlFor='width' className="mb-2 text-xs font-medium text-black">Width</label>
+                  <input
+
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="width"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    disabled
+                    // onChange={(e) => setWidth(e.target.value)}
+                    onChange={handleWidthChange}
+                    value={width}
+                  />
+                </div>
+
+                <div className='w-full'>
+                  <label htmlFor='height' className="mb-2 text-xs font-medium text-black">Height</label>
+                  <input
+
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="height"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    disabled
+                    // onChange={(e) => setHeight(e.target.value)}
+                    onChange={handleHeightChange}
+                    value={height}
+                  />
+                </div>
+              </div>
+
+            )}
+            {isOptionSelected && (
+              <div className='mb-6 flex justify-between gap-3'>
+
+                <div className='w-full'>
+                  <label htmlFor='weight' className="mb-2 text-xs font-medium text-black">Size</label>
+                  <input
+
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="weight"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    // onChange={(e) => setWeight(e.target.value)}
+                    onChange={handleSizeChange}
+                    value={size}
+                    disabled
+                  />
+                </div>
+                <div className='w-full'>
+                  <label htmlFor='length' className="mb-2 text-xs font-medium text-black">Row</label>
+                  <input
+                    disabled
+
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="length"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    // onChange={(e) => setLength(e.target.value)}
+                    onChange={handleRowChange}
+                    value={row}
+                  />
+                </div>
+
+              </div>
+            )}
 
             <div className="mb-6">
               <input

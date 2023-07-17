@@ -7334,6 +7334,180 @@ const WBSDB = {
   },
 
 
+  // tblPalletMaster Controller start ------------- 
+
+  async getAlltblPalletMaster(req, res, next) {
+    try {
+      let query = `
+        SELECT * FROM [dbo].[tblPalletMaster]
+      `;
+      let request = pool2.request();
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async insertPalletMasterData(req, res, next) {
+    try {
+      const palletMasterDataArray = req.body;
+      if (!Array.isArray(palletMasterDataArray) || palletMasterDataArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+
+      for (let i = 0; i < palletMasterDataArray.length; i++) {
+        const {
+          GroupWarehouse,
+          Zones,
+          PalletNumber,
+          PalletHeight,
+          PalletRow,
+          PalletWidth,
+          PalletTotalSize,
+          PalletType,
+          PalletLength
+        } = palletMasterDataArray[i];
+        if (!PalletNumber || PalletNumber === '') {
+          return res.status(400).send({ message: "PalletNumber is required." });
+        }
+
+        // Dynamic SQL query construction
+        let fields = [
+          "GroupWarehouse",
+          "Zones",
+          "PalletNumber",
+          "PalletHeight",
+          "PalletRow",
+          "PalletWidth",
+          "PalletTotalSize",
+          "PalletType",
+          "PalletLength"
+        ];
+
+        let values = fields.map((field) => "@" + field);
+
+        let query = `
+          INSERT INTO [dbo].[tblPalletMaster]
+            (${fields.join(', ')}) 
+          VALUES 
+            (${values.join(', ')})
+        `;
+
+        let request = pool2.request();
+        request.input('GroupWarehouse', sql.NVarChar, GroupWarehouse);
+        request.input('Zones', sql.NVarChar, Zones);
+        request.input('PalletNumber', sql.NVarChar, PalletNumber);
+        request.input('PalletHeight', sql.Float, PalletHeight);
+        request.input('PalletRow', sql.Float, PalletRow);
+        request.input('PalletWidth', sql.Float, PalletWidth);
+        request.input('PalletTotalSize', sql.Float, PalletTotalSize);
+        request.input('PalletType', sql.NVarChar, PalletType);
+        request.input('PalletLength', sql.Float, PalletLength);
+        await request.query(query);
+      }
+
+      return res.status(201).send({ message: 'Records inserted into tblPalletMaster successfully' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  async updatePalletMasterData(req, res, next) {
+    try {
+      const {
+        GroupWarehouse,
+        Zones,
+        PalletNumber,
+        PalletHeight,
+        PalletRow,
+        PalletWidth,
+        PalletTotalSize,
+        PalletType,
+        PalletLength
+      } = req.body;
+
+      if (!PalletNumber || PalletNumber === '') {
+        return res.status(400).send({ message: 'PalletNumber is required.' });
+      }
+
+      const query = `
+        UPDATE [dbo].[tblPalletMaster]
+        SET
+          GroupWarehouse = ISNULL(@GroupWarehouse, GroupWarehouse),
+          Zones = ISNULL(@Zones, Zones),
+          PalletHeight = ISNULL(@PalletHeight, PalletHeight),
+          PalletRow = ISNULL(@PalletRow, PalletRow),
+          PalletWidth = ISNULL(@PalletWidth, PalletWidth),
+          PalletTotalSize = ISNULL(@PalletTotalSize, PalletTotalSize),
+          PalletType = ISNULL(@PalletType, PalletType),
+          PalletLength = ISNULL(@PalletLength, PalletLength)
+        WHERE PalletNumber = @PalletNumber;
+      `;
+
+      let request = pool2.request();
+      request.input('GroupWarehouse', sql.NVarChar, GroupWarehouse);
+      request.input('Zones', sql.NVarChar, Zones);
+      request.input('PalletHeight', sql.Float, PalletHeight);
+      request.input('PalletRow', sql.Float, PalletRow);
+      request.input('PalletWidth', sql.Float, PalletWidth);
+      request.input('PalletTotalSize', sql.Float, PalletTotalSize);
+      request.input('PalletType', sql.NVarChar, PalletType);
+      request.input('PalletLength', sql.Float, PalletLength);
+      request.input('PalletNumber', sql.NVarChar, PalletNumber);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'Pallet location record not found.' });
+      }
+
+      res.status(200).send({ message: 'Pallet location updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async deletePalletMasterData(req, res, next) {
+    try {
+      const { PalletNumber } = req.query;
+
+      if (!PalletNumber) {
+        return res.status(400).send({ message: "PalletNumber is required." });
+      }
+
+      const query = `
+        DELETE FROM [dbo].[tblPalletMaster]
+        WHERE PalletNumber = @PalletNumber
+      `;
+
+      let request = pool2.request();
+      request.input('PalletNumber', sql.NVarChar, PalletNumber);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: "No data found with the given PalletNumber." });
+      }
+
+      res.status(200).send({ message: 'Pallet location data deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
+
   // --------- tblBinLocation Controller start ---------
   async getAlltblBinLocation(req, res, next) {
 
@@ -7344,7 +7518,7 @@ const WBSDB = {
       let request = pool2.request();
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
-        return res.status(404).send({ message: "N0 data found." });
+        return res.status(404).send({ message: "No data found." });
       }
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {

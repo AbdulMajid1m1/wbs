@@ -1280,7 +1280,15 @@ export default UserDataTable;
 
 const PrintingShipmentReceived = ({ selectedRow, index }) => {
   return (
+
     <div>
+      <style>
+        {`
+            ..css-ptiqhd-MuiSvgIcon-root {
+             color: #ffffff !important;
+             }
+      `}
+      </style>
       {/* {selectedRow.length > 0 && ( */}
       <div id="barcode">
         {/* {selectedRow.map((selectedRow, index) => ( */}

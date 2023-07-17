@@ -103,6 +103,7 @@ import AssignRoles from './components/AssignRoles/AssignRoles'
 import ReceivingByContainerId from './pages/ReceivingByContainerId/ReceivingByContainerId'
 import ReceivingByContainerIdSecond from './pages/ReceivingByContainerId/ReceivingByContainerIdSecond'
 import ReceivingByContainerIdThird from './pages/ReceivingByContainerId/ReceivingByContainerIdThird'
+import PalletMaster from './pages/PalletMaster/PalletMaster'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -273,6 +274,10 @@ const App = () => {
 
                 <Route path='/user-accounts' element={<UsersAccounts />} />
                 <Route path='/user-accounts/:id/:name' element={<AssignRoles />} />
+
+
+                <Route path='/palletmaster' element={<PalletMaster />} />
+
 
                 {/*  <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
 

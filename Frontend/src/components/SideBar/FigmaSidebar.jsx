@@ -40,6 +40,7 @@ import wmsbarcode from "../../images/wmsbarcode.png"
 import wmspallet from "../../images/wmspallet.png"
 import wmsdispatch from "../../images/wmsdispatch.png"
 import wmsbintobin from "../../images/wmsbintobin.png"
+import palletmaster from "../../images/palletmaster.png"
 
 import Cookies from 'js-cookie'
 
@@ -130,6 +131,15 @@ const FigmaSidebar = () => {
                     >
                         <img src={items} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Stock Master</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/palletmaster')}
+                        onContextMenu={(event) =>
+                            handleContextMenu(event, '/palletmaster')
+                          }
+                    >
+                        <img src={palletmaster} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Pallet Master</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/shipmentreceived')}

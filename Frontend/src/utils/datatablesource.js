@@ -2749,3 +2749,64 @@ export const TransactionHistoryColumn = [
 
 
 
+
+export const PalletMasterColumn = [
+  {
+    field: "GroupWarehouse",
+    headerName: "GROUP WAREHOUSE",
+    width: 180,
+
+  },
+  {
+    field: "Zones",
+    headerName: "ZONES",
+    width: 180,
+
+  },
+  {
+    field: "PalletNumber",
+    headerName: "PALLETNUMBER",
+    width: 180,
+
+  },
+  {
+    field: "PalletHeight",
+    headerName: "PALLET HEIGHT",
+    width: 180,
+
+  },
+  {
+    field: "PalletRow",
+    headerName: "PALLET ROW",
+    width: 180,
+
+  },
+  {
+    field: "PalletWidth",
+    headerName: "PALLETWIDTH",
+    width: 180,
+
+  },
+  {
+    field: "PalletTotalSize",
+    headerName: "PALLET TOTAL SIZE",
+    width: 180,
+
+  },
+  {
+    field: "PalletType",
+    headerName: "PALLET TYPE",
+    width: 180,
+
+  },
+  {
+    field: "PalletLength",
+    headerName: "PALLET LENGTH",
+    width: 180,
+
+  },
+
+
+
+
+]

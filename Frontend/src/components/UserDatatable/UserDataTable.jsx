@@ -463,6 +463,21 @@ const UserDataTable = ({
           }
           break;
 
+        // Pallet Master data Delete Api 
+        case "palletMasterId":
+          try {
+            const response = await userRequest.delete(
+              "/deletePalletMasterData?PalletNumber=" + rowdata.PalletNumber
+            );
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
+          }
+          break;
+
 
 
         default:
@@ -520,6 +535,9 @@ const UserDataTable = ({
         break;
       case "zoneMasterId":
         navigate("/tblzoneupdate/" + rowData?.Zones)
+        break;
+      case "palletMasterId":
+        navigate("/tblpalletupdate/" + rowData?.PalletNumber)
         break;
 
       case "usersAccountsId":

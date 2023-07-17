@@ -934,3 +934,75 @@ export const TblZoneMasterUpdateColumn = [
 
 ];
 
+
+
+export const TblPalletMasterInput = [
+  {
+    id: "palletMasterIdInput1",
+    label: "GroupWarehouse*",
+    name: "GroupWarehouse",
+    type: "text",
+    placeholder: "Group Warehouse",
+  },
+  {
+    id: "palletMasterIdInput2",
+    label: "Zones*",
+    name: "Zones",
+    type: "text",
+    placeholder: "Zones",
+  },
+  {
+    id: "palletMasterIdInput3",
+    label: "PalletNumber*",
+    name: "PalletNumber",
+    type: "text",
+    placeholder: "Pallet Number",
+  },
+  {
+    id: "palletMasterIdInput4",
+    label: "PalletHeight*",
+    name: "PalletHeight",
+    type: "text",
+    placeholder: "Pallet Height",
+  },
+  {
+    id: "palletMasterIdInput5",
+    label: "PalletRow*",
+    name: "PalletRow",
+    type: "text",
+    placeholder: "PalletRow",
+  },
+  {
+    id: "palletMasterIdInput6",
+    label: "PalletWidth*",
+    name: "PalletWidth",
+    type: "text",
+    placeholder: "Pallet Width",
+  },
+  {
+    id: "palletMasterIdInput7",
+    label: "PalletTotalSize*",
+    name: "PalletTotalSize",
+    type: "text",
+    placeholder: "Pallet Total Size",
+  },
+  {
+    id: "palletMasterIdInput8",
+    label: "PalletType*",
+    name: "PalletType",
+    type: "text",
+    placeholder: "Pallet Type",
+  },
+  {
+    id: "palletMasterIdInput9",
+    label: "PalletLength*",
+    name: "PalletLength",
+    type: "text",
+    placeholder: "Pallet Length",
+  },
+
+
+
+
+];
+

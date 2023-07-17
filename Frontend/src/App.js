@@ -103,6 +103,9 @@ import AssignRoles from './components/AssignRoles/AssignRoles'
 import ReceivingByContainerId from './pages/ReceivingByContainerId/ReceivingByContainerId'
 import ReceivingByContainerIdSecond from './pages/ReceivingByContainerId/ReceivingByContainerIdSecond'
 import ReceivingByContainerIdThird from './pages/ReceivingByContainerId/ReceivingByContainerIdThird'
+import PalletMaster from './pages/PalletMaster/PalletMaster'
+import AddNewPalletMaster from './components/AddNew/AddNewPalletMaster'
+import TblPalletMasterUpdate from './components/UpdatesItem/TblPalletMasterUpdate'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -273,6 +276,13 @@ const App = () => {
 
                 <Route path='/user-accounts' element={<UsersAccounts />} />
                 <Route path='/user-accounts/:id/:name' element={<AssignRoles />} />
+
+
+                <Route path='/palletmaster' element={<PalletMaster />} />
+                <Route path='/tblpalletnew' element={<AddNewPalletMaster title="Add Pallet Master Data" />} />
+                <Route path='/tblpalletupdate/:id' element={<TblPalletMasterUpdate title="Pallet Master Data Update" />} />
+
+
 
                 {/*  <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
 

@@ -21,23 +21,22 @@ const PrintingPalletLabels = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllTblMappedBarcodes")
-                    .then(response => {
-                        console.log(response?.data);
+                const res = await userRequest.get("/getAllTblMappedBarcodes")
 
-                        setAllData(response?.data ?? [])
-                        setIsLoading(false)
+                console.log(res?.data);
 
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        setIsLoading(false)
-                        setError(error?.response?.data?.message ?? "Something went wrong")
-                    });
+                setAllData(res?.data ?? [])
 
             }
             catch (error) {
                 console.log(error);
+                setError(error?.response?.data?.message ?? "Something went wrong")
+                console.error(error);
+
+            }
+
+            finally {
+                setIsLoading(false)
             }
         };
         getAllAssetsList();

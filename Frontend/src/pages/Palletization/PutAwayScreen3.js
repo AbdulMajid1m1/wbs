@@ -102,8 +102,8 @@ const PutAwayScreen3 = () => {
     setHeight(e.target.value);
   }
 
-  const handleSizeChange = (e) => {
-    setSize(e.target.value);
+  const handleLengthChange = (e) => {
+    setLength(e.target.value);
 
   }
 
@@ -303,7 +303,7 @@ const PutAwayScreen3 = () => {
                     id="length"
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     // onChange={(e) => setWeight(e.target.value)}
-                    onChange={handleSizeChange}
+                    onChange={handleLengthChange}
                     value={length}
                     disabled
                   />

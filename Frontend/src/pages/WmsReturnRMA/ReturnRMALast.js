@@ -178,7 +178,7 @@ const ReturnRMALast = () => {
 
   const handleInputUser = (e) => {
     setNewBarcode(e.target.value);
-    console.log("ccccc" + e.target.value)
+    console.log(e.target.value)
     if (e.target.value.length === 0) {
       setTimeout(() => {
         setError("Please scan a barcode");
@@ -194,76 +194,41 @@ const ReturnRMALast = () => {
   }
 
   const filterData = async (newBarcodeValue) => {
-    let filtered;
-    if (barcode === "barcode") {
-      let trimInput = userInput.trim()
+    let apiData = { ...parsedData, ITEMSERIALNO: newBarcodeValue };
 
-      // filter the data based on the user input and selection type
-      filtered = newTableData.filter((item) => {
-        if (selectionType === 'Pallet') {
-          return item.PalletCode === trimInput;
-        } else if (selectionType === 'Serial') {
-          return item.ItemSerialNo === trimInput;
-        }
-
-        else {
-          return true;
-        }
-      });
-
-      if (filtered.length === 0) {
-        setTimeout(() => {
-          setError("Please scan a valid barcode");
-        }, 100);
-        return;
-      }
-
-    }
-
-    let apiData = parsedData;
-    console.log("apiData barcode" + newBarcodeValue)
-    apiData.ITEMSERIALNO = newBarcodeValue;
     try {
-      const res = await userRequest.post(
-        `/insertIntoWmsReturnSalesOrderCl`,
-        [apiData],
+      await userRequest.post(`/insertIntoWmsReturnSalesOrderCl`, [apiData]);
 
-      );
-      console.log(res?.data)
-      setMessage(res?.data?.message ?? 'Data inserted successfully');
+      if (newTableData?.length > 0) {
+        const insertData = {
+          ...newTableData[0],
+          ItemDesc: parsedData?.NAME,
+          ItemSerialNo: newBarcodeValue,
+          MapDate: new Date().toLocaleDateString(),
+          PalletCode: null,
+          BinLocation: selectedValue
+        };
 
-      setFilteredData(prev => [...prev, apiData])
-      if (barcode === "barcode") {
-        // Remove the inserted records from the newTableData
-        setNewTableData((prevData) => {
-          return prevData.filter((item) => {
-            if (selectionType === 'Pallet') {
-              return !filtered.some(filteredItem => filteredItem.PalletCode === item.PalletCode);
-            } else if (selectionType === 'Serial') {
-              return !filtered.some(filteredItem => filteredItem.ItemSerialNo === item.ItemSerialNo);
-            } else {
-              return true;
-            }
-          });
-        });
+        const lowerCaseInsertData = Object.fromEntries(
+          Object.entries(insertData).map(([k, v]) => [k.toLowerCase(), v])
+        );
+
+        const response = await userRequest.post(
+          "/insertManyIntoMappedBarcode",
+          { records: [lowerCaseInsertData] }
+        );
+
+        setNewTableData(prev => [...prev, insertData]);
+        setMessage(response?.data?.message ?? 'Data inserted successfully');
       }
-      else {
-        // clear model number
-        setModelNumber("");
-      }
-      // clear the user input state variable
+
+      setFilteredData(prev => [...prev, apiData]);
       setUserInput("");
-
-
-    }
-    catch (error) {
-      console.log(error)
+    } catch (error) {
       setError(error?.response?.data?.message ?? 'Cannot save data');
-
     }
-
-
   };
+
 
 
   return (
@@ -305,7 +270,6 @@ const ReturnRMALast = () => {
                       options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
                       getOptionLabel={(option) => option}
                       onChange={handleFromSelect}
-
                       onInputChange={(event, value) => {
                         if (!value) {
                           // perform operation when input is cleared

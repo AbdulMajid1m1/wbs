@@ -1184,13 +1184,14 @@ const WBSDB = {
       const updateShipmentCounterQuery = `
   UPDATE [WBSSQL].[dbo].[tbl_Shipment_Counter]
   SET [REMAININGQTY] = @REMAININGQTY2
-  WHERE [SHIPMENTID] = @SHIPMENTID AND [CONTAINERID] = @CONTAINERID
+  WHERE [SHIPMENTID] = @SHIPMENTID AND [CONTAINERID] = @CONTAINERID AND ITEMID = @ITEMID
 `;
 
       let request5 = pool2.request();
       request5.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
       request5.input("CONTAINERID", sql.NVarChar, CONTAINERID);
       request5.input("REMAININGQTY2", sql.Numeric(18, 0), REMAININGQTY - 1);
+      request5.input("ITEMID", sql.NVarChar, ITEMID);
       await request5.query(updateShipmentCounterQuery);
 
       res.status(201).send({ message: "Shipment data inserted successfully." });

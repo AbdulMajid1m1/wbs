@@ -30,7 +30,7 @@ const PutAwayScreen3 = () => {
 
   const [options, setOptions] = useState([]);
   useEffect(() => {
-    userRequest.get('/getAlltblBinLocations')
+    userRequest.get('/getAlltblPalletMaster')
       .then(response => {
         console.log(response?.data);
         setOptions(response?.data ?? []);
@@ -47,7 +47,7 @@ const PutAwayScreen3 = () => {
   const [row, setRow] = useState(null);
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
-  const [size, setSize] = useState(null);
+  const [length, setLength] = useState(null);
 
   const [isOptionSelected, setIsOptionSelected] = useState(false);
   const handleSerialNumberInput = async (e) => {
@@ -90,10 +90,10 @@ const PutAwayScreen3 = () => {
     }
     setIsOptionSelected(true);
 
-    setHeight(value?.BinHeight);
-    setWidth(value?.BinWidth);
-    setSize(value?.BinTotalSize);
-    setRow(value?.BinRow);
+    setHeight(value?.PalletHeight);
+    setWidth(value?.PalletWidth);
+    setLength(value?.PalletLength);
+    setRow(value?.PalletRow);
 
   };
 
@@ -208,7 +208,7 @@ const PutAwayScreen3 = () => {
               <Autocomplete
                 id="zone"
                 options={options}
-                getOptionLabel={(option) => option?.BinTotalSize + ' x  ' + option?.BinType}
+                getOptionLabel={(option) => option?.PalletTotalSize + ' x  ' + option?.PalletType}
                 onChange={handleAutoComplete}
 
                 // onChange={(event, value) => {
@@ -262,7 +262,6 @@ const PutAwayScreen3 = () => {
                 <div className='w-full'>
                   <label htmlFor='width' className="mb-2 text-xs font-medium text-black">Width</label>
                   <input
-
                     type='number'
                     step='any'
                     min={0}
@@ -274,11 +273,9 @@ const PutAwayScreen3 = () => {
                     value={width}
                   />
                 </div>
-
                 <div className='w-full'>
                   <label htmlFor='height' className="mb-2 text-xs font-medium text-black">Height</label>
                   <input
-
                     type='number'
                     step='any'
                     min={0}
@@ -297,29 +294,29 @@ const PutAwayScreen3 = () => {
               <div className='mb-6 flex justify-between gap-3'>
 
                 <div className='w-full'>
-                  <label htmlFor='weight' className="mb-2 text-xs font-medium text-black">Size</label>
+                  <label htmlFor='length' className="mb-2 text-xs font-medium text-black">Length</label>
                   <input
-
-                    type='number'
-                    step='any'
-                    min={0}
-                    id="weight"
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    // onChange={(e) => setWeight(e.target.value)}
-                    onChange={handleSizeChange}
-                    value={size}
-                    disabled
-                  />
-                </div>
-                <div className='w-full'>
-                  <label htmlFor='length' className="mb-2 text-xs font-medium text-black">Row</label>
-                  <input
-                    disabled
 
                     type='number'
                     step='any'
                     min={0}
                     id="length"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    // onChange={(e) => setWeight(e.target.value)}
+                    onChange={handleSizeChange}
+                    value={length}
+                    disabled
+                  />
+                </div>
+                <div className='w-full'>
+                  <label htmlFor='row' className="mb-2 text-xs font-medium text-black">Row</label>
+                  <input
+                    disabled
+
+                    type='number'
+                    step='any'
+                    min={0}
+                    id="row"
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     // onChange={(e) => setLength(e.target.value)}
                     onChange={handleRowChange}

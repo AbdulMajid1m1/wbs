@@ -2995,39 +2995,48 @@ const WBSDB = {
         trans
       } = req.headers;
 
-
-
-      let query = ` 
-        INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
-        VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
-      `;
+      // Check if the serial number exists
+      let checkQuery = "SELECT ItemSerialNo FROM dbo.tblMappedBarcodes WHERE ItemSerialNo = @itemSerialNo";
       let request = pool2.request();
-      request.input('itemCode', sql.VarChar(100), itemcode);
-      request.input('itemDesc', sql.NVarChar(255), itemdesc);
-      request.input('gtin', sql.VarChar(150), gtin);
-      request.input('remarks', sql.VarChar(100), remarks);
-      request.input('user', sql.VarChar(50), req.token.UserID);
-      request.input('classification', sql.VarChar(150), classification);
-      request.input('mainLocation', sql.VarChar(200), mainlocation);
-      request.input('binLocation', sql.VarChar(200), binlocation);
-      request.input('intCode', sql.VarChar(150), intcode);
       request.input('itemSerialNo', sql.VarChar(200), itemserialno);
-      request.input('mapDate', sql.Date, mapdate);
-      request.input('palletCode', sql.VarChar(255), palletcode);
-      request.input('reference', sql.VarChar(100), reference);
-      request.input('sid', sql.VarChar(50), sid);
-      request.input('cid', sql.VarChar(50), cid);
-      request.input('po', sql.VarChar(50), po);
-      request.input('trans', sql.Numeric(10, 0), trans);
+      let result = await request.query(checkQuery);
 
-      await request.query(query);
+      if (result.recordset.length > 0) {
+        // If the serial number exists, return an error
+        return res.status(400).send({ message: "The serial number already exists" });
+      } else {
+        let query = ` 
+          INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+          VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+        `;
 
-      return res.status(201).send({ message: "Data Inserted Successfully." });
+        request.input('itemCode', sql.VarChar(100), itemcode);
+        request.input('itemDesc', sql.NVarChar(255), itemdesc);
+        request.input('gtin', sql.VarChar(150), gtin);
+        request.input('remarks', sql.VarChar(100), remarks);
+        request.input('user', sql.VarChar(50), req.token.UserID);
+        request.input('classification', sql.VarChar(150), classification);
+        request.input('mainLocation', sql.VarChar(200), mainlocation);
+        request.input('binLocation', sql.VarChar(200), binlocation);
+        request.input('intCode', sql.VarChar(150), intcode);
+        request.input('mapDate', sql.Date, mapdate);
+        request.input('palletCode', sql.VarChar(255), palletcode);
+        request.input('reference', sql.VarChar(100), reference);
+        request.input('sid', sql.VarChar(50), sid);
+        request.input('cid', sql.VarChar(50), cid);
+        request.input('po', sql.VarChar(50), po);
+        request.input('trans', sql.Numeric(10, 0), trans);
+
+        await request.query(query);
+
+        return res.status(201).send({ message: "Data Inserted Successfully." });
+      }
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  },
+  }
+  ,
 
   // check if serial number exists in tblMappedBarcodes table
   async insertIntoMappedBarcodeOrUpdateBySerialNo(req, res, next) {
@@ -3145,10 +3154,9 @@ const WBSDB = {
 
 
   async insertManyIntoMappedBarcode(req, res, next) {
-
     const { records } = req.body;
-    try {
 
+    try {
       for (let record of records) {
         const {
           itemcode,
@@ -3169,32 +3177,40 @@ const WBSDB = {
           trans
         } = record;
 
-
-
-        let query = ` 
-        INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
-        VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
-      `;
+        // Check if the serial number exists
+        let checkQuery = "SELECT ItemSerialNo FROM dbo.tblMappedBarcodes WHERE ItemSerialNo = @itemSerialNo";
         let request = pool2.request();
-        request.input('itemCode', sql.VarChar(100), itemcode);
-        request.input('itemDesc', sql.NVarChar(255), itemdesc);
-        request.input('gtin', sql.VarChar(150), gtin);
-        request.input('remarks', sql.VarChar(100), remarks);
-        request.input('user', sql.VarChar(50), req.token.UserID);
-        request.input('classification', sql.VarChar(150), classification);
-        request.input('mainLocation', sql.VarChar(200), mainlocation);
-        request.input('binLocation', sql.VarChar(200), binlocation);
-        request.input('intCode', sql.VarChar(150), intcode);
         request.input('itemSerialNo', sql.VarChar(200), itemserialno);
-        request.input('mapDate', sql.Date, mapdate);
-        request.input('palletCode', sql.VarChar(255), palletcode);
-        request.input('reference', sql.VarChar(100), reference);
-        request.input('sid', sql.VarChar(50), sid);
-        request.input('cid', sql.VarChar(50), cid);
-        request.input('po', sql.VarChar(50), po);
-        request.input('trans', sql.Numeric(10, 0), trans);
+        let result = await request.query(checkQuery);
 
-        await request.query(query);
+        if (result.recordset.length > 0) {
+          // If the serial number exists, return an error
+          return res.status(400).send({ message: `The serial number ${itemserialno} already exists. Please provide unique serial numbers.` });
+        } else {
+          let query = ` 
+            INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+            VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+          `;
+
+          request.input('itemCode', sql.VarChar(100), itemcode);
+          request.input('itemDesc', sql.NVarChar(255), itemdesc);
+          request.input('gtin', sql.VarChar(150), gtin);
+          request.input('remarks', sql.VarChar(100), remarks);
+          request.input('user', sql.VarChar(50), req.token.UserID);
+          request.input('classification', sql.VarChar(150), classification);
+          request.input('mainLocation', sql.VarChar(200), mainlocation);
+          request.input('binLocation', sql.VarChar(200), binlocation);
+          request.input('intCode', sql.VarChar(150), intcode);
+          request.input('mapDate', sql.Date, mapdate);
+          request.input('palletCode', sql.VarChar(255), palletcode);
+          request.input('reference', sql.VarChar(100), reference);
+          request.input('sid', sql.VarChar(50), sid);
+          request.input('cid', sql.VarChar(50), cid);
+          request.input('po', sql.VarChar(50), po);
+          request.input('trans', sql.Numeric(10, 0), trans);
+
+          await request.query(query);
+        }
       }
 
       return res.status(201).send({ message: "Data Inserted Successfully." });
@@ -4696,7 +4712,7 @@ const WBSDB = {
     try {
       const { availablePallet, serialNumber, selectionType } = req.body;
 
-      if (!availablePallet || !serialNumber || !selectionType) {
+      if (!availablePallet || !serialNumber || !selectionType || availablePallet === '' || serialNumber === '' || selectionType === '') {
         return res.status(400).send({ message: 'Available pallet, serial number, and selection type are required.' });
       }
 
@@ -4711,11 +4727,11 @@ const WBSDB = {
         result = await request.query(`SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialNumber`);
 
         if (result.recordset.length === 0) {
-          return res.status(400).send({ message: 'Serial number not found.' });
+          return res.status(400).send({ message: 'Serial number not found in tblMappedBarcodes' });
         }
 
         if (result.recordset[0].PalletCode === availablePallet) {
-          return res.status(400).send({ message: 'Pallet code is the same as available pallet.' });
+          return res.status(400).send({ message: 'Item Already in the same Pallet.' });
         }
 
         // Update the pallet code in the mapped barcodes table
@@ -4737,8 +4753,13 @@ const WBSDB = {
         }
 
         // Insert into the ItemsReAllocationPicked table
-        await request.query(`INSERT INTO tbl_ItemsReAllocationPicked SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialNumber`);
+        // await request.query(`INSERT INTO tbl_ItemsReAllocationPicked SELECT * FROM tblMappedBarcodes WHERE ItemSerialNo = @serialNumber`);
 
+        const insertQuery = `INSERT INTO tbl_ItemsReAllocationPicked (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+                     SELECT ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans
+                     FROM tblMappedBarcodes
+                     WHERE ItemSerialNo = @serialNumber`;
+        await request.query(insertQuery);
         // Delete from the mapped barcodes table
         await request.query(`DELETE FROM tblMappedBarcodes WHERE ItemSerialNo = @serialNumber`);
 
@@ -5467,46 +5488,52 @@ const WBSDB = {
       let currentDateTime = new Date();
 
       for (const returnSalesOrder of returnSalesOrderArray) {
-        let query = `INSERT INTO WMS_ReturnSalesOrder_CL
-          ([ITEMID], [NAME], [EXPECTEDRETQTY], [SALESID], [RETURNITEMNUM],
-          [INVENTSITEID], [INVENTLOCATIONID], [CONFIGID], [WMSLOCATIONID],
-          [TRXDATETIME], [TRXUSERID], [ITEMSERIALNO], [ASSIGNEDTOUSERID])
-          VALUES
-          (@ITEMID, @NAME, @EXPECTEDRETQTY, @SALESID, @RETURNITEMNUM,
-          @INVENTSITEID, @INVENTLOCATIONID, @CONFIGID, @WMSLOCATIONID,
-          @TRXDATETIME, @TRXUSERID, @ITEMSERIALNO, @ASSIGNEDTOUSERID)`;
-
+        // Check if the serial number exists
+        let checkQuery = "SELECT ITEMSERIALNO FROM WMS_ReturnSalesOrder_CL WHERE ITEMSERIALNO = @itemSerialNo";
         let request = pool2.request();
+        request.input('itemSerialNo', sql.VarChar, returnSalesOrder.ITEMSERIALNO);
+        let result = await request.query(checkQuery);
 
+        if (result.recordset.length > 0) {
+          // If the serial number exists, return an error
+          return res.status(400).send({ message: `The serial number ${returnSalesOrder.ITEMSERIALNO} already exists. Please provide unique serial numbers.` });
+        } else {
+          let query = `INSERT INTO WMS_ReturnSalesOrder_CL
+            ([ITEMID], [NAME], [EXPECTEDRETQTY], [SALESID], [RETURNITEMNUM],
+            [INVENTSITEID], [INVENTLOCATIONID], [CONFIGID], [WMSLOCATIONID],
+            [TRXDATETIME], [TRXUSERID], [ITEMSERIALNO], [ASSIGNEDTOUSERID])
+            VALUES
+            (@ITEMID, @NAME, @EXPECTEDRETQTY, @SALESID, @RETURNITEMNUM,
+            @INVENTSITEID, @INVENTLOCATIONID, @CONFIGID, @WMSLOCATIONID,
+            @TRXDATETIME, @TRXUSERID, @ITEMSERIALNO, @ASSIGNEDTOUSERID)`;
 
-        request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
-        request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
-        request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
-        request.input("SALESID", sql.NVarChar, returnSalesOrder.SALESID);
-        request.input("RETURNITEMNUM", sql.NVarChar, returnSalesOrder.RETURNITEMNUM);
-        request.input("INVENTSITEID", sql.NVarChar, returnSalesOrder.INVENTSITEID);
-        request.input("INVENTLOCATIONID", sql.NVarChar, returnSalesOrder.INVENTLOCATIONID);
-        request.input("CONFIGID", sql.NVarChar, returnSalesOrder.CONFIGID);
-        request.input("WMSLOCATIONID", sql.NVarChar, returnSalesOrder.WMSLOCATIONID);
-        request.input("TRXDATETIME", sql.DateTime, currentDateTime);
-        request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
-        request.input("ITEMSERIALNO", sql.VarChar, returnSalesOrder.ITEMSERIALNO);
-        // request.input("ASSIGNEDTOUSERID", sql.NVarChar, returnSalesOrder.ASSIGNEDTOUSERID);
-        request.input("ASSIGNEDTOUSERID", sql.NVarChar, req?.token?.UserID);
+          request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
+          request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
+          request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
+          request.input("SALESID", sql.NVarChar, returnSalesOrder.SALESID);
+          request.input("RETURNITEMNUM", sql.NVarChar, returnSalesOrder.RETURNITEMNUM);
+          request.input("INVENTSITEID", sql.NVarChar, returnSalesOrder.INVENTSITEID);
+          request.input("INVENTLOCATIONID", sql.NVarChar, returnSalesOrder.INVENTLOCATIONID);
+          request.input("CONFIGID", sql.NVarChar, returnSalesOrder.CONFIGID);
+          request.input("WMSLOCATIONID", sql.NVarChar, returnSalesOrder.WMSLOCATIONID);
+          request.input("TRXDATETIME", sql.DateTime, currentDateTime);
+          request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
+          request.input("ASSIGNEDTOUSERID", sql.NVarChar, req?.token?.UserID);
 
-        await request.query(query);
+          await request.query(query);
 
-        // ReturnRMA page
-        const result = await insertTransactionHistoryData("returnRma", returnSalesOrder?.ITEMID, req?.token?.UserID);
-        console.log(result.message);
+          // ReturnRMA page
+          const result = await insertTransactionHistoryData("returnRma", returnSalesOrder?.ITEMID, req?.token?.UserID);
+          console.log(result.message);
+        }
       }
 
       return res.status(201).send({ message: 'Data inserted successfully.' });
     } catch (error) {
       return res.status(500).send({ message: error.message });
     }
-  },
-
+  }
+  ,
 
   async generateBarcodeForRma(req, res, next) {
     try {

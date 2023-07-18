@@ -195,6 +195,14 @@ const ReturnRMALast = () => {
 
   const filterData = async (newBarcodeValue) => {
     let apiData = { ...parsedData, ITEMSERIALNO: newBarcodeValue };
+    if (selectedValue === null) {
+      setTimeout(() => {
+
+        setError("Please select a location");
+      }, 200);
+
+      return;
+    }
 
     try {
       await userRequest.post(`/insertIntoWmsReturnSalesOrderCl`, [apiData]);

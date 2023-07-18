@@ -21,7 +21,7 @@ const ItemReAllocation = () => {
   // const [selectedOption, setSelectedOption] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const [availablePallet, setAvailablePallet] = useState('');
+  const [availablePallet, setAvailablePallet] = useState(null);
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -80,6 +80,12 @@ const ItemReAllocation = () => {
 
 
     //   };
+
+    if (!availablePallet) {
+      setError('Please Scan Pallet First')
+      return
+    }
+
 
 
     userRequest.post('/manageItemsReallocation', {

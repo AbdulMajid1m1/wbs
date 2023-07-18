@@ -52,13 +52,7 @@ const TransferID = () => {
   useEffect(() => {
     const getLocationData = async () => {
       try {
-        const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
-          {
-            headers: {
-              itemcode: parsedData?.ITEMID,
-              // itemcode: "IC1233",
-            }
-          })
+        const res = await userRequest.get("/getAllTblLocationsCL")
         console.log(res?.data)
         setLocation(res?.data)
 
@@ -434,7 +428,7 @@ const TransferID = () => {
                   id="location"
                   // options={location.filter(item => item.BinLocation)}
                   // getOptionLabel={(option) => option.BinLocation}
-                  options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
+                  options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
                   getOptionLabel={(option) => option}
                   onChange={handleFromSelect}
 

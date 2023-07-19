@@ -111,6 +111,15 @@ const ReturnRMALast = () => {
       setError("Please enter a model number")
       return;
     }
+    if (selectedValue === null) {
+      setError("Please select a location")
+      return;
+    }
+    if (newTableData.length === 0) {
+      setError("No data to insert into  tblMappedBarcode")
+      return;
+    }
+    
     try {
       const response = await userRequest.post("/generateBarcodeForRma",
         {
@@ -221,6 +230,7 @@ const ReturnRMALast = () => {
           Object.entries(insertData).map(([k, v]) => [k.toLowerCase(), v])
         );
 
+
         const response = await userRequest.post(
           "/insertManyIntoMappedBarcode",
           { records: [lowerCaseInsertData] }
@@ -228,6 +238,10 @@ const ReturnRMALast = () => {
 
         setNewTableData(prev => [...prev, insertData]);
         setMessage(response?.data?.message ?? 'Data inserted successfully');
+      }
+      else {
+        setError("No Data to insert into tblMappedBarcode") //check this
+        return;
       }
 
       setFilteredData(prev => [...prev, apiData]);

@@ -188,7 +188,7 @@ const BinToBinInternal = () => {
       }
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
-        <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
+        <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
@@ -238,7 +238,7 @@ const BinToBinInternal = () => {
             <div className='mb-6'>
               <div className='flex justify-between'>
                 <div>
-                  <label className='text-[#00006A] font-semibold'>Items On Bin<span className='text-[#FF0404]'>*</span></label>
+                  <label className='text-[#00006A] font-semibold sm:text-lg text-xs'>Items On Bin<span className='text-[#FF0404]'>*</span></label>
                 </div>
 
                 <div className='flex justify-end items-center gap-2'>

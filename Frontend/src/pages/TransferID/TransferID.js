@@ -108,14 +108,12 @@ const TransferID = () => {
     if (selectionType === 'Pallet') {
       //  check if the scanned value is already in the table
 
-
-
-
       // userRequest.get(`/getShipmentRecievedCLDataByPalletCodeAndBinLocation?palletCode=${scanInputValue}&binLocation=${selectedOption}`)
-      userRequest.post("/getMappedBarcodedsByPalletCodeAndBinLocation", {}, {
+      // userRequest.post("/getMappedBarcodedsByPalletCodeAndBinLocation", {}, {
+      userRequest.post("/getItemInfoByPalletCode", {}, {
         headers: {
           palletcode: scanInputValue,
-          binlocation: selectedOption
+        
         }
       })
         .then(response => {
@@ -140,10 +138,10 @@ const TransferID = () => {
 
       console.log("scan" + scanInputValue + "bin" + selectedOption)
       // userRequest.get(`/getShipmentRecievedCLDataBySerialNumberAndBinLocation?serialNumber=${scanInputValue}&binLocation=${selectedOption}`)
-      userRequest.post("/getMappedBarcodedsByItemSerialNoAndBinLocation", {}, {
+      userRequest.post("/getItemInfoByItemSerialNo", {}, {
         headers: {
           itemserialno: scanInputValue,
-          binlocation: selectedOption
+
         }
       })
         .then(response => {
@@ -186,7 +184,21 @@ const TransferID = () => {
         SELECTTYPE: selectionType // Add the SELECTTYPE field
       };
     });
-    console.log(dataForAPI);
+    if (tableData.length === 0) {
+      setError("Please scan atleast one item");
+      return;
+    }
+
+
+    if (!locationInputValue || locationInputValue === '') {
+      setError("Please select a location");
+      return;
+    }
+    // let dataForAPI = tableData?.[0]; // to get the first row of table
+
+    // dataForAPI = { ...dataForAPI, ...parsedData, SELECTTYPE: selectionType, BinLocation: selectedOption };
+    // // });
+    // console.log(dataForAPI);
 
     // Now, you can send dataForAPI to the API endpoint
     userRequest.post("/insertTblTransferBinToBinCL", dataForAPI)
@@ -300,41 +312,41 @@ const TransferID = () => {
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
                     <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    <span>0</span>
+                    <span>{tableData?.length}</span>
                   </div>
                 </div>
               </div>
 
-              {selectedOption !== "" &&
-                <div class="text-center">
-                  <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+
+              <div class="text-center">
+                <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                  >
-                    <label className="inline-flex items-center mt-1">
-                      <input
-                        type="radio"
-                        name="selectionType"
-                        value="Pallet"
-                        checked={selectionType === 'Pallet'}
-                        onChange={e => setSelectionType(e.target.value)}
-                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                      />
-                      <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                    </label>
-                    <label className="inline-flex items-center mt-1">
-                      <input
-                        type="radio"
-                        name="selectionType"
-                        value="Serial"
-                        checked={selectionType === 'Serial'}
-                        onChange={e => setSelectionType(e.target.value)}
-                        className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                      />
-                      <span className="ml-2 text-[#00006A]">BY SERIAL</span>
-                    </label>
-                  </div>
+                >
+                  <label className="inline-flex items-center mt-1">
+                    <input
+                      type="radio"
+                      name="selectionType"
+                      value="Pallet"
+                      checked={selectionType === 'Pallet'}
+                      onChange={e => setSelectionType(e.target.value)}
+                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    />
+                    <span className="ml-2 text-[#00006A]">BY PALLETE</span>
+                  </label>
+                  <label className="inline-flex items-center mt-1">
+                    <input
+                      type="radio"
+                      name="selectionType"
+                      value="Serial"
+                      checked={selectionType === 'Serial'}
+                      onChange={e => setSelectionType(e.target.value)}
+                      className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    />
+                    <span className="ml-2 text-[#00006A]">BY SERIAL</span>
+                  </label>
                 </div>
-              }
+              </div>
+
             </div>
 
             <form
@@ -413,13 +425,7 @@ const TransferID = () => {
 
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-              {/* <input
-                id="enterscan"
-                value={locationInputValue}
-                onChange={e => setLocationInputValue(e.target.value)}
-                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Enter/Scan Location"
-              /> */}
+
 
               <div className='w-full'>
                 <Autocomplete

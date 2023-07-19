@@ -6,7 +6,6 @@ import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { Autocomplete, TextField } from '@mui/material';
 import Barcode from "react-barcode";
-import { QRCodeSVG } from "qrcode.react";
 import logo from "../../images/alessalogo2.png"
 
 
@@ -18,7 +17,7 @@ const ReturnRMALast = () => {
   const [barcode, setBarcode] = useState('noBarcode');
   const [locationInputValue, setLocationInputValue] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [newTableData, setNewTableData] = useState([]);
+  // const [newTableData, setNewTableData] = useState([]);
   const [selectedValue, setSelectedValue] = useState(null);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
@@ -56,15 +55,9 @@ const ReturnRMALast = () => {
   useEffect(() => {
     const getLocationData = async () => {
       try {
-        const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
-          {
-            headers: {
-              itemcode: parsedData?.ITEMID,
-            }
-          })
+        const res = await userRequest.get("/getAllTblLocationsCL")
         console.log(res?.data)
         setLocation(res?.data)
-
 
       }
       catch (error) {
@@ -80,28 +73,27 @@ const ReturnRMALast = () => {
 
   const handleFromSelect = (event, value) => {
     setSelectedValue(value);
-    fetchData(value);
+    // fetchData(value);
   };
 
-  const fetchData = async (selectedValue) => {
-    try {
-      const response = await userRequest.post(
-        "/getMappedBarcodedsByItemCodeAndBinLocation",
-        {},
-        {
-          headers: {
-            // itemcode: "CV-950H SS220 BK",
-            itemcode: parsedData?.ITEMID,
-            binlocation: selectedValue
-          }
-        }
-      );
-      const responseData = response.data;
-      setNewTableData(responseData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const fetchData = async (selectedValue) => {
+  //   try {
+  //     const response = await userRequest.post(
+  //       "/getMappedBarcodedsByItemCodeAndBinLocation",
+  //       {},
+  //       {
+  //         headers: {
+  //           itemcode: parsedData?.ITEMID,
+  //           binlocation: selectedValue
+  //         }
+  //       }
+  //     );
+  //     const responseData = response.data;
+  //     setNewTableData(responseData);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
 
 
@@ -115,11 +107,11 @@ const ReturnRMALast = () => {
       setError("Please select a location")
       return;
     }
-    if (newTableData.length === 0) {
-      setError("No data to insert into  tblMappedBarcode")
-      return;
-    }
-    
+    // if (newTableData.length === 0) {
+    //   setError("No data to insert into  tblMappedBarcode")
+    //   return;
+    // }
+
     try {
       const response = await userRequest.post("/generateBarcodeForRma",
         {
@@ -147,12 +139,6 @@ const ReturnRMALast = () => {
     }
 
   }
-
-
-
-
-
-
 
   const handlePrint = () => {
     const printWindow = window.open('', 'Print Window', 'height=400,width=800');
@@ -216,33 +202,33 @@ const ReturnRMALast = () => {
     try {
       await userRequest.post(`/insertIntoWmsReturnSalesOrderCl`, [apiData]);
 
-      if (newTableData?.length > 0) {
-        const insertData = {
-          ...newTableData[0],
-          ItemDesc: parsedData?.NAME,
-          ItemSerialNo: newBarcodeValue,
-          MapDate: new Date().toLocaleDateString(),
-          PalletCode: null,
-          BinLocation: selectedValue
-        };
+      // if (newTableData?.length > 0) {
+      const insertData = {
+        ItemDesc: parsedData?.NAME,
+        ItemCode: parsedData?.ITEMID,
+        ItemSerialNo: newBarcodeValue,
+        MapDate: new Date().toLocaleDateString(),
+        PalletCode: null,
+        BinLocation: selectedValue
+      };
 
-        const lowerCaseInsertData = Object.fromEntries(
-          Object.entries(insertData).map(([k, v]) => [k.toLowerCase(), v])
-        );
+      const lowerCaseInsertData = Object.fromEntries(
+        Object.entries(insertData).map(([k, v]) => [k.toLowerCase(), v])
+      );
 
 
-        const response = await userRequest.post(
-          "/insertManyIntoMappedBarcode",
-          { records: [lowerCaseInsertData] }
-        );
+      const response = await userRequest.post(
+        "/insertManyIntoMappedBarcode",
+        { records: [lowerCaseInsertData] }
+      );
 
-        setNewTableData(prev => [...prev, insertData]);
-        setMessage(response?.data?.message ?? 'Data inserted successfully');
-      }
-      else {
-        setError("No Data to insert into tblMappedBarcode") //check this
-        return;
-      }
+      // setNewTableData(prev => [...prev, insertData]);
+      setMessage(response?.data?.message ?? 'Data inserted successfully');
+      // }
+      // else {
+      //   setError("No Data to insert into tblMappedBarcode") //check this
+      //   return;
+      // }
 
       setFilteredData(prev => [...prev, apiData]);
       setUserInput("");
@@ -281,96 +267,43 @@ const ReturnRMALast = () => {
                   value={parsedData?.RETURNITEMNUM}
                   disabled
                 />
-                <div className='flex gap-2 justify-center items-center'>
-                  <span className='text-white'>FROM:</span>
 
-                  <div className='w-full'>
-                    <Autocomplete
-                      ref={autocompleteRef}
-                      key={autocompleteKey}
-                      id="location"
-                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
-                      getOptionLabel={(option) => option}
-                      onChange={handleFromSelect}
-                      onInputChange={(event, value) => {
-                        if (!value) {
-                          // perform operation when input is cleared
-                          console.log("Input cleared");
-
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          InputProps={{
-                            ...params.InputProps,
-                            className: "text-white",
-                          }}
-                          InputLabelProps={{
-                            ...params.InputLabelProps,
-                            style: { color: "white" },
-                          }}
-
-                          className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                          placeholder="FROM"
-                          required
-                        />
-                      )}
-                      classes={{
-                        endAdornment: "text-white",
-                      }}
-                      sx={{
-                        '& .MuiAutocomplete-endAdornment': {
-                          color: 'white',
-                        },
-                      }}
-                    />
-
-                  </div>
-                </div>
 
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-base'>
-                <div className='flex items-center flex-col w-full sm:text-lg gap-2 text-[#FFFFFF]'>
+              <div className='flex flex-col lg:flex-row justify-start items-start gap-2 mt-2 text-xs sm:text-base'>
+                <div className='w-full lg:w-1/3 sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Item Code:</span>
                   <span>{parsedData?.ITEMID}</span>
                 </div>
-
-                <div className='flex flex-col gap-2 w-full'>
-                  <div className='text-[#FFFFFF]'>
-                    <span>Sales ID: {parsedData?.SALESID}</span>
-                  </div>
-
-
-                  {/* <div className='text-[#FFFFFF] w-full'>
-                    <span>NAME: {parsedData.NAME}</span>
-                  </div> */}
+                <div className='w-full lg:w-1/3 sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Invent Location Id:</span>
+                  <span>{parsedData?.INVENTLOCATIONID}</span>
+                </div>
+                <div className='w-full lg:w-1/3 sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Sales ID:</span>
+                  <span>{parsedData?.SALESID}</span>
                 </div>
               </div>
 
-              <div>
-                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Return Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.EXPECTEDRETQTY}</span>
-                  </div>
+              <div className='flex flex-col lg:flex-row justify-start items-center gap-6 text-xs sm:text-lg sm:mt-0 mt-2'>
+                <div className='w-full lg:w-1/2 sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Return Quantity: </span>
+                  <span> {parsedData.EXPECTEDRETQTY}</span>
+                </div>
 
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    {/* <span>{filteredData.length}</span> */}
-                    <span>1</span>
-                  </div>
+                <div className='w-full lg:w-1/2 sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Picked: </span>
+                  <span>1</span> {/* Replace with {filteredData.length} when ready */}
                 </div>
               </div>
+
 
             </div>
 
 
 
-            <div className='mb-6'>
-              {/* // creae excel like Tables  */}
+            {/* <div className='mb-6'>
               <div className="table-location-generate1">
                 <table>
                   <thead>
@@ -422,9 +355,9 @@ const ReturnRMALast = () => {
 
 
 
-            </div >
+            </div > */}
 
-            <div className='mb-4 flex justify-end items-center gap-2'>
+            {/* <div className='mb-4 flex justify-end items-center gap-2'>
               <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="totals"
@@ -432,7 +365,7 @@ const ReturnRMALast = () => {
                 placeholder="Totals"
                 value={newTableData.length}
               />
-            </div>
+            </div> */}
 
             {/* Barcode Radio Button */}
             <div class="text-center mb-4">
@@ -465,6 +398,66 @@ const ReturnRMALast = () => {
               </div>
             </div>
 
+
+            <div className="mb-6">
+              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
+
+
+              <div className='w-full'>
+                <Autocomplete
+                  ref={autocompleteRef}
+                  key={autocompleteKey}
+                  id="location"
+                  // options={location.filter(item => item.BinLocation)}
+                  // getOptionLabel={(option) => option.BinLocation}
+                  options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
+                  getOptionLabel={(option) => option}
+                  onChange={handleFromSelect}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="TO Location"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+
+              </div>
+            </div >
+
             {/* Barcode Input */}
             <div className="mb-6"
               style={{ display: barcode === 'barcode' ? 'none' : '' }}
@@ -486,15 +479,14 @@ const ReturnRMALast = () => {
             <div className='mb-6 flex justify-center items-center gap-2'>
               <button
                 onClick={GenerateBarcode}
-
                 style={{ display: barcode === 'barcode' ? 'none' : '' }}
                 type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[35%]'>
-                <span className='flex justify-center items-center'
-                >
-                  <p>Generate Barcode </p>
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full sm:w-1/2 md:w-[35%]'>
+                <span className='flex justify-center items-center'>
+                  <p>Generate Barcode</p>
                 </span>
               </button>
+
 
 
 
@@ -567,18 +559,9 @@ const ReturnRMALast = () => {
               />
             </div>
 
-
-
-
-
-
-
-
             <form
             //   onSubmit={handleFormSubmit}
             >
-
-
 
               <div className='mb-6'>
                 <label className='text-[#00006A] font-semibold'>List of Items on RMA<span className='text-[#FF0404]'>*</span></label>
@@ -636,29 +619,6 @@ const ReturnRMALast = () => {
 
             </form>
 
-
-
-            {/* <div className="mb-6">
-              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-              <input
-                id="enterscan"
-                value={locationInputValue}
-                onChange={e => setLocationInputValue(e.target.value)}
-                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Enter/Scan Location"
-              />
-            </div > */}
-
-            {/* <div className='mb-6 flex justify-center items-center'>
-              <button
-                type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[35%]'>
-                <span className='flex justify-center items-center'   
-                >
-                  <p>Assign to User</p>
-                </span>
-              </button>
-            </div> */}
           </div>
         </div >
       </div >

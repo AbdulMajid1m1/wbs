@@ -4038,7 +4038,7 @@ const WBSDB = {
 
 
       // After all records are inserted, send a response.
-      res.status(201).send({ message: 'Data inserted and updated successfully.' });
+      res.status(201).send({ message: 'Data inserted and updated successfully. Updated Records' + records?.length });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });

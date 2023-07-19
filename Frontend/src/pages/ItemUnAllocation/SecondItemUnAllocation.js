@@ -203,8 +203,8 @@ const SecondItemUnAllocation = () => {
       }
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
-        <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
-          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
+        <div className="w-full h-screen px-3 sm:px-5 flex items-center justify-center absolute">
+          <div className="w-full h-screen sm:h-auto sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
               <div className='flex flex-col justify-start items-start gap-2 text-xs sm:text-xl text-white'>
@@ -254,13 +254,13 @@ const SecondItemUnAllocation = () => {
 
 
             {selectedOption === 'Pallet' && (
-              <div>
-                <input
-                  type='text'
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder='Enter Scan/Pallet No'
-                  onChange={(e) => setInputType(e.target.value)}
-                  onBlur={handlePalletSubmit}
+                <div className='mt-6'>
+                <input 
+                    type='text'
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder='Enter Scan/Pallet No'
+                    onChange={(e) => setInputType(e.target.value)}
+                    onBlur={handlePalletSubmit}
                 />
               </div>
             )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState , useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { json, useNavigate } from 'react-router-dom';
 import userRequest from '../../utils/userRequest';
 import "./ItemUnAllocation.css";
@@ -12,11 +12,11 @@ const SecondItemUnAllocation = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-//   const [selectionType, setSelectionType] = useState('Pallet');
+  //   const [selectionType, setSelectionType] = useState('Pallet');
   const [selectedOption, setSelectedOption] = useState('Bin');
   const [location, setLocation] = useState([])
   const [locationInputValue, setLocationInputValue] = useState('');
-  
+
 
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -59,7 +59,7 @@ const SecondItemUnAllocation = () => {
   }, [])
 
 
-  
+
   const handleFromSelect = (event, value) => {
     // setSelectedOption(parsedData?.INVENTLOCATIONIDFROM);
     console.log(value)
@@ -67,31 +67,39 @@ const SecondItemUnAllocation = () => {
   }
 
   const [inputType, setInputType] = useState('')
+  const [isPalletValid, setIsPalletValid] = useState(false)
 
 
-const handlePalletSubmit = () => {
+  const handlePalletSubmit = () => {
     userRequest.post('/getItemInfoByPalletCode', {}, {
       headers: {
         palletcode: inputType,
         // usertypevalue: selectedOption,
       },
     })
-    .then((response) => {
-      console.log(response.data);
-      setMessage("The Pallet Is Found")
-    })
-    .catch((error) => {
-      console.log(error);
-      setError(error?.response?.data?.message);
-    });
+      .then((response) => {
+        console.log(response.data);
+        setMessage("Pallet is valid");
+        setIsPalletValid(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Pallet is invalid");
+        setIsPalletValid(false);
+      });
   };
-  
 
 
-const handleInsertData = () => {
+
+  const handleInsertData = async () => {
     let apiBody = {};
-  
+
     if (selectedOption === 'Pallet') {
+      if (!isPalletValid) {
+        setError("Pallet is invalid. Please enter a valid pallet code.");
+        return;
+      }
+
       apiBody = {
         records: [
           {
@@ -115,6 +123,10 @@ const handleInsertData = () => {
         ]
       };
     } else if (selectedOption === 'Bin') {
+      if (!locationInputValue || locationInputValue === '') {
+        setError("Please select a bin location.");
+        return;
+      }
       apiBody = {
         records: [
           {
@@ -140,19 +152,29 @@ const handleInsertData = () => {
       console.error('Invalid selected option');
       return;
     }
-  
-    userRequest.post('/insertManyIntoMappedBarcode', apiBody)
-      .then((response) => {
-        console.log(response.data);
-        setMessage(response?.data?.message);
-      })
-      .catch((error) => {
-        console.log(error);
-        setError(error?.response?.data?.message);
-      });
+    // deleteItemsReAllocationPickedByItemSerialNo?ItemSerialNo=
+    try {
+      const response = await userRequest.post('/insertManyIntoMappedBarcode', apiBody)
+
+      console.log(response.data);
+      // setMessage(response?.data?.message);
+      const deleteResponse = await userRequest.delete(`/deleteItemsReAllocationPickedByItemSerialNo?ItemSerialNo=${parsedData?.ItemSerialNo}`)
+      console.log(deleteResponse.data);
+      setMessage("Item UnAllocation Successfull")
+      setTimeout(() => {
+        navigate(-1);
+      }, 1500);
+
+
+    }
+    catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message ?? "Something went wrong");
+    }
+
   };
 
-  
+
 
   return (
     <>
@@ -193,8 +215,8 @@ const handleInsertData = () => {
                 <h1>Bin Location: {parsedData?.BinLocation}</h1>
               </div>
 
-              
-                 {selectedOption !== "" &&
+
+              {selectedOption !== "" &&
                 <div class="text-center mt-6">
                   <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
@@ -202,27 +224,27 @@ const handleInsertData = () => {
 
                     {/* // Inside the return statement, where you render the radio buttons */}
                     <label className="inline-flex items-center mt-1">
-                    <input
+                      <input
                         type="radio"
                         name="selectionType"
                         value="Pallet"
                         checked={selectedOption === 'Pallet'}
                         onChange={() => setSelectedOption('Pallet')}
                         className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    />
-                    <span className="ml-2 text-[#00006A]">BY PALLET</span>
+                      />
+                      <span className="ml-2 text-[#00006A]">BY PALLET</span>
                     </label>
 
                     <label className="inline-flex items-center mt-1">
-                    <input
+                      <input
                         type="radio"
                         name="selectionType"
                         value="Bin"
                         checked={selectedOption === 'Bin'}
                         onChange={() => setSelectedOption('Bin')}
                         className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    />
-                    <span className="ml-2 text-[#00006A]">BY BIN</span>
+                      />
+                      <span className="ml-2 text-[#00006A]">BY BIN</span>
                     </label>
                   </div>
                 </div>
@@ -232,73 +254,73 @@ const handleInsertData = () => {
 
 
             {selectedOption === 'Pallet' && (
-                <div>
-                <input 
-                    type='text'
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder='Enter Scan/Pallet No'
-                    onChange={(e) => setInputType(e.target.value)}
-                    onBlur={handlePalletSubmit}
+              <div>
+                <input
+                  type='text'
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder='Enter Scan/Pallet No'
+                  onChange={(e) => setInputType(e.target.value)}
+                  onBlur={handlePalletSubmit}
                 />
-                </div>
+              </div>
             )}
 
-         {selectedOption === 'Bin' && (
-            <div className="mt-6">
-              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-           
-              <div className='w-full'>
-                <Autocomplete
-                  ref={autocompleteRef}
-                  key={autocompleteKey}
-                  id="location"
-                  // options={location.filter(item => item.BinLocation)}
-                  // getOptionLabel={(option) => option.BinLocation}
-                  options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
-                  getOptionLabel={(option) => option}
-                  onChange={handleFromSelect}
+            {selectedOption === 'Bin' && (
+              <div className="mt-6">
+                <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
+
+                <div className='w-full'>
+                  <Autocomplete
+                    ref={autocompleteRef}
+                    key={autocompleteKey}
+                    id="location"
+                    // options={location.filter(item => item.BinLocation)}
+                    // getOptionLabel={(option) => option.BinLocation}
+                    options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
+                    getOptionLabel={(option) => option}
+                    onChange={handleFromSelect}
 
 
-                  onInputChange={(event, value) => {
-                    if (!value) {
-                      // perform operation when input is cleared
-                      console.log("Input cleared");
+                    onInputChange={(event, value) => {
+                      if (!value) {
+                        // perform operation when input is cleared
+                        console.log("Input cleared");
 
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        className: "text-white",
-                      }}
-                      InputLabelProps={{
-                        ...params.InputLabelProps,
-                        style: { color: "white" },
-                      }}
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          className: "text-white",
+                        }}
+                        InputLabelProps={{
+                          ...params.InputLabelProps,
+                          style: { color: "white" },
+                        }}
 
-                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                        className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                       p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                      placeholder="TO Location"
-                      required
-                    />
-                  )}
-                  classes={{
-                    endAdornment: "text-white",
-                  }}
-                  sx={{
-                    '& .MuiAutocomplete-endAdornment': {
-                      color: 'white',
-                    },
-                  }}
-                />
+                        placeholder="TO Location"
+                        required
+                      />
+                    )}
+                    classes={{
+                      endAdornment: "text-white",
+                    }}
+                    sx={{
+                      '& .MuiAutocomplete-endAdornment': {
+                        color: 'white',
+                      },
+                    }}
+                  />
 
-              </div>
-            </div >
-              )}
+                </div>
+              </div >
+            )}
 
-           
+
             <div className='mt-6 flex justify-between items-center'>
               <button
                 type='button'
@@ -310,8 +332,8 @@ const handleInsertData = () => {
                 </span>
               </button>
             </div>
-           
-            
+
+
           </div>
         </div>
       </div>

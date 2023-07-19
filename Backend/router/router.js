@@ -347,7 +347,7 @@ router.put("/updateTblItemMaster", checkAuthentication, WBSDB.updateTblItemMaste
 // ---- item-Re-Allocation APIS Start ----
 
 router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsReallocation);
-
+router.delete("/deleteItemsReAllocationPickedByItemSerialNo", checkAuthentication, WBSDB.deleteItemsReAllocationPickedByItemSerialNo); 
 
 // ---- item-Re-Allocation APIS End ----
 

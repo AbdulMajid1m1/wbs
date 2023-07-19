@@ -4826,6 +4826,39 @@ const WBSDB = {
     }
   },
 
+
+
+  async deleteItemsReAllocationPickedByItemSerialNo(req, res, next) {
+    try {
+      const { ItemSerialNo } = req.query;
+
+      if (!ItemSerialNo) {
+        return res.status(400).send({ message: "ItemSerialNo is required." });
+      }
+
+      const query = `
+            DELETE FROM tbl_ItemsReAllocationPicked
+            WHERE ItemSerialNo = @ItemSerialNo
+          `;
+
+      let request = pool2.request();
+      request.input('ItemSerialNo', sql.NVarChar, ItemSerialNo);
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: "No data found with the given ItemSerialNo. " + ItemSerialNo });
+      }
+
+      return res.status(200).send({ message: 'Record deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
+
   async getAllTransferBinToBinCL(req, res, next) {
     try {
 

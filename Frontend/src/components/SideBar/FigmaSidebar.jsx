@@ -564,7 +564,7 @@ const FigmaSidebar = () => {
                         }
                     >
                         <img src={unallocation} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Item Un-Allocation</p>
+                        <p className='sidebar-text'>Item Un-Allocated</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/wmsinventory')}

@@ -41,6 +41,7 @@ import wmspallet from "../../images/wmspallet.png"
 import wmsdispatch from "../../images/wmsdispatch.png"
 import wmsbintobin from "../../images/wmsbintobin.png"
 import palletmaster from "../../images/palletmaster.png"
+import unallocation from "../../images/unallocation.png"
 
 import Cookies from 'js-cookie'
 
@@ -654,6 +655,15 @@ const FigmaSidebar = () => {
                     >
                         <img src={wmsputaway} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>RMA PutAway</p>
+                    </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/itemunallocation')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/itemunallocation')
+                        }
+                    >
+                        <img src={unallocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Un-Allocation Items</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/journalfirst')}

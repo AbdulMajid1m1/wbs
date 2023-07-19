@@ -74,8 +74,8 @@ const ItemUnAllocation = () => {
       }
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
-        <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
-          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
+        <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
+          <div className="w-full h-screen sm:h-auto sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
               <div className='flex justify-between items-center gap-2 text-xs sm:text-xl'>
@@ -85,7 +85,7 @@ const ItemUnAllocation = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>Un-Allocation Items</h2>
+                <h2 className='text-center text-[#fff]'>Item Un-Allocated</h2>
 
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>

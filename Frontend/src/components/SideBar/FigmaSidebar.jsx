@@ -557,6 +557,15 @@ const FigmaSidebar = () => {
                         <img src={wmsallocation} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Item Re Allocation</p>
                     </div>
+       
+                    <div className='main-images-container' onClick={() => navigate('/itemunallocation')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/itemunallocation')
+                        }
+                    >
+                        <img src={unallocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Item Un-Allocation</p>
+                    </div>
 
                     <div className='main-images-container' onClick={() => navigate('/wmsinventory')}
                          onContextMenu={(event) =>
@@ -655,15 +664,6 @@ const FigmaSidebar = () => {
                     >
                         <img src={wmsputaway} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>RMA PutAway</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/itemunallocation')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/itemunallocation')
-                        }
-                    >
-                        <img src={unallocation} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Un-Allocation Items</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => navigate('/journalfirst')}

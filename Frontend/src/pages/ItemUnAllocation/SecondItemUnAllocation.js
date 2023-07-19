@@ -88,43 +88,6 @@ const handlePalletSubmit = () => {
   
 
 
-// const handleInsertData = () => {
-//     const ApiBody = {
-//       records: [
-//         {
-//           "itemcode": parsedData?.ItemCode,
-//           "itemdesc": parsedData?.ItemDesc,
-//           "gtin": parsedData?.GTIN,
-//           "remarks": parsedData?.Remarks,
-//           "classification": parsedData?.Classification,
-//           "mainlocation": parsedData?.MainLocation,
-//         //   "binlocation": parsedData?.BinLocation,
-//           "binlocation": locationInputValue,
-//           "intcode": parsedData?.IntCode,
-//           "itemserialno": parsedData?.ItemSerialNo,
-//           "mapdate": parsedData?.MapDate,
-//           "palletcode": parsedData?.PalletCode,
-//           "reference": parsedData?.Reference,
-//           "sid": parsedData?.SID,
-//           "cid": parsedData?.CID,
-//           "po": parsedData?.PO,
-//           "trans": parsedData?.Trans
-//         }
-//       ]
-//     };
-  
-//     userRequest.post('/insertManyIntoMappedBarcode', ApiBody)
-//       .then((response) => {
-//         console.log(response.data);
-//         setMessage(response?.data?.message)
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//         setError(error?.response?.data?.message);
-//       });
-//   };
-
-
 const handleInsertData = () => {
     let apiBody = {};
   
@@ -223,11 +186,11 @@ const handleInsertData = () => {
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
               <div className='flex flex-col justify-start items-start gap-2 text-xs sm:text-xl text-white'>
-                <h1>ItemCode: {parsedData?.ItemDesc}</h1>
-                <h1>ItemCode: {parsedData?.ItemSerialNo}</h1>
-                <h1>ItemCode: {parsedData?.GTIN}</h1>
-                <h1>ItemCode: {parsedData?.PalletCode}</h1>
-                <h1>ItemCode: {parsedData?.BinLocation}</h1>
+                <h1>Item Description: {parsedData?.ItemDesc}</h1>
+                <h1>Item Serial No: {parsedData?.ItemSerialNo}</h1>
+                <h1>GTIN: {parsedData?.GTIN}</h1>
+                <h1>PalletCode: {parsedData?.PalletCode}</h1>
+                <h1>Bin Location: {parsedData?.BinLocation}</h1>
               </div>
 
               
@@ -281,7 +244,7 @@ const handleInsertData = () => {
             )}
 
          {selectedOption === 'Bin' && (
-            <div className="mb-6">
+            <div className="mt-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
            
               <div className='w-full'>

@@ -106,6 +106,8 @@ import ReceivingByContainerIdThird from './pages/ReceivingByContainerId/Receivin
 import PalletMaster from './pages/PalletMaster/PalletMaster'
 import AddNewPalletMaster from './components/AddNew/AddNewPalletMaster'
 import TblPalletMasterUpdate from './components/UpdatesItem/TblPalletMasterUpdate'
+import ItemUnAllocation from './pages/ItemUnAllocation/ItemUnAllocation'
+import SecondItemUnAllocation from './pages/ItemUnAllocation/SecondItemUnAllocation'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -183,6 +185,9 @@ const App = () => {
         <Route path='/wmsbinlocation' element={<WmsBinlocation />} />
 
         <Route path='/wmsmapping' element={<WmsItemMapping />} />
+
+        <Route path='/itemunallocation' element={<ItemUnAllocation />} />
+        <Route path='/secondItemunallocation' element={<SecondItemUnAllocation />} />
 
 
         <Route

@@ -8209,6 +8209,25 @@ const WBSDB = {
   // -------- tblUserRolesAssigned controller end ---------
 
 
+  // ---------tbl_DZONES Controller ------------
+  async getAllTblDZones(req, res, next) {
+    try {
+
+      const query = `
+      SELECT * from tbl_DZONES`;
+      let request = pool1.request();
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Item found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
 
 
 

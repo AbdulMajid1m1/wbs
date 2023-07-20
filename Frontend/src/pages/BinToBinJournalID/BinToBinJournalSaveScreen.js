@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "./BinToBinJournalSaveScreen.css";
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { Autocomplete, TextField } from '@mui/material';
 
 const BinToBinJournalSaveScreen = () => {
   const navigate = useNavigate();
+  const autocompleteRef = useRef();
   const [location, setLocation] = useState([])
   const [scanInputValue, setScanInputValue] = useState('');
   const [selectionType, setSelectionType] = useState('Pallet');
@@ -15,11 +17,34 @@ const BinToBinJournalSaveScreen = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   // to reset snakebar messages
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const resetAutocomplete = () => {
+    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  };
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
 
   };
+
+  useEffect(() => {
+    const getLocationData = async () => {
+      try {
+        const res = await userRequest.get("/getAllTblLocationsCL")
+        console.log(res?.data)
+        setLocation(res?.data ?? [])
+
+      }
+      catch (error) {
+        console.log(error)
+        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+      }
+    }
+
+    getLocationData();
+
+  }, []);
 
   // retrieve data from session storage
   const storedData = sessionStorage.getItem('journalRowData');
@@ -138,6 +163,10 @@ const BinToBinJournalSaveScreen = () => {
       });
   }
 
+  const handleFromSelect = (event, value) => {
+    setLocationInputValue(value);
+
+  };
 
   return (
     <>
@@ -307,15 +336,63 @@ const BinToBinJournalSaveScreen = () => {
 
             </form>
 
+
+
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-              <input
-                id="enterscan"
-                value={locationInputValue}
-                onChange={e => setLocationInputValue(e.target.value)}
-                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Enter/Scan Location"
-              />
+              <div className='w-full'>
+                <Autocomplete
+                  ref={autocompleteRef}
+                  key={autocompleteKey}
+                  id="location"
+                  // options={location.filter(item => item.BinLocation)}
+                  // getOptionLabel={(option) => option.BinLocation}
+                  options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
+                  getOptionLabel={(option) => option}
+                  onChange={handleFromSelect}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="TO Location"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+
+              </div>
             </div >
 
             <div className='mb-6 flex justify-center items-center'>

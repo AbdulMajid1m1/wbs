@@ -3151,12 +3151,15 @@ const WBSDB = {
   },
 
 
-
-
   async insertManyIntoMappedBarcode(req, res, next) {
     const { records } = req.body;
-
+    let duplicateSerialNumbers = [];
     try {
+      const transaction = new sql.Transaction(pool2);
+
+      // Begin the transaction
+      await transaction.begin();
+
       for (let record of records) {
         const {
           itemcode,
@@ -3177,21 +3180,24 @@ const WBSDB = {
           trans
         } = record;
 
-        // Check if the serial number exists
-        let checkQuery = "SELECT ItemSerialNo FROM dbo.tblMappedBarcodes WHERE ItemSerialNo = @itemSerialNo";
-        let request = pool2.request();
-        request.input('itemSerialNo', sql.VarChar(200), itemserialno);
-        let result = await request.query(checkQuery);
+        // Check if the serial number already exists
+        const duplicateCheckQuery = 'SELECT COUNT(*) AS Count FROM dbo.tblMappedBarcodes WHERE ItemSerialNo = @itemSerialNo';
+        const duplicateCheckResult = await transaction.request().input('itemSerialNo', sql.VarChar(200), itemserialno).query(duplicateCheckQuery);
 
-        if (result.recordset.length > 0) {
-          // If the serial number exists, return an error
-          return res.status(400).send({ message: `The serial number ${itemserialno} already exists. Please provide unique serial numbers.` });
+        if (duplicateCheckResult.recordset[0].Count > 0) {
+          duplicateSerialNumbers.push(itemserialno);
         } else {
-          let query = ` 
-            INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
-            VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+          // Insert the record
+          const insertQuery = `
+            INSERT INTO dbo.tblMappedBarcodes
+            (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+            VALUES
+            (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
           `;
 
+          const request = transaction.request();
+
+          // Add parameters for the insert
           request.input('itemCode', sql.VarChar(100), itemcode);
           request.input('itemDesc', sql.NVarChar(255), itemdesc);
           request.input('gtin', sql.VarChar(150), gtin);
@@ -3201,6 +3207,7 @@ const WBSDB = {
           request.input('mainLocation', sql.VarChar(200), mainlocation);
           request.input('binLocation', sql.VarChar(200), binlocation);
           request.input('intCode', sql.VarChar(150), intcode);
+          request.input('itemSerialNo', sql.VarChar(200), itemserialno);
           request.input('mapDate', sql.Date, mapdate);
           request.input('palletCode', sql.VarChar(255), palletcode);
           request.input('reference', sql.VarChar(100), reference);
@@ -3209,16 +3216,92 @@ const WBSDB = {
           request.input('po', sql.VarChar(50), po);
           request.input('trans', sql.Numeric(10, 0), trans);
 
-          await request.query(query);
+          await request.query(insertQuery);
         }
       }
+
+      if (duplicateSerialNumbers.length > 0) {
+        await transaction.rollback();
+        return res.status(400).send({ message: `Failed to insert ${duplicateSerialNumbers?.length} records. The following serial numbers already exist: ${duplicateSerialNumbers?.join(', ')}` });
+      }
+
+      // Commit the transaction if all records are inserted successfully
+      await transaction.commit();
 
       return res.status(201).send({ message: "Data Inserted Successfully." });
     } catch (error) {
       console.log(error);
-      res.status(500).send({ message: error.message });
+      return res.status(500).send({ message: error.message });
     }
-  },
+  }
+  ,
+
+  // async insertManyIntoMappedBarcode(req, res, next) {
+  //   const { records } = req.body;
+
+  //   try {
+  //     for (let record of records) {
+  //       const {
+  //         itemcode,
+  //         itemdesc,
+  //         gtin,
+  //         remarks,
+  //         classification,
+  //         mainlocation,
+  //         binlocation,
+  //         intcode,
+  //         itemserialno,
+  //         mapdate,
+  //         palletcode,
+  //         reference,
+  //         sid,
+  //         cid,
+  //         po,
+  //         trans
+  //       } = record;
+
+  //       // Check if the serial number exists
+  //       let checkQuery = "SELECT ItemSerialNo FROM dbo.tblMappedBarcodes WHERE ItemSerialNo = @itemSerialNo";
+  //       let request = pool2.request();
+  //       request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+  //       let result = await request.query(checkQuery);
+
+  //       if (result.recordset.length > 0) {
+  //         // If the serial number exists, return an error
+  //         return res.status(400).send({ message: `The serial number ${itemserialno} already exists. Please provide unique serial numbers.` });
+  //       } else {
+  //         let query = ` 
+  //           INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+  //           VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+  //         `;
+
+  //         request.input('itemCode', sql.VarChar(100), itemcode);
+  //         request.input('itemDesc', sql.NVarChar(255), itemdesc);
+  //         request.input('gtin', sql.VarChar(150), gtin);
+  //         request.input('remarks', sql.VarChar(100), remarks);
+  //         request.input('user', sql.VarChar(50), req.token.UserID);
+  //         request.input('classification', sql.VarChar(150), classification);
+  //         request.input('mainLocation', sql.VarChar(200), mainlocation);
+  //         request.input('binLocation', sql.VarChar(200), binlocation);
+  //         request.input('intCode', sql.VarChar(150), intcode);
+  //         request.input('mapDate', sql.Date, mapdate);
+  //         request.input('palletCode', sql.VarChar(255), palletcode);
+  //         request.input('reference', sql.VarChar(100), reference);
+  //         request.input('sid', sql.VarChar(50), sid);
+  //         request.input('cid', sql.VarChar(50), cid);
+  //         request.input('po', sql.VarChar(50), po);
+  //         request.input('trans', sql.Numeric(10, 0), trans);
+
+  //         await request.query(query);
+  //       }
+  //     }
+
+  //     return res.status(201).send({ message: "Data Inserted Successfully." });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // },
 
 
 
@@ -4597,7 +4680,7 @@ const WBSDB = {
   async insertDataFromInventTableWmsToStockMaster(req, res, next) {
     try {
       // Declare a batch size
-      const batchSize = 1000;
+      const batchSize = 2000;
 
       // Get the total number of records
       const totalRecordsQuery = 'SELECT COUNT(*) AS TotalRecords FROM dbo.InventTableWMS';
@@ -4609,10 +4692,11 @@ const WBSDB = {
       for (let i = 0; i < batches; i++) {
         // Get the batch of records from dbo.InventTableWMS
         const offset = i * batchSize;
+        
         const fetchQuery = `
-          SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME]
+          SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME],[PRODLINEID],[PRODBRANDID]
           FROM (
-            SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME], ROW_NUMBER() OVER (ORDER BY [ITEMID]) AS RowNum
+            SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME], [PRODLINEID], [PRODBRANDID], ROW_NUMBER() OVER (ORDER BY [ITEMID]) AS RowNum
             FROM dbo.InventTableWMS
           ) AS SubQuery
           WHERE SubQuery.RowNum > @offset AND SubQuery.RowNum <= @endRow
@@ -4639,10 +4723,12 @@ const WBSDB = {
           table2.columns.add('ITEMNAME', sql.NVarChar(sql.MAX), { nullable: true });
           table2.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX), { nullable: true });
           table2.columns.add('GROUPNAME', sql.NVarChar(sql.MAX), { nullable: true });
+          table2.columns.add('PRODLINEID', sql.NVarChar(sql.MAX), { nullable: true });
+          table2.columns.add('PRODBRANDID', sql.NVarChar(sql.MAX), { nullable: true });
 
           recordsToInsert.forEach(item => {
             console.log(item);
-            table2.rows.add(item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME);
+            table2.rows.add(item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME, item.PRODLINEID, item.PRODBRANDID);
           });
 
           const bulkRequest = pool2.request();

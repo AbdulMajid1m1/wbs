@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { json, useNavigate } from 'react-router-dom';
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
@@ -6,10 +6,12 @@ import "./RmaPutAway.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { Autocomplete, TextField } from '@mui/material';
 
 const WmsCycleCounting = () => {
   const navigate = useNavigate();
 
+  const autocompleteRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -17,8 +19,11 @@ const WmsCycleCounting = () => {
   const [binlocation, setBinlocation] = useState('');
   const storedUser = localStorage.getItem('currentUser');
   const initialUser = storedUser ? JSON.parse(storedUser) : {};
-
-
+  const [location, setLocation] = useState([])
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const resetAutocomplete = () => {
+    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  };
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -39,6 +44,22 @@ const WmsCycleCounting = () => {
         setIsLoading(false)
       }
     };
+
+    const getLocationData = async () => {
+      try {
+        const res = await userRequest.get("/getAllTblLocationsCL")
+        console.log(res?.data)
+        setLocation(res?.data ?? [])
+
+      }
+      catch (error) {
+        console.log(error)
+        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+      }
+    }
+
+    getLocationData();
     getRmaReturn();
   }, []);
   const handleFormSubmit = async (e) => {
@@ -50,15 +71,17 @@ const WmsCycleCounting = () => {
     setIsLoading(true);
 
     const mappedData = data.map((item) => ({
-      itemcode: item.ITEMID,
-      itemdesc: item.NAME,
-      classification: item.RETURNITEMNUM,
-      mainlocation: item.INVENTSITEID,
+      // itemcode: item?.ITEMID
+      // if null then don't send itemcode in the request
+      ...(item?.ITEMID && { itemcode: item?.ITEMID }),
+      itemdesc: item?.NAME,
+      classification: item?.RETURNITEMNUM,
+      mainlocation: item?.INVENTSITEID,
       binlocation: binlocation,
-      intcode: item.CONFIGID,
-      itemserialno: item.ITEMSERIALNO,
-      mapdate: item.TRXDATETIME ?? "",
-      user: item.ASSIGNEDTOUSERID ?? "",
+      intcode: item?.CONFIGID,
+      itemserialno: item?.ITEMSERIALNO,
+      mapdate: item?.TRXDATETIME ?? "",
+      user: item?.ASSIGNEDTOUSERID ?? "",
       gtin: "", // Add any default or empty values for the new fields in the API
       remarks: "",
       palletcode: "",
@@ -66,8 +89,9 @@ const WmsCycleCounting = () => {
       sid: "",
       cid: "",
       po: "",
-  
+
     }));
+    console.log(mappedData);
 
     try {
       const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
@@ -83,7 +107,10 @@ const WmsCycleCounting = () => {
       setIsLoading(false);
     }
   };
+  const handleFromSelect = (event, value) => {
+    setBinlocation(value);
 
+  };
 
 
 
@@ -117,8 +144,8 @@ const WmsCycleCounting = () => {
         <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
-             
-            <div className='flex justify-between items-center gap-2 text-xs sm:text-xl'>
+
+              <div className='flex justify-between items-center gap-2 text-xs sm:text-xl'>
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>
                     <img src={undo} className='h-auto w-8 object-contain' alt='' />
@@ -186,17 +213,64 @@ const WmsCycleCounting = () => {
               </div>
             </div>
 
-            <div className='mb-6'>
-              <label htmlFor='bin' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Bin location<span className='text-[#FF0404]'>*</span></label>
-              <div className='w-full flex'>
-                <input
-                  id="bin"
-                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                  placeholder="Binlocation"
-                  onChange={(e) => setBinlocation(e.target.value)}
+          
+
+            <div className="mb-6">
+              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
+              <div className='w-full'>
+                <Autocomplete
+                  ref={autocompleteRef}
+                  key={autocompleteKey}
+                  id="location"
+                  // options={location.filter(item => item.BinLocation)}
+                  // getOptionLabel={(option) => option.BinLocation}
+                  options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
+                  getOptionLabel={(option) => option}
+                  onChange={handleFromSelect}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="TO Location"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
                 />
+
               </div>
-            </div>
+            </div >
 
 
 

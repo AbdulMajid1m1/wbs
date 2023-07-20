@@ -603,3 +603,8 @@ router.get("/getRolesAssignedToUser", checkAuthentication, checkRole([roles[51]]
 router.post("/insertUserRoleAssignedData", checkAuthentication, checkRole([roles[51]]), WBSDB.insertUserRoleAssignedData);
 
 router.delete("/deleteUserRoleAssignedData/:RoleId", checkAuthentication, checkRole([roles[51]]), WBSDB.deleteUserRoleAssignedData);
+
+
+// --------- tbl_DZONES APIs start ---------
+
+router.get("/getAllTblDZones", checkAuthentication, WBSDB.getAllTblDZones);

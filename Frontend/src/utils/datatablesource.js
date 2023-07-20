@@ -303,6 +303,18 @@ export const AllItems = [
     width: 180,
 
   },
+  {
+    field: "PRODLINEID",
+    headerName: "PRODLINEID",
+    width: 180,
+
+  },
+  {
+    field: "PRODBRANDID",
+    headerName: "PRODBRANDID",
+    width: 180,
+
+  },
 ]
 
 export const AllRoleColumns = [

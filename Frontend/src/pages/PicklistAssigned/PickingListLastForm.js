@@ -18,19 +18,23 @@ const PickingListLastForm = () => {
   const [selectedValue, setSelectedValue] = useState(null);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
+  const [dzones, setDzones] = useState([])
+
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
 
   };
-
   // retrieve data from session storage
   const storedData = sessionStorage.getItem('PickingRowData');
   const parsedData = JSON.parse(storedData);
   console.log("parsedData")
   console.log(parsedData)
 
+  const handleDzoneSelect = (event, value) => {
+    setLocationInputValue(value);
+  };
 
 
   useEffect(() => {
@@ -55,6 +59,22 @@ const PickingListLastForm = () => {
     }
 
     getLocationData();
+
+    const getDzoneLocations = async () => {
+      try {
+        const res = await userRequest.get("/getAllTblDZones")
+        console.log(res?.data)
+        setDzones(res?.data ?? [])
+
+      }
+      catch (error) {
+        console.log(error)
+        setError(error?.response?.data?.message ?? 'Cannot fetch dzones data');
+
+      }
+    }
+
+    getDzoneLocations();
 
   }, [parsedData?.ITEMID])
 
@@ -548,16 +568,59 @@ const PickingListLastForm = () => {
 
             </form>
 
+
+
+
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
-              <input
-                id="enterscan"
-                value={locationInputValue}
-                onChange={e => setLocationInputValue(e.target.value)}
-                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Enter/Scan Location"
-              />
+              <div className='w-full'>
+                <Autocomplete
+                  ref={autocompleteRef}
+                  key={autocompleteKey}
+                  id="location"
+                  options={Array.from(new Set(dzones?.map(item => item?.DZONE))).filter(Boolean)}
+                  getOptionLabel={(option) => option}
+                  onChange={handleDzoneSelect}
+
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="TO Location"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+
+              </div>
             </div >
+
+
 
             <div className='mb-6 flex justify-center items-center'>
               <button

@@ -57,7 +57,7 @@ const ReturnRMALast = () => {
       try {
         const res = await userRequest.get("/getAllTblLocationsCL")
         console.log(res?.data)
-        setLocation(res?.data)
+        setLocation(res?.data ?? [])
 
       }
       catch (error) {

@@ -4064,11 +4064,42 @@ const WBSDB = {
     try {
       // Extract the array of records from the request body.
       const records = req.body;
+      const serialNumbers = records.map(record => {
+        if (!record.ItemSerialNo || record.ItemSerialNo.trim() === '') {
+          return res.status(400).send({ message: 'ItemSerialNo is required.' });
+        }
+        return record?.ItemSerialNo;
+      });
 
+      console.log(serialNumbers.join(', '))
+
+      let validateSerialNumber = pool2.request();
+      // validateSerialNumber.input('serialNumbers', sql.VarChar, serialNumbers.join(', '));
+      // Convert the array of serial numbers to a comma-separated string to use in the SQL query
+      const serialNumbersString = serialNumbers.map(serial => `'${serial}'`).join(', ');
+      const existingSerialNumbersQuery = `
+      SELECT DISTINCT ItemSerialNo
+      FROM dbo.tbl_TransferBinToBin_CL
+      WHERE ItemSerialNo IN (${serialNumbersString});
+  `;
+
+      // Execute the query to get existing serial numbers
+      const existingSerialNumbersResult = await validateSerialNumber.query(existingSerialNumbersQuery);
+      const existingSerialNumbers = existingSerialNumbersResult.recordset.map(record => record?.ItemSerialNo);
+      console.log(existingSerialNumbersResult)
+
+      // Check if any of the serial numbers already exist in the database
+      if (existingSerialNumbers?.length > 0) {
+        return res.status(400).send({ message: 'Duplicate serial numbers: ' + existingSerialNumbers.join(', ') })
+      }
+
+
+      const transaction = new sql.Transaction(pool2);
+      await transaction.begin();
       // For each record in the array
       for (const record of records) {
-        let request = new sql.Request(pool2);
 
+        const request = transaction.request();
         // Add input parameters for each field. If the field is not provided in the record, set it to null.
         request.input('TRANSFERID', sql.NVarChar, record.TRANSFERID || null);
         request.input('TRANSFERSTATUS', sql.Int, record.TRANSFERSTATUS || null);
@@ -4077,7 +4108,8 @@ const WBSDB = {
         request.input('ITEMID', sql.NVarChar, record.ITEMID || null);
         request.input('QTYTRANSFER', sql.Int, record.QTYTRANSFER || null);
         request.input('QTYRECEIVED', sql.Int, record.QTYRECEIVED || null);
-        request.input('CREATEDDATETIME', sql.DateTime, record.CREATEDDATETIME ? new Date(record.CREATEDDATETIME) : null);
+        // insert current datetime in CREATEDDATETIME
+        request.input('CREATEDDATETIME', sql.DateTime, new Date());
         request.input('ItemCode', sql.VarChar, record.ItemCode || null);
         request.input('ItemDesc', sql.NVarChar, record.ItemDesc || null);
         request.input('GTIN', sql.VarChar, record.GTIN || null);
@@ -4106,34 +4138,22 @@ const WBSDB = {
             `;
 
         // Execute the query
+
         await request.query(query);
 
-        // // Update STOCKQTY in dbo.[tbl_Stock_Master] 
-        // const updateQuery = `
-        //     UPDATE dbo.[tbl_Stock_Master]
-        //     SET STOCKQTY = STOCKQTY + 1
-        //     OUTPUT INSERTED.*
-        //     WHERE ITEMID = @itemid
-        //   `;
 
-        // const updateRequest = new sql.Request(pool2);
-        // updateRequest.input('itemid', sql.NVarChar(255), record.ITEMID);
-
-        // const updateResult = await updateRequest.query(updateQuery);
-
-        // if (updateResult.rowsAffected[0] === 0) {
-        //   console.log('Item not found in tbl_Stock_Master, ITEMID: ' + record.ITEMID);
-        // }
-        // Update BinLocation in dbo.[tblMappedBarcode]
         const updateBinLocationQuery = `
           UPDATE dbo.[tblMappedBarcodes]
-          SET BinLocation = @binlocation
+          SET BinLocation = @binlocation,
+          MainLocation=@mainlocation   
           WHERE ItemSerialNo = @itemserialno
 `;
 
-        const updateBinLocationRequest = new sql.Request(pool2);
+
+        const updateBinLocationRequest = transaction.request();
         updateBinLocationRequest.input('binlocation', sql.VarChar, record.BinLocation);
         updateBinLocationRequest.input('itemserialno', sql.VarChar, record.ItemSerialNo);
+        updateBinLocationRequest.input('mainlocation', sql.VarChar, record.MainLocation);
 
         const updateBinLocationResult = await updateBinLocationRequest.query(updateBinLocationQuery);
 
@@ -4148,10 +4168,10 @@ const WBSDB = {
 
       }
 
-
+      await transaction.commit();
 
       // After all records are inserted, send a response.
-      res.status(201).send({ message: 'Data inserted and updated successfully. Updated Records' + records?.length });
+      return res.status(201).send({ message: 'Data inserted and updated successfully. Updated Records ' + records?.length });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
@@ -4722,7 +4742,7 @@ const WBSDB = {
       for (let i = 0; i < batches; i++) {
         // Get the batch of records from dbo.InventTableWMS
         const offset = i * batchSize;
-        
+
         const fetchQuery = `
           SELECT [ITEMID], [ITEMNAME], [ITEMGROUPID], [GROUPNAME],[PRODLINEID],[PRODBRANDID]
           FROM (

@@ -113,7 +113,7 @@ const TransferID = () => {
       userRequest.post("/getItemInfoByPalletCode", {}, {
         headers: {
           palletcode: scanInputValue,
-        
+
         }
       })
         .then(response => {
@@ -175,15 +175,7 @@ const TransferID = () => {
   const handleSaveBtnClick = () => {
     // Create a new array
 
-    const dataForAPI = tableData.map(row => {
-      // Return a new object for each row of the table
-      return {
-        ...row, // Spread the fields from the current row of the table
-        BinLocation: locationInputValue,
-        ...parsedData, // Spread the fields from parsedData
-        SELECTTYPE: selectionType // Add the SELECTTYPE field
-      };
-    });
+
     if (tableData.length === 0) {
       setError("Please scan atleast one item");
       return;
@@ -194,6 +186,18 @@ const TransferID = () => {
       setError("Please select a location");
       return;
     }
+
+    const dataForAPI = tableData.map(row => {
+      // Return a new object for each row of the table
+      return {
+        ...row, // Spread the fields from the current row of the table
+        BinLocation: locationInputValue,
+        ...parsedData, // Spread the fields from parsedData
+        SELECTTYPE: selectionType, // Add the SELECTTYPE field
+        MainLocation: locationInputValue?.substring(0, 2), // Add the MainLocation field by extracting the first two characters from the locationInputValue
+
+      };
+    });
     // let dataForAPI = tableData?.[0]; // to get the first row of table
 
     // dataForAPI = { ...dataForAPI, ...parsedData, SELECTTYPE: selectionType, BinLocation: selectedOption };

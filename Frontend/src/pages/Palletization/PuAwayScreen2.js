@@ -58,11 +58,22 @@ const PutAwayScreen2 = () => {
 
               <div className='flex flex-col justify-start items-start gap-2 text-xs 2xl:text-xl lg:text-xl xl:text-xl md:text-sm text-white'>
                 <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
-                {/* <h1>ItemId: {selectedPutAwayData.ITEMID}</h1> */}
+                <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
+                <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
                 <h1>GROUPID: {parsedData?.ItemDesc}</h1>
                 <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
                 <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
-                <h1>DIMENSION: {parsedData?.PalletCode}</h1>
+              </div>
+
+              <div className='flex justify-center items-center gap-5 text-xs 2xl:text-xl lg:text-xl xl:text-xl md:text-sm text-white mt-3'>
+                <div>
+                  <h1>HEIGHT: 50 {parsedData?.PalletCode}</h1>
+                  <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1>
+                </div>
+                <div className='ml-6'>
+                  <h1>LENGTH: 67.6 {parsedData?.PalletCode}</h1>
+                  <h1>WEIGHT: {parsedData?.PalletCode}</h1>
+                </div>
               </div>
 
             </div>

@@ -145,7 +145,7 @@ const PutAwayScreen3 = () => {
       {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
-        <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
+        <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
@@ -173,33 +173,89 @@ const PutAwayScreen3 = () => {
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>ITEMNAME</span>
-                  <span>{selectedPutAwayData.ITEMNAME}</span>
+              {/* <div className='flex flex-col justify-start items-start gap-2 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
+                <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
+                <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
+                <h1>GROUPID: {parsedData?.ItemDesc}</h1>
+                <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
+                <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
+              </div> */}
+              {/* <div className='flex justify-between items-center gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
+                  <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
+                </div>
+                <div className=''>
+                  <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
+                  <h1>GROUPID: {parsedData?.ItemDesc}</h1>
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>ItemID:</span>
-                  <span>{selectedPutAwayData.ITEMID}</span>
+              <div className='flex justify-between items-center gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
+                </div>
+                <div className=''>
+                  <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
                 </div>
               </div>
 
+              <div className='flex justify-between items-center gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>HEIGHT: 50 {parsedData?.PalletCode}</h1>
+                  <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1>
+                </div>
+                <div className=''>
+                  <h1>LENGTH: 67.6 {parsedData?.PalletCode}</h1>
+                  <h1>WEIGHT: {parsedData?.PalletCode}</h1>
+                </div>
+              </div>
+               */}
+
+            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
               <div>
-                <div className='flex gap-6 justify-center items-center'>
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Quantity</span>
-                    <span>{selectedPutAwayData.QTYTRANSFER}</span>
-                  </div>
-
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked</span>
-                    <span>{serialnumberlist.length}</span>
-                  </div>
-                </div>
+                <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
+                <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
               </div>
+              <div>
+                <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
+                <h1>GROUPID: {parsedData?.ItemDesc}</h1>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+              <div>
+                <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
+              </div>
+              <div>
+                <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+              <div>
+                <h1>HEIGHT: 50 {parsedData?.PalletCode}</h1>
+                <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1>
+              </div>
+              <div>
+                <h1>LENGTH: 67.6 {parsedData?.PalletCode}</h1>
+                <h1>WEIGHT: {parsedData?.PalletCode}</h1>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+              <div>
+                <h1>Quantity {selectedPutAwayData.QTYTRANSFER}</h1>
+                {/* <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1> */}
+              </div>
+              <div>
+                <h1>Picked {serialnumberlist.length}</h1>
+                {/* <h1>WEIGHT: {parsedData?.PalletCode}</h1> */}
+              </div>
+            </div>
+
+
 
             </div>
 

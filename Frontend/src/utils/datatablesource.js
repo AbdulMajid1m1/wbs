@@ -1206,20 +1206,14 @@ export const shipmentPalletizingColumn = [
 
 export const PalletizingByTransferIdColumn = [
   {
-    field: "ALS_PACKINGSLIPREF",
-    headerName: "ALS PACKINGSLIP REF",
-    width: 180,
-
-  },
-  {
-    field: "ALS_TRANSFERORDERTYPE",
-    headerName: "ALS TRANSFER ORDER TYPE",
-    width: 180,
-
-  },
-  {
     field: "TRANSFERID",
     headerName: "TRANSFER ID",
+    width: 180,
+
+  },
+  {
+    field: "TRANSFERSTATUS",
+    headerName: "TRANSFER STATUS",
     width: 180,
 
   },
@@ -1236,41 +1230,36 @@ export const PalletizingByTransferIdColumn = [
 
   },
   {
-    field: "QTYTRANSFER",
-    headerName: "QTY TRANSFER",
-    width: 180,
-
-  },
-  {
     field: "ITEMID",
     headerName: "ITEM ID",
     width: 180,
 
   },
   {
-    field: "ITEMNAME",
-    headerName: "ITEM NAME",
+    field: "INVENTDIMID",
+    headerName: "INVENTDIMID",
     width: 180,
 
   },
   {
-    field: "CONFIGID",
-    headerName: "CONFIG ID",
+    field: "QTYTRANSFER",
+    headerName: "QTY TRANSFER",
     width: 180,
 
   },
   {
-    field: "WMSLOCATIONID",
-    headerName: "WMS LOCATION ID",
+    field: "QTYREMAINRECEIVE",
+    headerName: "QTY REMAIN RECEIVE",
     width: 180,
 
   },
   {
-    field: "SHIPMENTID",
-    headerName: "SHIPMENT ID",
+    field: "CREATEDDATETIME",
+    headerName: "CREATED DATE TIME",
     width: 180,
 
   },
+ 
 
 
 

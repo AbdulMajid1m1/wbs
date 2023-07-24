@@ -1234,6 +1234,36 @@ const WBSDB = {
     }
   },
 
+
+  async getShipmentRecievedCLDataCByItemId(req, res, next) {
+
+    try {
+      const { ITEMID } = req.query;
+      console.log(ITEMID);
+
+      if (!ITEMID) {
+        return res.status(400).send({ message: "ITEMID is required." });
+      }
+
+      const query = `
+        SELECT * FROM dbo.tbl_Shipment_Received_CL
+        WHERE ITEMID = @ITEMID
+      `;
+      let request = pool2.request();
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "Data not found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
   async getShipmentRecievedClCountByPoqtyContainerIdAndItemId(req, res, next) {
     try {
       const { POQTY, CONTAINERID, ITEMID } = req.query;

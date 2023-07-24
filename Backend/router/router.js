@@ -112,6 +112,8 @@ router.get("/getRemainingQtyFromShipmentCounter", checkAuthentication, WBSDB.get
 
 router.post("/getShipmentRecievedCLDataCByShipmentId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByShipmentId)
 
+router.get("/getShipmentRecievedCLDataCByItemId", checkAuthentication, WBSDB.getShipmentRecievedCLDataCByItemId)
+
 router.get("/getShipmentRecievedCLDataCBySerialNumber", checkAuthentication, WBSDB.getShipmentRecievedCLDataCBySerialNumber)
 
 router.post("/getShipmentRecievedCLDataByPalletCode", checkAuthentication, checkRole([roles[40]]), WBSDB.getShipmentRecievedCLDataByPalletCode)

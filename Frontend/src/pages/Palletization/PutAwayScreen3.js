@@ -116,6 +116,10 @@ const PutAwayScreen3 = () => {
   }
 
   const handleClick = () => {
+    if (serialnumberlist.length === 0) {
+      setError('Please enter serial number');
+      return;
+    }
     userRequest.post('/generateAndUpdatePalletIds', null, {
       params: {
         // serialNumberList: ['SN12347', 'SN12342']

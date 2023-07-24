@@ -41,24 +41,13 @@ const PutAwayScreen2 = () => {
   return (
     <>
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
-        <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
+        <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
                 <div className='w-full flex justify-end'>
-                  {/* <div className='w-[85%]'>
-                    <div className='relative'>
-                      <input
-                        className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
-                        placeholder='Shipment Palletizing'
-                      />
-                      <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
-                        <FaSearch size={20} className='text-[#FFF]' />
-                      </div>
-                    </div>
-                  </div> */}
-
+                
                   <button type='button' onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium -mt-2 rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                     <span>
                       <img src={icon} className='h-auto w-8 object-contain' alt='' />
@@ -67,27 +56,75 @@ const PutAwayScreen2 = () => {
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>ITEMNAME</span>
-                  <span>{selectedPutAwayData.ITEMNAME}</span>
+             {/* <div className='flex justify-between items-center gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
+                  <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
+                </div>
+                <div className='ml-6'>
+                  <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
+                  <h1>GROUPID: {parsedData?.ItemDesc}</h1>
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>ItemId:</span>
-                  <span>{selectedPutAwayData.ITEMID}</span>
+              <div className='flex justify-between items-center gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
+                </div>
+                <div className='ml-6'>
+                  <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
                 </div>
               </div>
+
+              <div className='flex justify-between items-center gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>HEIGHT: 50 {parsedData?.PalletCode}</h1>
+                  <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1>
+                </div>
+                <div className='ml-6'>
+                  <h1>LENGTH: 67.6 {parsedData?.PalletCode}</h1>
+                  <h1>WEIGHT: {parsedData?.PalletCode}</h1>
+                </div>
+              </div> */}
+
+            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+              <div>
+                <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
+                <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
+              </div>
+              <div>
+                <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
+                <h1>GROUPID: {parsedData?.ItemDesc}</h1>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+              <div>
+                <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
+              </div>
+              <div>
+                <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+              <div>
+                <h1>HEIGHT: 50 {parsedData?.PalletCode}</h1>
+                <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1>
+              </div>
+              <div>
+                <h1>LENGTH: 67.6 {parsedData?.PalletCode}</h1>
+                <h1>WEIGHT: {parsedData?.PalletCode}</h1>
+              </div>
+            </div>
 
             </div>
 
-            <div className="mb-6">
+            <div className="mt-6">
               <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">List of Receiving Zones</label>
             </div>
 
-            <div className='mb-6'>
+            <div className='mt-6'>
               <span className='text-[#00006A] font-semibold'>RZONE</span>
               <Autocomplete
                 id="zone"

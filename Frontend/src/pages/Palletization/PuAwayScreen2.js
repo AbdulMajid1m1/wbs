@@ -47,18 +47,7 @@ const PutAwayScreen2 = () => {
 
               <div className='flex flex-col gap-2 text-xs sm:text-xl'>
                 <div className='w-full flex justify-end'>
-                  {/* <div className='w-[85%]'>
-                    <div className='relative'>
-                      <input
-                        className='w-full text-lg font-thin placeholder:text-[#fff] text-[#fff] bg-[#e69138] border-gray-300 focus:outline-none focus:border-blue-500 pl-8'
-                        placeholder='Shipment Palletizing'
-                      />
-                      <div className='absolute inset-y-0 left-0 flex items-center pl-2'>
-                        <FaSearch size={20} className='text-[#FFF]' />
-                      </div>
-                    </div>
-                  </div> */}
-
+                
                   <button type='button' onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium -mt-2 rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                     <span>
                       <img src={icon} className='h-auto w-8 object-contain' alt='' />
@@ -67,27 +56,22 @@ const PutAwayScreen2 = () => {
                 </div>
               </div>
 
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>ITEMNAME</span>
-                  <span>{selectedPutAwayData.ITEMNAME}</span>
-                </div>
-              </div>
-
-              <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
-                <div className='flex items-center sm:text-lg gap-2 text-white'>
-                  <span>ItemId:</span>
-                  <span>{selectedPutAwayData.ITEMID}</span>
-                </div>
+              <div className='flex flex-col justify-start items-start gap-2 text-xs 2xl:text-xl lg:text-xl xl:text-xl md:text-sm text-white'>
+                <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
+                {/* <h1>ItemId: {selectedPutAwayData.ITEMID}</h1> */}
+                <h1>GROUPID: {parsedData?.ItemDesc}</h1>
+                <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
+                <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
+                <h1>DIMENSION: {parsedData?.PalletCode}</h1>
               </div>
 
             </div>
 
-            <div className="mb-6">
+            <div className="mt-6">
               <label htmlFor="zone" className="block mb-2 text-xs font-medium text-black">List of Receiving Zones</label>
             </div>
 
-            <div className='mb-6'>
+            <div className='mt-6'>
               <span className='text-[#00006A] font-semibold'>RZONE</span>
               <Autocomplete
                 id="zone"

@@ -40,12 +40,7 @@ const PickingListLastForm = () => {
   useEffect(() => {
     const getLocationData = async () => {
       try {
-        const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
-          {
-            headers: {
-              itemcode: parsedData?.ITEMID,
-            }
-          })
+        const res = await userRequest.get("/getAllTblLocationsCL")
         console.log(res?.data)
         setLocation(res?.data)
 
@@ -310,7 +305,7 @@ const PickingListLastForm = () => {
                       id="location"
                       // options={location.filter(item => item.BinLocation)}
                       // getOptionLabel={(option) => option.BinLocation}
-                      options={Array.from(new Set(location.map(item => item.BinLocation))).filter(Boolean)}
+                      options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
                       getOptionLabel={(option) => option}
                       onChange={handleFromSelect}
 
@@ -567,17 +562,13 @@ const PickingListLastForm = () => {
               </div>
 
             </form>
-
-
-
-
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
               <div className='w-full'>
                 <Autocomplete
                   ref={autocompleteRef}
                   key={autocompleteKey}
-                  id="location"
+                  id="dzones"
                   options={Array.from(new Set(dzones?.map(item => item?.DZONE))).filter(Boolean)}
                   getOptionLabel={(option) => option}
                   onChange={handleDzoneSelect}
@@ -603,7 +594,7 @@ const PickingListLastForm = () => {
 
                       className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                       p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                      placeholder="TO Location"
+                      placeholder="DZone Locations"
                       required
                     />
                   )}

@@ -21,7 +21,8 @@ const PutAway = () => {
     e.preventDefault();
     setIsLoading(true)
 
-    userRequest.get(`/getShipmentPalletizingByTransferId?TRANSFERID=${shipmentTag}`)
+    // userRequest.get(`/getShipmentPalletizingByTransferId?TRANSFERID=${shipmentTag}`)
+    userRequest.get(`/getTransferDistributionByTransferId?TRANSFERID=${shipmentTag}`)
       .then(response => {
         // console.log(response?.data);
         setData(response?.data ?? []);

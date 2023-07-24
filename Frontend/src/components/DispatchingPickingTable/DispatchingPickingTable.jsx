@@ -2,12 +2,14 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import CustomSnakebar from "../../utils/CustomSnakebar";
+import { MuiCustomTable } from "../../utils/MuiCustomTable";
 
 const DispatchingPickingSlipTable = ({
     columnsName,
     data,
     title,
     uniqueId,
+    secondaryColor,
 }) => {
     const navigate = useNavigate();
     const [record, setRecord] = useState([]);
@@ -79,8 +81,8 @@ const DispatchingPickingSlipTable = ({
 
                 </div>
 
-                <DataGrid
-
+                <MuiCustomTable
+                    secondaryColor={secondaryColor ? secondaryColor : null}
                     getRowHeight={({ }) => {
                         let x;
                         x = 50;

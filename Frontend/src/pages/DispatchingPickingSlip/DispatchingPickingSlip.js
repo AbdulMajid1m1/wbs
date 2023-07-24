@@ -118,10 +118,11 @@ const DispatchingPickingSlip = () => {
               </div>
             </form >
 
-            <div className="mb-6">
+            <div className="mb-6" style={{ marginLeft: '-20px', marginRight: '-20px' }}>
 
               <DispatchingPickingSlipTable
                 data={data}
+                secondaryColor="secondary"
                 title={"Dispatching Picking Slip"}
                 columnsName={TblPackingSlipTableColumn}
                 uniqueId="" />

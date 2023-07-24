@@ -3765,7 +3765,7 @@ const WBSDB = {
       console.log(ItemCode);
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes
-        WHERE ITEMCODE = @ItemCode
+        WHERE ItemCode = @ItemCode
         AND BinLocation = @BinLoacation
 
       `;
@@ -8215,7 +8215,7 @@ const WBSDB = {
 
       const query = `
       SELECT * from tbl_DZONES`;
-      let request = pool1.request();
+      let request = pool2.request();
 
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {

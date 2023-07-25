@@ -423,6 +423,8 @@ router.post("/insertIntoWmsReturnSalesOrderCl", checkAuthentication, checkRole([
 
 router.get("/getWmsReturnSalesOrderClByAssignedToUserId", checkAuthentication, checkRole([roles[8], roles[46]]), WBSDB.getWmsReturnSalesOrderClByAssignedToUserId);
 
+router.delete("/deleteMultipleRecordsFromWmsReturnSalesOrderCl", checkAuthentication, checkRole([roles[8], roles[46]]), WBSDB.deleteMultipleRecordsFromWmsReturnSalesOrderCl);
+
 // WMS_Journal_ProfitLost APIS Start -----
 
 

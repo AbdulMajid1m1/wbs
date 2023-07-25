@@ -3266,6 +3266,9 @@ const WBSDB = {
   }
   ,
 
+
+
+
   // async insertManyIntoMappedBarcode(req, res, next) {
   //   const { records } = req.body;
 
@@ -5676,6 +5679,49 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
 
+    }
+  },
+
+  async deleteMultipleRecordsFromWmsReturnSalesOrderCl(req, res, next) {
+    const serialNumbers = req.body;
+
+    // Create a SQL transaction
+    const transaction = new sql.Transaction(pool2);
+    try {
+      // Begin the transaction
+      await transaction.begin();
+
+      let rowsAffected = 0; // To keep track of total rows affected
+
+      for (let serialNumber of serialNumbers) {
+        // Delete the record with the given serial number
+        const deleteQuery = `
+          DELETE FROM WMS_ReturnSalesOrder_CL
+          WHERE ITEMSERIALNO = @serialNumber
+        `;
+
+        const request = transaction.request();
+        request.input('serialNumber', sql.VarChar(200), serialNumber);
+
+        const result = await request.query(deleteQuery);
+        rowsAffected += result.rowsAffected[0]; // Increment total affected rows
+      }
+
+      // Commit the transaction
+      await transaction.commit();
+
+      if (rowsAffected > 0) {
+        // Some records were deleted
+        return res.status(200).send({ message: 'Records deleted successfully.' });
+      } else {
+        // No records were deleted
+        return res.status(404).send({ message: 'No matching records found to delete.' });
+      }
+    } catch (error) {
+      console.log(error);
+      // Rollback the transaction in case of an error
+      await transaction.rollback();
+      return res.status(500).send({ message: error.message });
     }
   },
 

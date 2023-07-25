@@ -118,8 +118,11 @@ const UserDataTable = ({
         try {
           const response = await userRequest.get(`/getStockMasterDataByItemId?ITEMID=${row.data.ITEMID}`);
           const itemGroup = response?.data[0]?.GROUPNAME; // add optional chaining
+          console.log(response)
           return { ...row, itemGroup: itemGroup || '' }; // add a fallback value for itemGroup
+
         } catch (error) {
+          console.log("this is error in userdata table in useeffect with uniqueId")
           console.log(error);
         }
         return row; // if the API call fails, return the original row
@@ -1490,16 +1493,16 @@ const PrintPalletBarCode = ({ selectedRow, index }) => {
               <p id='paragh'>{selectedRow.data.ItemCode}</p>
               <br />
               <p id='paragh' style={{ width: '250px', lineHeight: '1' }}>{selectedRow.data.ItemSerialNo}</p> */}
-           
-                {/* Display "N/A" if selectedRow.data.SID is null or undefined */}
-    <p id='paragh-body'>{selectedRow.data.SID || <p id="paragh-body-null">.</p>}</p>
-    
-    {/* Display "N/A" if selectedRow.data.ItemCode is null or undefined */}
-    <p id='paragh'>{selectedRow.data.ItemCode || <p id="paragh-body-null">.</p>}</p>
-    <br />
 
-    {/* Display "N/A" if selectedRow.data.ItemSerialNo is null or undefined */}
-    <p id='paragh' style={{ width: '250px', lineHeight: '1' }}>{selectedRow.data.ItemSerialNo || <p id="paragh-body-null">.</p>}</p>
+              {/* Display "N/A" if selectedRow.data.SID is null or undefined */}
+              <p id='paragh-body'>{selectedRow.data.SID || <p id="paragh-body-null">.</p>}</p>
+
+              {/* Display "N/A" if selectedRow.data.ItemCode is null or undefined */}
+              <p id='paragh'>{selectedRow.data.ItemCode || <p id="paragh-body-null">.</p>}</p>
+              <br />
+
+              {/* Display "N/A" if selectedRow.data.ItemSerialNo is null or undefined */}
+              <p id='paragh' style={{ width: '250px', lineHeight: '1' }}>{selectedRow.data.ItemSerialNo || <p id="paragh-body-null">.</p>}</p>
 
             </div>
             <div id='inside-QRCode'>

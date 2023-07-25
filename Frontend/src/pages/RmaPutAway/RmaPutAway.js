@@ -170,8 +170,8 @@ const WmsCycleCounting = () => {
 
    // State to keep track of the selected rows
    const [selectedRows, setSelectedRows] = useState([]);
+   const [selectAllRows, setSelectAllRows] = useState(false);
 
-    // Function to handle row selection
   // const handleRowSelect = (index) => {
   //   if (selectedRows.includes(index)) {
   //     setSelectedRows(selectedRows.filter((rowIndex) => rowIndex !== index));
@@ -186,7 +186,22 @@ const WmsCycleCounting = () => {
     } else {
       setSelectedRows([...selectedRows, index]);
     }
+    setSelectAllRows(false); // If individual row is selected/deselected, deselect "Select All" heading checkbox
   };
+  
+
+
+  const handleSelectAllRows = () => {
+    setSelectAllRows(!selectAllRows); // Toggle the selectAllRows state
+    if (!selectAllRows) {
+      // If currently not all rows are selected, select all rows
+      setSelectedRows(data.map((_, index) => index));
+    } else {
+      // If currently all rows are selected, deselect all rows
+      setSelectedRows([]);
+    }
+  };
+  
   
 
 
@@ -247,7 +262,15 @@ const WmsCycleCounting = () => {
         <table>
           <thead>
             <tr>
-              <th>Select</th>
+            <th className="flex items-center gap-1">
+              Select
+                <input
+                  type="checkbox"
+                  checked={selectAllRows} // Use the selectAllRows state for the checked value
+                  onChange={handleSelectAllRows} // Call a new function for the onChange event
+                />
+              </th>
+              {/* <th>Select</th> */}
               <th>ITEMID</th>
               <th>NAME</th>
               <th>EXPECTEDRETQTY</th>

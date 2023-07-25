@@ -5,6 +5,7 @@ import icon from "../../images/close.png"
 import "./TransferIDPage1.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const TransferIDPage = () => {
   const navigate = useNavigate();
@@ -12,14 +13,36 @@ const TransferIDPage = () => {
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [error, setError] = useState(false);
+  // to reset snakebar messages
+  const resetSnakeBarMessages = () => {
+    setError(null);
 
+  };
 
-  const handleRowClick = (item, index) => {
-    // save data in session storage
-    sessionStorage.setItem('transferData', JSON.stringify(item));
-    navigate('/transferid')
+  const handleRowClick = async (item, index) => {
+    console.log(item);
+    try {
+
+      const res = await userRequest.get(`/getQtyReceivedFromTransferBinToBinCl?TRANSFERID=${item?.TRANSFERID}&ITEMID=${item?.ITEMID}`)
+      console.log(res?.data);
+      let qtyReceived = res?.data?.qunaityReceived;
+      console.log(qtyReceived);
+      // save data in session storage
+      if (parseInt(qtyReceived) >= parseInt(item?.QTYTRANSFER)) {
+        setError("Transfer is already completed")
+        return;
+
+      }
+
+      sessionStorage.setItem('transferData', JSON.stringify(item));
+      navigate('/transferid')
+    }
+    catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message ?? "Something went wrong")
+    }
   }
-
 
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
@@ -47,6 +70,7 @@ const TransferIDPage = () => {
 
   return (
     <>
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
       {isLoading &&
 

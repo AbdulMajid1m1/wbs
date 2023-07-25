@@ -16,10 +16,13 @@ const TransferID = () => {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
+
+
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
+
 
   };
   const autocompleteRef = useRef(); // Ref to access the Autocomplete component
@@ -45,6 +48,8 @@ const TransferID = () => {
   // retrieve data from session storage
   const storedData = sessionStorage.getItem('transferData');
   const parsedData = JSON.parse(storedData);
+  const [QtyReceived, setQtyReceived] = useState(parseInt(parsedData?.QTYRECEIVED));
+
 
   console.log(parsedData)
   const [selectedOption, setSelectedOption] = useState(parsedData?.INVENTLOCATIONIDFROM);
@@ -174,6 +179,11 @@ const TransferID = () => {
 
   const handleSaveBtnClick = () => {
     // Create a new array
+    if (QtyReceived >= parseInt(parsedData?.QTYTRANSFER)) {
+      setError("Transfer is already completed");
+      return;
+    }
+
 
 
     if (tableData.length === 0) {
@@ -195,15 +205,15 @@ const TransferID = () => {
         ...parsedData, // Spread the fields from parsedData
         SELECTTYPE: selectionType, // Add the SELECTTYPE field
         MainLocation: locationInputValue?.substring(0, 2), // Add the MainLocation field by extracting the first two characters from the locationInputValue
+        QTYRECEIVED: QtyReceived,
 
       };
     });
-    // let dataForAPI = tableData?.[0]; // to get the first row of table
 
-    // dataForAPI = { ...dataForAPI, ...parsedData, SELECTTYPE: selectionType, BinLocation: selectedOption };
-    // // });
-    // console.log(dataForAPI);
-
+    if (dataForAPI.length + QtyReceived > parseInt(parsedData?.QTYTRANSFER)) {
+      setError(`You can only scan ${parseInt(parsedData?.QTYTRANSFER) - QtyReceived} more items`);
+      return;
+    }
     // Now, you can send dataForAPI to the API endpoint
     userRequest.post("/insertTblTransferBinToBinCL", dataForAPI)
       .then(response => {
@@ -219,6 +229,7 @@ const TransferID = () => {
         // reset the autocomplete
         resetAutocomplete();
         setMessage("Data inserted successfully");
+        setQtyReceived(QtyReceived + dataForAPI?.length)
 
 
       })
@@ -310,13 +321,13 @@ const TransferID = () => {
               <div>
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
+                    <span>Quantity Transfer</span>
                     <span>{parsedData?.QTYTRANSFER}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
-                    <span>{tableData?.length}</span>
+                    <span>Quantity Received</span>
+                    <span>{QtyReceived}</span>
                   </div>
                 </div>
               </div>

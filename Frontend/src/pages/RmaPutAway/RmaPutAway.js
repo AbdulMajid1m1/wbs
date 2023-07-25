@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { json, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import "./RmaPutAway.css";
@@ -45,6 +45,11 @@ const WmsCycleCounting = () => {
       }
     };
 
+
+    getRmaReturn();
+  }, []);
+
+  useEffect(() => {
     const getLocationData = async () => {
       try {
         const res = await userRequest.get("/getAllTblLocationsCL")
@@ -60,53 +65,8 @@ const WmsCycleCounting = () => {
     }
 
     getLocationData();
-    getRmaReturn();
-  }, []);
-  // const handleFormSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (!binlocation) {
-  //     setError("Please enter bin location");
-  //     return;
-  //   }
-  //   setIsLoading(true);
+  }, [])
 
-  //   const mappedData = data.map((item) => ({
-  //     // itemcode: item?.ITEMID
-  //     // if null then don't send itemcode in the request
-  //     ...(item?.ITEMID && { itemcode: item?.ITEMID }),
-  //     itemdesc: item?.NAME,
-  //     classification: item?.RETURNITEMNUM,
-  //     mainlocation: item?.INVENTSITEID,
-  //     binlocation: binlocation,
-  //     intcode: item?.CONFIGID,
-  //     itemserialno: item?.ITEMSERIALNO,
-  //     mapdate: item?.TRXDATETIME ?? "",
-  //     user: item?.ASSIGNEDTOUSERID ?? "",
-  //     gtin: "", // Add any default or empty values for the new fields in the API
-  //     remarks: "",
-  //     palletcode: "",
-  //     reference: "",
-  //     sid: "",
-  //     cid: "",
-  //     po: "",
-
-  //   }));
-  //   console.log(mappedData);
-
-  //   try {
-  //     const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
-  //     console.log(res?.data);
-  //     setIsLoading(false);
-  //     setMessage("Data Inserted Successfully.");
-  //     // Clear form fields and data state
-  //     setBinlocation("");
-  //     setData([]);
-  //   } catch (error) {
-  //     console.log(error);
-  //     setError(error?.response?.data?.message ?? "Something went wrong");
-  //     setIsLoading(false);
-  //   }
-  // };
   const handleFromSelect = (event, value) => {
     setBinlocation(value);
 
@@ -125,11 +85,11 @@ const WmsCycleCounting = () => {
       setError("Please select at least one row");
       return;
     }
-    
+
     setIsLoading(true);
-  
+
     const selectedData = selectedRows.map((index) => data[index]); // Filter the selected rows from the data array
-  
+
     const mappedData = selectedData.map((item) => ({
       ...(item?.ITEMID && { itemcode: item?.ITEMID }),
       itemdesc: item?.NAME,
@@ -149,37 +109,42 @@ const WmsCycleCounting = () => {
       po: "",
     }));
     console.log(mappedData);
-  
+
     try {
       const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
       console.log(res?.data);
+
+      let insertedSerialNumbers = mappedData?.map((record) => {
+        return record?.itemserialno;
+      })
+
+      console.log(insertedSerialNumbers)
+      const deleteRes = await userRequest.delete("/deleteMultipleRecordsFromWmsReturnSalesOrderCl", { data: insertedSerialNumbers })
+      console.log(deleteRes?.data);
       setIsLoading(false);
       setMessage("Data Inserted Successfully.");
       // Clear form fields and data state
       setBinlocation("");
       setData([]);
       setSelectedRows([]); // Clear selected rows after successful insertion
+      // filter the data array to remove the selected rows
+      setData(data.filter((_, index) => !selectedRows.includes(index)));
+
+
+
+
     } catch (error) {
       console.log(error);
       setError(error?.response?.data?.message ?? "Something went wrong");
       setIsLoading(false);
     }
   };
-  
 
 
-   // State to keep track of the selected rows
-   const [selectedRows, setSelectedRows] = useState([]);
-   const [selectAllRows, setSelectAllRows] = useState(false);
 
-  // const handleRowSelect = (index) => {
-  //   if (selectedRows.includes(index)) {
-  //     setSelectedRows(selectedRows.filter((rowIndex) => rowIndex !== index));
-  //   } else {
-  //     setSelectedRows([...selectedRows, index]);
-  //   }
-  // };
-
+  // State to keep track of the selected rows
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectAllRows, setSelectAllRows] = useState(false);
   const handleRowSelect = (index) => {
     if (selectedRows.includes(index)) {
       setSelectedRows(selectedRows.filter((rowIndex) => rowIndex !== index));
@@ -188,7 +153,7 @@ const WmsCycleCounting = () => {
     }
     setSelectAllRows(false); // If individual row is selected/deselected, deselect "Select All" heading checkbox
   };
-  
+
 
 
   const handleSelectAllRows = () => {
@@ -201,8 +166,8 @@ const WmsCycleCounting = () => {
       setSelectedRows([]);
     }
   };
-  
-  
+
+
 
 
   return (
@@ -255,73 +220,73 @@ const WmsCycleCounting = () => {
             </div>
 
 
-<div className='mb-6'>
-      <label className='text-[#00006A] font-semibold'>List of RMA PutAway<span className='text-[#FF0404]'>*</span></label>
-      {/* // create excel-like Tables  */}
-      <div className="table-location-generate1">
-        <table>
-          <thead>
-            <tr>
-            <th className="flex items-center gap-1">
-              Select
-                <input
-                  type="checkbox"
-                  checked={selectAllRows} // Use the selectAllRows state for the checked value
-                  onChange={handleSelectAllRows} // Call a new function for the onChange event
-                />
-              </th>
-              {/* <th>Select</th> */}
-              <th>ITEMID</th>
-              <th>NAME</th>
-              <th>EXPECTEDRETQTY</th>
-              <th>SALESID</th>
-              <th>RETURNITEMNUM</th>
-              <th>INVENTSITEID</th>
-              <th>INVENTLOCATIONID</th>
-              <th>CONFIGID</th>
-              <th>WMSLOCATIONID</th>
-              <th>ASSIGNEDTOUSERID</th>
-              <th>TRXDATETIME</th>
-              <th>TRXUSERID</th>
-              <th>ITEMSERIALNO</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr
-                key={index}
-                // Apply a different class to the selected row
-                className={selectedRows.includes(index) ? 'selected' : ''}
-                onClick={() => handleRowSelect(index)}
-              >
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.includes(index)}
-                    onChange={() => handleRowSelect(index)}
-                  />
-                </td>
-                <td>{item.ITEMID}</td>
-                <td>{item.NAME}</td>
-                <td>{item.EXPECTEDRETQTY}</td>
-                <td>{item.SALESID}</td>
-                <td>{item.RETURNITEMNUM}</td>
-                <td>{item.INVENTSITEID}</td>
-                <td>{item.INVENTLOCATIONID}</td>
-                <td>{item.CONFIGID}</td>
-                <td>{item.WMSLOCATIONID}</td>
-                <td>{item.ASSIGNEDTOUSERID}</td>
-                <td>{item.TRXDATETIME}</td>
-                <td>{item.TRXUSERID}</td>
-                <td>{item.ITEMSERIALNO}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            <div className='mb-6'>
+              <label className='text-[#00006A] font-semibold'>List of RMA PutAway<span className='text-[#FF0404]'>*</span></label>
+              {/* // create excel-like Tables  */}
+              <div className="table-location-generate1">
+                <table>
+                  <thead>
+                    <tr>
+                      <th className="flex items-center gap-1">
 
-          
+                        <input
+                          type="checkbox"
+                          checked={selectAllRows} // Use the selectAllRows state for the checked value
+                          onChange={handleSelectAllRows} // Call a new function for the onChange event
+                        />
+                      </th>
+                      {/* <th>Select</th> */}
+                      <th>ITEMID</th>
+                      <th>NAME</th>
+                      <th>EXPECTEDRETQTY</th>
+                      <th>SALESID</th>
+                      <th>RETURNITEMNUM</th>
+                      <th>INVENTSITEID</th>
+                      <th>INVENTLOCATIONID</th>
+                      <th>CONFIGID</th>
+                      <th>WMSLOCATIONID</th>
+                      <th>ASSIGNEDTOUSERID</th>
+                      <th>TRXDATETIME</th>
+                      <th>TRXUSERID</th>
+                      <th>ITEMSERIALNO</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((item, index) => (
+                      <tr
+                        key={index}
+                        // Apply a different class to the selected row
+                        className={selectedRows.includes(index) ? 'selected' : ''}
+                        onClick={() => handleRowSelect(index)}
+                      >
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.includes(index)}
+                            onChange={() => handleRowSelect(index)}
+                          />
+                        </td>
+                        <td>{item.ITEMID}</td>
+                        <td>{item.NAME}</td>
+                        <td>{item.EXPECTEDRETQTY}</td>
+                        <td>{item.SALESID}</td>
+                        <td>{item.RETURNITEMNUM}</td>
+                        <td>{item.INVENTSITEID}</td>
+                        <td>{item.INVENTLOCATIONID}</td>
+                        <td>{item.CONFIGID}</td>
+                        <td>{item.WMSLOCATIONID}</td>
+                        <td>{item.ASSIGNEDTOUSERID}</td>
+                        <td>{item.TRXDATETIME}</td>
+                        <td>{item.TRXUSERID}</td>
+                        <td>{item.ITEMSERIALNO}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
 
             <div className="mb-6">
               <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
@@ -379,9 +344,6 @@ const WmsCycleCounting = () => {
 
               </div>
             </div >
-
-
-
 
             <form onSubmit={handleFormSubmit}>
               <div className='mt-6'>

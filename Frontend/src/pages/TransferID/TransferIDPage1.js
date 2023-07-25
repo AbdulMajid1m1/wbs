@@ -22,6 +22,11 @@ const TransferIDPage = () => {
 
   const handleRowClick = async (item, index) => {
     console.log(item);
+    if (parseInt(item?.QTYRECEIVED) >= parseInt(item?.QTYTRANSFER)) {
+      setError("Transfer is already completed")
+      return;
+
+    }
     try {
 
       const res = await userRequest.get(`/getQtyReceivedFromTransferBinToBinCl?TRANSFERID=${item?.TRANSFERID}&ITEMID=${item?.ITEMID}`)

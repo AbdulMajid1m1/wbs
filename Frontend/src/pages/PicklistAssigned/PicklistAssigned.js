@@ -15,8 +15,8 @@ const PicklistAssigned = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
     useEffect(() => {
@@ -51,8 +51,6 @@ const PicklistAssigned = () => {
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
-
-
             <UserDataTable data={alldata} title="Pick List" columnsName={PicklistAssignedColumn}
                 backButton={true}
                 uniqueId="pickingSlipId"
@@ -60,10 +58,7 @@ const PicklistAssigned = () => {
                 AddUser={true}
                 UserName="Assign picklist"
             />
-            {/* <UserDataTable data={alldata} title="" columnsName={PicklistAssignedColumn} backButton={true} uniqueId="itemTableId"
-                actionColumnVisibility={false}
-                buttonVisibility={false}
-            /> */}
+           
 
             {isLoading &&
 

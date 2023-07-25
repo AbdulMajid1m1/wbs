@@ -4097,9 +4097,19 @@ const WBSDB = {
       const transaction = new sql.Transaction(pool2);
       await transaction.begin();
       // For each record in the array
-      for (const record of records) {
+      let qtyTransferNo = parseInt(records[0]?.QTYTRANSFER);
+      let qtyReceivedNo = parseInt(records[0]?.QTYRECEIVED);
 
+
+
+      for (const record of records) {
         const request = transaction.request();
+
+
+        if (qtyReceivedNo >= qtyTransferNo) {
+          return res.status(400).send({ message: 'QTYRECEIVED should be less than QTYTRANSFER' });
+        }
+
         // Add input parameters for each field. If the field is not provided in the record, set it to null.
         request.input('TRANSFERID', sql.NVarChar, record.TRANSFERID || null);
         request.input('TRANSFERSTATUS', sql.Int, record.TRANSFERSTATUS || null);
@@ -4163,6 +4173,8 @@ const WBSDB = {
         // transferId page
         const result = await insertTransactionHistoryData("binToBinTransfer", record?.ITEMID, req?.token?.UserID);
         console.log(result.message);
+
+        qtyReceivedNo += 1;
 
 
 
@@ -5022,7 +5034,7 @@ const WBSDB = {
 
     try {
       let query = `
-      SELECT * FROM dbo.WMS_Sales_PickingList
+      SELECT * FROM dbo.tbl_Picking
       `;
       let request = pool1.request();
       const data = await request.query(query);
@@ -5115,7 +5127,7 @@ const WBSDB = {
           ITEMNAME,
           QTY,
           CUSTOMER,
-          DLVDATE,
+          WMSLOCATIONID,
           TRANSREFID,
           EXPEDITIONSTATUS,
           ASSIGNEDTOUSERID,
@@ -5149,13 +5161,15 @@ const WBSDB = {
           ...(INVENTLOCATIONID ? ['INVENTLOCATIONID'] : []),
           ...(CONFIGID ? ['CONFIGID'] : []),
           ...(ITEMNAME ? ['ITEMNAME'] : []),
-          ...(DLVDATE ? ['DLVDATE'] : []),
+
           ...(TRANSREFID ? ['TRANSREFID'] : []),
           ...(EXPEDITIONSTATUS !== undefined ? ['EXPEDITIONSTATUS'] : []),
           ...(ASSIGNEDTOUSERID ? ['ASSIGNEDTOUSERID'] : []),
           ...(PICKSTATUS ? ['PICKSTATUS'] : []),
           ...(QTYPICKED ? ['QTYPICKED'] : []),
-          "DATETIMEASSIGNED"
+          ...(WMSLOCATIONID ? ['WMSLOCATIONID'] : []),
+          "DATETIMEASSIGNED",
+          "DLVDATE"
         ];
 
         let values = fields.map((field) => "@" + field);
@@ -5175,8 +5189,9 @@ const WBSDB = {
         if (INVENTLOCATIONID) request.input('INVENTLOCATIONID', sql.NVarChar, INVENTLOCATIONID);
         if (CONFIGID) request.input('CONFIGID', sql.NVarChar, CONFIGID);
         if (ITEMNAME) request.input('ITEMNAME', sql.NVarChar, ITEMNAME);
-        if (DLVDATE) request.input('DLVDATE', sql.Date, new Date(DLVDATE));
+        request.input('DLVDATE', sql.Date, new Date());
         if (TRANSREFID) request.input('TRANSREFID', sql.NVarChar, TRANSREFID);
+        if (TRANSREFID) request.input('WMSLOCATIONID', sql.NVarChar, WMSLOCATIONID);
         if (EXPEDITIONSTATUS !== undefined) request.input('EXPEDITIONSTATUS', sql.Int, EXPEDITIONSTATUS);
         if (ASSIGNEDTOUSERID) request.input('ASSIGNEDTOUSERID', sql.NVarChar, ASSIGNEDTOUSERID);
         if (PICKSTATUS) request.input('PICKSTATUS', sql.NVarChar, PICKSTATUS);

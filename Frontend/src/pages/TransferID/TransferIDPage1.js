@@ -5,6 +5,7 @@ import icon from "../../images/close.png"
 import "./TransferIDPage1.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const TransferIDPage = () => {
   const navigate = useNavigate();
@@ -12,14 +13,25 @@ const TransferIDPage = () => {
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [error, setError] = useState(false);
+  // to reset snakebar messages
+  const resetSnakeBarMessages = () => {
+    setError(null);
 
+  };
 
   const handleRowClick = (item, index) => {
+    console.log(item);
     // save data in session storage
+    if (parseInt(item?.QTYRECEIVED) >= parseInt(item?.QTYTRANSFER)) {
+      setError("Transfer is already completed")
+      return;
+
+    }
+
     sessionStorage.setItem('transferData', JSON.stringify(item));
     navigate('/transferid')
   }
-
 
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
@@ -47,6 +59,7 @@ const TransferIDPage = () => {
 
   return (
     <>
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
       {isLoading &&
 

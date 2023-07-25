@@ -1662,8 +1662,8 @@ export const PicklistAssignedColumn = [
 
   },
   {
-    field: "DLVDATE",
-    headerName: "DLVDATE",
+    field: "WMSLOCATIONID",
+    headerName: "WMSLOCATIONID",
     width: 180,
 
   },

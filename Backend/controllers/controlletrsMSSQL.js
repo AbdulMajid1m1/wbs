@@ -4058,6 +4058,32 @@ const WBSDB = {
   },
 
 
+  async getQtyReceivedFromTransferBinToBinCl(req, res, next) {
+    try {
+      const { TRANSFERID, ITEMID } = req.query;
+      let query = `
+        SELECT
+          COUNT(*) as qunaityReceived
+        FROM dbo.tbl_TransferBinToBin_CL
+        WHERE TRANSFERID = @TRANSFERID AND ITEMID = @ITEMID
+      `;
+      let request = pool2.request();
+      request.input('TRANSFERID', sql.NVarChar, TRANSFERID);
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No Record found." });
+      }
+      return res.status(200).send({
+        qunaityReceived: data.recordsets[0][0]?.qunaityReceived
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
 
 
   async insertTblTransferBinToBinCL(req, res, next) {
@@ -4097,19 +4123,9 @@ const WBSDB = {
       const transaction = new sql.Transaction(pool2);
       await transaction.begin();
       // For each record in the array
-      let qtyTransferNo = parseInt(records[0]?.QTYTRANSFER);
-      let qtyReceivedNo = parseInt(records[0]?.QTYRECEIVED);
-
-
 
       for (const record of records) {
         const request = transaction.request();
-
-
-        if (qtyReceivedNo >= qtyTransferNo) {
-          return res.status(400).send({ message: 'QTYRECEIVED should be less than QTYTRANSFER' });
-        }
-
         // Add input parameters for each field. If the field is not provided in the record, set it to null.
         request.input('TRANSFERID', sql.NVarChar, record.TRANSFERID || null);
         request.input('TRANSFERSTATUS', sql.Int, record.TRANSFERSTATUS || null);
@@ -4173,8 +4189,6 @@ const WBSDB = {
         // transferId page
         const result = await insertTransactionHistoryData("binToBinTransfer", record?.ITEMID, req?.token?.UserID);
         console.log(result.message);
-
-        qtyReceivedNo += 1;
 
 
 

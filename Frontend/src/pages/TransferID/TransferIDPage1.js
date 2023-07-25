@@ -20,17 +20,28 @@ const TransferIDPage = () => {
 
   };
 
-  const handleRowClick = (item, index) => {
+  const handleRowClick = async (item, index) => {
     console.log(item);
-    // save data in session storage
-    if (parseInt(item?.QTYRECEIVED) >= parseInt(item?.QTYTRANSFER)) {
-      setError("Transfer is already completed")
-      return;
+    try {
 
+      const res = await userRequest.get(`/getQtyReceivedFromTransferBinToBinCl?TRANSFERID=${item?.TRANSFERID}&ITEMID=${item?.ITEMID}`)
+      console.log(res?.data);
+      let qtyReceived = res?.data?.qunaityReceived;
+      console.log(qtyReceived);
+      // save data in session storage
+      if (parseInt(qtyReceived) >= parseInt(item?.QTYTRANSFER)) {
+        setError("Transfer is already completed")
+        return;
+
+      }
+
+      sessionStorage.setItem('transferData', JSON.stringify(item));
+      navigate('/transferid')
     }
-
-    sessionStorage.setItem('transferData', JSON.stringify(item));
-    navigate('/transferid')
+    catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message ?? "Something went wrong")
+    }
   }
 
   const handleChangeValue = (e) => {

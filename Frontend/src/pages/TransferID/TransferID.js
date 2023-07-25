@@ -205,6 +205,7 @@ const TransferID = () => {
         ...parsedData, // Spread the fields from parsedData
         SELECTTYPE: selectionType, // Add the SELECTTYPE field
         MainLocation: locationInputValue?.substring(0, 2), // Add the MainLocation field by extracting the first two characters from the locationInputValue
+        QTYRECEIVED: QtyReceived,
 
       };
     });

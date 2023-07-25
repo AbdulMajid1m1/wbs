@@ -326,6 +326,7 @@ router.post('/sendEmail', upload.array('attachments'), WBSDB.sendEmail);
 
 router.post("/insertTblTransferBinToBinCL", checkAuthentication, WBSDB.insertTblTransferBinToBinCL);
 
+router.get("/getQtyReceivedFromTransferBinToBinCl", checkAuthentication, WBSDB.getQtyReceivedFromTransferBinToBinCl);
 
 // ----------------- tbl_TransferBinToBin_CL APIS End -----------------
 
@@ -349,7 +350,7 @@ router.put("/updateTblItemMaster", checkAuthentication, WBSDB.updateTblItemMaste
 // ---- item-Re-Allocation APIS Start ----
 
 router.post("/manageItemsReallocation", checkAuthentication, WBSDB.manageItemsReallocation);
-router.delete("/deleteItemsReAllocationPickedByItemSerialNo", checkAuthentication, WBSDB.deleteItemsReAllocationPickedByItemSerialNo); 
+router.delete("/deleteItemsReAllocationPickedByItemSerialNo", checkAuthentication, WBSDB.deleteItemsReAllocationPickedByItemSerialNo);
 
 // ---- item-Re-Allocation APIS End ----
 

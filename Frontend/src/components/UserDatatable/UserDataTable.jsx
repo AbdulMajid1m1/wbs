@@ -159,6 +159,7 @@ const UserDataTable = ({
       '#paragh { font-size: 15px; font-weight: 600; }' +
       '#paragh-header { display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: 600; }' +
       '#paragh-body { font-size: 21px; font-weight: 600; margin-top: -4px;}' +
+      '#paragh-body-null { font-size: 21px; font-weight: 600; margin-top: -4px; visibility: hidden;}' +
       '</style>' +
       '</head><body>' +
       '<div style="">' +
@@ -1485,12 +1486,20 @@ const PrintPalletBarCode = ({ selectedRow, index }) => {
 
           <div id='inside-body'>
             <div>
-              <p id='paragh-body'>{selectedRow.data.SID}</p>
+              {/* <p id='paragh-body'>{selectedRow.data.SID}</p>
               <p id='paragh'>{selectedRow.data.ItemCode}</p>
               <br />
-              {/* <p id='paragh'>HITACHI WASHING MACHINE <br /><br /><br /><br /> AUTOMATIC 230V, Inverter</p> */}
-              {/* Add this line Pallet Code */}
-              <p id='paragh' style={{ width: '250px', lineHeight: '1' }}>{selectedRow.data.ItemSerialNo}</p>
+              <p id='paragh' style={{ width: '250px', lineHeight: '1' }}>{selectedRow.data.ItemSerialNo}</p> */}
+           
+                {/* Display "N/A" if selectedRow.data.SID is null or undefined */}
+    <p id='paragh-body'>{selectedRow.data.SID || <p id="paragh-body-null">.</p>}</p>
+    
+    {/* Display "N/A" if selectedRow.data.ItemCode is null or undefined */}
+    <p id='paragh'>{selectedRow.data.ItemCode || <p id="paragh-body-null">.</p>}</p>
+    <br />
+
+    {/* Display "N/A" if selectedRow.data.ItemSerialNo is null or undefined */}
+    <p id='paragh' style={{ width: '250px', lineHeight: '1' }}>{selectedRow.data.ItemSerialNo || <p id="paragh-body-null">.</p>}</p>
 
             </div>
             <div id='inside-QRCode'>

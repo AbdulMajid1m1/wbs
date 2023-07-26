@@ -1,5 +1,6 @@
 // import "./UserDataTable.scss";
 import "./UserDataTable.css"
+import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import userRequest from "../../utils/userRequest";
@@ -14,7 +15,7 @@ import { GridToolbar } from "@mui/x-data-grid";
 import * as XLSX from 'xlsx';
 import { MuiCustomTable } from "../../utils/MuiCustomTable";
 import { ClipLoader } from 'react-spinners';
-
+import CustomToolbar from "../../utils/Components/CustomToolbar";
 
 const UserDataTable = ({
   columnsName = [],
@@ -44,6 +45,8 @@ const UserDataTable = ({
   Refresh,
   handleRefresh,
   refreshLoading,
+  TotalCount
+
 
 }) => {
   const navigate = useNavigate();
@@ -68,13 +71,97 @@ const UserDataTable = ({
 
   const [filterModel, setFilterModel] = useState({ items: [] });
 
-  const handleFilterModelChange = (newFilterModel) => {
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    data.map((item, index) => {
+      item.id = index + 1;
+    });
+    setRecord(
+      data.map((item, index) => ({ ...item, id: index + 1 }))
+    );
+    setFilteredData(
+      data.map((item, index) => ({ ...item, id: index + 1 }))
+    );
+
+  }, [data]);
+  // const filteredData = shipmentIdSearch && containerIdSearch
+  //   ? record.filter((item) =>
+  //     item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) && item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+  //   )
+  //   : shipmentIdSearch && !containerIdSearch
+  //     ? record.filter((item) =>
+  //       item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
+  //     )
+  //     : !shipmentIdSearch && containerIdSearch
+  //       ? record.filter((item) =>
+  //         item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+  //       )
+  //       : record;
+
+  useEffect(() => {
+    let filteredData = record;
+
+    if (shipmentIdSearch && containerIdSearch) {
+      filteredData = record.filter(
+        (item) =>
+          item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) &&
+          item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+      );
+    } else if (shipmentIdSearch && !containerIdSearch) {
+      filteredData = record.filter((item) =>
+        item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
+      );
+    } else if (!shipmentIdSearch && containerIdSearch) {
+      filteredData = record.filter((item) =>
+        item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+      );
+    }
+
+    setFilteredData(filteredData);
+  }, [shipmentIdSearch, containerIdSearch, record]);
+
+
+
+
+  useEffect(() => {
+    setMuiFilteredData(filteredData);
+  }, [filteredData]);
+
+  const handleFilterModelChange = async (newFilterModel) => {
+    // Check if the newFilterModel is empty or has no filter items
+    if (!newFilterModel || !newFilterModel.items || newFilterModel.items.length === 0) {
+      // If no filters are applied, reset the filteredData state to the original data (record)
+      setFilteredData(record);
+      setFilterModel(newFilterModel); // Clear the filterModel state
+      return;
+    }
+    const { field, operator, value } = newFilterModel.items.length > 0 ? newFilterModel.items[0] : {};
     setFilterModel(newFilterModel);
+    console.log(newFilterModel)
 
     // You can apply the filtering logic here and use the filtered rows for your other logic
-    const filteredRows = applyFiltering(filteredData, newFilterModel);
-    console.log("Filtered rows:", filteredRows);
-    setMuiFilteredData(filteredRows);
+    // const filteredRows = applyFiltering(filteredData, newFilterModel);
+    // console.log("Filtered rows:", filteredRows);
+    // setMuiFilteredData(filteredRows);
+    try {
+
+      const res = await userRequest.post("/getAllTblMappedBarcodesByValueAndOperator", {
+        value,
+        operator,
+        field,
+      })
+
+      console.log(res?.data);
+      setMuiFilteredData(res?.data ?? [])
+      setFilteredData(res?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [])
+      // data.map((item, index) => ({ ...item, id: index + 1 }))
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+
   };
 
   const operatorFunctions = {
@@ -247,34 +334,6 @@ const UserDataTable = ({
 
 
 
-
-
-  useEffect(() => {
-    data.map((item, index) => {
-      item.id = index + 1;
-    });
-    setRecord(
-      data.map((item, index) => ({ ...item, id: index + 1 }))
-    );
-  }, [data]);
-
-  const filteredData = shipmentIdSearch && containerIdSearch
-    ? record.filter((item) =>
-      item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) && item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
-    )
-    : shipmentIdSearch && !containerIdSearch
-      ? record.filter((item) =>
-        item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
-      )
-      : !shipmentIdSearch && containerIdSearch
-        ? record.filter((item) =>
-          item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
-        )
-        : record;
-
-  useEffect(() => {
-    setMuiFilteredData(filteredData);
-  }, [filteredData]);
 
 
 
@@ -1135,9 +1194,7 @@ const UserDataTable = ({
                 </span>
               )}
               {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
-              <button onClick={() => handleExport(false)}>Export to Excel</button>
-              <button onClick={() => handlePdfExport(false)}
-              >Export to Pdf</button>
+
             </span>
             }
             {printButton && <button onClick={handlePrint}>{PrintName}</button>}
@@ -1153,9 +1210,16 @@ const UserDataTable = ({
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
           }
 
+          // components={{
+          //   Toolbar: CustomGridToolbarContainer,
+          // }}
 
-
-          slots={{ toolbar: GridToolbar }}
+          slots={{
+            toolbar: () => <CustomToolbar handlePdfExport={() => handlePdfExport(false)}
+              handleExport={() => handleExport(false)}
+              TotalCount={TotalCount}
+            />
+          }}
           // className="datatable"
 
           rows={filteredData}
@@ -1177,6 +1241,7 @@ const UserDataTable = ({
             // call your handle function and pass the row data as a parameter
             handleRowClick(params.row, rowIdx);
           }}
+
 
         />
 

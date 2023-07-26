@@ -55,7 +55,7 @@ const ReturnRMALast = () => {
   useEffect(() => {
     const getLocationData = async () => {
       try {
-        const res = await userRequest.get("/getAllTblLocationsCL")
+        const res = await userRequest.get("/getAllTblRZones")
         console.log(res?.data)
         setLocation(res?.data ?? [])
 
@@ -400,7 +400,7 @@ const ReturnRMALast = () => {
 
 
             <div className="mb-6">
-              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
+              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Receiving Zones<span className='text-[#FF0404]'>*</span></label>
 
 
               <div className='w-full'>
@@ -410,7 +410,7 @@ const ReturnRMALast = () => {
                   id="location"
                   // options={location.filter(item => item.BinLocation)}
                   // getOptionLabel={(option) => option.BinLocation}
-                  options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
+                  options={Array.from(new Set(location.map(item => item?.RZONE))).filter(Boolean)}
                   getOptionLabel={(option) => option}
                   onChange={handleFromSelect}
 

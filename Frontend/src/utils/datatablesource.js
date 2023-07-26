@@ -1,3 +1,12 @@
+const renderFormattedDate = (params) => {
+  const date = params?.value ? new Date(params?.value) : null;
+  if (!date) return null;
+
+  return <span>{date.toISOString().slice(0, 10)}</span>; // Format the date using the browser's locale settings
+};
+
+
+
 //User Admin Panel Assets Columns 
 export const allUserAssetsColumns = [
   {
@@ -1087,6 +1096,8 @@ export const MappedItemsColumn = [
     headerName: "MAP DATE",
     width: 220,
 
+    renderCell: renderFormattedDate,
+
   },
   {
     field: "PalletCode",
@@ -1124,6 +1135,46 @@ export const MappedItemsColumn = [
     width: 180,
 
   },
+  {
+    field: "Length",
+    headerName: "LENGTH",
+    width: 180,
+    type: 'number',
+
+  },
+  {
+    field: "Width",
+    headerName: "WIDTH",
+    width: 180,
+    type: 'number',
+
+  },
+  {
+    field: "Height",
+    headerName: "HEIGHT",
+    width: 180,
+    type: 'number',
+  },
+  {
+    field: "Weight",
+    headerName: "WEIGHT",
+    width: 180,
+    type: 'number',
+  },
+  {
+    field: "QrCode",
+    headerName: "QR CODE",
+    width: 180,
+
+  },
+  {
+    field: "TrxDate",
+    headerName: "TRX DATE",
+    width: 180,
+
+    renderCell: renderFormattedDate,
+  },
+
 
 
 ]
@@ -1259,7 +1310,7 @@ export const PalletizingByTransferIdColumn = [
     width: 180,
 
   },
- 
+
 
 
 
@@ -1833,22 +1884,22 @@ export const ReturnSalesOrderColumn = [
     field: "TRXDATETIME",
     headerName: "TRANSACTION DATETIME",
     width: 220,
-},
-{
+  },
+  {
     field: "TRXUSERID",
     headerName: "TRANSACTION USER ID",
     width: 180,
-},
-{
+  },
+  {
     field: "ITEMSERIALNO",
     headerName: "ITEM SERIAL NO",
     width: 200,
-},
-{
+  },
+  {
     field: "ASSIGNEDTOUSERID",
     headerName: "ASSIGNED TO USER ID",
     width: 180,
-},
+  },
 
 
 

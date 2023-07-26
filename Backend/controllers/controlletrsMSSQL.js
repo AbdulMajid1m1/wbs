@@ -694,34 +694,35 @@ const WBSDB = {
       if (checkMappedBarcodesResult.recordset[0].count > 0) {
         return res.status(400).send({ message: "ItemSerialNo already exists in tbl_mappedBarcodes." });
       }
+      return res.status(200).send({ message: "Success: Serial number is valid" });
 
-      let request2 = pool1.request();
-      let request3 = pool2.request();
+      // let request2 = pool1.request();
+      // let request3 = pool2.request();
 
-      request2.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
-      request3.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
-      request3.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
+      // request2.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      // request3.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      // request3.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
 
 
       // Fetch SHIPMENTID from tbl_Shipment_Received_CL
 
-      const getShipmentIDFromReceivedCLQuery = `
-        SELECT SHIPMENTID
-        FROM tbl_Shipment_Received_CL
-        WHERE SERIALNUM = @ItemSerialNo AND SHIPMENTID = @SHIPMENTID
-        AND (PALLETCODE IS NULL OR PALLETCODE = '' OR PALLETCODE = 'undefined')
-      `;
-      const shipmentIDFromReceivedCLResult = await request3.query(getShipmentIDFromReceivedCLQuery);
-      console.log(shipmentIDFromReceivedCLResult);
-      if (shipmentIDFromReceivedCLResult.recordset.length > 0) {
-        const receivedCLShipmentID = shipmentIDFromReceivedCLResult.recordset[0].SHIPMENTID;
+      // const getShipmentIDFromReceivedCLQuery = `
+      //   SELECT SHIPMENTID
+      //   FROM tbl_Shipment_Received_CL
+      //   WHERE SERIALNUM = @ItemSerialNo AND SHIPMENTID = @SHIPMENTID
+      //   AND (PALLETCODE IS NULL OR PALLETCODE = '' OR PALLETCODE = 'undefined')
+      // `;
+      // const shipmentIDFromReceivedCLResult = await request3.query(getShipmentIDFromReceivedCLQuery);
+      // console.log(shipmentIDFromReceivedCLResult);
+      // if (shipmentIDFromReceivedCLResult.recordset.length > 0) {
+      //   const receivedCLShipmentID = shipmentIDFromReceivedCLResult.recordset[0].SHIPMENTID;
 
-        // Check if SHIPMENTID exists in tbl_Shipment_Palletizing
-        console.log(receivedCLShipmentID);
-        return res.status(200).send({ message: "Success: Serial number is valid" });
-      } else {
-        return res.status(404).send({ message: "ShipmentId does not matched." });
-      }
+      //   // Check if SHIPMENTID exists in tbl_Shipment_Palletizing
+      //   console.log(receivedCLShipmentID);
+      //   return res.status(200).send({ message: "Success: Serial number is valid" });
+      // } else {
+      //   return res.status(404).send({ message: "ShipmentId does not matched." });
+      // }
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
@@ -2983,6 +2984,105 @@ const WBSDB = {
   },
 
 
+
+  // Inside the getAllTblMappedBarcodesByValueAndOperator API function
+
+  async getAllTblMappedBarcodesByValueAndOperator(req, res, next) {
+    try {
+      const { field, operator, value } = req.body;
+
+      if (!field || !operator) {
+        return res.status(400).send({ message: "Field and operator are required." });
+      }
+
+      let query = `SELECT * FROM dbo.tblMappedBarcodes`;
+
+      // Get the data type of the column from your database schema or metadata
+      // For example, let's assume the column "Length" is of numeric type
+      const isNumericColumn = field === "Length" || field === "Width" || field === "Height" || field === "Weight";
+
+      // Build the WHERE clause based on the provided filter
+      let whereClause = "";
+      switch (operator) {
+        case "equals":
+          whereClause = isNumericColumn ? `${field} = @value` : `${field} = @value`;
+          break;
+        case "contains":
+          whereClause = `${field} LIKE '%' + @value + '%'`;
+          break;
+        case "startsWith":
+          whereClause = `${field} LIKE @value + '%'`;
+          break;
+        case "endsWith":
+          whereClause = `${field} LIKE '%' + @value`;
+          break;
+        case "isEmpty":
+          whereClause = isNumericColumn ? `${field} IS NULL` : `${field} = ''`;
+          break;
+        case "isNotEmpty":
+          whereClause = isNumericColumn ? `${field} IS NOT NULL` : `${field} <> ''`;
+          break;
+        case "greaterThan":
+          whereClause = isNumericColumn ? `${field} > @value` : `${field} > @value`;
+          break;
+        case "greaterThanOrEqual":
+          whereClause = isNumericColumn ? `${field} >= @value` : `${field} >= @value`;
+          break;
+        case "lessThan":
+          whereClause = isNumericColumn ? `${field} < @value` : `${field} < @value`;
+          break;
+        case "lessThanOrEqual":
+          whereClause = isNumericColumn ? `${field} <= @value` : `${field} <= @value`;
+          break;
+        case "dateEquals":
+          whereClause = isNumericColumn ? `CONVERT(DATE, ${field}) = @value` : `CONVERT(DATE, ${field}) = @value`;
+          break;
+        case "dateAfter":
+          whereClause = isNumericColumn ? `CONVERT(DATE, ${field}) > @value` : `CONVERT(DATE, ${field}) > @value`;
+          break;
+        case "dateBefore":
+          whereClause = isNumericColumn ? `CONVERT(DATE, ${field}) < @value` : `CONVERT(DATE, ${field}) < @value`;
+          break;
+        default:
+          return res.status(400).send({ message: "Unknown filter operator." });
+      }
+
+      if (whereClause) {
+        query += ` WHERE ${whereClause}`;
+
+        // Add parameter for the filter value
+        let request = pool2.request();
+        if (operator.startsWith("date")) {
+          request.input('value', sql.Date, value);
+        } else if (isNumericColumn) {
+          request.input('value', sql.Decimal(10, 2), value); // Adjust the data type based on your column type
+        } else {
+          request.input('value', sql.NVarChar, value);
+        }
+
+        const data = await request.query(query);
+
+        if (data.recordsets[0].length === 0) {
+          return res.status(404).send({ message: "No data found." });
+        }
+
+        return res.status(200).send(data.recordsets[0]);
+      }
+
+      // If no filter provided, fetch all data
+      const data = await pool2.request().query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
   async getAllTblMappedBarcodes(req, res, next) {
     try {
 
@@ -3004,6 +3104,38 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
+  async getLimitedTblMappedBarcodes(req, res, next) {
+    try {
+      const pageSize = 500;
+
+      // Fetch the total count of all records in the table
+      const countQuery = `
+        SELECT COUNT(*) AS totalCount FROM dbo.tblMappedBarcodes
+      `;
+      let request = pool2.request();
+      const countResult = await request.query(countQuery);
+      const totalCount = countResult.recordsets[0][0].totalCount;
+
+      // Fetch the 500 latest records
+      const query = `
+        SELECT TOP(${pageSize}) * FROM dbo.tblMappedBarcodes ORDER BY MapDate DESC
+      `;
+      request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+      // Return the data and the total count in the response
+      return res.status(200).send({ data: data.recordsets[0], totalCount });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  }
+  ,
   async insertIntoMappedBarcode(req, res, next) {
     try {
       const {

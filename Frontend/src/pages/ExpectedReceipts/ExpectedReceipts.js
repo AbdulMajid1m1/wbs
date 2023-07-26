@@ -15,8 +15,8 @@ const ExpectedReceipts = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
 
@@ -24,22 +24,17 @@ const ExpectedReceipts = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllExpectedShipments")
-                    .then(response => {
-                        console.log(response?.data);
+                const res = await userRequest.get("/getAllExpectedShipments")
 
-                        setAllData(response?.data ?? [])
-                        setIsLoading(false)
+                console.log(res?.data);
 
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        setIsLoading(false)
-                        setError(error?.response?.data?.message ?? "Something went wrong")
-                    });
-
+                setAllData(res?.data ?? [])
+                setIsLoading(false)
             }
             catch (error) {
+             
+                setIsLoading(false)
+                setError(error?.response?.data?.message ?? "Something went wrong")
                 console.log(error);
             }
         };

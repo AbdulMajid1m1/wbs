@@ -21,93 +21,87 @@ const MainComponent = () => {
     const getAllAssetsList = async () => {
       try {
 
-      userRequest.get("/getAllExpectedShipments")
-        .then(response => {
-          setNewExpectedReceipts(response.data)
-        })
-        .catch(error => {
+        const response = await userRequest.get("/getAllExpectedShipments")
 
+        setNewExpectedReceipts(response.data)
 
-          console.error(error);
-        });
+      }
+      catch (error) {
+        console.log(error);
 
-    }
-    catch (error) {
-      console.log(error);
+      }
+    };
 
-    }
-  };
+    const getAllExpectedShipments = async () => {
+      try {
 
-  const getAllExpectedShipments = async () => {
-    try {
-
-      userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
-        .then(response => {
+        userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
+          .then(response => {
             console.log(response.data)
             setNewExpectedShipments(response.data)
-        })
-        .catch(error => {
-          
+          })
+          .catch(error => {
 
-          console.error(error);
-        });
-        
-    }
-    catch (error) {
-      console.log(error);
 
-    }
-  };
+            console.error(error);
+          });
 
-  const getNewItemsDispatch = async () => {
-    try {
+      }
+      catch (error) {
+        console.log(error);
 
-      userRequest.get("/getAllTblDispatchingData")
-        .then(response => {
-          // response.data == "no data available" ? setNewItemsDispatch([]) : setNewItemsDispatch(response.data);
-          setNewItemsDispatch(response.data)
-        })
-        .catch(error => {
-          
-          // setError(error?.response?.data?.message ?? "Something went wrong");
+      }
+    };
 
-          console.error(error);
-        });
-        
-    }
-    catch (error) {
-      console.log(error);
+    const getNewItemsDispatch = async () => {
+      try {
 
-    }
-  };
+        userRequest.get("/getAllTblDispatchingData")
+          .then(response => {
+            // response.data == "no data available" ? setNewItemsDispatch([]) : setNewItemsDispatch(response.data);
+            setNewItemsDispatch(response.data)
+          })
+          .catch(error => {
 
-  const getNewTransferOrder = async () => {
-    try {
+            // setError(error?.response?.data?.message ?? "Something went wrong");
 
-      userRequest.get("/getAllExpectedTransferOrder")
-        .then(response => {
-          // response.data == "no data available" ? setNewTransferOrder([]) : setNewTransferOrder(response.data);
-          setNewTransferOrder(response.data)
-        })
-        .catch(error => {
-          
-          // setError(error?.response?.data?.message ?? "Something went wrong");
+            console.error(error);
+          });
 
-          console.error(error);
-        });
-        
-    }
-    catch (error) {
-      console.log(error);
+      }
+      catch (error) {
+        console.log(error);
 
-    }
-  };
+      }
+    };
 
-  getAllAssetsList();
-  getAllExpectedShipments();
-  getNewItemsDispatch();
-  getNewTransferOrder();
-},[])
+    const getNewTransferOrder = async () => {
+      try {
+
+        userRequest.get("/getAllExpectedTransferOrder")
+          .then(response => {
+            // response.data == "no data available" ? setNewTransferOrder([]) : setNewTransferOrder(response.data);
+            setNewTransferOrder(response.data)
+          })
+          .catch(error => {
+
+            // setError(error?.response?.data?.message ?? "Something went wrong");
+
+            console.error(error);
+          });
+
+      }
+      catch (error) {
+        console.log(error);
+
+      }
+    };
+
+    getAllAssetsList();
+    getAllExpectedShipments();
+    getNewItemsDispatch();
+    getNewTransferOrder();
+  }, [])
   return (
     <div>
       <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white text-black dark:text-white">
@@ -159,22 +153,22 @@ const MainComponent = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 p-4 gap-4 bg-gradient-to-r from-[#5666e2]">
             {/* <!-- Social Traffic --> */}
             <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 w-full shadow-lg rounded">
-                  <DashboardTable data={newExpectedReceipts} columnsName={ExpectedReceiptsColumn} title={"Expected Receipts"} UniqueId="assetPrintingId"/>
+              <DashboardTable data={newExpectedReceipts} columnsName={ExpectedReceiptsColumn} title={"Expected Receipts"} UniqueId="assetPrintingId" />
             </div>
 
-             {/* <!-- Social Traffic2 --> */}
-             <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50  w-full shadow-lg rounded">
-               <DashboardTable data={newExpectedShipments} columnsName={allUserAssetsColumns} title={"Expected Shipments"} UniqueId="assetPrintingId"/>
+            {/* <!-- Social Traffic2 --> */}
+            <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50  w-full shadow-lg rounded">
+              <DashboardTable data={newExpectedShipments} columnsName={allUserAssetsColumns} title={"Expected Shipments"} UniqueId="assetPrintingId" />
             </div>
 
             {/* <!-- Social Traffic2 --> */}
             <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 w-full shadow-lg rounded">
-               <DashboardTable data={newItemsDispatch} columnsName={TblDispatchingCLColumn} title={"Items Dispatch"} UniqueId="assetPrintingId"/>
+              <DashboardTable data={newItemsDispatch} columnsName={TblDispatchingCLColumn} title={"Items Dispatch"} UniqueId="assetPrintingId" />
             </div>
 
             {/* <!-- Social Traffic2 --> */}
             <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 w-full shadow-lg rounded">
-               <DashboardTable data={newTransferOrder} columnsName={InternalTransferColumn} title={"Internal Transfer"} UniqueId="assetPrintingId"/>
+              <DashboardTable data={newTransferOrder} columnsName={InternalTransferColumn} title={"Internal Transfer"} UniqueId="assetPrintingId" />
             </div>
 
           </div>

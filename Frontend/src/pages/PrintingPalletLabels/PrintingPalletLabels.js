@@ -10,6 +10,7 @@ const PrintingPalletLabels = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
+    const [count, setCount] = useState(null);
 
     const resetSnakeBarMessages = () => {
         setError(null);
@@ -21,11 +22,12 @@ const PrintingPalletLabels = () => {
         const getAllAssetsList = async () => {
             try {
 
-                const res = await userRequest.get("/getAllTblMappedBarcodes")
+                const res = await userRequest.get("/getLimitedTblMappedBarcodes")
 
                 console.log(res?.data);
 
-                setAllData(res?.data ?? [])
+                setAllData(res?.data?.data ?? [])
+                setCount(res?.data?.totalCount || null)
 
             }
             catch (error) {
@@ -57,6 +59,7 @@ const PrintingPalletLabels = () => {
                 emailButton={false}
                 printButton={true}
                 PrintName={"Print Pallet Labels"}
+                TotalCount={count}
             //    printBarCode={true}
             //    PrintBarCodeName={"Print Pallet Barcode"}
             />

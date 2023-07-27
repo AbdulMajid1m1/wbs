@@ -119,23 +119,23 @@ const handleForm = (e) => {
                {/* Table to display GTIN and Pallet Code */}
                 <div className="table-location-generate1">
                     <table>
-                    <thead>
-                        <tr>
-                        <th>GTIN</th>
-                        <th>Pallet Code</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.GTIN}</td>
-                            <td>{item.PalletCode}</td>
-                        </tr>
-                        ))}
-                    </tbody>
+                        <thead>
+                            <tr>
+                            <th>GTIN</th>
+                            <th>Pallet Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.GTIN}</td>
+                                <td>{item.PalletCode}</td>
+                            </tr>
+                            ))}
+                        </tbody>
                     </table>
                 </div>  
-                </div>         
+            </div>         
         </div>
       </div>
     </>

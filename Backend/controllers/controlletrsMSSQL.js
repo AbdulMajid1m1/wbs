@@ -734,6 +734,12 @@ const WBSDB = {
   async generateAndUpdatePalletIds(req, res, next) {
     try {
       const serialNumberList = req.query.serialNumberList;
+      if (!serialNumberList) {
+        return res.status(400).send({ message: "serialNumberList is required." });
+      }
+      if (serialNumberList.length === 0) {
+        return res.status(400).send({ message: "serialNumberList cannot be empty." });
+      }
 
       // Fetch the first GS1GCPID and last SSCC_AutoCounter from TblSysNo using pool2
       const query = `
@@ -764,10 +770,10 @@ const WBSDB = {
 
         // Update tbl_Shipment_Received_CL based on SERIALNUM
 
-        let currentDate = new Date().toISOString();
+        let currentDate = new Date();
         const updateQuery = `
           UPDATE tbl_Shipment_Received_CL
-          SET PALLETCODE = @PalletID,
+          SET PALLETCODE = @PalletID,        
           PALLET_DATE = @currentDate
           WHERE SERIALNUM = @SerialNumber
         `;

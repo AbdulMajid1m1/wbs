@@ -54,9 +54,12 @@ const BinToBinCL = () => {
             <UserDataTable data={data} title="Bin To Bin CL (Warehouse Operation)" columnsName={BinToBinCLColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -74,7 +77,7 @@ const BinToBinCL = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

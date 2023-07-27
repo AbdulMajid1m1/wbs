@@ -59,10 +59,12 @@ const BinMaster = () => {
                 columnsName={BinMasterColumn} 
                   backButton={true}
                     uniqueId="binMasterId"
-                      
+                    loading={isLoading}
+                    setIsLoading={setIsLoading}
+                         
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -80,7 +82,7 @@ const BinMaster = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

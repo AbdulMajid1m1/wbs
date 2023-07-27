@@ -68,10 +68,12 @@ const TblShipmentReceivedCl = () => {
         emailButton={true}
         printButton={true}
         PrintName={"Print Shipment"}
-
+        loading={isLoading}
+        setIsLoading={setIsLoading}
+     
       />
 
-      {isLoading &&
+      {/* {isLoading &&
 
         <div className='loading-spinner-background'
           style={{
@@ -86,7 +88,7 @@ const TblShipmentReceivedCl = () => {
             loading={isLoading}
           />
         </div>
-      }
+      } */}
     </div>
   )
 }

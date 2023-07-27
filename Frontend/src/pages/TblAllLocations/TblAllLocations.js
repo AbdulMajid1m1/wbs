@@ -52,11 +52,19 @@ const TblAllLocations = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable data={alldata} addNewNavigation="/tbl-new-location" title="TBL ALL LOCATIONS (Warehouse Operation)" columnsName={TblAllLocationColumn} backButton={true}
-                uniqueId="locationTableId" />
+            <UserDataTable 
+                data={alldata} 
+                addNewNavigation="/tbl-new-location" 
+                title="TBL ALL LOCATIONS (Warehouse Operation)" 
+                columnsName={TblAllLocationColumn} 
+                backButton={true}
+                uniqueId="locationTableId"
+                loading={isLoading}
+                setIsLoading={setIsLoading}    
+            />
 
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -74,7 +82,7 @@ const TblAllLocations = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

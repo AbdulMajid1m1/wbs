@@ -56,11 +56,13 @@ const MappedItems = () => {
                 addNewNavigation="/insert-mapped-barcode" title="MAPPED ITEMS (Warehouse Operation) "
                 columnsName={MappedItemsColumn} backButton={true}
                 uniqueId="ItemCode"
-
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
 
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -78,7 +80,7 @@ const MappedItems = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

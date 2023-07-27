@@ -91,7 +91,9 @@ const WarehouseJournalCounting = () => {
                 uniqueId={'journalCountingClId'}
                 checkboxSelection={'disabled'}
                 handleRowClickInParent={handleRowClickInParent}
-
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
             <div
@@ -102,10 +104,12 @@ const WarehouseJournalCounting = () => {
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 uniqueId={'journalCountingClDetsId'}
-
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -123,7 +127,7 @@ const WarehouseJournalCounting = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

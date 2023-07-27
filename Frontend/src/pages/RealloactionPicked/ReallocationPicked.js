@@ -55,9 +55,12 @@ const RealloactionPicked = () => {
             <UserDataTable data={data} title="Realloaction Picked (Warehouse Operation)" columnsName={SideBarTableColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -75,7 +78,7 @@ const RealloactionPicked = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

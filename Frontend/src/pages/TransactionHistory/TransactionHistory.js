@@ -59,10 +59,12 @@ const TransactionHistory = () => {
                 columnsName={TransactionHistoryColumn} 
                   backButton={true}
                     uniqueId=""
-                      
+                    loading={isLoading}
+                    setIsLoading={setIsLoading}
+                   
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -80,7 +82,7 @@ const TransactionHistory = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

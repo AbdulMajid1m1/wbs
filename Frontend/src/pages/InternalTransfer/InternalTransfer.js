@@ -53,9 +53,12 @@ const InternalTransfer = () => {
             <UserDataTable data={alldata} title="Internal Tranfer" columnsName={InternalTransferColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -73,7 +76,7 @@ const InternalTransfer = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

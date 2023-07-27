@@ -57,9 +57,12 @@ const JournalMovement = () => {
                 AddUser={true}
                 buttonVisibility={false}
                 UserName="Journal Movement User"
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -77,7 +80,7 @@ const JournalMovement = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

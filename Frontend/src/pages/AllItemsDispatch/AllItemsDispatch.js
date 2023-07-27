@@ -55,10 +55,13 @@ const AllItemsDispatch = () => {
             <UserDataTable data={alldata} title="Items For Dispatch" columnsName={PackingSlipTableColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -76,7 +79,7 @@ const AllItemsDispatch = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

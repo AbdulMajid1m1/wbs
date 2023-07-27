@@ -53,9 +53,12 @@ const ReturnSalesOrder = () => {
             <UserDataTable data={data} title="Return Sales Order (Axapta)" columnsName={ReturnSalesOrderColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -73,7 +76,7 @@ const ReturnSalesOrder = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

@@ -57,9 +57,12 @@ const ExpectedShipments = () => {
             <UserDataTable data={alldata} title="Expected Shipments" columnsName={allUserAssetsColumns} backButton={true} uniqueId="itemTableId"
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -77,7 +80,7 @@ const ExpectedShipments = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

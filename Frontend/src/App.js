@@ -108,6 +108,7 @@ import AddNewPalletMaster from './components/AddNew/AddNewPalletMaster'
 import TblPalletMasterUpdate from './components/UpdatesItem/TblPalletMasterUpdate'
 import ItemUnAllocation from './pages/ItemUnAllocation/ItemUnAllocation'
 import SecondItemUnAllocation from './pages/ItemUnAllocation/SecondItemUnAllocation'
+import WmsPalletIDInquiry from './pages/WmsPalletIDInquiry/WmsPalletIDInquiry'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -188,6 +189,8 @@ const App = () => {
 
         <Route path='/itemunallocation' element={<ItemUnAllocation />} />
         <Route path='/secondItemunallocation' element={<SecondItemUnAllocation />} />
+
+        <Route path='/palletIdInquiry' element={<WmsPalletIDInquiry />} />
 
 
         <Route

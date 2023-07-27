@@ -143,6 +143,13 @@ const PutAwayScreen3 = () => {
       });
   };
 
+
+  const handleRemoveSerialNumber = (index) => {
+    const updatedList = [...serialnumberlist];
+    updatedList.splice(index, 1);
+    setSerialNumberList(updatedList);
+  };
+
   return (
     <>
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -401,7 +408,7 @@ const PutAwayScreen3 = () => {
               <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Serial Number</label>
 
               {/* // creae excel like Tables  */}
-              <div className="table-putaway-generate1">
+              {/* <div className="table-putaway-generate1">
                 <table>
                   <thead>
                     <tr>
@@ -417,7 +424,27 @@ const PutAwayScreen3 = () => {
                   </tbody>
                 </table>
               </div>
-            </div >
+            </div > */}
+        <div className="table-putaway-generate1">
+      <table>
+        <thead>
+          <tr>
+            <th>Serial Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          {serialnumberlist.map((serialNumber, index) => (
+            <tr key={index}>
+              <td className="serial-number-cell">
+                {serialNumber}
+                <button className="remove-button" onClick={() => handleRemoveSerialNumber(index)}>X</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    </div>
 
             <div className='mt-6'>
               <button

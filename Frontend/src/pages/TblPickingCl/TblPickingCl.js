@@ -52,12 +52,20 @@ const TblPickingCl = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable data={alldata} addNewNavigation="/tbl-new-picking" title="PICKING (Warehouse Operation)" columnsName={TblPickingClColumn} backButton={true} uniqueId="PICKINGROUTEID"
-
+            <UserDataTable 
+                data={alldata} 
+                addNewNavigation="/tbl-new-picking" 
+                title="PICKING (Warehouse Operation)" 
+                columnsName={TblPickingClColumn} 
+                backButton={true} 
+                uniqueId="PICKINGROUTEID"
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
 
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -75,7 +83,7 @@ const TblPickingCl = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

@@ -93,7 +93,9 @@ const WarehouseMovement = () => {
                 buttonVisibility={false}
                 checkboxSelection={'disabled'}
                 handleRowClickInParent={handleRowClickInParent}
-
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
             <div
                 style={{ height: '40px' }}
@@ -105,9 +107,12 @@ const WarehouseMovement = () => {
                 // checkboxSelection={true}
 
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
-            {
+            {/* {
                 isLoading &&
 
                 <div className='loading-spinner-background'
@@ -126,7 +131,7 @@ const WarehouseMovement = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div >
     )

@@ -56,10 +56,11 @@ const UsersAccounts = () => {
             <UserDataTable data={alldata} title="User Accounts" columnsName={UserTableColumns}
                 backButton={true}
                 uniqueId="usersAccountsId"
-           
+                loading={isLoading}
+                setIsLoading={setIsLoading}
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -77,7 +78,7 @@ const UsersAccounts = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

@@ -55,9 +55,12 @@ const TblItem = () => {
             <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="ALL ITEMS" columnsName={AllItems} backButton={true} uniqueId="itemTableId"
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -75,7 +78,7 @@ const TblItem = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

@@ -58,10 +58,12 @@ const ZoneMaster = () => {
                 columnsName={ZoneMasterColumn} 
                   backButton={true}
                     uniqueId="zoneMasterId"
-                      
+                    loading={isLoading}
+                    setIsLoading={setIsLoading}
+                         
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -79,7 +81,7 @@ const ZoneMaster = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

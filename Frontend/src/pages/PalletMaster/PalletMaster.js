@@ -59,10 +59,12 @@ const PalletMaster = () => {
                 columnsName={PalletMasterColumn} 
                   backButton={true}
                     uniqueId="palletMasterId"
+                    loading={isLoading}
+                    setIsLoading={setIsLoading}
                       
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -80,7 +82,7 @@ const PalletMaster = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

@@ -53,12 +53,17 @@ const TblItemCl = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable data={alldata} addNewNavigation="/addnewpalletizing" title="SHIPMENT PALLETIZING (Warehouse Operation)" columnsName={shipmentPalletizingColumn} backButton={true} uniqueId="TRANSFERID"
-
+            <UserDataTable 
+            data={alldata} 
+            addNewNavigation="/addnewpalletizing" 
+            title="SHIPMENT PALLETIZING (Warehouse Operation)" columnsName={shipmentPalletizingColumn} backButton={true} uniqueId="TRANSFERID"
+            loading={isLoading}
+            setIsLoading={setIsLoading}
+         
 
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -76,7 +81,7 @@ const TblItemCl = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

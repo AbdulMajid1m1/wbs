@@ -50,9 +50,12 @@ const ExpectedReceipts = () => {
             <UserDataTable data={alldata} title="Expected Receipts" columnsName={ExpectedReceiptsColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -70,7 +73,7 @@ const ExpectedReceipts = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

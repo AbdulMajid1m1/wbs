@@ -59,9 +59,12 @@ const WarehouseReturnSalesOrder = () => {
                 printBarCode={true}
                 PrintBarCodeName={"Print"}
                 uniqueId="PrintReturnSalesOrder"
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -79,7 +82,7 @@ const WarehouseReturnSalesOrder = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

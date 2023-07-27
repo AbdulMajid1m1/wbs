@@ -79,11 +79,13 @@ const TblItemCl = () => {
                 uniqueId="itemTableId"
                 handleRefresh={handleRefresh}
                 refreshLoading={refreshLoading}
-
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
 
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -101,7 +103,7 @@ const TblItemCl = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

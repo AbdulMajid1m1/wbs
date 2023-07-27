@@ -56,9 +56,12 @@ const JournalCounting = () => {
                 AddUser={true}
                 uniqueId="journalCountingUser"
                 UserName="Journal Counting User"
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -76,7 +79,7 @@ const JournalCounting = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

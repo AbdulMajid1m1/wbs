@@ -57,10 +57,12 @@ const TruckMasterData = () => {
                 columnsName={TruckMasterDataColumn} 
                   backButton={true}
                     uniqueId="truckMasterId"
-                      
+                    loading={isLoading}
+                    setIsLoading={setIsLoading}
+                   
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -78,7 +80,7 @@ const TruckMasterData = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

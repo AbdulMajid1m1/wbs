@@ -57,9 +57,12 @@ const JournalProfitLost = () => {
                 AddUser={true}
                 uniqueId="journalprofitlost"
                 UserName="Journal Profit User"
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -77,7 +80,7 @@ const JournalProfitLost = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

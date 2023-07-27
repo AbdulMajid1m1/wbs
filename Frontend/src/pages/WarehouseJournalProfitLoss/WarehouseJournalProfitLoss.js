@@ -96,7 +96,9 @@ const WarehouseJournalProfitLost = () => {
                 checkboxSelection={'disabled'}
                 uniqueId={"wProfitLostClId"}
                 handleRowClickInParent={handleRowClickInParent}
-
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
             <div
                 style={{ height: '40px' }}
@@ -106,9 +108,12 @@ const WarehouseJournalProfitLost = () => {
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 uniqueId={"wProfitLostClDetsId"}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -126,7 +131,7 @@ const WarehouseJournalProfitLost = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

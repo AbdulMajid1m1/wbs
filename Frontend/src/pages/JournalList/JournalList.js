@@ -55,9 +55,12 @@ const JournalList = () => {
             <UserDataTable data={data} title="Journal List" columnsName={journalListColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -75,7 +78,7 @@ const JournalList = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

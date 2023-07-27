@@ -54,10 +54,19 @@ const TblDispatchingCL = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable data={alldata} addNewNavigation="/tbl-new-dispatch" title="TBL DISPATCHING CL (Warehouse Operation)" columnsName={TblDispatchingCLColumn} backButton={true} uniqueId="PACKINGSLIPID" />
+            <UserDataTable 
+                data={alldata} 
+                addNewNavigation="/tbl-new-dispatch" 
+                title="TBL DISPATCHING CL (Warehouse Operation)" 
+                columnsName={TblDispatchingCLColumn} 
+                backButton={true} 
+                uniqueId="PACKINGSLIPID"
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            />
 
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -75,7 +84,7 @@ const TblDispatchingCL = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

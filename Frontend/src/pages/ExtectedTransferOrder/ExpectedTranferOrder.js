@@ -54,9 +54,12 @@ const ExpectedTranferOrder = () => {
             <UserDataTable data={alldata} title="Expected Tranfer Order" columnsName={ExpectedTranferOrderColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+            
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -74,7 +77,7 @@ const ExpectedTranferOrder = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

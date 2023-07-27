@@ -59,9 +59,12 @@ const SalesPickingList = () => {
                 addNewNavigation="/pickinglistfrom"
                 AddUser={true}
                 UserName="Picklist Assign"
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
         />    
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -79,7 +82,7 @@ const SalesPickingList = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

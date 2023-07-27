@@ -90,7 +90,9 @@ const WarehouseWmsInventory = () => {
                 uniqueId={'wmsInventoryClId'}
                 checkboxSelection={'disabled'}
                 handleRowClickInParent={handleRowClickInParent}
-
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
             <div
@@ -101,10 +103,12 @@ const WarehouseWmsInventory = () => {
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 uniqueId={'wmsInventoryClDetsId'}
-
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+             
             />
 
-            {isLoading &&
+            {/* {isLoading &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -122,7 +126,7 @@ const WarehouseWmsInventory = () => {
                         loading={isLoading}
                     />
                 </div>
-            }
+            } */}
 
         </div>
     )

@@ -24,6 +24,7 @@ const WmsPalletIDInquiry = () => {
 
 
 const handleForm = (e) => {
+    setIsLoading(true)
     e.preventDefault();
     userRequest.post('/getItemInfoByItemSerialNo', {}, {
         headers: {
@@ -33,13 +34,14 @@ const handleForm = (e) => {
     .then(response => {
       const { GTIN, PalletCode } = response.data[0];
       setData([{ GTIN, PalletCode }]);
-      setMessage(response?.data?.message ?? 'Data Displayed');
+    //   setMessage(response?.data?.message ?? 'Data Displayed');
+      setIsLoading(false)
    
     })
     .catch(error => {
       console.log(error);
       setError(error?.response.data?.message);
-
+      setIsLoading(false)
     });
   };
 

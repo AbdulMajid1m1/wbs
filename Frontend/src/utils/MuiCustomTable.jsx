@@ -98,6 +98,7 @@ export const MuiCustomTable = styled(DataGrid)(({ theme, secondaryColor }) => {
     const colors = secondaryColor === 'secondary' ? colorOptions['secondary'] : defaultColors;
 
     return {
+
         [`& .${gridClasses.row}`]: {
             '&.odd': {
                 backgroundColor: colors.oddRow,
@@ -124,6 +125,10 @@ export const MuiCustomTable = styled(DataGrid)(({ theme, secondaryColor }) => {
             '& .MuiDataGrid-columnMenuIcon': {
                 color: colors.columnMenuIcon,
             },
+            '& .MuiSvgIcon-root': {
+                color: colors.columnHeaderText,
+            }
+
         },
         [`& .${gridClasses.iconButtonContainer}`]: {
             color: colors.iconButton,

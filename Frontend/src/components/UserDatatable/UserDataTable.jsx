@@ -129,58 +129,64 @@ const UserDataTable = ({
     const { field, operator, value } = newFilterModel.items.length > 0 ? newFilterModel.items[0] : {};
     setFilterModel(newFilterModel);
     console.log(newFilterModel)
-    switch (uniqueId) {
-      case "PrintPalletBarcode":
-        setIsLoading(true)
-        try {
+    if (field === 'id') {
+      const filteredRows = applyFiltering(filteredData, newFilterModel);
+      console.log("Filtered rows:", filteredRows);
+      setMuiFilteredData(filteredRows);
+    } else {
+      switch (uniqueId) {
+        case "PrintPalletBarcode":
+          setIsLoading(true)
+          try {
 
-          const res = await userRequest.post("/getAllTblMappedBarcodesByValueAndOperator", {
-            value,
-            operator,
-            field,
-          })
+            const res = await userRequest.post("/getAllTblMappedBarcodesByValueAndOperator", {
+              value,
+              operator,
+              field,
+            })
 
-          console.log(res?.data);
-          setMuiFilteredData(res?.data ?? [])
-          setFilteredData(res?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [])
-          // data.map((item, index) => ({ ...item, id: index + 1 }))
-        }
-        catch (error) {
-          console.log(error)
-        }
-        finally {
-          setIsLoading(false)
-        }
-        break;
-      case "PrintBarCode":
-        setIsLoading(true)
-        try {
+            console.log(res?.data);
+            setMuiFilteredData(res?.data ?? [])
+            setFilteredData(res?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [])
+            // data.map((item, index) => ({ ...item, id: index + 1 }))
+          }
+          catch (error) {
+            console.log(error)
+          }
+          finally {
+            setIsLoading(false)
+          }
+          break;
+        case "PrintBarCode":
+          setIsLoading(true)
+          try {
 
-          const res = await userRequest.post("/getAllTblMappedBarcodesByValueAndOperator", {
-            value,
-            operator,
-            field,
-          })
+            const res = await userRequest.post("/getAllTblMappedBarcodesByValueAndOperator", {
+              value,
+              operator,
+              field,
+            })
 
-          console.log(res?.data);
-          setMuiFilteredData(res?.data ?? [])
-          setFilteredData(res?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [])
-          // data.map((item, index) => ({ ...item, id: index + 1 }))
-        }
-        catch (error) {
-          console.log(error)
-        }
-        finally {
-          setIsLoading(false)
-        }
-        break;
-      default:
-        // You can apply the filtering logic here and use the filtered rows for your other logic
-        const filteredRows = applyFiltering(filteredData, newFilterModel);
-        console.log("Filtered rows:", filteredRows);
-        setMuiFilteredData(filteredRows);
-        break;
-    };
+            console.log(res?.data);
+            setMuiFilteredData(res?.data ?? [])
+            setFilteredData(res?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [])
+            // data.map((item, index) => ({ ...item, id: index + 1 }))
+          }
+          catch (error) {
+            console.log(error)
+          }
+          finally {
+            setIsLoading(false)
+          }
+          break;
+        default:
+          // You can apply the filtering logic here and use the filtered rows for your other logic
+          const filteredRows = applyFiltering(filteredData, newFilterModel);
+          console.log("Filtered rows:", filteredRows);
+          setMuiFilteredData(filteredRows);
+          break;
+      };
+    }
   };
 
   const operatorFunctions = {

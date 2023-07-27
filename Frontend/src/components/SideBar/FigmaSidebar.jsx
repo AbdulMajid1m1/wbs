@@ -823,7 +823,10 @@ const FigmaSidebar = () => {
 
             {kpiDashboard && (
                 <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
-                    <div className='main-images-container' onClick={() => navigate('/kpireceiving')}
+                    <div
+                        className={`main-images-container ${selectedItem === '/kpireceiving' ? 'selected-item' : ''}`}
+                        onClick={() => handleItemClick('/kpireceiving')}  
+                    // className='main-images-container' onClick={() => navigate('/kpireceiving')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/kpireceiving')
                         }
@@ -844,8 +847,14 @@ const FigmaSidebar = () => {
                 <p className='sidebar-text'>Settings</p>
             </div>
 
-            <div className='main-images-container'
-                onClick={() => navigate('/user-accounts')}
+            <div
+                className={`main-images-container ${selectedItem === '/user-accounts' ? 'selected-item' : ''}`}
+                onClick={() => handleItemClick('/user-accounts')}
+                onContextMenu={(event) =>
+                    handleContextMenu(event, '/user-accounts')
+                }  
+            // className='main-images-container'
+            //     onClick={() => navigate('/user-accounts')}
             >
                 <img src={setting} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Users Account</p>

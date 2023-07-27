@@ -42,6 +42,7 @@ import wmsdispatch from "../../images/wmsdispatch.png"
 import wmsbintobin from "../../images/wmsbintobin.png"
 import palletmaster from "../../images/palletmaster.png"
 import unallocation from "../../images/unallocation.png"
+import palletid from "../../images/palletid.png"
 
 import Cookies from 'js-cookie'
 
@@ -743,6 +744,16 @@ const FigmaSidebar = () => {
                         <img src={wmspallet} className='main-inside-image bg-white rounded-full' alt='' />
                         <p className='sidebar-text'>Palletization</p>
                     </div>
+
+                    <div className='main-images-container' onClick={() => navigate('/palletIdInquiry')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/palletIdInquiry')
+                        }
+                    >
+                        <img src={palletid} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>PalletID Inquiry</p>
+                    </div>
+
 
                     <div className='main-images-container' onClick={() => navigate('/dispatchingslip')}
                          onContextMenu={(event) =>

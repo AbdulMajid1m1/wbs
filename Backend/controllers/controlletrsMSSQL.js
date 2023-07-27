@@ -740,7 +740,7 @@ const WBSDB = {
       if (serialNumberList.length === 0) {
         return res.status(400).send({ message: "serialNumberList cannot be empty." });
       }
-
+      console.log(serialNumberList)
       // Fetch the first GS1GCPID and last SSCC_AutoCounter from TblSysNo using pool2
       const query = `
       SELECT 

@@ -6,7 +6,6 @@ import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import userRequest from '../../utils/userRequest';
-import axios from 'axios';
 
 const WmsPalletIDInquiry = () => {
   const navigate = useNavigate();
@@ -135,11 +134,8 @@ const handleForm = (e) => {
                         ))}
                     </tbody>
                     </table>
-                </div>
-                        
-                </div>
-
-         
+                </div>  
+                </div>         
         </div>
       </div>
     </>

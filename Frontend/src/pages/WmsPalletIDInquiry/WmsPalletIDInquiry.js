@@ -42,6 +42,7 @@ const handleForm = (e) => {
       console.log(error);
       setError(error?.response.data?.message);
       setIsLoading(false)
+      setData([])
     });
   };
 

@@ -45,7 +45,9 @@ const UserDataTable = ({
   Refresh,
   handleRefresh,
   refreshLoading,
-  TotalCount
+  TotalCount,
+  loading,
+  setIsLoading,
 
 
 }) => {
@@ -85,19 +87,7 @@ const UserDataTable = ({
     );
 
   }, [data]);
-  // const filteredData = shipmentIdSearch && containerIdSearch
-  //   ? record.filter((item) =>
-  //     item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) && item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
-  //   )
-  //   : shipmentIdSearch && !containerIdSearch
-  //     ? record.filter((item) =>
-  //       item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
-  //     )
-  //     : !shipmentIdSearch && containerIdSearch
-  //       ? record.filter((item) =>
-  //         item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
-  //       )
-  //       : record;
+
 
   useEffect(() => {
     let filteredData = record;
@@ -139,29 +129,64 @@ const UserDataTable = ({
     const { field, operator, value } = newFilterModel.items.length > 0 ? newFilterModel.items[0] : {};
     setFilterModel(newFilterModel);
     console.log(newFilterModel)
+    if (field === 'id') {
+      const filteredRows = applyFiltering(filteredData, newFilterModel);
+      console.log("Filtered rows:", filteredRows);
+      setMuiFilteredData(filteredRows);
+    } else {
+      switch (uniqueId) {
+        case "PrintPalletBarcode":
+          setIsLoading(true)
+          try {
 
-    // You can apply the filtering logic here and use the filtered rows for your other logic
-    // const filteredRows = applyFiltering(filteredData, newFilterModel);
-    // console.log("Filtered rows:", filteredRows);
-    // setMuiFilteredData(filteredRows);
-    try {
+            const res = await userRequest.post("/getAllTblMappedBarcodesByValueAndOperator", {
+              value,
+              operator,
+              field,
+            })
 
-      const res = await userRequest.post("/getAllTblMappedBarcodesByValueAndOperator", {
-        value,
-        operator,
-        field,
-      })
+            console.log(res?.data);
+            setMuiFilteredData(res?.data ?? [])
+            setFilteredData(res?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [])
+            // data.map((item, index) => ({ ...item, id: index + 1 }))
+          }
+          catch (error) {
+            console.log(error)
+          }
+          finally {
+            setIsLoading(false)
+          }
+          break;
+        case "PrintBarCode":
+          setIsLoading(true)
+          try {
 
-      console.log(res?.data);
-      setMuiFilteredData(res?.data ?? [])
-      setFilteredData(res?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [])
-      // data.map((item, index) => ({ ...item, id: index + 1 }))
+            const res = await userRequest.post("/getAllTblMappedBarcodesByValueAndOperator", {
+              value,
+              operator,
+              field,
+            })
+
+            console.log(res?.data);
+            setMuiFilteredData(res?.data ?? [])
+            setFilteredData(res?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [])
+            // data.map((item, index) => ({ ...item, id: index + 1 }))
+          }
+          catch (error) {
+            console.log(error)
+          }
+          finally {
+            setIsLoading(false)
+          }
+          break;
+        default:
+          // You can apply the filtering logic here and use the filtered rows for your other logic
+          const filteredRows = applyFiltering(filteredData, newFilterModel);
+          console.log("Filtered rows:", filteredRows);
+          setMuiFilteredData(filteredRows);
+          break;
+      };
     }
-    catch (error) {
-      console.log(error)
-    }
-
-
   };
 
   const operatorFunctions = {
@@ -1206,6 +1231,7 @@ const UserDataTable = ({
 
 
         <MuiCustomTable
+          loading={loading}
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
           }

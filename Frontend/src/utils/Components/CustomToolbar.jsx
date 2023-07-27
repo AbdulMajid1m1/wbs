@@ -71,12 +71,12 @@ const CustomToolbar = ({
                     />
                 </Menu>
             </div>
-            <Typography variant="body2" color="primary"
+            {TotalCount && (<Typography variant="body2" color="primary"
 
             >
                 Total Count:
                 <span style={{ color: "crimson" }}> {TotalCount}</span>
-            </Typography>
+            </Typography>)}
         </GridToolbarContainer >
     );
 };

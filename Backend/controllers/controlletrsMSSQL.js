@@ -748,6 +748,7 @@ const WBSDB = {
 
 
   async generateAndUpdatePalletIds(req, res, next) {
+    let palletID;
     try {
       const serialNumberList = req.query.serialNumberList;
       if (!serialNumberList) {
@@ -782,7 +783,7 @@ const WBSDB = {
         const inputNumber = prefix + padding + SSCC_AutoCounter.toString();
 
         // Generate 18-digit PalletID
-        const palletID = ssccCheckDigit(inputNumber);
+        palletID = ssccCheckDigit(inputNumber);
 
         // Update tbl_Shipment_Received_CL based on SERIALNUM
 
@@ -833,7 +834,7 @@ const WBSDB = {
         .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
         .query(updateTblSysNoQuery);
 
-      res.status(200).send({ message: 'PalletIDs generated and updated successfully.' });
+      res.status(200).send({ message: 'Pallet code generated successfully.', PalletCode: palletID });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: error.message });
@@ -3882,6 +3883,9 @@ const WBSDB = {
     try {
       const ItemSerialNo = req.headers['itemserialno']; // Get ItemSerialNo from headers
       console.log(ItemSerialNo);
+      if (!ItemSerialNo) {
+        return res.status(400).send({ message: "itemserialno is required." });
+      }
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes
         WHERE ItemSerialNo = @ItemSerialNo

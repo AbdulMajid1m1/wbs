@@ -800,6 +800,17 @@ const WBSDB = {
           .input("currentDate", sql.Date, currentDate)
           .query(updateQuery);
 
+        // Update tblMappedBarcodes based on ItemSerialNo
+        const updateMappedBarcodesQuery = `
+        UPDATE tblMappedBarcodes
+        SET PalletCode = @PalletID
+        WHERE ItemSerialNo = @SerialNumber
+        `;
+
+        await pool2.request()
+          .input('PalletID', sql.NVarChar, palletID)
+          .input('SerialNumber', sql.NVarChar, serialNumber)
+          .query(updateMappedBarcodesQuery);
 
 
       }

@@ -468,3 +468,5 @@ const PutAwayScreen3 = () => {
 }
 
 export default PutAwayScreen3
+
+

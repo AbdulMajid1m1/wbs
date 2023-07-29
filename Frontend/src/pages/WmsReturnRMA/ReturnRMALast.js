@@ -218,7 +218,7 @@ const ReturnRMALast = () => {
 
 
       const response = await userRequest.post(
-        "/insertManyIntoMappedBarcode",
+        "/insertManyIntoMappedBarcodeFromRma",
         { records: [lowerCaseInsertData] }
       );
 

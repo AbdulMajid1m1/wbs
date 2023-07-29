@@ -306,8 +306,12 @@ const UserDataTable = ({
 
 
   const handleRowClick = (item) => {
-    if (uniqueId === "journalMovementClId" || uniqueId === "wProfitLostClId" || uniqueId === "journalCountingClId" || uniqueId === "wmsInventoryClId"
-      || uniqueId === "mobileWmsInventoryId"
+    if (
+      uniqueId === "journalMovementClId" ||
+      uniqueId === "wProfitLostClId" ||
+      uniqueId === "journalCountingClId" ||
+      uniqueId === "wmsInventoryClId" ||
+      uniqueId === "mobileWmsInventoryId"
     ) {
       handleRowClickInParent(item);
       return;
@@ -316,25 +320,9 @@ const UserDataTable = ({
     if (uniqueId === "wmsItemMappingId") {
       handleSaveData(item);
       return;
-    }
-
-    else {
-
-
-      // check for which component this code belongs to
-
+    } else {
+      // Check for which component this code belongs to
       const index = item.id;
-      let itemGroup;
-
-      userRequest.get('/getStockMasterDataByItemId?ITEMID=23CHP130')
-        .then((response) => {
-          itemGroup = response.data[0].ITEMGROUP
-
-        })
-        .catch(err => {
-          console.log(err)
-        })
-
       // Set the value of qrcodeValue to the data of the clicked row
       setQRCodeValue(JSON.stringify(item));
       setSelectedRow(data[index]);
@@ -342,21 +330,28 @@ const UserDataTable = ({
       console.log(item);
 
       // Check if the row is already selected
-      const selectedIndex = selectedRow.findIndex(selectedItem => selectedItem.index === index);
+      const selectedIndex = selectedRow.findIndex(
+        (selectedItem) => selectedItem.data.id === item.id
+      );
+      console.log(selectedIndex);
+
       if (selectedIndex > -1) {
         // If the row is already selected, remove it from the selectedRows array
-        const newSelectedRows = [...selectedRow];
-        newSelectedRows.splice(selectedIndex, 1);
+        const newSelectedRows = selectedRow.filter(
+          (selectedItem) => selectedItem.data.id !== item.id
+        );
+        console.log(newSelectedRows)
+
         setSelectedRow(newSelectedRows);
       } else {
         // If the row is not selected, add it to the selectedRows array
+        console.log(item)
         setSelectedRow([...selectedRow, { data: item, index }]);
       }
 
       return;
     }
   };
-
 
 
 
@@ -941,7 +936,7 @@ const UserDataTable = ({
   };
 
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     switch (uniqueId) {
@@ -954,7 +949,7 @@ const UserDataTable = ({
           }
           handleAddUserClose();
           setUserName('');
-
+          console.log(selectedRow)
           let newData = selectedRow.map(singleRowData => ({
             ...singleRowData.data,
             ASSIGNEDTOUSERID: username,
@@ -963,20 +958,19 @@ const UserDataTable = ({
           console.log('new Data', newData)
 
           // Make the API request
-          userRequest.post('/insertPickingListDataCLIntoWBS', newData)
-            .then(response => {
-              // Handle the response from the API if needed
-              console.log(response.data);
-              setMessage(response?.data?.message || 'Picklist assigned to user successfully')
-            })
-            .catch(error => {
-              // Handle any errors that occur during the request
-              console.error(error);
-              setError(error?.response?.data?.message || 'Something went wrong')
-            });
+          const response = await userRequest.post('/insertPickingListDataCLIntoWBS', newData)
+
+          // Handle the response from the API if needed
+          console.log(response.data);
+          setMessage(response?.data?.message || 'Picklist assigned to user successfully')
+
         } catch (error) {
+          setError(error?.response?.data?.message || 'Something went wrong')
           console.log(error)
         }
+        // finally {
+        //   setSelectedRow([]);
+        // }
         break;
 
       case "journalUserAssigned":

@@ -677,43 +677,12 @@ const WBSDB = {
 
 
 
-  // async vaildatehipmentPalletizingSerialNumber(req, res, next) {
-  //   try {
-  //     const { ItemSerialNo, SHIPMENTID } = req.query;
-  //     // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
-  //     const checkMappedBarcodesQuery = `
-  //       SELECT COUNT(*) as count
-  //       FROM dbo.tblMappedBarcodes
-  //       WHERE ItemSerialNo = @ItemSerialNo
-  //     `;
-
-  //     let request1 = pool2.request();
-  //     request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
-  //     const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
-
-  //     if (checkMappedBarcodesResult.recordset[0].count > 0) {
-  //       return res.status(400).send({ message: "ItemSerialNo already exists in tbl_mappedBarcodes." });
-  //     }
-  //     return res.status(200).send({ message: "Success: Serial number is valid" });
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // },
-
   async vaildatehipmentPalletizingSerialNumber(req, res, next) {
     try {
-      const { ItemSerialNo, SHIPMENTID } = req.query;
-
+      const { ItemSerialNo } = req.query;
       // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
+      if (!ItemSerialNo) return res.status(400).send({ message: "ItemSerialNo is required." });
       const checkMappedBarcodesQuery = `
-        SELECT COUNT(*) as count
-        FROM dbo.tblMappedBarcodes
-        WHERE ItemSerialNo = @ItemSerialNo
-      `;
-
-      // Check if the SERIALNUMBER exists in tbl_Shipment_Received_CL
-      const checkShipmentReceivedQuery = `
         SELECT COUNT(*) as count
         FROM dbo.tbl_Shipment_Received_CL
         WHERE SERIALNUM = @ItemSerialNo
@@ -721,34 +690,162 @@ const WBSDB = {
 
       let request1 = pool2.request();
       request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
 
-      // Execute both queries in parallel using Promise.all
-      const [checkMappedBarcodesResult, checkShipmentReceivedResult] = await Promise.all([
-        request1.query(checkMappedBarcodesQuery),
-        request1.query(checkShipmentReceivedQuery)
-      ]);
-
-      const isSerialNumberInMappedBarcodes = checkMappedBarcodesResult.recordset[0].count > 0;
-      const isSerialNumberInShipmentReceived = checkShipmentReceivedResult.recordset[0].count > 0;
-
-      if (isSerialNumberInMappedBarcodes && isSerialNumberInShipmentReceived) {
-        return res.status(200).send({ message: "Success: Serial number is validated." });
-      } else if (!isSerialNumberInMappedBarcodes && !isSerialNumberInShipmentReceived) {
-        return res.status(400).send({ message: "Error: Serial number not found in tblMappedBarcodes and tbl_Shipment_Received_CL." });
-      } else if (!isSerialNumberInMappedBarcodes) {
-        return res.status(400).send({ message: "Error: Serial number not found in tblMappedBarcodes." });
-      } else {
+      if (checkMappedBarcodesResult.recordset[0].count === 0) {
         return res.status(400).send({ message: "Error: Serial number not found in tbl_Shipment_Received_CL." });
       }
+      return res.status(200).send({ message: "Success: Serial number is valid" });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
 
+  // async vaildatehipmentPalletizingSerialNumber(req, res, next) {
+  //   try {
+  //     const { ItemSerialNo, SHIPMENTID } = req.query;
+
+  //     // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
+  //     const checkMappedBarcodesQuery = `
+  //       SELECT COUNT(*) as count
+  //       FROM dbo.tblMappedBarcodes
+  //       WHERE ItemSerialNo = @ItemSerialNo
+  //     `;
+
+  //     // Check if the SERIALNUMBER exists in tbl_Shipment_Received_CL
+  //     const checkShipmentReceivedQuery = `
+  //       SELECT COUNT(*) as count
+  //       FROM dbo.tbl_Shipment_Received_CL
+  //       WHERE SERIALNUM = @ItemSerialNo
+  //     `;
+
+  //     let request1 = pool2.request();
+  //     request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+
+  //     // Execute both queries in parallel using Promise.all
+  //     const [checkMappedBarcodesResult, checkShipmentReceivedResult] = await Promise.all([
+  //       request1.query(checkMappedBarcodesQuery),
+  //       request1.query(checkShipmentReceivedQuery)
+  //     ]);
+
+  //     const isSerialNumberInMappedBarcodes = checkMappedBarcodesResult.recordset[0].count > 0;
+  //     const isSerialNumberInShipmentReceived = checkShipmentReceivedResult.recordset[0].count > 0;
+
+  //     if (isSerialNumberInMappedBarcodes && isSerialNumberInShipmentReceived) {
+  //       return res.status(200).send({ message: "Success: Serial number is validated." });
+  //     } else if (!isSerialNumberInMappedBarcodes && !isSerialNumberInShipmentReceived) {
+  //       return res.status(400).send({ message: "Error: Serial number not found in tblMappedBarcodes and tbl_Shipment_Received_CL." });
+  //     } else if (!isSerialNumberInMappedBarcodes) {
+  //       return res.status(400).send({ message: "Error: Serial number not found in tblMappedBarcodes." });
+  //     } else {
+  //       return res.status(400).send({ message: "Error: Serial number not found in tbl_Shipment_Received_CL." });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // },
+
+
+  // async generateAndUpdatePalletIds(req, res, next) {
+  //   let palletID;
+  //   try {
+  //     const serialNumberList = req.query.serialNumberList;
+  //     if (!serialNumberList) {
+  //       return res.status(400).send({ message: "serialNumberList is required." });
+  //     }
+  //     if (serialNumberList.length === 0) {
+  //       return res.status(400).send({ message: "serialNumberList cannot be empty." });
+  //     }
+  //     console.log(serialNumberList)
+  //     // Fetch the first GS1GCPID and last SSCC_AutoCounter from TblSysNo using pool2
+  //     const query = `
+  //     SELECT 
+  //       (SELECT TOP 1 GS1GCPID FROM TblGCP ORDER BY TblSysNoID ASC) as FirstGS1GCPID,
+  //       (SELECT TOP 1 SSCC_AutoCounter FROM TblSysNo ORDER BY SSCC_AutoCounter DESC) as LastSSCCAutoCounter
+  //   `;
+
+  //     const result = await pool2.request().query(query);
+  //     const GS1GCPID = result.recordset[0].FirstGS1GCPID.toString();
+  //     let SSCC_AutoCounter = result.recordset[0].LastSSCCAutoCounter;
+
+  //     // If there is no number in SSCC_AutoCounter, use 1 as the starting counter
+  //     if (!SSCC_AutoCounter) {
+  //       SSCC_AutoCounter = 1;
+  //     } else {
+  //       SSCC_AutoCounter = parseInt(SSCC_AutoCounter) + 1;
+  //     }
+
+  //     for (const serialNumber of serialNumberList) {
+  //       // Create 17-digit number with the given formula
+  //       const prefix = '0' + GS1GCPID;
+  //       const padding = '0000000'.substring(0, 7 - SSCC_AutoCounter.toString().length);
+  //       const inputNumber = prefix + padding + SSCC_AutoCounter.toString();
+
+  //       // Generate 18-digit PalletID
+  //       palletID = ssccCheckDigit(inputNumber);
+
+  //       // Update tbl_Shipment_Received_CL based on SERIALNUM
+
+  //       let currentDate = new Date();
+  //       const updateQuery = `
+  //         UPDATE tbl_Shipment_Received_CL
+  //         SET PALLETCODE = @PalletID,        
+  //         PALLET_DATE = @currentDate
+  //         WHERE SERIALNUM = @SerialNumber
+  //       `;
+
+  //       await pool2.request()
+  //         .input('PalletID', sql.NVarChar, palletID)
+  //         .input('SerialNumber', sql.NVarChar, serialNumber)
+  //         .input("currentDate", sql.Date, currentDate)
+  //         .query(updateQuery);
+
+  //       // Update tblMappedBarcodes based on ItemSerialNo
+  //       const updateMappedBarcodesQuery = `
+  //       UPDATE tblMappedBarcodes
+  //       SET PalletCode = @PalletID
+  //       WHERE ItemSerialNo = @SerialNumber
+  //       `;
+
+  //       await pool2.request()
+  //         .input('PalletID', sql.NVarChar, palletID)
+  //         .input('SerialNumber', sql.NVarChar, serialNumber)
+  //         .query(updateMappedBarcodesQuery);
+
+
+  //     }
+
+
+
+  //     // Update or insert SSCC_AutoCounter in TblSysNo
+  //     const updateTblSysNoQuery = `
+  //      IF EXISTS (SELECT * FROM TblSysNo)
+  //      BEGIN
+  //        UPDATE TblSysNo SET SSCC_AutoCounter = @SSCC_AutoCounter
+  //      END
+  //      ELSE
+  //      BEGIN
+  //        INSERT INTO TblSysNo (SSCC_AutoCounter) VALUES (1)
+  //      END
+  //    `;
+
+  //     await pool2.request()
+  //       .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
+  //       .query(updateTblSysNoQuery);
+
+  //     res.status(200).send({ message: 'Pallet code generated successfully.', PalletCode: palletID });
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send({ message: error.message });
+  //   }
+  // } ,
+
 
   async generateAndUpdatePalletIds(req, res, next) {
     let palletID;
+
     try {
       const serialNumberList = req.query.serialNumberList;
       if (!serialNumberList) {
@@ -757,13 +854,13 @@ const WBSDB = {
       if (serialNumberList.length === 0) {
         return res.status(400).send({ message: "serialNumberList cannot be empty." });
       }
-      console.log(serialNumberList)
+
       // Fetch the first GS1GCPID and last SSCC_AutoCounter from TblSysNo using pool2
       const query = `
-      SELECT 
-        (SELECT TOP 1 GS1GCPID FROM TblGCP ORDER BY TblSysNoID ASC) as FirstGS1GCPID,
-        (SELECT TOP 1 SSCC_AutoCounter FROM TblSysNo ORDER BY SSCC_AutoCounter DESC) as LastSSCCAutoCounter
-    `;
+    SELECT 
+      (SELECT TOP 1 GS1GCPID FROM TblGCP ORDER BY TblSysNoID ASC) as FirstGS1GCPID,
+      (SELECT TOP 1 SSCC_AutoCounter FROM TblSysNo ORDER BY SSCC_AutoCounter DESC) as LastSSCCAutoCounter
+  `;
 
       const result = await pool2.request().query(query);
       const GS1GCPID = result.recordset[0].FirstGS1GCPID.toString();
@@ -775,6 +872,7 @@ const WBSDB = {
       } else {
         SSCC_AutoCounter = parseInt(SSCC_AutoCounter) + 1;
       }
+      console.log(SSCC_AutoCounter)
 
       for (const serialNumber of serialNumberList) {
         // Create 17-digit number with the given formula
@@ -784,9 +882,116 @@ const WBSDB = {
 
         // Generate 18-digit PalletID
         palletID = ssccCheckDigit(inputNumber);
+        // Check if the serial number exists in tblMappedBarcodes
+
+
+        // Increment SSCC_AutoCounter
+
+        const checkIfExistsQuery = `
+          SELECT COUNT(*) AS Count
+          FROM tblMappedBarcodes
+          WHERE ItemSerialNo = @SerialNumber
+        `;
+        const checkIfExistsResult = await pool2.request()
+          .input('SerialNumber', sql.NVarChar, serialNumber)
+          .query(checkIfExistsQuery);
+
+        const existsInMappedBarcodes = checkIfExistsResult.recordset[0].Count > 0;
+
+        if (!existsInMappedBarcodes) {
+          // If the serial number does not exist in tblMappedBarcodes, fetch the data from tbl_Shipment_Received_CL
+          const fetchShipmentDataQuery = `
+            SELECT
+              [ITEMID] AS [ItemCode],
+              [ITEMNAME] AS [ItemDesc],
+              [REMARKS] AS [Remarks],
+              [USERID] AS [User],
+              [BIN] AS [BinLocation],
+              [SERIALNUM] AS [ItemSerialNo],
+              GETDATE() AS [MapDate],
+              @PalletID AS [PalletCode],
+              [SHIPMENTID] AS [SID],
+              [CONTAINERID] AS [CID],
+              [PURCHID] AS [PO],
+              [LENGTH],
+              [WIDTH],
+              [HEIGHT],
+              [WEIGHT],
+            
+              [TRXDATETIME] AS [TrxDate]
+            FROM tbl_Shipment_Received_CL
+            WHERE SERIALNUM = @SerialNumber
+          `;
+          const fetchShipmentDataResult = await pool2.request()
+            .input('SerialNumber', sql.NVarChar, serialNumber)
+            .input('PalletID', sql.NVarChar, palletID)
+            .query(fetchShipmentDataQuery);
+
+          const shipmentData = fetchShipmentDataResult.recordset[0];
+
+          // Insert the fetched data into tblMappedBarcodes
+          const insertIntoMappedBarcodesQuery = `
+            INSERT INTO tblMappedBarcodes
+            (
+              [ItemCode],
+              [ItemDesc],
+              [Remarks],
+              [User],
+              [BinLocation],
+              [ItemSerialNo],
+              [MapDate],
+              [PalletCode],
+              [SID],
+              [CID],
+              [PO],
+              [LENGTH],
+              [WIDTH],
+              [HEIGHT],
+              [WEIGHT],
+             
+              [TrxDate]
+            )
+            VALUES
+            (
+              @ItemCode,
+              @ItemDesc,
+              @Remarks,
+              @User,
+              @BinLocation,
+              @ItemSerialNo,
+              @MapDate,
+              @PalletCode,
+              @SID,
+              @CID,
+              @PO,
+              @LENGTH,
+              @WIDTH,
+              @HEIGHT,
+              @WEIGHT,
+              @TrxDate
+            )
+          `;
+          await pool2.request()
+            .input('ItemCode', sql.NVarChar, shipmentData.ItemCode)
+            .input('ItemDesc', sql.NVarChar, shipmentData.ItemDesc)
+            .input('Remarks', sql.NVarChar, shipmentData.Remarks)
+            .input('User', sql.NVarChar, req?.token?.UserID)
+            .input('BinLocation', sql.NVarChar, shipmentData.BinLocation)
+            .input('ItemSerialNo', sql.NVarChar, shipmentData.ItemSerialNo)
+            .input('MapDate', sql.Date, new Date())
+            .input('PalletCode', sql.NVarChar, shipmentData.PalletCode)
+            .input('SID', sql.NVarChar, shipmentData.SID)
+            .input('CID', sql.NVarChar, shipmentData.CID)
+            .input('PO', sql.NVarChar, shipmentData.PO)
+            .input('LENGTH', sql.Numeric(10, 2), shipmentData.LENGTH)
+            .input('WIDTH', sql.Numeric(10, 2), shipmentData.WIDTH)
+            .input('HEIGHT', sql.Numeric(10, 2), shipmentData.HEIGHT)
+            .input('WEIGHT', sql.Numeric(10, 2), shipmentData.WEIGHT)
+            .input('TrxDate', sql.Date, shipmentData.TrxDate)
+            .query(insertIntoMappedBarcodesQuery);
+        }
 
         // Update tbl_Shipment_Received_CL based on SERIALNUM
-
         let currentDate = new Date();
         const updateQuery = `
           UPDATE tbl_Shipment_Received_CL
@@ -794,44 +999,38 @@ const WBSDB = {
           PALLET_DATE = @currentDate
           WHERE SERIALNUM = @SerialNumber
         `;
-
         await pool2.request()
           .input('PalletID', sql.NVarChar, palletID)
           .input('SerialNumber', sql.NVarChar, serialNumber)
-          .input("currentDate", sql.Date, currentDate)
+          .input("currentDate", sql.DateTime, currentDate)
           .query(updateQuery);
 
         // Update tblMappedBarcodes based on ItemSerialNo
         const updateMappedBarcodesQuery = `
-        UPDATE tblMappedBarcodes
-        SET PalletCode = @PalletID
-        WHERE ItemSerialNo = @SerialNumber
+          UPDATE tblMappedBarcodes
+          SET PalletCode = @PalletID
+          WHERE ItemSerialNo = @SerialNumber
         `;
-
         await pool2.request()
           .input('PalletID', sql.NVarChar, palletID)
           .input('SerialNumber', sql.NVarChar, serialNumber)
           .query(updateMappedBarcodesQuery);
 
-
       }
-
-
 
       // Update or insert SSCC_AutoCounter in TblSysNo
       const updateTblSysNoQuery = `
-       IF EXISTS (SELECT * FROM TblSysNo)
-       BEGIN
-         UPDATE TblSysNo SET SSCC_AutoCounter = @SSCC_AutoCounter
-       END
-       ELSE
-       BEGIN
-         INSERT INTO TblSysNo (SSCC_AutoCounter) VALUES (1)
-       END
-     `;
-
+        IF EXISTS (SELECT * FROM TblSysNo)
+        BEGIN
+          UPDATE TblSysNo SET SSCC_AutoCounter = @SSCC_AutoCounter
+        END
+        ELSE
+        BEGIN
+          INSERT INTO TblSysNo (SSCC_AutoCounter) VALUES (@SSCC_AutoCounter)
+        END
+      `;
       await pool2.request()
-        .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
+        .input('SSCC_AutoCounter', sql.Numeric(10, 0), SSCC_AutoCounter)
         .query(updateTblSysNoQuery);
 
       res.status(200).send({ message: 'Pallet code generated successfully.', PalletCode: palletID });
@@ -839,8 +1038,7 @@ const WBSDB = {
       console.error(error);
       res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
 
 
   // tbl_Shipment_Palletizing end ------------------------------
@@ -3429,78 +3627,87 @@ const WBSDB = {
       console.log(error);
       return res.status(500).send({ message: error.message });
     }
+
+  },
+
+
+  async insertManyIntoMappedBarcodeFromRma(req, res, next) {
+    const { records } = req.body;
+
+    try {
+      const transaction = new sql.Transaction(pool2);
+
+      // Begin the transaction
+      await transaction.begin();
+
+      for (let record of records) {
+        const {
+          itemcode,
+          itemdesc,
+          gtin,
+          remarks,
+          classification,
+          mainlocation,
+          binlocation,
+          intcode,
+          itemserialno,
+          mapdate,
+          palletcode,
+          reference,
+          sid,
+          cid,
+          po,
+          trans
+        } = record;
+
+
+        // Insert the record
+        const insertQuery = `
+            INSERT INTO dbo.tblMappedBarcodes
+            (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+            VALUES
+            (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+          `;
+
+        const request = transaction.request();
+
+        // Add parameters for the insert
+        request.input('itemCode', sql.VarChar(100), itemcode);
+        request.input('itemDesc', sql.NVarChar(255), itemdesc);
+        request.input('gtin', sql.VarChar(150), gtin);
+        request.input('remarks', sql.VarChar(100), remarks);
+        request.input('user', sql.VarChar(50), req.token.UserID);
+        request.input('classification', sql.VarChar(150), classification);
+        request.input('mainLocation', sql.VarChar(200), mainlocation);
+        request.input('binLocation', sql.VarChar(200), binlocation);
+        request.input('intCode', sql.VarChar(150), intcode);
+        request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+        request.input('mapDate', sql.Date, mapdate);
+        request.input('palletCode', sql.VarChar(255), palletcode);
+        request.input('reference', sql.VarChar(100), reference);
+        request.input('sid', sql.VarChar(50), sid);
+        request.input('cid', sql.VarChar(50), cid);
+        request.input('po', sql.VarChar(50), po);
+        request.input('trans', sql.Numeric(10, 0), trans);
+
+        await request.query(insertQuery);
+
+      }
+
+
+
+      // Commit the transaction if all records are inserted successfully
+      await transaction.commit();
+
+      return res.status(201).send({ message: "Data Inserted Successfully." });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
   }
   ,
 
 
-
-
-  // async insertManyIntoMappedBarcode(req, res, next) {
-  //   const { records } = req.body;
-
-  //   try {
-  //     for (let record of records) {
-  //       const {
-  //         itemcode,
-  //         itemdesc,
-  //         gtin,
-  //         remarks,
-  //         classification,
-  //         mainlocation,
-  //         binlocation,
-  //         intcode,
-  //         itemserialno,
-  //         mapdate,
-  //         palletcode,
-  //         reference,
-  //         sid,
-  //         cid,
-  //         po,
-  //         trans
-  //       } = record;
-
-  //       // Check if the serial number exists
-  //       let checkQuery = "SELECT ItemSerialNo FROM dbo.tblMappedBarcodes WHERE ItemSerialNo = @itemSerialNo";
-  //       let request = pool2.request();
-  //       request.input('itemSerialNo', sql.VarChar(200), itemserialno);
-  //       let result = await request.query(checkQuery);
-
-  //       if (result.recordset.length > 0) {
-  //         // If the serial number exists, return an error
-  //         return res.status(400).send({ message: `The serial number ${itemserialno} already exists. Please provide unique serial numbers.` });
-  //       } else {
-  //         let query = ` 
-  //           INSERT INTO dbo.tblMappedBarcodes (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
-  //           VALUES (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
-  //         `;
-
-  //         request.input('itemCode', sql.VarChar(100), itemcode);
-  //         request.input('itemDesc', sql.NVarChar(255), itemdesc);
-  //         request.input('gtin', sql.VarChar(150), gtin);
-  //         request.input('remarks', sql.VarChar(100), remarks);
-  //         request.input('user', sql.VarChar(50), req.token.UserID);
-  //         request.input('classification', sql.VarChar(150), classification);
-  //         request.input('mainLocation', sql.VarChar(200), mainlocation);
-  //         request.input('binLocation', sql.VarChar(200), binlocation);
-  //         request.input('intCode', sql.VarChar(150), intcode);
-  //         request.input('mapDate', sql.Date, mapdate);
-  //         request.input('palletCode', sql.VarChar(255), palletcode);
-  //         request.input('reference', sql.VarChar(100), reference);
-  //         request.input('sid', sql.VarChar(50), sid);
-  //         request.input('cid', sql.VarChar(50), cid);
-  //         request.input('po', sql.VarChar(50), po);
-  //         request.input('trans', sql.Numeric(10, 0), trans);
-
-  //         await request.query(query);
-  //       }
-  //     }
-
-  //     return res.status(201).send({ message: "Data Inserted Successfully." });
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // },
 
 
 
@@ -5325,10 +5532,10 @@ const WBSDB = {
 
         // Check if a record already exists
         let checkQuery = `
-          SELECT * FROM [WBSSQL].[dbo].[WMS_Sales_PickingList_CL] 
+          SELECT * FROM WMS_Sales_PickingList_CL
           WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID = @ASSIGNEDTOUSERID AND ITEMID =@ITEMID
         `;
-        let checkRequest = pool1.request();
+        let checkRequest = pool2.request();
         checkRequest.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
         checkRequest.input('ASSIGNEDTOUSERID', sql.NVarChar, ASSIGNEDTOUSERID);
         checkRequest.input('ITEMID', sql.NVarChar, ITEMID);
@@ -5361,7 +5568,7 @@ const WBSDB = {
         let values = fields.map((field) => "@" + field);
 
         let query = `
-          INSERT INTO [WBSSQL].[dbo].[WMS_Sales_PickingList_CL]
+          INSERT INTO WMS_Sales_PickingList_CL
             (${fields.join(', ')}) 
           VALUES 
             (${values.join(', ')})
@@ -5901,44 +6108,44 @@ const WBSDB = {
       let currentDateTime = new Date();
 
       for (const returnSalesOrder of returnSalesOrderArray) {
-        // Check if the serial number exists
-        let checkQuery = "SELECT ITEMSERIALNO FROM WMS_ReturnSalesOrder_CL WHERE ITEMSERIALNO = @itemSerialNo";
-        let request = pool2.request();
-        request.input('itemSerialNo', sql.VarChar, returnSalesOrder.ITEMSERIALNO);
-        let result = await request.query(checkQuery);
 
-        if (result.recordset.length > 0) {
-          // If the serial number exists, return an error
-          return res.status(400).send({ message: `The serial number ${returnSalesOrder.ITEMSERIALNO} already exists. Please provide unique serial numbers.` });
-        } else {
-          let query = `INSERT INTO WMS_ReturnSalesOrder_CL
+        // let checkQuery = "SELECT ITEMSERIALNO FROM WMS_ReturnSalesOrder_CL WHERE ITEMSERIALNO = @itemSerialNo";
+        let request = pool2.request();
+        // let result = await request.query(checkQuery);
+
+        // if (result.recordset.length > 0) {
+        //   // If the serial number exists, return an error
+        //   return res.status(400).send({ message: `The serial number ${returnSalesOrder.ITEMSERIALNO} already exists. Please provide unique serial numbers.` });
+        // } else {
+        let query = `INSERT INTO WMS_ReturnSalesOrder_CL
             ([ITEMID], [NAME], [EXPECTEDRETQTY], [SALESID], [RETURNITEMNUM],
             [INVENTSITEID], [INVENTLOCATIONID], [CONFIGID], [WMSLOCATIONID],
             [TRXDATETIME], [TRXUSERID], [ITEMSERIALNO], [ASSIGNEDTOUSERID])
             VALUES
             (@ITEMID, @NAME, @EXPECTEDRETQTY, @SALESID, @RETURNITEMNUM,
-            @INVENTSITEID, @INVENTLOCATIONID, @CONFIGID, @WMSLOCATIONID,
-            @TRXDATETIME, @TRXUSERID, @ITEMSERIALNO, @ASSIGNEDTOUSERID)`;
+              @INVENTSITEID, @INVENTLOCATIONID, @CONFIGID, @WMSLOCATIONID,
+              @TRXDATETIME, @TRXUSERID, @itemSerialNo, @ASSIGNEDTOUSERID)`;
 
-          request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
-          request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
-          request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
-          request.input("SALESID", sql.NVarChar, returnSalesOrder.SALESID);
-          request.input("RETURNITEMNUM", sql.NVarChar, returnSalesOrder.RETURNITEMNUM);
-          request.input("INVENTSITEID", sql.NVarChar, returnSalesOrder.INVENTSITEID);
-          request.input("INVENTLOCATIONID", sql.NVarChar, returnSalesOrder.INVENTLOCATIONID);
-          request.input("CONFIGID", sql.NVarChar, returnSalesOrder.CONFIGID);
-          request.input("WMSLOCATIONID", sql.NVarChar, returnSalesOrder.WMSLOCATIONID);
-          request.input("TRXDATETIME", sql.DateTime, currentDateTime);
-          request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
-          request.input("ASSIGNEDTOUSERID", sql.NVarChar, req?.token?.UserID);
+        request.input('itemSerialNo', sql.VarChar, returnSalesOrder.ITEMSERIALNO);
+        request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
+        request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
+        request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
+        request.input("SALESID", sql.NVarChar, returnSalesOrder.SALESID);
+        request.input("RETURNITEMNUM", sql.NVarChar, returnSalesOrder.RETURNITEMNUM);
+        request.input("INVENTSITEID", sql.NVarChar, returnSalesOrder.INVENTSITEID);
+        request.input("INVENTLOCATIONID", sql.NVarChar, returnSalesOrder.INVENTLOCATIONID);
+        request.input("CONFIGID", sql.NVarChar, returnSalesOrder.CONFIGID);
+        request.input("WMSLOCATIONID", sql.NVarChar, returnSalesOrder.WMSLOCATIONID);
+        request.input("TRXDATETIME", sql.DateTime, currentDateTime);
+        request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
+        request.input("ASSIGNEDTOUSERID", sql.NVarChar, req?.token?.UserID);
 
-          await request.query(query);
+        await request.query(query);
 
-          // ReturnRMA page
-          const result = await insertTransactionHistoryData("returnRma", returnSalesOrder?.ITEMID, req?.token?.UserID);
-          console.log(result.message);
-        }
+        // ReturnRMA page
+        const result = await insertTransactionHistoryData("returnRma", returnSalesOrder?.ITEMID, req?.token?.UserID);
+        console.log(result.message);
+        // }
       }
 
       return res.status(201).send({ message: 'Data inserted successfully.' });

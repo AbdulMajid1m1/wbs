@@ -246,6 +246,8 @@ router.post("/insertIntoMappedBarcode", checkAuthentication, checkRole([roles[13
 
 router.post("/insertManyIntoMappedBarcode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[46]]), WBSDB.insertManyIntoMappedBarcode);
 
+router.post("/insertManyIntoMappedBarcodeFromRma", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[46]]), WBSDB.insertManyIntoMappedBarcode);
+
 router.put("/updateTblMappedBarcodeByItemCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.updateTblMappedBarcodeByItemCode);
 
 router.put("/updateTblMappedBarcodeBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[44], roles[45], roles[47], roles[48], roles[49]]), WBSDB.updateTblMappedBarcodeBinLocation);

@@ -6,7 +6,6 @@ import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import userRequest from '../../utils/userRequest';
-import axios from 'axios';
 
 const WmsPalletIDInquiry = () => {
   const navigate = useNavigate();
@@ -31,6 +30,7 @@ const handleForm = (e) => {
           itemserialno: serial
         }
       })
+      //Show only one palletCode
     .then(response => {
       const { GTIN, PalletCode } = response.data[0];
       setData([{ GTIN, PalletCode }]);
@@ -38,6 +38,17 @@ const handleForm = (e) => {
       setIsLoading(false)
    
     })
+
+    // Show Multiple PalletCode
+    // .then(response => {
+    //     const extractedData = response.data.map(item => ({
+    //       GTIN: item.GTIN,
+    //       PalletCode: item.PalletCode
+    //     }));
+    //     setData(extractedData);
+    //     setIsLoading(false)
+    //   })
+
     .catch(error => {
       console.log(error);
       setError(error?.response.data?.message);
@@ -118,28 +129,25 @@ const handleForm = (e) => {
 
          
                {/* Table to display GTIN and Pallet Code */}
-                <div className="table-location-generate1">
+                <div className="table-location-generate2">
                     <table>
-                    <thead>
-                        <tr>
-                        <th>GTIN</th>
-                        <th>Pallet Code</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.GTIN}</td>
-                            <td>{item.PalletCode}</td>
-                        </tr>
-                        ))}
-                    </tbody>
+                        <thead>
+                            <tr>
+                            <th>GTIN</th>
+                            <th>Pallet Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.GTIN}</td>
+                                <td>{item.PalletCode}</td>
+                            </tr>
+                            ))}
+                        </tbody>
                     </table>
-                </div>
-                        
-                </div>
-
-         
+                </div>  
+            </div>         
         </div>
       </div>
     </>

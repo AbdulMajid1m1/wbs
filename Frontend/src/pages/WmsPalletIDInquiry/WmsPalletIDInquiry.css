@@ -1,4 +1,4 @@
-.table-location-generate1 {
+.table-location-generate2 {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
@@ -16,7 +16,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
-  .table-location-generate1 table {
+  .table-location-generate2 table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid #ccc;
@@ -24,12 +24,12 @@
     font-size: 10px;
   }
   
-  .table-location-generate1 table thead {
+  .table-location-generate2 table thead {
     background-color: #F98E1A;
     background-color: #3f51b5;
     color: white;
   }
-  .table-location-generate1 table thead tr th {
+  .table-location-generate2 table thead tr th {
     padding: 12px;
     border: 1px solid #ccc;
     font-weight: 600;
@@ -51,18 +51,18 @@
     background-color: #f3f3f3;
   }
   
-  .table-location-generate1 table {
+  .table-location-generate2 table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid #ccc;
     font-size: 10px;
   }
   
-  .table-location-generate1 table thead {
+  .table-location-generate2 table thead {
     background-color: #F98E1A;
     color: white;
   }
-  .table-location-generate1 table thead tr th {
+  .table-location-generate2 table thead tr th {
     padding: 10px;
     color: #f3f3f3;
     font-weight: 600;
@@ -70,7 +70,7 @@
     border: 1px solid #ccc;
   }
   
-  .table-location-generate1 table tbody tr td {
+  .table-location-generate2 table tbody tr td {
     font-size: 18px; /* adjust font size as desired */
     padding: 10px;
     border: 1px solid black;
@@ -81,21 +81,21 @@
     height: 25px;
   }
 
-  .table-location-generate1 table tbody tr td:nth-child(1),
-  .table-location-generate1 table tbody tr td:nth-child(2),
-  .table-location-generate1 table tbody tr td:nth-child(3),
-  .table-location-generate1 table tbody tr td:nth-child(4),
-  .table-location-generate1 table tbody tr td:nth-child(5),
-  .table-location-generate1 table tbody tr td:nth-child(6),
-  .table-location-generate1 table tbody tr td:nth-child(7),
-  .table-location-generate1 table tbody tr td:nth-child(8),
-  .table-location-generate1 table tbody tr td:nth-child(9),
-  .table-location-generate1 table tbody tr td:nth-child(10),
-  .table-location-generate1 table tbody tr td:nth-child(11),
-  .table-location-generate1 table tbody tr td:nth-child(12),
-  .table-location-generate1 table tbody tr td:nth-child(13),
-  .table-location-generate1 table tbody tr td:nth-child(14),
-  .table-location-generate1 table tbody tr td:nth-child(15) {
+  .table-location-generate2 table tbody tr td:nth-child(1),
+  .table-location-generate2 table tbody tr td:nth-child(2),
+  .table-location-generate2 table tbody tr td:nth-child(3),
+  .table-location-generate2 table tbody tr td:nth-child(4),
+  .table-location-generate2 table tbody tr td:nth-child(5),
+  .table-location-generate2 table tbody tr td:nth-child(6),
+  .table-location-generate2 table tbody tr td:nth-child(7),
+  .table-location-generate2 table tbody tr td:nth-child(8),
+  .table-location-generate2 table tbody tr td:nth-child(9),
+  .table-location-generate2 table tbody tr td:nth-child(10),
+  .table-location-generate2 table tbody tr td:nth-child(11),
+  .table-location-generate2 table tbody tr td:nth-child(12),
+  .table-location-generate2 table tbody tr td:nth-child(13),
+  .table-location-generate2 table tbody tr td:nth-child(14),
+  .table-location-generate2 table tbody tr td:nth-child(15) {
     max-width: 280px;
     white-space: nowrap;
     overflow: hidden;
@@ -104,7 +104,7 @@
 
 
   /* change table row background */
-  .table-location-generate1 table tbody tr:nth-child(even) {
+  .table-location-generate2 table tbody tr:nth-child(even) {
     background-color: rgb(242, 242, 221);
   }
   

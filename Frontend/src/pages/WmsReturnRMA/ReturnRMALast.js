@@ -303,70 +303,7 @@ const ReturnRMALast = () => {
 
 
 
-            {/* <div className='mb-6'>
-              <div className="table-location-generate1">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>ItemCode</th>
-                      <th>ItemDesc</th>
-                      <th>GTIN</th>
-                      <th>Remarks</th>
-                      <th>User</th>
-                      <th>Classification</th>
-                      <th>MainLocation</th>
-                      <th>BinLocation</th>
-                      <th>IntCode</th>
-                      <th>ItemSerialNo</th>
-                      <th>MapDate</th>
-                      <th>PalletCode</th>
-                      <th>Reference</th>
-                      <th>SID</th>
-                      <th>CID</th>
-                      <th>PO</th>
-                      <th>Trans</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {newTableData.map((data, index) => (
-                      <tr key={"tranidRow" + index}>
-                        <td>{data.ItemCode}</td>
-                        <td>{data.ItemDesc}</td>
-                        <td>{data.GTIN}</td>
-                        <td>{data.Remarks}</td>
-                        <td>{data.User}</td>
-                        <td>{data.Classification}</td>
-                        <td>{data.MainLocation}</td>
-                        <td>{data.BinLocation}</td>
-                        <td>{data.IntCode}</td>
-                        <td>{data.ItemSerialNo}</td>
-                        <td>{new Date(data.MapDate).toLocaleDateString()}</td>
-                        <td>{data.PalletCode}</td>
-                        <td>{data.Reference}</td>
-                        <td>{data.SID}</td>
-                        <td>{data.CID}</td>
-                        <td>{data.PO}</td>
-                        <td>{data.Trans}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-
-
-            </div > */}
-
-            {/* <div className='mb-4 flex justify-end items-center gap-2'>
-              <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-              <input
-                id="totals"
-                className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Totals"
-                value={newTableData.length}
-              />
-            </div> */}
-
+           
             {/* Barcode Radio Button */}
             <div class="text-center mb-4">
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500

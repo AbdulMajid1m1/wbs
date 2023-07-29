@@ -30,6 +30,7 @@ const handleForm = (e) => {
           itemserialno: serial
         }
       })
+      //Show only one palletCode
     .then(response => {
       const { GTIN, PalletCode } = response.data[0];
       setData([{ GTIN, PalletCode }]);
@@ -37,6 +38,17 @@ const handleForm = (e) => {
       setIsLoading(false)
    
     })
+
+    // Show Multiple PalletCode
+    // .then(response => {
+    //     const extractedData = response.data.map(item => ({
+    //       GTIN: item.GTIN,
+    //       PalletCode: item.PalletCode
+    //     }));
+    //     setData(extractedData);
+    //     setIsLoading(false)
+    //   })
+
     .catch(error => {
       console.log(error);
       setError(error?.response.data?.message);

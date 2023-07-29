@@ -7,7 +7,7 @@ import icon from "../../images/close.png"
 import "./PutAwayScreen3.css"
 import axios from 'axios';
 import CustomSnakebar from '../../utils/CustomSnakebar';
-
+import Swal from 'sweetalert2';
 
 const PutAwayScreen3 = () => {
   const navigate = useNavigate();
@@ -129,12 +129,15 @@ const PutAwayScreen3 = () => {
       .then(response => {
         // handle response
         setPalletIds(response.data);
-        setMessage(response?.data?.message || 'Pallete Ids Updated Successfully');
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          html: response?.data?.message + '<br><b style="font-size: 1.6rem; margin-top:5px; ">' + response?.data?.PalletCode + '</b>'
+        });
+
         // clear serial number list
         setSerialNumberList([]);
-        // setTimeout(() => {
-        //   navigate('/putawaylast')
-        // }, 1000);
+
       })
       .catch(error => {
         // handle error
@@ -224,47 +227,47 @@ const PutAwayScreen3 = () => {
               </div>
                */}
 
-            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
-              <div>
-                <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
-                <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
+              <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>ITEMNAME: {selectedPutAwayData.ITEMID}</h1>
+                  <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
+                </div>
+                <div>
+                  <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
+                  <h1>GROUPID: {parsedData?.ItemDesc}</h1>
+                </div>
               </div>
-              <div>
-                <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
-                <h1>GROUPID: {parsedData?.ItemDesc}</h1>
-              </div>
-            </div>
 
-            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
-              <div>
-                <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
+              <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>PRODLINEID: {parsedData?.ItemSerialNo}</h1>
+                </div>
+                <div>
+                  <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
+                </div>
               </div>
-              <div>
-                <h1>PRODBRANDID: {parsedData?.GTIN}</h1>
-              </div>
-            </div>
 
-            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
-              <div>
-                <h1>HEIGHT: 50 {parsedData?.PalletCode}</h1>
-                <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1>
+              <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>HEIGHT: 50 {parsedData?.PalletCode}</h1>
+                  <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1>
+                </div>
+                <div>
+                  <h1>LENGTH: 67.6 {parsedData?.PalletCode}</h1>
+                  <h1>WEIGHT: {parsedData?.PalletCode}</h1>
+                </div>
               </div>
-              <div>
-                <h1>LENGTH: 67.6 {parsedData?.PalletCode}</h1>
-                <h1>WEIGHT: {parsedData?.PalletCode}</h1>
-              </div>
-            </div>
 
-            <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
-              <div>
-                <h1>Quantity {selectedPutAwayData.QTYTRANSFER}</h1>
-                {/* <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1> */}
+              <div className='grid grid-cols-2 gap-5 text-xs 2xl:text-lg lg:text-lg xl:text-lg md:text-sm text-white mt-3'>
+                <div>
+                  <h1>Quantity {selectedPutAwayData.QTYTRANSFER}</h1>
+                  {/* <h1>WIDTH: 45.7 {parsedData?.PalletCode}</h1> */}
+                </div>
+                <div>
+                  <h1>Picked {serialnumberlist.length}</h1>
+                  {/* <h1>WEIGHT: {parsedData?.PalletCode}</h1> */}
+                </div>
               </div>
-              <div>
-                <h1>Picked {serialnumberlist.length}</h1>
-                {/* <h1>WEIGHT: {parsedData?.PalletCode}</h1> */}
-              </div>
-            </div>
 
 
 
@@ -425,26 +428,26 @@ const PutAwayScreen3 = () => {
                 </table>
               </div>
             </div > */}
-        <div className="table-putaway-generate1">
-      <table>
-        <thead>
-          <tr>
-            <th>Serial Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {serialnumberlist.map((serialNumber, index) => (
-            <tr key={index}>
-              <td className="serial-number-cell">
-                {serialNumber}
-                <button className="remove-button" onClick={() => handleRemoveSerialNumber(index)}>X</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    </div>
+              <div className="table-putaway-generate1">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Serial Number</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {serialnumberlist.map((serialNumber, index) => (
+                      <tr key={index}>
+                        <td className="serial-number-cell">
+                          {serialNumber}
+                          <button className="remove-button" onClick={() => handleRemoveSerialNumber(index)}>X</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
             <div className='mt-6'>
               <button

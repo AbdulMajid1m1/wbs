@@ -129,7 +129,7 @@ const handleForm = (e) => {
 
          
                {/* Table to display GTIN and Pallet Code */}
-                <div className="table-location-generate1">
+                <div className="table-location-generate2">
                     <table>
                         <thead>
                             <tr>

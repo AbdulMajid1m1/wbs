@@ -258,7 +258,7 @@ const WmsItemMapping = () => {
       }
 
       <div className="before:animate-pulse before:bg-gradient-to-b " style={{ minHeight: '550px' }}>
-        <form onSubmit={saveItemMapping} className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
+        <form onSubmit={saveItemMapping} className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg" style={{ minHeight: '550px' }}>
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 

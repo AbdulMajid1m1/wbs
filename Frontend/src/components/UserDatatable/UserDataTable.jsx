@@ -1612,7 +1612,7 @@ const PrintPalletBarCode = ({ selectedRow, index }) => {
 
             </div>
             <div id='inside-QRCode'>
-              <QRCodeSVG value={selectedRow.data.SERIALNUM} width={70} height={40} />
+              <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={70} height={40} />
             </div>
           </div>
           <hr />

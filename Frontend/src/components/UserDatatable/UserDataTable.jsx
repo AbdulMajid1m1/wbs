@@ -304,6 +304,12 @@ const UserDataTable = ({
 
       printWindow.print();
       printWindow.close();
+      setTimeout(() => {
+        setSelectedRow([]);
+        setFilteredData([]);
+        setResetRows(!resetRows);
+
+      }, 500);
     };
   }
 
@@ -1152,6 +1158,12 @@ const UserDataTable = ({
 
       printWindow.print();
       printWindow.close();
+      setTimeout(() => {
+        setSelectedRow([]);
+        setFilteredData([]);
+        setResetRows(!resetRows);
+
+      }, 500);
     };
   }
 

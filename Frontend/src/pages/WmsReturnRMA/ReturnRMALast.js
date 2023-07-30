@@ -76,27 +76,6 @@ const ReturnRMALast = () => {
     // fetchData(value);
   };
 
-  // const fetchData = async (selectedValue) => {
-  //   try {
-  //     const response = await userRequest.post(
-  //       "/getMappedBarcodedsByItemCodeAndBinLocation",
-  //       {},
-  //       {
-  //         headers: {
-  //           itemcode: parsedData?.ITEMID,
-  //           binlocation: selectedValue
-  //         }
-  //       }
-  //     );
-  //     const responseData = response.data;
-  //     setNewTableData(responseData);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-
-
   const GenerateBarcode = async () => {
 
     if (modelNumber === "") {
@@ -107,10 +86,7 @@ const ReturnRMALast = () => {
       setError("Please select a location")
       return;
     }
-    // if (newTableData.length === 0) {
-    //   setError("No data to insert into  tblMappedBarcode")
-    //   return;
-    // }
+   
 
     try {
       const response = await userRequest.post("/generateBarcodeForRma",

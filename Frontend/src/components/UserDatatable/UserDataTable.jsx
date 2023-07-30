@@ -62,6 +62,7 @@ const UserDataTable = ({
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [muiFilteredData, setMuiFilteredData] = useState([]);
+  const [resetRows, setResetRows] = useState(false);
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -79,14 +80,16 @@ const UserDataTable = ({
     data.map((item, index) => {
       item.id = index + 1;
     });
+
     setRecord(
       data.map((item, index) => ({ ...item, id: index + 1 }))
     );
+
     setFilteredData(
       data.map((item, index) => ({ ...item, id: index + 1 }))
     );
 
-  }, [data]);
+  }, [data, resetRows]);
 
 
   useEffect(() => {
@@ -893,6 +896,7 @@ const UserDataTable = ({
   const [remarks, setRemarks] = useState("");
   const [roles, setRoles] = useState([]);
 
+
   const handleOpenPopup = () => {
     setIsOpen(true);
   };
@@ -963,13 +967,21 @@ const UserDataTable = ({
           // Handle the response from the API if needed
           console.log(response.data);
           setMessage(response?.data?.message || 'Picklist assigned to user successfully')
+          // unselect the rows
+          setSelectedRow([]);
+          console.log('selected row')
+          setFilteredData([]);
+          setResetRows(!resetRows);
 
         } catch (error) {
           setError(error?.response?.data?.message || 'Something went wrong')
           console.log(error)
+
         }
+
         // finally {
-        //   setSelectedRow([]);
+
+
         // }
         break;
 
@@ -1257,6 +1269,7 @@ const UserDataTable = ({
 
           filterModel={filterModel}
           onFilterModelChange={handleFilterModelChange}
+
           onRowClick={(params, rowIdx) => {
             // call your handle function and pass the row data as a parameter
             handleRowClick(params.row, rowIdx);
@@ -1264,10 +1277,6 @@ const UserDataTable = ({
 
 
         />
-
-
-
-
 
         {/* Email Screen */}
         {isOpen && (

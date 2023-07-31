@@ -114,23 +114,56 @@ async function getExistingItemIds(itemIds) {
   return new Set(checkResult.recordset.map(item => item.ITEMID));
 }
 
+async function bulkInsertNewRecords(records) {
+  const table = new sql.Table('dbo.tbl_Stock_Master');
+  table.create = false;
+  table.columns.add('ITEMID', sql.NVarChar(sql.MAX), { nullable: true });
+  table.columns.add('ITEMNAME', sql.NVarChar(sql.MAX), { nullable: true });
+  table.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX), { nullable: true });
+  table.columns.add('GROUPNAME', sql.NVarChar(sql.MAX), { nullable: true });
+  table.columns.add('PRODLINEID', sql.NVarChar(sql.MAX), { nullable: true });
+  table.columns.add('PRODBRANDID', sql.NVarChar(sql.MAX), { nullable: true });
+
+  records.forEach(item => {
+    table.rows.add(item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME, item.PRODLINEID, item.PRODBRANDID);
+  });
+
+  const bulkRequest = pool2.request();
+  await bulkRequest.bulk(table);
+}
 async function updateExistingRecords(records) {
-  for (const record of records) {
-    console.log(1)
-    const updateQuery = `
-      UPDATE dbo.tbl_Stock_Master
-      SET ITEMNAME = @itemName, ITEMGROUPID = @itemGroupId, GROUPNAME = @groupName, PRODLINEID = @prodLineId, PRODBRANDID = @prodBrandId
-      WHERE ITEMID = @itemId
-    `;
-    const updateRequest = pool2.request();
-    updateRequest.input('itemId', sql.NVarChar, record.ITEMID);
-    updateRequest.input('itemName', sql.NVarChar, record.ITEMNAME);
-    updateRequest.input('itemGroupId', sql.NVarChar, record.ITEMGROUPID);
-    updateRequest.input('groupName', sql.NVarChar, record.GROUPNAME);
-    updateRequest.input('prodLineId', sql.NVarChar, record.PRODLINEID);
-    updateRequest.input('prodBrandId', sql.NVarChar, record.PRODBRANDID);
-    await updateRequest.query(updateQuery);
+  const batchSize = 100; // You can adjust this number based on your preference
+  let batch = [];
+
+  for (let record of records) {
+    batch.push(record);
+
+    if (batch.length === batchSize) {
+      await executeUpdateBatch(batch);
+      batch = []; // Reset batch
+    }
   }
+
+  // Handle any remaining records
+  if (batch.length > 0) {
+    await executeUpdateBatch(batch);
+  }
+}
+
+async function executeUpdateBatch(records) {
+  const updateQueries = records.map(record => {
+    return `
+      UPDATE dbo.tbl_Stock_Master
+      SET ITEMNAME = '${record.ITEMNAME}', 
+          ITEMGROUPID = '${record.ITEMGROUPID}', 
+          GROUPNAME = '${record.GROUPNAME}', 
+          PRODLINEID = '${record.PRODLINEID}', 
+          PRODBRANDID = '${record.PRODBRANDID}'
+      WHERE ITEMID = '${record.ITEMID}'`;
+  });
+
+  const updateQuery = updateQueries.join(';');
+  await pool2.request().query(updateQuery);
 }
 
 
@@ -1367,11 +1400,11 @@ const WBSDB = {
         `;
 
         let request2 = pool2.request();
-        request2.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
-        request2.input("CONTAINERID", sql.NVarChar, CONTAINERID);
+        request2.input("SHIPMENTID", sql.NVarChar, SHIPMENTID?.trim());
+        request2.input("CONTAINERID", sql.NVarChar, CONTAINERID?.trim());
         request2.input("POQTY", sql.Numeric(18, 0), POQTY);
         request2.input("REMAININGQTY", sql.Numeric(18, 0), REMAININGQTY);
-        request2.input("ITEMID", sql.NVarChar, ITEMID);
+        request2.input("ITEMID", sql.NVarChar, ITEMID?.trim());
         await request2.query(insertShipmentCounterQuery);
 
       } else {
@@ -1404,22 +1437,22 @@ const WBSDB = {
           (@SHIPMENTID, @CONTAINERID, @ARRIVALWAREHOUSE, @ITEMNAME, @ITEMID, @PURCHID, @CLASSIFICATION, @SERIALNUM, @RCVDCONFIGID, @RCVD_DATE, @GTIN, @RZONE, @PALLET_DATE, @PALLETCODE, @BIN, @REMARKS, @POQTY, @RCVQTY, @REMAININGQTY, @USERID, @TRXDATETIME , @LENGTH, @WIDTH, @HEIGHT, @WEIGHT)
           `;
       let request4 = pool2.request();
-      request4.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
-      request4.input("CONTAINERID", sql.NVarChar, CONTAINERID);
-      request4.input("ARRIVALWAREHOUSE", sql.NVarChar, ARRIVALWAREHOUSE);
-      request4.input("ITEMNAME", sql.NVarChar, ITEMNAME);
-      request4.input("ITEMID", sql.NVarChar, ITEMID);
-      request4.input("PURCHID", sql.NVarChar, PURCHID);
-      request4.input("CLASSIFICATION", sql.NVarChar, CLASSIFICATION);
-      request4.input("SERIALNUM", sql.NVarChar, SERIALNUM);
-      request4.input("RCVDCONFIGID", sql.NVarChar, RCVDCONFIGID);
+      request4.input("SHIPMENTID", sql.NVarChar, SHIPMENTID?.trim());
+      request4.input("CONTAINERID", sql.NVarChar, CONTAINERID?.trim());
+      request4.input("ARRIVALWAREHOUSE", sql.NVarChar, ARRIVALWAREHOUSE?.trim());
+      request4.input("ITEMNAME", sql.NVarChar, ITEMNAME?.trim());
+      request4.input("ITEMID", sql.NVarChar, ITEMID?.trim());
+      request4.input("PURCHID", sql.NVarChar, PURCHID?.trim());
+      request4.input("CLASSIFICATION", sql.NVarChar, CLASSIFICATION?.trim());
+      request4.input("SERIALNUM", sql.NVarChar, SERIALNUM?.trim());
+      request4.input("RCVDCONFIGID", sql.NVarChar, RCVDCONFIGID?.trim());
       request4.input("RCVD_DATE", sql.Date, RCVD_DATE);
-      request4.input("GTIN", sql.NVarChar, GTIN);
-      request4.input("RZONE", sql.NVarChar, RZONE);
+      request4.input("GTIN", sql.NVarChar, GTIN?.trim());
+      request4.input("RZONE", sql.NVarChar, RZONE?.trim());
       request4.input("PALLET_DATE", sql.Date, PALLET_DATE);
-      request4.input("PALLETCODE", sql.NVarChar, PALLETCODE);
-      request4.input("BIN", sql.NVarChar, BIN);
-      request4.input("REMARKS", sql.NVarChar, REMARKS);
+      request4.input("PALLETCODE", sql.NVarChar, PALLETCODE?.trim());
+      request4.input("BIN", sql.NVarChar, BIN?.trim());
+      request4.input("REMARKS", sql.NVarChar, REMARKS?.trim());
       request4.input("POQTY", sql.Numeric(18, 0), POQTY);
       request4.input("RCVQTY", sql.Numeric(18, 0), 1);
       request4.input("REMAININGQTY", sql.Numeric(18, 0), REMAININGQTY - 1);
@@ -3611,23 +3644,24 @@ const WBSDB = {
           const request = transaction.request();
 
           // Add parameters for the insert
-          request.input('itemCode', sql.VarChar(100), itemcode);
-          request.input('itemDesc', sql.NVarChar(255), itemdesc);
-          request.input('gtin', sql.VarChar(150), gtin);
-          request.input('remarks', sql.VarChar(100), remarks);
-          request.input('user', sql.VarChar(50), req.token.UserID);
-          request.input('classification', sql.VarChar(150), classification);
-          request.input('mainLocation', sql.VarChar(200), mainlocation);
-          request.input('binLocation', sql.VarChar(200), binlocation);
-          request.input('intCode', sql.VarChar(150), intcode);
-          request.input('itemSerialNo', sql.VarChar(200), itemserialno);
-          request.input('mapDate', sql.Date, mapdate);
-          request.input('palletCode', sql.VarChar(255), palletcode);
-          request.input('reference', sql.VarChar(100), reference);
-          request.input('sid', sql.VarChar(50), sid);
-          request.input('cid', sql.VarChar(50), cid);
-          request.input('po', sql.VarChar(50), po);
-          request.input('trans', sql.Numeric(10, 0), trans);
+          request.input('itemCode', sql.VarChar(100), itemcode?.trim());
+        request.input('itemDesc', sql.NVarChar(255), itemdesc?.trim());
+        request.input('gtin', sql.VarChar(150), gtin?.trim());
+        request.input('remarks', sql.VarChar(100), remarks?.trim());
+        request.input('user', sql.VarChar(50), req.token.UserID);
+        request.input('classification', sql.VarChar(150), classification?.trim());
+        request.input('mainLocation', sql.VarChar(200), mainlocation?.trim());
+        request.input('binLocation', sql.VarChar(200), binlocation?.trim());
+        request.input('intCode', sql.VarChar(150), intcode?.trim());
+        request.input('itemSerialNo', sql.VarChar(200), itemserialno?.trim());
+        request.input('mapDate', sql.Date, mapdate);
+        request.input('palletCode', sql.VarChar(255), palletcode?.trim());
+        request.input('reference', sql.VarChar(100), reference?.trim());
+        request.input('sid', sql.VarChar(50), sid?.trim());
+        request.input('cid', sql.VarChar(50), cid?.trim());
+        request.input('po', sql.VarChar(50), po?.trim());
+        request.input('trans', sql.Numeric(10, 0), trans);
+
 
           await request.query(insertQuery);
         }
@@ -3691,22 +3725,22 @@ const WBSDB = {
         const request = transaction.request();
 
         // Add parameters for the insert
-        request.input('itemCode', sql.VarChar(100), itemcode);
-        request.input('itemDesc', sql.NVarChar(255), itemdesc);
-        request.input('gtin', sql.VarChar(150), gtin);
-        request.input('remarks', sql.VarChar(100), remarks);
+        request.input('itemCode', sql.VarChar(100), itemcode?.trim());
+        request.input('itemDesc', sql.NVarChar(255), itemdesc?.trim());
+        request.input('gtin', sql.VarChar(150), gtin?.trim());
+        request.input('remarks', sql.VarChar(100), remarks?.trim());
         request.input('user', sql.VarChar(50), req.token.UserID);
-        request.input('classification', sql.VarChar(150), classification);
-        request.input('mainLocation', sql.VarChar(200), mainlocation);
-        request.input('binLocation', sql.VarChar(200), binlocation);
-        request.input('intCode', sql.VarChar(150), intcode);
-        request.input('itemSerialNo', sql.VarChar(200), itemserialno);
+        request.input('classification', sql.VarChar(150), classification?.trim());
+        request.input('mainLocation', sql.VarChar(200), mainlocation?.trim());
+        request.input('binLocation', sql.VarChar(200), binlocation?.trim());
+        request.input('intCode', sql.VarChar(150), intcode?.trim());
+        request.input('itemSerialNo', sql.VarChar(200), itemserialno?.trim());
         request.input('mapDate', sql.Date, mapdate);
-        request.input('palletCode', sql.VarChar(255), palletcode);
-        request.input('reference', sql.VarChar(100), reference);
-        request.input('sid', sql.VarChar(50), sid);
-        request.input('cid', sql.VarChar(50), cid);
-        request.input('po', sql.VarChar(50), po);
+        request.input('palletCode', sql.VarChar(255), palletcode?.trim());
+        request.input('reference', sql.VarChar(100), reference?.trim());
+        request.input('sid', sql.VarChar(50), sid?.trim());
+        request.input('cid', sql.VarChar(50), cid?.trim());
+        request.input('po', sql.VarChar(50), po?.trim());
         request.input('trans', sql.Numeric(10, 0), trans);
 
         await request.query(insertQuery);
@@ -5010,14 +5044,12 @@ const WBSDB = {
       return res.status(500).send({ message: error.message });
     }
   },
-
-
-
-
-
-
   async insertDataFromInventTableWmsToStockMaster(req, res, next) {
     try {
+      // Initialize connection pools
+      await pool1.connect();
+      await pool2.connect();
+
       // Declare a batch size
       const batchSize = 2000;
 
@@ -5044,58 +5076,36 @@ const WBSDB = {
         fetchRequest.input('offset', sql.Int, offset);
         fetchRequest.input('endRow', sql.Int, offset + batchSize);
         const fetchResult = await fetchRequest.query(fetchQuery);
+        const records = fetchResult.recordset;
 
         // Gather all ITEMIDs in the current batch
-        const itemIds = fetchResult.recordset.map(item => item.ITEMID);
+        const itemIds = records.map(item => item.ITEMID);
 
         // Query dbo.tbl_Stock_Master for existing ITEMIDs in the batch
         const existingItemIds = await getExistingItemIds(itemIds);
 
+        const recordsToUpdate = records.filter(item => existingItemIds.has(item.ITEMID));
+        const recordsToInsert = records.filter(item => !existingItemIds.has(item.ITEMID));
 
-        const recordsToUpdate = fetchResult.recordset.filter(item => existingItemIds.has(item.ITEMID));
-        if (recordsToUpdate.length > 0) {
-          await updateExistingRecords(recordsToUpdate);
-        }
-
-        // Filter out the records that already exist in dbo.tbl_Stock_Master
-        const recordsToInsert = fetchResult.recordset.filter(item => !existingItemIds.has(item.ITEMID));
-
-        // Bulk insert the filtered records into dbo.tbl_Stock_Master
-        if (recordsToInsert.length > 0) {
-          const table2 = new sql.Table('[tbl_Stock_Master]');
-          table2.create = true; // This means the table is already created.
-          table2.columns.add('ITEMID', sql.NVarChar(sql.MAX), { nullable: true });
-          table2.columns.add('ITEMNAME', sql.NVarChar(sql.MAX), { nullable: true });
-          table2.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX), { nullable: true });
-          table2.columns.add('GROUPNAME', sql.NVarChar(sql.MAX), { nullable: true });
-          table2.columns.add('PRODLINEID', sql.NVarChar(sql.MAX), { nullable: true });
-          table2.columns.add('PRODBRANDID', sql.NVarChar(sql.MAX), { nullable: true });
-
-          recordsToInsert.forEach(item => {
-            console.log(item);
-            table2.rows.add(item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME, item.PRODLINEID, item.PRODBRANDID);
-          });
-
-          const bulkRequest = pool2.request();
-          await bulkRequest.bulk(table2);
-        }
+        // Execute both updates and inserts in parallel
+        await Promise.all([
+          recordsToUpdate.length > 0 ? updateExistingRecords(recordsToUpdate) : null,
+          recordsToInsert.length > 0 ? bulkInsertNewRecords(recordsToInsert) : null,
+        ]);
       }
 
-      // Fetch all the data from tblstockmaster
-      const fetchAllQuery = 'SELECT * FROM tbl_Stock_Master';
-      const fetchAllResult = await pool2.request().query(fetchAllQuery);
-      const stockMasterData = fetchAllResult.recordset;
-
       console.log('Inventory synchronized successfully.');
-      return res.status(200).send({
-        message: 'Inventory synchronized successfully.',
-        stockMasterData: stockMasterData // Include the fetched data in the response
-      });
+      return res.status(200).send({ message: 'Inventory synchronized successfully.' });
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error.message });
+    } finally {
+      // Close the connection pools
+      await pool1.close();
+      await pool2.close();
     }
-  },
+  }
+  ,
 
   async insertDataFromTable1ToTable2(req, res, next) {
     try {

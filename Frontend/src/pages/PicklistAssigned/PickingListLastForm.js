@@ -120,13 +120,13 @@ const PickingListLastForm = () => {
   // define the function to filter data based on user input and selection type
 
   const filterData = () => {
-    let trimInput = userInput.trim()
+    let trimInput = userInput?.trim()
     // filter the data based on the user input and selection type
     const filtered = newTableData.filter((item) => {
       if (selectionType === 'Pallet') {
-        return item.PalletCode === trimInput;
+        return item.PalletCode?.trim() === trimInput;
       } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo === trimInput;
+        return item.ItemSerialNo?.trim() === trimInput;
       } else {
         return true;
       }
@@ -145,7 +145,7 @@ const PickingListLastForm = () => {
         if (selectionType === 'Pallet') {
           return !prevData.some(prevItem => prevItem.PalletCode === item.PalletCode);
         } else if (selectionType === 'Serial') {
-          return !prevData.some(prevItem => prevItem.ItemSerialNo === item.ItemSerialNo);
+          return !prevData.some(prevItem => prevItem.ItemSerialNo?.trim() === item.ItemSerialNo?.trim());
         }
       });
       setUserInput("");
@@ -157,9 +157,9 @@ const PickingListLastForm = () => {
     setNewTableData((prevData) => {
       return prevData.filter((item) => {
         if (selectionType === 'Pallet') {
-          return !filtered.some(filteredItem => filteredItem.PalletCode === item.PalletCode);
+          return !filtered.some(filteredItem => filteredItem.PalletCode?.trim() === item.PalletCode?.trim());
         } else if (selectionType === 'Serial') {
-          return !filtered.some(filteredItem => filteredItem.ItemSerialNo === item.ItemSerialNo);
+          return !filtered.some(filteredItem => filteredItem.ItemSerialNo?.trim() === item.ItemSerialNo?.trim());
         } else {
           return true;
         }

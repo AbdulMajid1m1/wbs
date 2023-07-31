@@ -109,6 +109,7 @@ import TblPalletMasterUpdate from './components/UpdatesItem/TblPalletMasterUpdat
 import ItemUnAllocation from './pages/ItemUnAllocation/ItemUnAllocation'
 import SecondItemUnAllocation from './pages/ItemUnAllocation/SecondItemUnAllocation'
 import WmsPalletIDInquiry from './pages/WmsPalletIDInquiry/WmsPalletIDInquiry'
+import { RefreshProvider } from './contexts/RefreshContext'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -204,7 +205,9 @@ const App = () => {
                 <Route path='/shipmentupdate/:id' element={<TblShipmentUpdate title="Update Shipment Received Data" />} />
 
                 <Route path='/items' element={<TblItem />} />
+                {/* <Route path='/itemscl' element={<TblItemCl />} /> */}
                 <Route path='/itemscl' element={<TblItemCl />} />
+
                 <Route path='/addnew' element={<AddNew title="Add New Shipment Receving Details" />} />
                 {/* <Route path='/update' element={<UpdateData title="Update Shipment Receiving Data" />} /> */}
                 <Route path='/update/:id' element={<UpdateData title="Update Row Shipment Receiving Data" />} />

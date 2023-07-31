@@ -62,7 +62,8 @@ const UserDataTable = ({
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [muiFilteredData, setMuiFilteredData] = useState([]);
-  const [resetRows, setResetRows] = useState(false);
+
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
@@ -89,7 +90,7 @@ const UserDataTable = ({
       data.map((item, index) => ({ ...item, id: index + 1 }))
     );
 
-  }, [data, resetRows]);
+  }, [data]);
 
 
   useEffect(() => {
@@ -306,13 +307,11 @@ const UserDataTable = ({
       printWindow.close();
       setTimeout(() => {
         setSelectedRow([]);
-        setFilteredData([]);
-        setResetRows(!resetRows);
+        setRowSelectionModel([]);
 
       }, 500);
     };
   }
-
 
   const handleRowClick = (item) => {
     if (
@@ -334,30 +333,9 @@ const UserDataTable = ({
       const index = item.id;
       // Set the value of qrcodeValue to the data of the clicked row
       setQRCodeValue(JSON.stringify(item));
-      setSelectedRow(data[index]);
+      // setSelectedRow(data[index]);
       setSelectedRowIndex(index);
       console.log(item);
-
-      // Check if the row is already selected
-      const selectedIndex = selectedRow.findIndex(
-        (selectedItem) => selectedItem.data.id === item.id
-      );
-      console.log(selectedIndex);
-
-      if (selectedIndex > -1) {
-        // If the row is already selected, remove it from the selectedRows array
-        const newSelectedRows = selectedRow.filter(
-          (selectedItem) => selectedItem.data.id !== item.id
-        );
-        console.log(newSelectedRows)
-
-        setSelectedRow(newSelectedRows);
-      } else {
-        // If the row is not selected, add it to the selectedRows array
-        console.log(item)
-        setSelectedRow([...selectedRow, { data: item, index }]);
-      }
-
       return;
     }
   };
@@ -976,8 +954,8 @@ const UserDataTable = ({
           // unselect the rows
           setSelectedRow([]);
           console.log('selected row')
-          setFilteredData([]);
-          setResetRows(!resetRows);
+
+          setRowSelectionModel([]);
 
         } catch (error) {
           setError(error?.response?.data?.message || 'Something went wrong')
@@ -1160,13 +1138,11 @@ const UserDataTable = ({
       printWindow.close();
       setTimeout(() => {
         setSelectedRow([]);
-        setFilteredData([]);
-        setResetRows(!resetRows);
+        setRowSelectionModel([]);
 
       }, 500);
     };
   }
-
 
 
 
@@ -1282,9 +1258,19 @@ const UserDataTable = ({
           filterModel={filterModel}
           onFilterModelChange={handleFilterModelChange}
 
-          onRowClick={(params, rowIdx) => {
-            // call your handle function and pass the row data as a parameter
-            handleRowClick(params.row, rowIdx);
+
+          // selectionModel={rowSelectionModel}
+          // pass rowselectonModel to the table so that it can be used to unset the selection when set to empty array
+          rowSelectionModel={rowSelectionModel}
+          onRowSelectionModelChange={(newRowSelectionModel) => {
+            setRowSelectionModel(newRowSelectionModel); // Set the state with selected row ids
+            console.log(newRowSelectionModel); // Logs the ids of selected rows
+            const selectedRows = filteredData.filter((row) => newRowSelectionModel.includes(row.id));
+            console.log(selectedRows)
+            setSelectedRow(selectedRows.map((item, index) => ({ data: item, index }))); // Set the state with selected row data objects
+            if (newRowSelectionModel.length > 0) {
+              handleRowClick(selectedRows[selectedRows.length - 1]);
+            }
           }}
 
 

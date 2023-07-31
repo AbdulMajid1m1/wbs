@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RefreshProvider } from './contexts/RefreshContext';
 
 // Instantiate a new QueryClient
 const queryClient = new QueryClient();
@@ -14,7 +15,10 @@ root.render(
   <React.StrictMode>
     {/* Provide the QueryClient instance to your App */}
     <QueryClientProvider client={queryClient}>
-      <App />
+      <RefreshProvider>
+
+        <App />
+      </RefreshProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

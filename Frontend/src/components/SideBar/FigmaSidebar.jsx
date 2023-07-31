@@ -606,9 +606,13 @@ const FigmaSidebar = () => {
             {wmsMobileApp && (
                 <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
 
-                    <div className='main-images-container'>
-                        <img src={dispatch} className='main-inside-image bg-white rounded-full' alt='' />
-                        <p className='sidebar-text'>Dispatch Management</p>
+                    <div className='main-images-container' onClick={() => navigate('/wmsmapping')}
+                        onContextMenu={(event) =>
+                            handleContextMenu(event, '/wmsmapping')
+                        }
+                    >
+                        <img src={wmsbarcode} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Barcode Mapping</p>
                     </div>
 
                     <div className='main-images-container' onClick={() => {
@@ -621,21 +625,68 @@ const FigmaSidebar = () => {
                         }
                     >
                         <img src={receipts} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Receipts Management</p>
+                        <p className='sidebar-text'>Receiving</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => {
-                        // remove item from session storage
-                        sessionStorage.removeItem('receivingBycontainerIdData');
-                        navigate('/receiving-by-containerid-first')
-                    }}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/receiving-by-containerid-first')
+                 
+                    <div className='main-images-container' onClick={() => navigate('/palletscreen1')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/palletscreen1')
                         }
                     >
-                        <img src={receipts} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>RECEIVING BY CONTAINER</p>
+                        <img src={wmspallet} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Palletization</p>
                     </div>
+
+
+                    <div className='main-images-container' onClick={() => navigate('/putaway')}
+                        onContextMenu={(event) =>
+                            handleContextMenu(event, '/putaway')
+                        }
+                    >
+                        <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Shipment Put-Away</p>
+                    </div>
+
+
+                    <div className='main-images-container' onClick={() => navigate('/pickinglistfrom')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/pickinglistfrom')
+                        }
+                    >
+                        <img src={wmspicking} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Picking Slip</p>
+                    </div>
+
+                    
+                    <div className='main-images-container' onClick={() => navigate('/dispatchingslip')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/dispatchingslip')
+                        }
+                    >
+                        <img src={wmsdispatch} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Dispatching</p>
+                    </div>
+                    
+
+                    <div className='main-images-container' onClick={() => navigate('/itemallocation')}
+                        onContextMenu={(event) =>
+                            handleContextMenu(event, '/itemallocation')
+                        }
+                    >
+                        <img src={wmsallocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Item Re Allocation</p>
+                    </div>
+       
+                    <div className='main-images-container' onClick={() => navigate('/itemunallocation')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/itemunallocation')
+                        }
+                    >
+                        <img src={unallocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Un-Allocated Items</p>
+                    </div>
+
 
                     <div className='main-images-container' onClick={() => navigate('/transferpage1')}
                          onContextMenu={(event) =>
@@ -664,115 +715,17 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Bin To Bin (Journal)</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/itemallocation')}
+                    
+                    <div className='main-images-container' onClick={() => navigate('/profitloss')}
                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/itemallocation')
+                            handleContextMenu(event, '/profitloss')
                         }
                     >
-                        <img src={wmsallocation} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Item Re Allocation</p>
-                    </div>
-       
-                    <div className='main-images-container' onClick={() => navigate('/itemunallocation')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/itemunallocation')
-                        }
-                    >
-                        <img src={unallocation} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Item Un-Allocated</p>
+                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Profit and Loss</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/wmsinventory')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/wmsinventory')
-                        }
-                    >
-                        <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>WMS Inventory</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/wmsphysical')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/wmsphysical')
-                        }
-                    >
-                        <img src={wmsinventory} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>WMS Physical Inventory</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/wmsphysicalbinlocation')
-                        }
-                    >
-                        <img src={wmslocation} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Inventory By BinLocation</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/wmsbinlocation')}
-                          onContextMenu={(event) =>
-                            handleContextMenu(event, '/wmsbinlocation')
-                        }
-                    >
-                        <img src={move} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>WMS Inventory (by BIN)</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/putaway')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/putaway')
-                        }
-                    >
-                        <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Put-Away Transaction</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/wmsmapping')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/wmsmapping')
-                        }
-                    >
-                        <img src={wmsbarcode} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Product Barcode Mapping</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/palletscreen1')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/palletscreen1')
-                        }
-                    >
-                        <img src={wmspallet} className='main-inside-image bg-white rounded-full' alt='' />
-                        <p className='sidebar-text'>Palletization</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/palletIdInquiry')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/palletIdInquiry')
-                        }
-                    >
-                        <img src={palletid} className='main-inside-image bg-white rounded-full' alt='' />
-                        <p className='sidebar-text'>PalletID Inquiry</p>
-                    </div>
-
-
-                    <div className='main-images-container' onClick={() => navigate('/dispatchingslip')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/dispatchingslip')
-                        }
-                    >
-                        <img src={wmsdispatch} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Dispatching</p>
-                    </div>
-
-                    <div className='main-images-container' onClick={() => navigate('/pickinglistfrom')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/pickinglistfrom')
-                        }
-                    >
-                        <img src={wmspicking} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Picking Slip</p>
-                    </div>
-
+                    
                     <div className='main-images-container' onClick={() => navigate('/rma')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/rma')
@@ -788,9 +741,10 @@ const FigmaSidebar = () => {
                         }
                     >
                         <img src={wmsputaway} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>RMA PutAway</p>
+                        <p className='sidebar-text'>RMA Put-Away</p>
                     </div>
 
+                    
                     <div className='main-images-container' onClick={() => navigate('/journalfirst')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/journalfirst')
@@ -800,15 +754,72 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Journal Movement Counting</p>
                     </div>
 
-                    <div className='main-images-container' onClick={() => navigate('/profitloss')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/profitloss')
+
+                    
+                      <div className='main-images-container' onClick={() => navigate('/wmsphysical')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/wmsphysical')
                         }
                     >
-                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Profit and Loss</p>
+                        <img src={wmsinventory} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Physical Count (WMS)</p>
                     </div>
 
+
+                    <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/wmsphysicalbinlocation')
+                        }
+                    >
+                        <img src={wmslocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Inventory By Bin Location</p>
+                    </div>
+
+
+                    <div className='main-images-container' onClick={() => navigate('/palletIdInquiry')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/palletIdInquiry')
+                        }
+                    >
+                        <img src={palletid} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Pallet ID Inquiry</p>
+                    </div>
+
+
+                    <div className='main-images-container' onClick={() => {
+                        // remove item from session storage
+                        sessionStorage.removeItem('receivingBycontainerIdData');
+                        navigate('/receiving-by-containerid-first')
+                    }}
+                        onContextMenu={(event) =>
+                            handleContextMenu(event, '/receiving-by-containerid-first')
+                        }
+                    >
+                        <img src={receipts} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>RECEIVING BY CONTAINER</p>
+                    </div>
+
+
+                    <div className='main-images-container' onClick={() => navigate('/wmsinventory')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/wmsinventory')
+                        }
+                    >
+                        <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>WMS Inventory</p>
+                    </div>
+
+                  
+                    <div className='main-images-container' onClick={() => navigate('/wmsbinlocation')}
+                          onContextMenu={(event) =>
+                            handleContextMenu(event, '/wmsbinlocation')
+                        }
+                    >
+                        <img src={move} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>WMS Inventory (by BIN)</p>
+                    </div>
+
+                   
                     <div className='main-images-container' onClick={() => navigate('/cyclecounting')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/cyclecounting')
@@ -818,10 +829,6 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Cycle Counting Process</p>
                     </div>
 
-                    {/* <div className='main-images-container' onClick={() => navigate('/rmaputaway')}>
-                        <img src={movement} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>RMA PutAway</p>
-                    </div> */}
 
                 </div>
             )}

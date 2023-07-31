@@ -116,6 +116,7 @@ async function getExistingItemIds(itemIds) {
 
 async function updateExistingRecords(records) {
   for (const record of records) {
+    console.log(1)
     const updateQuery = `
       UPDATE dbo.tbl_Stock_Master
       SET ITEMNAME = @itemName, ITEMGROUPID = @itemGroupId, GROUPNAME = @groupName, PRODLINEID = @prodLineId, PRODBRANDID = @prodBrandId

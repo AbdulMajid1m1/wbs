@@ -1426,7 +1426,7 @@ const PrintingShipmentReceived = ({ selectedRow, index }) => {
               <img src={logo} id='imglogo' alt='' />
             </div>
             <div id='first-QRCode'>
-              <QRCodeSVG value="http://localhost:3006/" width={40} height={32} />
+              <QRCodeSVG value="http://www.alessa.com.sa" width={40} height={32} />
             </div>
           </div>
           <div id='inside-heading'>
@@ -1557,7 +1557,7 @@ const PrintPalletBarCode = ({ selectedRow, index }) => {
               <img src={logo} id='imglogo' alt='' />
             </div>
             <div id='first-QRCode'>
-              <QRCodeSVG value="http://gs1ksa.org:3006/" width={40} height={32} />
+              <QRCodeSVG value="http://www.alessa.com.sa" width={40} height={32} />
             </div>
           </div>
           <div id='inside-heading'>

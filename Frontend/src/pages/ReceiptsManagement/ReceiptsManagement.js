@@ -76,7 +76,7 @@ const ReceiptsManagement = () => {
         <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-300 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-6 rounded-lg">
             <div className="w-full flex justify-center text-black font-semibold text-xl mb:2 md:mb-5">
-              Receipts Management
+                RECEIVING
             </div>
             <button onClick={() => navigate(-1)} className='w-[15%] rounded-sm text-[#fff] bg-[#e69138]'>
               Back

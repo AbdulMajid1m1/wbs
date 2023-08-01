@@ -131,23 +131,41 @@ async function bulkInsertNewRecords(records) {
   const bulkRequest = pool2.request();
   await bulkRequest.bulk(table);
 }
+// async function updateExistingRecords(records) {
+//   const batchSize = 100; // You can adjust this number based on your preference
+//   let batch = [];
+
+//   for (let record of records) {
+//     batch.push(record);
+
+//     if (batch.length === batchSize) {
+//       await executeUpdateBatch(batch);
+//       batch = []; // Reset batch
+//     }
+//   }
+
+//   // Handle any remaining records
+//   if (batch.length > 0) {
+//     await executeUpdateBatch(batch);
+//   }
+// }
 async function updateExistingRecords(records) {
-  const batchSize = 100; // You can adjust this number based on your preference
-  let batch = [];
+  const table = new sql.Table();
+  table.create = false; // This is important
+  table.columns.add('ITEMID', sql.NVarChar(sql.MAX));
+  table.columns.add('ITEMNAME', sql.NVarChar(sql.MAX));
+  table.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX));
+  table.columns.add('GROUPNAME', sql.NVarChar(sql.MAX));
+  table.columns.add('PRODLINEID', sql.NVarChar(sql.MAX));
+  table.columns.add('PRODBRANDID', sql.NVarChar(sql.MAX));
 
-  for (let record of records) {
-    batch.push(record);
+  records.forEach(record => {
+    table.rows.add(record.ITEMID, record.ITEMNAME, record.ITEMGROUPID, record.GROUPNAME, record.PRODLINEID, record.PRODBRANDID);
+  });
 
-    if (batch.length === batchSize) {
-      await executeUpdateBatch(batch);
-      batch = []; // Reset batch
-    }
-  }
-
-  // Handle any remaining records
-  if (batch.length > 0) {
-    await executeUpdateBatch(batch);
-  }
+  const request = pool2.request();
+  request.input('data', table);
+  await request.execute('dbo.UpdateStockMaster');
 }
 
 async function executeUpdateBatch(records) {

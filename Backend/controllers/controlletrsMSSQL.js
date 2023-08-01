@@ -8559,7 +8559,7 @@ const WBSDB = {
   },
 
   // tbl_Shipment_Counter controller start
-  async validateShipmentIdFromShipmentCounter(req, res, next) {
+  async validateShipmentIdFromShipmentReceivedCl(req, res, next) {
     try {
       const { SHIPMENTID } = req.query;
 
@@ -8568,7 +8568,7 @@ const WBSDB = {
       }
 
       const query = `
-        SELECT count(*) as count FROM dbo.tbl_Shipment_Counter
+        SELECT count(*) as count FROM dbo.tbl_Shipment_Received_CL
         WHERE SHIPMENTID = @SHIPMENTID
       `;
       let request = pool2.request();
@@ -8576,7 +8576,7 @@ const WBSDB = {
 
       const data = await request.query(query);
       if (data.recordsets[0][0].count === 0) {
-        return res.status(404).send({ message: "Shipment ID not found in tbl_Shipment_Counter." });
+        return res.status(404).send({ message: "Shipment ID not found in tbl_Shipment_Received_CL." });
       }
       return res.status(200).send({ message: "Shipment ID is valid." });
     } catch (error) {

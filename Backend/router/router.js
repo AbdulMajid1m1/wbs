@@ -618,3 +618,8 @@ router.delete("/deleteUserRoleAssignedData/:RoleId", checkAuthentication, checkR
 // --------- tbl_DZONES APIs start ---------
 
 router.get("/getAllTblDZones", checkAuthentication, WBSDB.getAllTblDZones);
+
+
+// --------- tbl_Shipment_Counter APIs start ---------
+
+router.get("/validateShipmentIdFromShipmentCounter", checkAuthentication, WBSDB.validateShipmentIdFromShipmentCounter);

@@ -149,63 +149,21 @@ async function updateExistingRecords(records) {
     await executeUpdateBatch(batch);
   }
 }
+
 async function executeUpdateBatch(records) {
-  const transaction = new sql.Transaction(pool2);
-
-  transaction.begin(err => {
-    if (err) throw err;
-
-    let rolledBack = false;
-
-    transaction.on('rollback', aborted => {
-      // emited with aborted === true
-      rolledBack = true;
-    });
-
-    const updatePromises = records.map(record => {
-      const query = `
-        UPDATE dbo.tbl_Stock_Master
-        SET ITEMNAME = @ITEMNAME,
-            ITEMGROUPID = @ITEMGROUPID,
-            GROUPNAME = @GROUPNAME,
-            PRODLINEID = @PRODLINEID,
-            PRODBRANDID = @PRODBRANDID
-        WHERE ITEMID = @ITEMID`;
-
-      const request = new sql.Request(transaction);
-      request
-        .input('ITEMNAME', sql.NVarChar, record.ITEMNAME)
-        .input('ITEMGROUPID', sql.NVarChar, record.ITEMGROUPID)
-        .input('GROUPNAME', sql.NVarChar, record.GROUPNAME)
-        .input('PRODLINEID', sql.NVarChar, record.PRODLINEID)
-        .input('PRODBRANDID', sql.NVarChar, record.PRODBRANDID)
-        .input('ITEMID', sql.NVarChar, record.ITEMID);
-
-      return request.query(query);
-    });
-
-    Promise.all(updatePromises)
-      .then(() => {
-        transaction.commit(err => {
-          if (err) {
-            if (!rolledBack) {
-              transaction.rollback(err => {
-                throw err;
-              });
-            }
-          } else {
-            console.log('Bulk update successful.');
-          }
-        });
-      })
-      .catch(err => {
-        if (!rolledBack) {
-          transaction.rollback(err => {
-            throw err;
-          });
-        }
-      });
+  const updateQueries = records.map(record => {
+    return `
+      UPDATE dbo.tbl_Stock_Master
+      SET ITEMNAME = '${record.ITEMNAME}', 
+          ITEMGROUPID = '${record.ITEMGROUPID}', 
+          GROUPNAME = '${record.GROUPNAME}', 
+          PRODLINEID = '${record.PRODLINEID}', 
+          PRODBRANDID = '${record.PRODBRANDID}'
+      WHERE ITEMID = '${record.ITEMID}'`;
   });
+
+  const updateQuery = updateQueries.join(';');
+  await pool2.request().query(updateQuery);
 }
 
 
@@ -1336,26 +1294,45 @@ const WBSDB = {
 
 
 
-  async getTransferDistributionByTransferId(req, res, next,) {
+  async getTransferDistributionByTransferId(req, res, next) {
     try {
-      let query = `
+      const { TRANSFERID } = req.query;
+      if (!TRANSFERID) {
+        return res.status(400).send({ message: 'TRANSFERID is required.' });
+      }
+      // First Query
+      const query1 = `
         SELECT * FROM dbo.Transfer_Distribution
         WHERE TRANSFERID = @TRANSFERID
       `;
-      const { TRANSFERID } = req.query;
-      let request = pool1.request();
-      request.input('TRANSFERID', sql.NVarChar(20), TRANSFERID);
-      const data = await request.query(query);
-      if (data.recordsets[0].length === 0) {
+      let request1 = pool1.request();
+      request1.input('TRANSFERID', sql.NVarChar(20), TRANSFERID);
+      const data1 = await request1.query(query1);
+      if (data1.recordsets[0].length === 0) {
         return res.status(404).send({ message: "Data not found." });
       }
-      return res.status(200).send(data.recordsets[0]);
+
+      // Second Query
+      const query2 = `
+        SELECT SHIPMENTID FROM dbo.TransferDistribution_Shipment
+        WHERE TRANSFERID = @TRANSFERID
+      `;
+      let request2 = pool2.request();
+      request2.input('TRANSFERID', sql.NVarChar(20), TRANSFERID);
+      const data2 = await request2.query(query2);
+
+      // Merge Data
+      const shipmentRecord = data2.recordsets[0][0]?.SHIPMENTID;
+      console.log(data2.recordsets[0])
+
+      return res.status(200).send({ data: data1.recordsets[0], shipmentId: shipmentRecord ?? null });
+
     } catch (error) {
       console.log(error);
-      res.status(500).send({ message: error.message });
+      return res.status(500).send({ message: error.message });
     }
-  },
-
+  }
+  ,
   async getTblShipmentReceivedCLStats(req, res, next) {
     try {
       let query = `
@@ -8673,8 +8650,32 @@ const WBSDB = {
     }
   },
 
+  // tbl_Shipment_Counter controller start
+  async validateShipmentIdFromShipmentCounter(req, res, next) {
+    try {
+      const { SHIPMENTID } = req.query;
 
+      if (!SHIPMENTID) {
+        return res.status(400).send({ message: "SHIPMENTID is required." });
+      }
 
+      const query = `
+        SELECT count(*) as count FROM dbo.tbl_Shipment_Counter
+        WHERE SHIPMENTID = @SHIPMENTID
+      `;
+      let request = pool2.request();
+      request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+
+      const data = await request.query(query);
+      if (data.recordsets[0][0].count === 0) {
+        return res.status(404).send({ message: "Shipment ID not found in tbl_Shipment_Counter." });
+      }
+      return res.status(200).send({ message: "Shipment ID is valid." });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

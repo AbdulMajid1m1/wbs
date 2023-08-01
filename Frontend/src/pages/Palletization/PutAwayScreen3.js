@@ -25,7 +25,11 @@ const PutAwayScreen3 = () => {
   const parsedData = JSON.parse(data)
   console.log(parsedData);
   console.log(data)
+  const storedData = sessionStorage.getItem('putawaydatashipmentId');
 
+
+  const parsedData12 = JSON.parse(storedData)
+  console.log(parsedData12)
 
 
   const [options, setOptions] = useState([]);
@@ -233,7 +237,7 @@ const PutAwayScreen3 = () => {
                   <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
                 </div>
                 <div>
-                  <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
+                  <h1>SHIPMENTID: {parsedData12}</h1>
                   <h1>GROUPID: {parsedData?.ItemDesc}</h1>
                 </div>
               </div>

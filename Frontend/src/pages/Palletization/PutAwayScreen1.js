@@ -16,6 +16,7 @@ const PutAway = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // const [selectedRow, setSelectedRow] = useState(null);
+  sessionStorage.setItem('putawaydatashipmentId', JSON.stringify(shipmentValidate));
 
 
   const handleForm = (e) => {
@@ -33,7 +34,6 @@ const PutAway = () => {
 
         // save data in session storage
         sessionStorage.setItem('putawaydata', JSON.stringify(response?.data ?? []));
-        // sessionStorage.setItem('putawaydatashipmentId', JSON.stringify(shipmentValidate));
         setIsLoading(false);
       })
 
@@ -54,15 +54,17 @@ const PutAway = () => {
     setShipmentTag(e.target.value);
   }
 
+  
   const handleChangevalidate = (e) => {
-      userRequest.get(`/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=${shipmentValidate}`)
+    userRequest.get(`/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=${shipmentValidate}`)
         .then((response) => {
             alert(response?.data?.message)  
         })
         .catch((error) => {
           console.log(error)
         })
-  }
+      }
+      
 
 
   return (
@@ -137,24 +139,14 @@ const PutAway = () => {
                   </div>
 
                   {/* New Input Shipment */}
-                  {/* <input
-                      onChange={handleChangevalidate}
+                  <input
+                      onBlur={handleChangevalidate}
                       name=''
                       value={shipmentValidate}
                       className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
                       block sm:w-[50%] p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
 
-                    /> */}
-
-                  <input
-                    onChange={handleChangevalidate}
-                    value={shipmentValidate}
-                    readOnly={shipmentValidate !== ''} // Make the input readOnly if shipmentValidate is not empty
-                    className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
-                    block sm:w-[50%] p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
-
-                  />
-
+                    />
 
                 </div>
 

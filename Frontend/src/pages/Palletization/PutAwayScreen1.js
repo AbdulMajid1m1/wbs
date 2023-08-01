@@ -12,6 +12,7 @@ const PutAway = () => {
   const navigate = useNavigate();
   const [data, setData] = useState();
   const [shipmentTag, setShipmentTag] = useState('');
+  const [shipmentValidate, setShipmentValidate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // const [selectedRow, setSelectedRow] = useState(null);
@@ -25,8 +26,15 @@ const PutAway = () => {
     userRequest.get(`/getTransferDistributionByTransferId?TRANSFERID=${shipmentTag}`)
       .then(response => {
         // console.log(response?.data);
-        setData(response?.data ?? []);
-        // setSelectedRow(response?.data[0] ?? []);
+        // setData(response?.data ?? []);
+        
+        // Extract the data from the response
+        const data = response?.data?.data ?? [];
+        setData(data);
+
+         // Set the shipmentId state
+        setShipmentValidate(response?.data?.shipmentId ?? '');
+
         // save data in session storage
         sessionStorage.setItem('putawaydata', JSON.stringify(response?.data ?? []));
         setIsLoading(false);
@@ -35,6 +43,7 @@ const PutAway = () => {
       .catch(error => {
         console.error(error);
         setIsLoading(false);
+        setShipmentValidate('')
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -45,6 +54,10 @@ const PutAway = () => {
 
   const handleChangeValue = (e) => {
     setShipmentTag(e.target.value);
+  }
+
+  const handleChangevalidate = (e) => {
+    setShipmentValidate(e.target.value);
   }
 
 
@@ -62,7 +75,7 @@ const PutAway = () => {
         >
           <BeatLoader
             size={18}
-            color={"#6439ff"}
+            color={"#e69138"}
             // height={4}
             loading={isLoading}
           />
@@ -70,7 +83,7 @@ const PutAway = () => {
       }
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
-        <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
+        <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-300 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
@@ -105,7 +118,7 @@ const PutAway = () => {
                       onChange={handleChangeValue}
                       name=''
                       className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
-                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Transfer Order ID"
+                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Transfer ID"
 
                     />
 
@@ -118,6 +131,17 @@ const PutAway = () => {
                     </button>
 
                   </div>
+
+                  {/* New Input Shipment */}
+                  <input
+                      onChange={handleChangevalidate}
+                      name=''
+                      value={shipmentValidate}
+                      className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
+                      block sm:w-[50%] p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
+
+                    />
+
                 </div>
 
                 <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>

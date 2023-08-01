@@ -130,3 +130,29 @@
 .table-location-generate1 table tbody tr:nth-child(even) {
   background-color: rgb(242, 242, 221);
 }
+
+
+
+
+.disselect-remove-button {
+  background-color: #F98E1A;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+
+.disselect-number-cell {
+  position: relative;
+}
+
+/* .remove-button {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+} */

@@ -13,6 +13,8 @@ const PutAwayTable = ({
     title,
     uniqueId,
     secondaryColor,
+    isValidation, // Accept the validation state as a prop
+ 
 }) => {
     const navigate = useNavigate();
     const [record, setRecord] = useState([]);
@@ -82,6 +84,12 @@ const PutAwayTable = ({
 
 
     const handleRowClick = (rowData, idx) => {
+        if (!isValidation) {
+            // If the validation is not valid, display an error and prevent navigation
+            setError('Validation is not valid. Please enter a valid Shipment ID.')
+            return;
+          }
+
         if (uniqueId === "pustawayScreen1") {
             console.log("rowData", rowData);
             sessionStorage.setItem("selectedPutAwayData", JSON.stringify(rowData));

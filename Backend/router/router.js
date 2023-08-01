@@ -100,10 +100,10 @@ router.put("/updateTblItemsCLData", checkAuthentication, WBSDB.updateTblItemsCLD
 
 
 // ----------- tbl_Shipment_Received_CL APIS Start -----------------
-
 router.get("/getAllTblShipmentReceivedCL", checkAuthentication, checkRole([roles[2]]), WBSDB.getAllTblShipmentReceivedCL);
 router.get("/getTblShipmentReceivedCLStats", checkAuthentication, WBSDB.getTblShipmentReceivedCLStats);
 
+router.get("/validateShipmentIdFromShipmentReceivedCl", checkAuthentication, WBSDB.validateShipmentIdFromShipmentReceivedCl);
 router.get("/getShipmentRecievedClCountByPoqtyContainerIdAndItemId", checkAuthentication, WBSDB.getShipmentRecievedClCountByPoqtyContainerIdAndItemId);
 
 router.get("/getShipmentRecievedClCountByPoqtyShipmentIdAndItemId", checkAuthentication, WBSDB.getShipmentRecievedClCountByPoqtyShipmentIdAndItemId);
@@ -622,4 +622,3 @@ router.get("/getAllTblDZones", checkAuthentication, WBSDB.getAllTblDZones);
 
 // --------- tbl_Shipment_Counter APIs start ---------
 
-router.get("/validateShipmentIdFromShipmentCounter", checkAuthentication, WBSDB.validateShipmentIdFromShipmentCounter);

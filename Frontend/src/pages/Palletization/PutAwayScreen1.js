@@ -70,7 +70,7 @@ const PutAway = () => {
       }
 
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
-        <div className="w-full h-auto px-3 sm:px-5 flex items-center justify-center absolute">
+        <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-300 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
@@ -108,14 +108,6 @@ const PutAway = () => {
                       block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Transfer ID"
 
                     />
-                    
-                     <input
-                      // onChange={handleChangeValue}
-                      name=''
-                      className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
-                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
-
-                    />
 
                     <button
                       type='submit'
@@ -126,6 +118,16 @@ const PutAway = () => {
                     </button>
 
                   </div>
+
+                  {/* New Input Shipment */}
+                  <input
+                      // onChange={handleChangeValue}
+                      name=''
+                      className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
+                      block sm:w-[50%] p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
+
+                    />
+
                 </div>
 
                 <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>

@@ -533,8 +533,8 @@ const PickingListLastForm = () => {
                     <tbody>
                       {filteredData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
-                          <td className="serial-number-cell">
-                            <button className="remove-button" onClick={() => handleRemoveSerialNumber(index)}><FiTrash2 /></button>
+                          <td className="disselect-number-cell">
+                            <button className="disselect-remove-button" onClick={() => handleRemoveSerialNumber(index)}><FiTrash2 /></button>
                           </td>
                           <td>{data.ItemCode}</td>
                           <td>{data.ItemDesc}</td>

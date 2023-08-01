@@ -62,7 +62,7 @@ const PutAway = () => {
         >
           <BeatLoader
             size={18}
-            color={"#6439ff"}
+            color={"#e69138"}
             // height={4}
             loading={isLoading}
           />
@@ -105,7 +105,15 @@ const PutAway = () => {
                       onChange={handleChangeValue}
                       name=''
                       className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
-                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Transfer Order ID"
+                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Transfer ID"
+
+                    />
+                    
+                     <input
+                      // onChange={handleChangeValue}
+                      name=''
+                      className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
+                      block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
 
                     />
 

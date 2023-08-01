@@ -8650,8 +8650,32 @@ const WBSDB = {
     }
   },
 
+  // tbl_Shipment_Counter controller start
+  async validateShipmentIdFromShipmentCounter(req, res, next) {
+    try {
+      const { SHIPMENTID } = req.query;
 
+      if (!SHIPMENTID) {
+        return res.status(400).send({ message: "SHIPMENTID is required." });
+      }
 
+      const query = `
+        SELECT count(*) as count FROM dbo.tbl_Shipment_Counter
+        WHERE SHIPMENTID = @SHIPMENTID
+      `;
+      let request = pool2.request();
+      request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+
+      const data = await request.query(query);
+      if (data.recordsets[0][0].count === 0) {
+        return res.status(404).send({ message: "Shipment ID not found in tbl_Shipment_Counter." });
+      }
+      return res.status(200).send({ message: "Shipment ID is valid." });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
 
 

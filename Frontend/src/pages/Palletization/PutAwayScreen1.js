@@ -12,6 +12,7 @@ const PutAway = () => {
   const navigate = useNavigate();
   const [data, setData] = useState();
   const [shipmentTag, setShipmentTag] = useState('');
+  const [shipmentValidate, setShipmentValidate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // const [selectedRow, setSelectedRow] = useState(null);
@@ -25,8 +26,15 @@ const PutAway = () => {
     userRequest.get(`/getTransferDistributionByTransferId?TRANSFERID=${shipmentTag}`)
       .then(response => {
         // console.log(response?.data);
-        setData(response?.data ?? []);
-        // setSelectedRow(response?.data[0] ?? []);
+        // setData(response?.data ?? []);
+        
+        // Extract the data from the response
+        const data = response?.data?.data ?? [];
+        setData(data);
+
+         // Set the shipmentId state
+        setShipmentValidate(response?.data?.shipmentId ?? '');
+
         // save data in session storage
         sessionStorage.setItem('putawaydata', JSON.stringify(response?.data ?? []));
         setIsLoading(false);
@@ -35,6 +43,7 @@ const PutAway = () => {
       .catch(error => {
         console.error(error);
         setIsLoading(false);
+        setShipmentValidate('')
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -45,6 +54,10 @@ const PutAway = () => {
 
   const handleChangeValue = (e) => {
     setShipmentTag(e.target.value);
+  }
+
+  const handleChangevalidate = (e) => {
+    setShipmentValidate(e.target.value);
   }
 
 
@@ -121,8 +134,9 @@ const PutAway = () => {
 
                   {/* New Input Shipment */}
                   <input
-                      // onChange={handleChangeValue}
+                      onChange={handleChangevalidate}
                       name=''
+                      value={shipmentValidate}
                       className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
                       block sm:w-[50%] p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
 

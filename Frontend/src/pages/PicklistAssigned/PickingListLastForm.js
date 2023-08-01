@@ -265,6 +265,13 @@ const PickingListLastForm = () => {
   }
 
 
+  
+  const handleRemoveSerialNumber = (index) => {
+    const updatedList = [...filteredData];
+    updatedList.splice(index, 1);
+    setFilteredData(updatedList);
+  };
+
 
   return (
     <>
@@ -502,6 +509,7 @@ const PickingListLastForm = () => {
                   <table>
                     <thead>
                       <tr>
+                        <th>Disselect</th>
                         <th>ItemCode</th>
                         <th>ItemDesc</th>
                         <th>GTIN</th>
@@ -524,6 +532,9 @@ const PickingListLastForm = () => {
                     <tbody>
                       {filteredData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
+                          <td className="serial-number-cell">
+                            <button className="remove-button" onClick={() => handleRemoveSerialNumber(index)}>X</button>
+                          </td>
                           <td>{data.ItemCode}</td>
                           <td>{data.ItemDesc}</td>
                           <td>{data.GTIN}</td>

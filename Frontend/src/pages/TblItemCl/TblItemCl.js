@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
 import { AllItems } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { RefreshContext } from '../../contexts/RefreshContext'
 
 
 
@@ -13,7 +14,8 @@ const TblItemCl = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
-    const [refreshLoading, setRefreshLoading] = useState(false);
+    // const [refreshLoading, setRefreshLoading] = useState(false);
+    const { refreshLoading, setRefreshLoading } = useContext(RefreshContext);
 
     const handleRefresh = async () => {
         setRefreshLoading(true);
@@ -81,7 +83,7 @@ const TblItemCl = () => {
                 refreshLoading={refreshLoading}
                 loading={isLoading}
                 setIsLoading={setIsLoading}
-             
+
 
             />
 

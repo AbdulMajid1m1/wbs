@@ -29,7 +29,13 @@ const TblItemCl = () => {
         }
         catch (error) {
             console.error(error);
-            setError(error?.response?.data?.message ?? "Something went wrong")
+            // setError(error?.response?.data?.message ?? "Something went wrong")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error?.response?.data?.message ?? "Something went wrong",
+            })
+
         }
         finally {
             setRefreshLoading(false);

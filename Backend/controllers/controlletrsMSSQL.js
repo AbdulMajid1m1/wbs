@@ -1222,45 +1222,25 @@ const WBSDB = {
 
 
 
-  async getTransferDistributionByTransferId(req, res, next) {
+  async getTransferDistributionByTransferId(req, res, next,) {
     try {
-      const { TRANSFERID } = req.query;
-      if (!TRANSFERID) {
-        return res.status(400).send({ message: 'TRANSFERID is required.' });
-      }
-      // First Query
-      const query1 = `
+      let query = `
         SELECT * FROM dbo.Transfer_Distribution
         WHERE TRANSFERID = @TRANSFERID
       `;
-      let request1 = pool1.request();
-      request1.input('TRANSFERID', sql.NVarChar(20), TRANSFERID);
-      const data1 = await request1.query(query1);
-      if (data1.recordsets[0].length === 0) {
+      const { TRANSFERID } = req.query;
+      let request = pool1.request();
+      request.input('TRANSFERID', sql.NVarChar(20), TRANSFERID);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "Data not found." });
       }
-
-      // Second Query
-      const query2 = `
-        SELECT SHIPMENTID FROM dbo.TransferDistribution_Shipment
-        WHERE TRANSFERID = @TRANSFERID
-      `;
-      let request2 = pool2.request();
-      request2.input('TRANSFERID', sql.NVarChar(20), TRANSFERID);
-      const data2 = await request2.query(query2);
-
-      // Merge Data
-      const shipmentRecord = data2.recordsets[0][0]?.SHIPMENTID;
-      console.log(data2.recordsets[0])
-
-      return res.status(200).send({ data: data1.recordsets[0], shipmentId: shipmentRecord ?? null });
-
+      return res.status(200).send(data.recordsets[0]);
     } catch (error) {
       console.log(error);
-      return res.status(500).send({ message: error.message });
+      res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
   async getTblShipmentReceivedCLStats(req, res, next) {
     try {
       let query = `

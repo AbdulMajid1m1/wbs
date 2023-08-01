@@ -32,8 +32,8 @@ const PutAway = () => {
         const data = response?.data?.data ?? [];
         setData(data);
 
-         // Set the shipmentId state
-        setShipmentValidate(response?.data?.shipmentId ?? '');
+        // Set the shipmentValidate state from the response
+        setShipmentValidate(response?.data?.data?.[0]?.SHIPMENTID);
 
         // save data in session storage
         sessionStorage.setItem('putawaydata', JSON.stringify(response?.data ?? []));
@@ -52,12 +52,13 @@ const PutAway = () => {
       });
   }
 
+
   const handleChangeValue = (e) => {
     setShipmentTag(e.target.value);
   }
 
   const handleChangevalidate = (e) => {
-    setShipmentValidate(e.target.value);
+  
   }
 
 

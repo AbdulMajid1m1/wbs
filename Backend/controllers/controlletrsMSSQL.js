@@ -747,44 +747,12 @@ const WBSDB = {
 
 
 
-  async vaildatehipmentPalletizingSerialNumber(req, res, next) {
-    try {
-      const { ItemSerialNo } = req.query;
-      // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
-      if (!ItemSerialNo) return res.status(400).send({ message: "ItemSerialNo is required." });
-      const checkMappedBarcodesQuery = `
-        SELECT COUNT(*) as count
-        FROM dbo.tbl_Shipment_Received_CL
-        WHERE SERIALNUM = @ItemSerialNo
-      `;
-
-      let request1 = pool2.request();
-      request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
-      const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
-
-      if (checkMappedBarcodesResult.recordset[0].count === 0) {
-        return res.status(400).send({ message: "Error: Serial number not found in tbl_Shipment_Received_CL." });
-      }
-      return res.status(200).send({ message: "Success: Serial number is valid" });
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
-    }
-  },
-
   // async vaildatehipmentPalletizingSerialNumber(req, res, next) {
   //   try {
-  //     const { ItemSerialNo, SHIPMENTID } = req.query;
-
+  //     const { ItemSerialNo } = req.query;
   //     // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
+  //     if (!ItemSerialNo) return res.status(400).send({ message: "ItemSerialNo is required." });
   //     const checkMappedBarcodesQuery = `
-  //       SELECT COUNT(*) as count
-  //       FROM dbo.tblMappedBarcodes
-  //       WHERE ItemSerialNo = @ItemSerialNo
-  //     `;
-
-  //     // Check if the SERIALNUMBER exists in tbl_Shipment_Received_CL
-  //     const checkShipmentReceivedQuery = `
   //       SELECT COUNT(*) as count
   //       FROM dbo.tbl_Shipment_Received_CL
   //       WHERE SERIALNUM = @ItemSerialNo
@@ -792,126 +760,68 @@ const WBSDB = {
 
   //     let request1 = pool2.request();
   //     request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+  //     const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
 
-  //     // Execute both queries in parallel using Promise.all
-  //     const [checkMappedBarcodesResult, checkShipmentReceivedResult] = await Promise.all([
-  //       request1.query(checkMappedBarcodesQuery),
-  //       request1.query(checkShipmentReceivedQuery)
-  //     ]);
-
-  //     const isSerialNumberInMappedBarcodes = checkMappedBarcodesResult.recordset[0].count > 0;
-  //     const isSerialNumberInShipmentReceived = checkShipmentReceivedResult.recordset[0].count > 0;
-
-  //     if (isSerialNumberInMappedBarcodes && isSerialNumberInShipmentReceived) {
-  //       return res.status(200).send({ message: "Success: Serial number is validated." });
-  //     } else if (!isSerialNumberInMappedBarcodes && !isSerialNumberInShipmentReceived) {
-  //       return res.status(400).send({ message: "Error: Serial number not found in tblMappedBarcodes and tbl_Shipment_Received_CL." });
-  //     } else if (!isSerialNumberInMappedBarcodes) {
-  //       return res.status(400).send({ message: "Error: Serial number not found in tblMappedBarcodes." });
-  //     } else {
+  //     if (checkMappedBarcodesResult.recordset[0].count === 0) {
   //       return res.status(400).send({ message: "Error: Serial number not found in tbl_Shipment_Received_CL." });
   //     }
+  //     return res.status(200).send({ message: "Success: Serial number is valid" });
   //   } catch (error) {
   //     console.log(error);
   //     res.status(500).send({ message: error.message });
   //   }
   // },
 
+  async vaildatehipmentPalletizingSerialNumber(req, res, next) {
+    try {
+      const { ItemSerialNo, SHIPMENTID } = req.query;
+      // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
+      const checkMappedBarcodesQuery = `
+        SELECT COUNT(*) as count
+        FROM dbo.tblMappedBarcodes
+        WHERE ItemSerialNo = @ItemSerialNo
+      `;
 
-  // async generateAndUpdatePalletIds(req, res, next) {
-  //   let palletID;
-  //   try {
-  //     const serialNumberList = req.query.serialNumberList;
-  //     if (!serialNumberList) {
-  //       return res.status(400).send({ message: "serialNumberList is required." });
-  //     }
-  //     if (serialNumberList.length === 0) {
-  //       return res.status(400).send({ message: "serialNumberList cannot be empty." });
-  //     }
-  //     console.log(serialNumberList)
-  //     // Fetch the first GS1GCPID and last SSCC_AutoCounter from TblSysNo using pool2
-  //     const query = `
-  //     SELECT 
-  //       (SELECT TOP 1 GS1GCPID FROM TblGCP ORDER BY TblSysNoID ASC) as FirstGS1GCPID,
-  //       (SELECT TOP 1 SSCC_AutoCounter FROM TblSysNo ORDER BY SSCC_AutoCounter DESC) as LastSSCCAutoCounter
-  //   `;
+      let request1 = pool2.request();
+      request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
 
-  //     const result = await pool2.request().query(query);
-  //     const GS1GCPID = result.recordset[0].FirstGS1GCPID.toString();
-  //     let SSCC_AutoCounter = result.recordset[0].LastSSCCAutoCounter;
+      if (checkMappedBarcodesResult.recordset[0].count > 0) {
+        return res.status(400).send({ message: "ItemSerialNo already exists in tbl_mappedBarcodes." });
+      }
 
-  //     // If there is no number in SSCC_AutoCounter, use 1 as the starting counter
-  //     if (!SSCC_AutoCounter) {
-  //       SSCC_AutoCounter = 1;
-  //     } else {
-  //       SSCC_AutoCounter = parseInt(SSCC_AutoCounter) + 1;
-  //     }
+      let request2 = pool1.request();
+      let request3 = pool2.request();
 
-  //     for (const serialNumber of serialNumberList) {
-  //       // Create 17-digit number with the given formula
-  //       const prefix = '0' + GS1GCPID;
-  //       const padding = '0000000'.substring(0, 7 - SSCC_AutoCounter.toString().length);
-  //       const inputNumber = prefix + padding + SSCC_AutoCounter.toString();
-
-  //       // Generate 18-digit PalletID
-  //       palletID = ssccCheckDigit(inputNumber);
-
-  //       // Update tbl_Shipment_Received_CL based on SERIALNUM
-
-  //       let currentDate = new Date();
-  //       const updateQuery = `
-  //         UPDATE tbl_Shipment_Received_CL
-  //         SET PALLETCODE = @PalletID,        
-  //         PALLET_DATE = @currentDate
-  //         WHERE SERIALNUM = @SerialNumber
-  //       `;
-
-  //       await pool2.request()
-  //         .input('PalletID', sql.NVarChar, palletID)
-  //         .input('SerialNumber', sql.NVarChar, serialNumber)
-  //         .input("currentDate", sql.Date, currentDate)
-  //         .query(updateQuery);
-
-  //       // Update tblMappedBarcodes based on ItemSerialNo
-  //       const updateMappedBarcodesQuery = `
-  //       UPDATE tblMappedBarcodes
-  //       SET PalletCode = @PalletID
-  //       WHERE ItemSerialNo = @SerialNumber
-  //       `;
-
-  //       await pool2.request()
-  //         .input('PalletID', sql.NVarChar, palletID)
-  //         .input('SerialNumber', sql.NVarChar, serialNumber)
-  //         .query(updateMappedBarcodesQuery);
+      request2.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      request3.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
+      request3.input("SHIPMENTID", sql.NVarChar, SHIPMENTID);
 
 
-  //     }
+      // Fetch SHIPMENTID from tbl_Shipment_Received_CL
 
+      const getShipmentIDFromReceivedCLQuery = `
+        SELECT SHIPMENTID
+        FROM tbl_Shipment_Received_CL
+        WHERE SERIALNUM = @ItemSerialNo AND SHIPMENTID = @SHIPMENTID
+        AND (PALLETCODE IS NULL OR PALLETCODE = '' OR PALLETCODE = 'undefined')
+      `;
+      const shipmentIDFromReceivedCLResult = await request3.query(getShipmentIDFromReceivedCLQuery);
+      console.log(shipmentIDFromReceivedCLResult);
+      if (shipmentIDFromReceivedCLResult.recordset.length > 0) {
+        const receivedCLShipmentID = shipmentIDFromReceivedCLResult.recordset[0].SHIPMENTID;
 
-
-  //     // Update or insert SSCC_AutoCounter in TblSysNo
-  //     const updateTblSysNoQuery = `
-  //      IF EXISTS (SELECT * FROM TblSysNo)
-  //      BEGIN
-  //        UPDATE TblSysNo SET SSCC_AutoCounter = @SSCC_AutoCounter
-  //      END
-  //      ELSE
-  //      BEGIN
-  //        INSERT INTO TblSysNo (SSCC_AutoCounter) VALUES (1)
-  //      END
-  //    `;
-
-  //     await pool2.request()
-  //       .input('SSCC_AutoCounter', sql.Int, SSCC_AutoCounter)
-  //       .query(updateTblSysNoQuery);
-
-  //     res.status(200).send({ message: 'Pallet code generated successfully.', PalletCode: palletID });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // } ,
-
+        // Check if SHIPMENTID exists in tbl_Shipment_Palletizing
+        console.log(receivedCLShipmentID);
+        return res.status(200).send({ message: "Success: Serial number is valid" });
+      } else {
+        return res.status(404).send({ message: "ShipmentId does not matched." });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
 
   async generateAndUpdatePalletIds(req, res, next) {
     let palletID;

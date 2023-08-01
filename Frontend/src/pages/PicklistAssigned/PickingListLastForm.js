@@ -6,6 +6,7 @@ import icon from "../../images/close.png"
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { Autocomplete, TextField } from '@mui/material';
 import { items } from 'fusioncharts';
+import { FiTrash2 } from "react-icons/fi";
 
 const PickingListLastForm = () => {
   const navigate = useNavigate();
@@ -533,7 +534,7 @@ const PickingListLastForm = () => {
                       {filteredData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
                           <td className="serial-number-cell">
-                            <button className="remove-button" onClick={() => handleRemoveSerialNumber(index)}>X</button>
+                            <button className="remove-button" onClick={() => handleRemoveSerialNumber(index)}><FiTrash2 /></button>
                           </td>
                           <td>{data.ItemCode}</td>
                           <td>{data.ItemDesc}</td>

@@ -149,37 +149,64 @@ async function updateExistingRecords(records) {
     await executeUpdateBatch(batch);
   }
 }
-
 async function executeUpdateBatch(records) {
-  const table = new sql.Table();
-  table.create = false;
-  table.columns.add('ITEMID', sql.NVarChar(sql.MAX), { nullable: true });
-  table.columns.add('ITEMNAME', sql.NVarChar(sql.MAX), { nullable: true });
-  table.columns.add('ITEMGROUPID', sql.NVarChar(sql.MAX), { nullable: true });
-  table.columns.add('GROUPNAME', sql.NVarChar(sql.MAX), { nullable: true });
-  table.columns.add('PRODLINEID', sql.NVarChar(sql.MAX), { nullable: true });
-  table.columns.add('PRODBRANDID', sql.NVarChar(sql.MAX), { nullable: true });
+  const transaction = new sql.Transaction(pool2);
 
-  records.forEach(item => {
-    table.rows.add(item.ITEMID, item.ITEMNAME, item.ITEMGROUPID, item.GROUPNAME, item.PRODLINEID, item.PRODBRANDID);
+  transaction.begin(err => {
+    if (err) throw err;
+
+    let rolledBack = false;
+
+    transaction.on('rollback', aborted => {
+      // emited with aborted === true
+      rolledBack = true;
+    });
+
+    const updatePromises = records.map(record => {
+      const query = `
+        UPDATE dbo.tbl_Stock_Master
+        SET ITEMNAME = @ITEMNAME,
+            ITEMGROUPID = @ITEMGROUPID,
+            GROUPNAME = @GROUPNAME,
+            PRODLINEID = @PRODLINEID,
+            PRODBRANDID = @PRODBRANDID
+        WHERE ITEMID = @ITEMID`;
+
+      const request = new sql.Request(transaction);
+      request
+        .input('ITEMNAME', sql.NVarChar, record.ITEMNAME)
+        .input('ITEMGROUPID', sql.NVarChar, record.ITEMGROUPID)
+        .input('GROUPNAME', sql.NVarChar, record.GROUPNAME)
+        .input('PRODLINEID', sql.NVarChar, record.PRODLINEID)
+        .input('PRODBRANDID', sql.NVarChar, record.PRODBRANDID)
+        .input('ITEMID', sql.NVarChar, record.ITEMID);
+
+      return request.query(query);
+    });
+
+    Promise.all(updatePromises)
+      .then(() => {
+        transaction.commit(err => {
+          if (err) {
+            if (!rolledBack) {
+              transaction.rollback(err => {
+                return res.status(500).send({ message: err.message });
+              });
+            }
+          } else {
+            console.log('Bulk update successful.');
+          }
+        });
+      })
+      .catch(err => {
+        if (!rolledBack) {
+          transaction.rollback(err => {
+            return res.status(500).send({ message: err.message });
+          });
+        }
+      });
   });
-
-  const request = pool2.request();
-  request.input('MyTable', table);
-  await request.query(`
-    MERGE INTO dbo.tbl_Stock_Master AS Target
-    USING @MyTable AS Source
-    ON Target.ITEMID = Source.ITEMID
-    WHEN MATCHED THEN
-    UPDATE SET 
-        Target.ITEMNAME = Source.ITEMNAME, 
-        Target.ITEMGROUPID = Source.ITEMGROUPID, 
-        Target.GROUPNAME = Source.GROUPNAME, 
-        Target.PRODLINEID = Source.PRODLINEID, 
-        Target.PRODBRANDID = Source.PRODBRANDID;
-  `);
 }
-
 
 
 const WBSDB = {

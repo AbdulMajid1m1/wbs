@@ -190,7 +190,7 @@ async function executeUpdateBatch(records) {
           if (err) {
             if (!rolledBack) {
               transaction.rollback(err => {
-                return res.status(500).send({ message: err.message });
+                throw err;
               });
             }
           } else {
@@ -201,7 +201,7 @@ async function executeUpdateBatch(records) {
       .catch(err => {
         if (!rolledBack) {
           transaction.rollback(err => {
-            return res.status(500).send({ message: err.message });
+            throw err;
           });
         }
       });

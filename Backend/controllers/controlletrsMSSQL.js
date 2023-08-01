@@ -1,8 +1,8 @@
 
-import { pool1, pool2 } from "../config/connection.js"; // import pool1 and pool2 from connection.js file
+// import { pool1, pool2 } from "../config/connection.js"; // import pool1 and pool2 from connection.js file
 import sql from "mssql";
-pool1.connect().catch((err) => console.log("Error connecting to config1:", err));
-pool2.connect().catch((err) => console.log("Error connecting to config2:", err));
+import { pool1, pool2, pool1ConnectPromise, pool2ConnectPromise } from "../config/connection.js";
+
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
@@ -149,21 +149,63 @@ async function updateExistingRecords(records) {
     await executeUpdateBatch(batch);
   }
 }
-
 async function executeUpdateBatch(records) {
-  const updateQueries = records.map(record => {
-    return `
-      UPDATE dbo.tbl_Stock_Master
-      SET ITEMNAME = '${record.ITEMNAME}', 
-          ITEMGROUPID = '${record.ITEMGROUPID}', 
-          GROUPNAME = '${record.GROUPNAME}', 
-          PRODLINEID = '${record.PRODLINEID}', 
-          PRODBRANDID = '${record.PRODBRANDID}'
-      WHERE ITEMID = '${record.ITEMID}'`;
-  });
+  const transaction = new sql.Transaction(pool2);
 
-  const updateQuery = updateQueries.join(';');
-  await pool2.request().query(updateQuery);
+  transaction.begin(err => {
+    if (err) throw err;
+
+    let rolledBack = false;
+
+    transaction.on('rollback', aborted => {
+      // emited with aborted === true
+      rolledBack = true;
+    });
+
+    const updatePromises = records.map(record => {
+      const query = `
+        UPDATE dbo.tbl_Stock_Master
+        SET ITEMNAME = @ITEMNAME,
+            ITEMGROUPID = @ITEMGROUPID,
+            GROUPNAME = @GROUPNAME,
+            PRODLINEID = @PRODLINEID,
+            PRODBRANDID = @PRODBRANDID
+        WHERE ITEMID = @ITEMID`;
+
+      const request = new sql.Request(transaction);
+      request
+        .input('ITEMNAME', sql.NVarChar, record.ITEMNAME)
+        .input('ITEMGROUPID', sql.NVarChar, record.ITEMGROUPID)
+        .input('GROUPNAME', sql.NVarChar, record.GROUPNAME)
+        .input('PRODLINEID', sql.NVarChar, record.PRODLINEID)
+        .input('PRODBRANDID', sql.NVarChar, record.PRODBRANDID)
+        .input('ITEMID', sql.NVarChar, record.ITEMID);
+
+      return request.query(query);
+    });
+
+    Promise.all(updatePromises)
+      .then(() => {
+        transaction.commit(err => {
+          if (err) {
+            if (!rolledBack) {
+              transaction.rollback(err => {
+                throw err;
+              });
+            }
+          } else {
+            console.log('Bulk update successful.');
+          }
+        });
+      })
+      .catch(err => {
+        if (!rolledBack) {
+          transaction.rollback(err => {
+            throw err;
+          });
+        }
+      });
+  });
 }
 
 
@@ -3645,22 +3687,22 @@ const WBSDB = {
 
           // Add parameters for the insert
           request.input('itemCode', sql.VarChar(100), itemcode?.trim());
-        request.input('itemDesc', sql.NVarChar(255), itemdesc?.trim());
-        request.input('gtin', sql.VarChar(150), gtin?.trim());
-        request.input('remarks', sql.VarChar(100), remarks?.trim());
-        request.input('user', sql.VarChar(50), req.token.UserID);
-        request.input('classification', sql.VarChar(150), classification?.trim());
-        request.input('mainLocation', sql.VarChar(200), mainlocation?.trim());
-        request.input('binLocation', sql.VarChar(200), binlocation?.trim());
-        request.input('intCode', sql.VarChar(150), intcode?.trim());
-        request.input('itemSerialNo', sql.VarChar(200), itemserialno?.trim());
-        request.input('mapDate', sql.Date, mapdate);
-        request.input('palletCode', sql.VarChar(255), palletcode?.trim());
-        request.input('reference', sql.VarChar(100), reference?.trim());
-        request.input('sid', sql.VarChar(50), sid?.trim());
-        request.input('cid', sql.VarChar(50), cid?.trim());
-        request.input('po', sql.VarChar(50), po?.trim());
-        request.input('trans', sql.Numeric(10, 0), trans);
+          request.input('itemDesc', sql.NVarChar(255), itemdesc?.trim());
+          request.input('gtin', sql.VarChar(150), gtin?.trim());
+          request.input('remarks', sql.VarChar(100), remarks?.trim());
+          request.input('user', sql.VarChar(50), req.token.UserID);
+          request.input('classification', sql.VarChar(150), classification?.trim());
+          request.input('mainLocation', sql.VarChar(200), mainlocation?.trim());
+          request.input('binLocation', sql.VarChar(200), binlocation?.trim());
+          request.input('intCode', sql.VarChar(150), intcode?.trim());
+          request.input('itemSerialNo', sql.VarChar(200), itemserialno?.trim());
+          request.input('mapDate', sql.Date, mapdate);
+          request.input('palletCode', sql.VarChar(255), palletcode?.trim());
+          request.input('reference', sql.VarChar(100), reference?.trim());
+          request.input('sid', sql.VarChar(50), sid?.trim());
+          request.input('cid', sql.VarChar(50), cid?.trim());
+          request.input('po', sql.VarChar(50), po?.trim());
+          request.input('trans', sql.Numeric(10, 0), trans);
 
 
           await request.query(insertQuery);
@@ -5099,11 +5141,12 @@ const WBSDB = {
     } catch (error) {
       console.log(error);
       return res.status(500).send({ message: error.message });
-    } finally {
-      // Close the connection pools
-      await pool1.close();
-      await pool2.close();
     }
+    // finally {
+    //   // Close the connection pools
+    //   await pool1.close();
+    //   await pool2.close();
+    // }
   }
   ,
 
@@ -5134,8 +5177,8 @@ const WBSDB = {
       await request.bulk(table2);
 
       // Close the connections
-      await pool1.close();
-      await pool2.close();
+      // await pool1.close();
+      // await pool2.close();
 
       console.log('Data inserted successfully.');
       return res.status(200).send({ message: 'Data inserted successfully.' });

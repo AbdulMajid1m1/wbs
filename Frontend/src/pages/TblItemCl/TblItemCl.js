@@ -6,15 +6,16 @@ import axios from 'axios'
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { RefreshContext } from '../../contexts/RefreshContext'
+import { useQuery } from '@tanstack/react-query'
+import Swal from 'sweetalert2';
 
 
 
 const TblItemCl = () => {
     const [alldata, setAllData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
-    // const [refreshLoading, setRefreshLoading] = useState(false);
     const { refreshLoading, setRefreshLoading } = useContext(RefreshContext);
 
     const handleRefresh = async () => {
@@ -28,7 +29,13 @@ const TblItemCl = () => {
         }
         catch (error) {
             console.error(error);
-            setError(error?.response?.data?.message ?? "Something went wrong")
+            // setError(error?.response?.data?.message ?? "Something went wrong")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error?.response?.data?.message ?? "Something went wrong",
+            })
+
         }
         finally {
             setRefreshLoading(false);
@@ -41,71 +48,37 @@ const TblItemCl = () => {
     };
 
 
-    useEffect(() => {
-        const getAllAssetsList = async () => {
-            try {
 
-                userRequest.get("/getAllTblStockMaster")
-                    .then(response => {
-                        console.log(response?.data);
+    const { isLoading, error: userQueryError, data } = useQuery({
+        queryKey: ['stockMaster'],
+        queryFn: () =>
+            userRequest.get("/getAllTblStockMaster").then(
+                (res) => res.data ?? [],
+            ),
+    })
 
-                        setAllData(response?.data ?? [])
-                        setIsLoading(false)
 
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        setIsLoading(false)
-                        // setError(error?.response?.data?.error)
-                        setError(error?.response?.data?.message ?? "Something went wrong")
-
-                    });
-
-            }
-            catch (error) {
-                console.log(error);
-            }
-        };
-        getAllAssetsList();
-    }, []);
 
     return (
         <div>
 
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {userQueryError && <CustomSnakebar message={userQueryError.message} severity="error" onClose={resetSnakeBarMessages} />}
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable data={alldata} addNewNavigation="/itemsnew" title="Stock Master (Warehouse Operation)" columnsName={AllItems} backButton={true}
+            <UserDataTable data={data || []} addNewNavigation="/itemsnew" title="Stock Master (Warehouse Operation)" columnsName={AllItems} backButton={true}
                 Refresh={true}
                 uniqueId="itemTableId"
                 handleRefresh={handleRefresh}
                 refreshLoading={refreshLoading}
                 loading={isLoading}
-                setIsLoading={setIsLoading}
+            // setIsLoading={setIsLoading}
 
 
             />
 
-            {/* {isLoading &&
 
-                <div className='loading-spinner-background'
-                    style={{
-                        zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                        display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
-
-
-                    }}
-                >
-                    <SyncLoader
-
-                        size={18}
-                        color={"#FFA500"}
-                        // height={4}
-                        loading={isLoading}
-                    />
-                </div>
-            } */}
 
         </div>
     )

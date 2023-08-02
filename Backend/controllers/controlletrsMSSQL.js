@@ -3293,6 +3293,39 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+//   async getAllTblMappedBarcodes(req, res, next) {
+//     try {
+//         let query = `SELECT * FROM dbo.tblMappedBarcodes`;
+//         let request = pool2.request();
+//         request.stream = true; // Enable streaming
+//         request.query(query);
+
+//         // Handle 'row' event
+//         request.on('row', row => {
+//             // Emitted for each row in a recordset
+//             res.write(JSON.stringify(row) + '\n');
+//         });
+
+//         // Handle 'error' event
+//         request.on('error', err => {
+//             // May be emitted multiple times
+//             console.log(err);
+//             res.status(500).send({ message: err.message });
+//         });
+
+//         // Handle 'done' event
+//         request.on('done', result => {
+//             // Always emitted as the last one
+//             res.end(); // end the response when done
+//         });
+
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send({ message: error.message });
+//     }
+// }
+// ,
+
 
   async getAllTblMappedBarcodes(req, res, next) {
     try {

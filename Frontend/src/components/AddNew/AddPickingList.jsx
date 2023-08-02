@@ -25,53 +25,56 @@ const TblPickingList = ({ inputs, title,
 
     };
     const handleSubmit = async event => {
-        // if form is not valid, do not submit
+        event.preventDefault();
+        
         if (!event.target.checkValidity()) {
+            setError("Form is not valid");
             return;
         }
-        event.preventDefault();
+    
         try {
             setIsLoading(true);
-
+    
             const data = {
-                PICKINGROUTEID: event.target.PICKINGROUTEID.value,
-                CUSTOMER: event.target.CUSTOMER.value,
-                INVENTLOCATIONID: event.target.INVENTLOCATIONID.value,
-                TRANSREFID: event.target.TRANSREFID.value,
-                ITEMID: event.target.ITEMID.value,
-                QTY: event.target.QTY.value,
-                EXPEDITIONSTATUS: event.target.EXPEDITIONSTATUS.value,
-                CONFIGID: event.target.CONFIGID.value,
-                WMSLOCATIONID: event.target.WMSLOCATIONID.value,
-                ITEMNAME: event.target.ITEMNAME.value,
-                inventTransId: event.target.inventTransId.value,
+                PICKINGROUTEID: event.target?.PICKINGROUTEID?.value,
+                CUSTOMER: event.target?.CUSTOMER?.value,
+                INVENTLOCATIONID: event.target?.INVENTLOCATIONID?.value,
+                TRANSREFID: event.target?.TRANSREFID?.value,
+                ITEMID: event.target?.ITEMID?.value,
+                QTY: event.target?.QTY?.value,
+                EXPEDITIONSTATUS: event.target?.EXPEDITIONSTATUS?.value,
+                CONFIGID: event.target?.CONFIGID?.value,
+                WMSLOCATIONID: event.target?.WMSLOCATIONID?.value,
+                ITEMNAME: event.target?.ITEMNAME?.value,
+                DLVDATE: event.target?.DLVDATE?.value,
+                DATETIMEASSIGNED: event.target?.DATETIMEASSIGNED?.value,
+                ASSIGNEDTOUSERID: event.target?.ASSIGNEDTOUSERID?.value,
+                PICKSTATUS: event.target?.PICKSTATUS?.value,
+                QTYPICKED: event.target?.QTYPICKED?.value,
             };
-            
+    
             console.log(data);
-
+    
             const queryParameters = new URLSearchParams(data).toString();
-
-            userRequest.post(
-                `/insertTblPickingDataCL?${queryParameters}`)
-                .then((response) => {
-                    setIsLoading(false);
-                    console.log(response.data);
-                    setMessage("Successfully Added");
-                    setTimeout(() => {
-                        navigate(-1)
-                    }, 1000)
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.log(error);
-                    setError(error?.response?.data?.message ?? "Failed to Add")
-                });
+    
+            const response = await userRequest.post(`/insertTblPickingDataCL?${queryParameters}`)
+    
+            setIsLoading(false);
+            console.log(response.data);
+            setMessage("Data inserted successfully");
+            setTimeout(() => {
+                navigate(-1)
+            }, 1000)
+    
+    
         } catch (error) {
             setIsLoading(false);
+    
             console.log(error);
-            setError("Failed to Add");
+            setError(error?.response?.data?.message ?? "Something went wrong")
         }
     };
+    
 
     const handleInputChange = (event, inputName) => {
         const value = event.target.value;
@@ -124,7 +127,7 @@ const TblPickingList = ({ inputs, title,
 
 
                             <div className="right">
-                                
+
                                 <form onSubmit={handleSubmit} id="myForm" >
                                     {TblPickingClInsertInput.map((input) => (
 
@@ -138,10 +141,11 @@ const TblPickingList = ({ inputs, title,
                                             />
                                         </div>
                                     ))}
+                                    {TblPickingClInsertInput.length % 2 !== 0 && <div className="formInput"></div>}
 
                                     <div className="buttonAdd" >
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{ background: '#e69138' }}
                                             type="submit"
                                         >Save</button>
                                     </div>

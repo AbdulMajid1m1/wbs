@@ -11,20 +11,20 @@ import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const PutAway = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [shipmentTag, setShipmentTag] = useState('');
-  const [shipmentValidate, setShipmentValidate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [isValidation, setIsValidation] = useState(false)
+  const [shipmentValidate, setShipmentValidate] = useState('');
+  const [isValidationNeeded, setIsValidationNeeded] = useState(false)
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
 
   };
 
-  // const [selectedRow, setSelectedRow] = useState(null);
-  sessionStorage.setItem('putawaydatashipmentId', JSON.stringify(shipmentValidate));
 
 
   const handleForm = (e) => {
@@ -36,10 +36,20 @@ const PutAway = () => {
       .then(response => {
         // console.log(response?.data);
         setData(response?.data ?? []);
-        
-        // Set the shipmentValidate state from the response
-        setShipmentValidate(response?.data?.[0]?.SHIPMENTID);
 
+        // Set the shipmentValidate state from the response
+
+        let shipmentId = response?.data?.[0]?.SHIPMENTID;
+        console.log(shipmentId);
+        setShipmentValidate(shipmentId);
+        // if shipmentid is null or undefined or "" then set isValidationNeeded to true
+        if (!shipmentId || shipmentId === "") {
+          setIsValidationNeeded(true);
+        }
+        else {
+          sessionStorage.setItem('putawaydatashipmentId', shipmentId);
+          setIsValidationNeeded(false);
+        }
         // save data in session storage
         sessionStorage.setItem('putawaydata', JSON.stringify(response?.data ?? []));
         setIsLoading(false);
@@ -64,32 +74,40 @@ const PutAway = () => {
 
 
 
-  const [isValidation, setIsValidation] = useState(false)
 
   const handleChangevalidate = (e) => {
     // setShipmentValidate(e.target.value)
     const inputValue = e.target.value;
     setShipmentValidate(inputValue);
 
-    if (inputValue.trim() === '') {
-      setIsValidation(false);
+
+  }
+
+  const handleShipmentIdValidation = async () => {
+    if (data?.length === 0) {
+      setError("Please Scan Transfer Id First")
       return;
     }
+    if (shipmentValidate.trim() === '') {
+      setIsValidation(false);
+      setError("Please Enter Shipment Id")
+      return;
+    }
+    try {
 
-    userRequest.get(`/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=${inputValue}`)
-        .then((response) => {
-            // alert(response?.data?.message)
-            setMessage(response?.data?.message)
-            setIsValidation(true)
-          })
-          .catch((error) => {
-            console.log(error)
-            setError(error?.response?.data?.message)
-            setIsValidation(false)
-        })
-      }
-      
+      const response = await userRequest.get(`/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=${shipmentValidate}`)
 
+      // alert(response?.data?.message)
+      setMessage(response?.data?.message ?? "Shipment Id is valid")
+      sessionStorage.setItem('putawaydatashipmentId', shipmentValidate);
+      setIsValidation(true)
+    }
+    catch (error) {
+      console.log(error)
+      setError(error?.response?.data?.message)
+      setIsValidation(false)
+    }
+  }
 
   return (
     <>
@@ -109,7 +127,7 @@ const PutAway = () => {
         >
           <BeatLoader
             size={18}
-            color={"#e69138"}
+            color={"#F98E1A"}
             // height={4}
             loading={isLoading}
           />
@@ -166,21 +184,34 @@ const PutAway = () => {
 
                   </div>
 
-                
-                  <input
+                  <div className='flex justify-left gap-1'>
+
+                    <input
                       onChange={handleChangevalidate}
                       value={shipmentValidate}
+                      readOnly={!isValidationNeeded}
                       className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
                       block sm:w-[50%] p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
 
                     />
+
+                    <button disabled={!isValidationNeeded}
+                      style={{ cursor: !isValidationNeeded ? 'not-allowed' : '' }}
+                      type='button'
+                      onClick={handleShipmentIdValidation}
+                      className="bg-[#fff] hover:bg-[#edc498] text-[#e69138] font-medium py-1 px-6 rounded-sm w-[15%]">
+                      <span className='flex justify-center items-center'>
+                        <p>Validate</p>
+                      </span>
+                    </button>
+                  </div>
 
                 </div>
 
                 <div className='flex justify-between gap-2 mt-2 text-xs sm:text-xl'>
                   <div className='flex items-center sm:text-lg gap-2 text-white'>
                     <span>Results:</span>
-                    <span>0</span>
+                    <span>{data?.length}</span>
                   </div>
                 </div>
               </form>
@@ -193,7 +224,8 @@ const PutAway = () => {
                 uniqueId={"pustawayScreen1"}
                 data={data} columnsName={PalletizingByTransferIdColumn}
                 isValidation={isValidation}
-                // setIsValidation={setIsValidation}
+                isValidationNeeded={isValidationNeeded}
+              // setIsValidation={setIsValidation}
               />
             </div >
 

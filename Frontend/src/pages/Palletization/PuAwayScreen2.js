@@ -17,7 +17,7 @@ const PutAwayScreen2 = () => {
 
 
   const parsedData = JSON.parse(data)
-  const parsedData12 = JSON.parse(storedData)
+  const parsedData12 = storedData
   console.log(parsedData);
   console.log(parsedData12)
   console.log(data)

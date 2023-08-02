@@ -30,8 +30,10 @@ const PickingListLastForm = () => {
   // retrieve data from session storage
   const storedData = sessionStorage.getItem('PickingRowData');
   const parsedData = JSON.parse(storedData);
-  console.log("parsedData")
-  console.log(parsedData)
+
+
+  let qtyRemaining = parseInt(parsedData?.QTY) || 0;
+  const [remainingQty, setRemainingQty] = useState(qtyRemaining);
 
   const handleDzoneSelect = (event, value) => {
     setLocationInputValue(value);
@@ -108,6 +110,8 @@ const PickingListLastForm = () => {
       setNewTableData(responseData);
     } catch (error) {
       console.error(error);
+      setNewTableData([]);
+      setError(error?.response?.data?.message ?? 'Cannot fetch data');
     }
   };
 
@@ -194,6 +198,12 @@ const PickingListLastForm = () => {
 
 
   const handleInputUser = (e) => {
+    console.log(filterData.length, remainingQty)
+    if (filteredData?.length === remainingQty) {
+      setError("cannot pick more than remaining qty")
+
+      return;
+    }
     console.log(userInput)
     // setUserInputSubmit(!userInputSubmit);
     filterData();
@@ -244,9 +254,7 @@ const PickingListLastForm = () => {
         {
           params: {
             PICKINGROUTEID: parsedData?.PICKINGROUTEID,
-            ITEMID: parsedData?.ITEMID,
-            QTYPICKED: parsedData?.QTYPICKED,
-            QTY: parsedData?.QTY
+
           }
         }
       );
@@ -254,6 +262,7 @@ const PickingListLastForm = () => {
       setMessage(res?.data?.message ?? 'Data saved successfully');
 
       // clear the filtered data and user input
+      setRemainingQty(remainingQty - filteredData.length)
       setFilteredData([]);
       setUserInput("");
 
@@ -266,11 +275,12 @@ const PickingListLastForm = () => {
   }
 
 
-  
+
   const handleRemoveSerialNumber = (index) => {
     const updatedList = [...filteredData];
     updatedList.splice(index, 1);
     setFilteredData(updatedList);
+
   };
 
 
@@ -377,12 +387,12 @@ const PickingListLastForm = () => {
               <div>
                 <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Quantity<span className='text-[#FF0404]'>*</span></span>
-                    <span>{parsedData.QTY}</span>
+                    <span>Remaining Quantity</span>
+                    <span>{remainingQty}</span>
                   </div>
 
                   <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked<span className='text-[#FF0404]'>*</span></span>
+                    <span>Picked Quantity</span>
                     <span>{filteredData.length}</span>
                   </div>
                 </div>
@@ -534,7 +544,7 @@ const PickingListLastForm = () => {
                       {filteredData.map((data, index) => (
                         <tr key={"tranidRow" + index}>
                           <td className="disselect-number-cell">
-                            <button className="disselect-remove-button" onClick={() => handleRemoveSerialNumber(index)}><FiTrash2 /></button>
+                            <button type="button" className="disselect-remove-button" onClick={() => handleRemoveSerialNumber(index)}><FiTrash2 /></button>
                           </td>
                           <td>{data.ItemCode}</td>
                           <td>{data.ItemDesc}</td>

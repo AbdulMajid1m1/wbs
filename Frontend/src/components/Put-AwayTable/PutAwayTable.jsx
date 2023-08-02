@@ -14,7 +14,8 @@ const PutAwayTable = ({
     uniqueId,
     secondaryColor,
     isValidation, // Accept the validation state as a prop
- 
+    isValidationNeeded,
+
 }) => {
     const navigate = useNavigate();
     const [record, setRecord] = useState([]);
@@ -84,22 +85,21 @@ const PutAwayTable = ({
 
 
     const handleRowClick = (rowData, idx) => {
-        if (!isValidation) {
-            // If the validation is not valid, display an error and prevent navigation
-            setError('Validation is not valid. Please enter a valid Shipment ID.')
+        // We only care about uniqueId === "pustawayScreen1", otherwise we return
+        if (uniqueId !== "pustawayScreen1") return;
+
+        // If validation is needed but hasn't passed, display an error and return
+        if (isValidationNeeded && !isValidation) {
+            setError("Please validate the data before proceeding")
             return;
-          }
-
-        if (uniqueId === "pustawayScreen1") {
-            console.log("rowData", rowData);
-            sessionStorage.setItem("selectedPutAwayData", JSON.stringify(rowData));
-            navigate("/palletscreen2");
-        }
-        else {
-            return
         }
 
+        // If we reached this point, we can proceed
+        console.log("rowData", rowData);
+        sessionStorage.setItem("selectedPutAwayData", JSON.stringify(rowData));
+        navigate("/palletscreen2");
     };
+
 
     return (
         <>

@@ -962,70 +962,77 @@ export const TblPickingClColumn = [
     field: "PICKINGROUTEID",
     headerName: "PICKING ROUTE ID",
     width: 180,
-
-  },
-  {
-    field: "CUSTOMER",
-    headerName: "CUSTOMER",
-    width: 180,
-
   },
   {
     field: "INVENTLOCATIONID",
     headerName: "INVENT LOCATION ID",
     width: 180,
-
-  },
-  {
-    field: "TRANSREFID",
-    headerName: "TRANSREF ID",
-    width: 180,
-
-  },
-  {
-    field: "ITEMID",
-    headerName: "ITEM ID",
-    width: 180,
-
-  },
-  {
-    field: "QTY",
-    headerName: "QTY",
-    width: 180,
-
-  },
-  {
-    field: "EXPEDITIONSTATUS",
-    headerName: "EXPEDITION STATUS",
-    width: 180,
-
   },
   {
     field: "CONFIGID",
     headerName: "CONFIG ID",
     width: 180,
-
   },
   {
-    field: "WMSLOCATIONID",
-    headerName: "WMS LOCATION ID",
+    field: "ITEMID",
+    headerName: "ITEM ID",
     width: 180,
-
   },
   {
     field: "ITEMNAME",
     headerName: "ITEM NAME",
     width: 180,
-
   },
   {
-    field: "inventTransId",
-    headerName: "INVENT TRANS ID",
+    field: "QTY",
+    headerName: "QTY",
     width: 180,
-
   },
-
-
+  {
+    field: "CUSTOMER",
+    headerName: "CUSTOMER",
+    width: 180,
+  },
+  {
+    field: "DLVDATE",
+    headerName: "DELIVERY DATE",
+    width: 180,
+  },
+  {
+    field: "TRANSREFID",
+    headerName: "TRANSREF ID",
+    width: 180,
+  },
+  {
+    field: "EXPEDITIONSTATUS",
+    headerName: "EXPEDITION STATUS",
+    width: 180,
+  },
+  {
+    field: "DATETIMEASSIGNED",
+    headerName: "DATETIME ASSIGNED",
+    width: 180,
+  },
+  {
+    field: "ASSIGNEDTOUSERID",
+    headerName: "ASSIGNED TO USER ID",
+    width: 180,
+  },
+  {
+    field: "PICKSTATUS",
+    headerName: "PICK STATUS",
+    width: 180,
+  },
+  {
+    field: "QTYPICKED",
+    headerName: "QTY PICKED",
+    width: 180,
+  },
+  {
+    field: "WMSLOCATIONID",
+    headerName: "WMS LOCATION ID",
+    width: 180,
+  },
 ]
 
 

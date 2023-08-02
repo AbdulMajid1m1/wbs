@@ -66,6 +66,8 @@ const PickingListForm = () => {
     // save data in session storage
 
     sessionStorage.setItem('PickingRowData', JSON.stringify(item));
+
+    sessionStorage.setItem("PickingRowQTYPICKED", item?.QTYPICKED);
     sessionStorage.setItem('PickingRowIndex', index);
     navigate('/pickinglistlast')
   }

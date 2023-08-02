@@ -28,7 +28,7 @@ const PutAwayScreen3 = () => {
   const storedData = sessionStorage.getItem('putawaydatashipmentId');
 
 
-  const parsedData12 = JSON.parse(storedData)
+  const parsedData12 =storedData
   console.log(parsedData12)
 
 

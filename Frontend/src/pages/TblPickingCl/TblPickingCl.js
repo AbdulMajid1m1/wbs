@@ -15,31 +15,26 @@ const TblPickingCl = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllTblPickingCL")
-                    .then(response => {
-                        console.log(response?.data);
+                const response = await userRequest.get("/getAllTblPickingCL")
 
-                        setAllData(response?.data ?? [])
-                        setIsLoading(false)
+                console.log(response?.data);
 
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        setIsLoading(false)
-                        setError(error?.response?.data?.message ?? "Something went wrong")
-                    });
+                setAllData(response?.data ?? [])
+                setIsLoading(false)
 
             }
             catch (error) {
                 console.log(error);
+                setIsLoading(false)
+                setError(error?.response?.data?.message ?? "Something went wrong")
             }
         };
         getAllAssetsList();
@@ -52,38 +47,20 @@ const TblPickingCl = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable 
-                data={alldata} 
-                addNewNavigation="/tbl-new-picking" 
-                title="PICKING (Warehouse Operation)" 
-                columnsName={TblPickingClColumn} 
-                backButton={true} 
+            <UserDataTable
+                data={alldata}
+                addNewNavigation="/tbl-new-picking"
+                title="PICKING (Warehouse Operation)"
+                columnsName={TblPickingClColumn}
+                backButton={true}
                 uniqueId="PICKINGROUTEID"
                 loading={isLoading}
                 setIsLoading={setIsLoading}
-             
+
 
             />
 
-            {/* {isLoading &&
-
-                <div className='loading-spinner-background'
-                    style={{
-                        zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                        display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
-
-
-                    }}
-                >
-                    <SyncLoader
-
-                        size={18}
-                        color={"#FFA500"}
-                        // height={4}
-                        loading={isLoading}
-                    />
-                </div>
-            } */}
+           
 
         </div>
     )

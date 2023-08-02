@@ -13,9 +13,13 @@ const PutAwayScreen2 = () => {
   //   const { serialNumLength, statedata, updateData } = useContext(ReceiptsContext);
   const data = sessionStorage.getItem('putawaydata')
   const selectedPutAwayData = JSON.parse(sessionStorage.getItem('selectedPutAwayData'))
+  const storedData = sessionStorage.getItem('putawaydatashipmentId');
+
 
   const parsedData = JSON.parse(data)
+  const parsedData12 = JSON.parse(storedData)
   console.log(parsedData);
+  console.log(parsedData12)
   console.log(data)
 
   const [dataList, setDataList] = useState([]);
@@ -93,7 +97,7 @@ const PutAwayScreen2 = () => {
                 <h1>CONFIGID: {selectedPutAwayData.ITEMID}</h1>
               </div>
               <div>
-                <h1>SHIPMENTID: {selectedPutAwayData.ITEMID}</h1>
+                <h1>SHIPMENTID: {parsedData12}</h1>
                 <h1>GROUPID: {parsedData?.ItemDesc}</h1>
               </div>
             </div>

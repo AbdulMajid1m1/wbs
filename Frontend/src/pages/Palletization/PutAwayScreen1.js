@@ -7,6 +7,7 @@ import userRequest from '../../utils/userRequest';
 import icon from "../../images/close.png"
 import Swal from 'sweetalert2';
 import { BeatLoader } from 'react-spinners';
+import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const PutAway = () => {
   const navigate = useNavigate();
@@ -14,8 +15,16 @@ const PutAway = () => {
   const [shipmentTag, setShipmentTag] = useState('');
   const [shipmentValidate, setShipmentValidate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+  const resetSnakeBarMessages = () => {
+    setError(null);
+    setMessage(null);
+
+  };
 
   // const [selectedRow, setSelectedRow] = useState(null);
+  sessionStorage.setItem('putawaydatashipmentId', JSON.stringify(shipmentValidate));
 
 
   const handleForm = (e) => {
@@ -26,14 +35,10 @@ const PutAway = () => {
     userRequest.get(`/getTransferDistributionByTransferId?TRANSFERID=${shipmentTag}`)
       .then(response => {
         // console.log(response?.data);
-        // setData(response?.data ?? []);
+        setData(response?.data ?? []);
         
-        // Extract the data from the response
-        const data = response?.data?.data ?? [];
-        setData(data);
-
-         // Set the shipmentId state
-        setShipmentValidate(response?.data?.shipmentId ?? '');
+        // Set the shipmentValidate state from the response
+        setShipmentValidate(response?.data?.[0]?.SHIPMENTID);
 
         // save data in session storage
         sessionStorage.setItem('putawaydata', JSON.stringify(response?.data ?? []));
@@ -52,17 +57,46 @@ const PutAway = () => {
       });
   }
 
+
   const handleChangeValue = (e) => {
     setShipmentTag(e.target.value);
   }
 
+
+
+  const [isValidation, setIsValidation] = useState(false)
+
   const handleChangevalidate = (e) => {
-    setShipmentValidate(e.target.value);
-  }
+    // setShipmentValidate(e.target.value)
+    const inputValue = e.target.value;
+    setShipmentValidate(inputValue);
+
+    if (inputValue.trim() === '') {
+      setIsValidation(false);
+      return;
+    }
+
+    userRequest.get(`/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=${inputValue}`)
+        .then((response) => {
+            // alert(response?.data?.message)
+            setMessage(response?.data?.message)
+            setIsValidation(true)
+          })
+          .catch((error) => {
+            console.log(error)
+            setError(error?.response?.data?.message)
+            setIsValidation(false)
+        })
+      }
+      
 
 
   return (
     <>
+
+      {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
       {isLoading &&
 
         <div className='loading-spinner-background'
@@ -132,10 +166,9 @@ const PutAway = () => {
 
                   </div>
 
-                  {/* New Input Shipment */}
+                
                   <input
                       onChange={handleChangevalidate}
-                      name=''
                       value={shipmentValidate}
                       className="bg-gray-50 border border-gray-300 text-xs text-[#00006A] rounded-lg focus:ring-blue-500
                       block sm:w-[50%] p-1.5 md:p-2.5 placeholder:text-[#00006A]" placeholder="Enter/scan Shipment ID"
@@ -159,7 +192,8 @@ const PutAway = () => {
                 secondaryColor="secondary"
                 uniqueId={"pustawayScreen1"}
                 data={data} columnsName={PalletizingByTransferIdColumn}
-
+                isValidation={isValidation}
+                // setIsValidation={setIsValidation}
               />
             </div >
 

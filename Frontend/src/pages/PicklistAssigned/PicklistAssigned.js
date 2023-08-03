@@ -59,9 +59,10 @@ const PicklistAssigned = () => {
                 UserName="Assign picklist"
                 loading={isLoading}
                 setIsLoading={setIsLoading}
-            
+                ExpectedStatusSearchEnable={true}
+
             />
-           
+
 
         </div>
     )

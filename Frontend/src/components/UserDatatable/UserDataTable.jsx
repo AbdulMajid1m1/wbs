@@ -28,6 +28,7 @@ const UserDataTable = ({
   deleteBtnEndPoint,
   ShipmentIdSearchEnable,
   ContainerIdSearchEnable,
+  ExpectedStatusSearchEnable,
   buttonVisibility,
   addNewNavigation,
   printButton,
@@ -58,6 +59,7 @@ const UserDataTable = ({
   const [record, setRecord] = useState([]);
   const [shipmentIdSearch, setShipmentIdSearch] = useState("");
   const [containerIdSearch, setContainerIdSearch] = useState("");
+  const [expectedStatusSearch, setExpectedStatusSearch] = useState("");
   const [updatedRows, setUpdatedRows] = useState([]);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
@@ -96,24 +98,56 @@ const UserDataTable = ({
   useEffect(() => {
     let filteredData = record;
 
-    if (shipmentIdSearch && containerIdSearch) {
+    if (shipmentIdSearch && containerIdSearch && expectedStatusSearch) {
+      filteredData = record.filter(
+        (item) =>
+          item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) &&
+          item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase()) &&
+          isMatched(item.EXPEDITIONSTATUS, expectedStatusSearch.toLowerCase())
+      );
+    } else if (shipmentIdSearch && containerIdSearch && !expectedStatusSearch) {
       filteredData = record.filter(
         (item) =>
           item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) &&
           item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
       );
-    } else if (shipmentIdSearch && !containerIdSearch) {
+    } else if (shipmentIdSearch && !containerIdSearch && expectedStatusSearch) {
+      filteredData = record.filter(
+        (item) =>
+          item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase()) &&
+          isMatched(item.EXPEDITIONSTATUS, expectedStatusSearch.toLowerCase())
+      );
+    } else if (!shipmentIdSearch && containerIdSearch && expectedStatusSearch) {
+      filteredData = record.filter(
+        (item) =>
+          item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase()) &&
+          isMatched(item.EXPEDITIONSTATUS, expectedStatusSearch.toLowerCase())
+      );
+    } else if (shipmentIdSearch && !containerIdSearch && !expectedStatusSearch) {
       filteredData = record.filter((item) =>
         item.SHIPMENTID.toLowerCase().includes(shipmentIdSearch.toLowerCase())
       );
-    } else if (!shipmentIdSearch && containerIdSearch) {
+    } else if (!shipmentIdSearch && containerIdSearch && !expectedStatusSearch) {
       filteredData = record.filter((item) =>
         item.CONTAINERID.toLowerCase().includes(containerIdSearch.toLowerCase())
+      );
+    } else if (!shipmentIdSearch && !containerIdSearch && expectedStatusSearch) {
+      filteredData = record.filter((item) =>
+        isMatched(item.EXPEDITIONSTATUS.toString(), expectedStatusSearch.toLowerCase())
       );
     }
 
     setFilteredData(filteredData);
-  }, [shipmentIdSearch, containerIdSearch, record]);
+  }, [shipmentIdSearch, containerIdSearch, expectedStatusSearch, record]);
+
+  const isMatched = (source, target) => {
+    if (typeof source === 'string') {
+      return source.toLowerCase().includes(target);
+    }
+    return false;
+  };
+
+
 
 
 
@@ -345,11 +379,19 @@ const UserDataTable = ({
 
 
   const handleSearch = (e) => {
-    // setShipmentIdSearch(e.target.value);
-    e.target.name === "SHIPMENTID" ? setShipmentIdSearch(e.target.value) : setContainerIdSearch(e.target.value);
+    if (e.target.name === "SHIPMENTID") {
+      setShipmentIdSearch(e.target.value);
+    } else if (e.target.name === "CONTAINERID") {
+      setContainerIdSearch(e.target.value);
+    } else if (e.target.name === "EXPEDITIONSTATUS") {
+      setExpectedStatusSearch(e.target.value);
+    }
+
     console.log(e.target.name, e.target.value);
-    console.log(shipmentIdSearch, containerIdSearch);
+    console.log(shipmentIdSearch, containerIdSearch, expectedStatusSearch);
   };
+
+
   // Retrieve the value with the key "myKey" from localStorage getvalue
   const myValue = localStorage.getItem("userId");
   console.log(myValue)
@@ -368,6 +410,11 @@ const UserDataTable = ({
             );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");
+
+            const updateRemainingQty = await userRequest.put("/updateRemainingQtyInTblShipmentCounter?SHIPMENTID=" + rowdata?.SHIPMENTID)
+
+            console.log(updateRemainingQty?.data);
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -1179,6 +1226,17 @@ const UserDataTable = ({
                 type="text"
                 name="CONTAINERID"
                 placeholder="SEARCH BY CONTAINER ID"
+                className="searchInput"
+                onChange={handleSearch}
+              />
+            </span> : null}
+
+            {ExpectedStatusSearchEnable &&
+              ExpectedStatusSearchEnable === true ? <span>
+              <input
+                type="text"
+                name="EXPEDITIONSTATUS"
+                placeholder="SEARCH BY EXPEDITIONSTATUS"
                 className="searchInput"
                 onChange={handleSearch}
               />

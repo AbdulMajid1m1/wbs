@@ -200,7 +200,7 @@ const PickingListLastForm = () => {
   const handleInputUser = (e) => {
     console.log(filterData.length, remainingQty)
     if (filteredData?.length === remainingQty) {
-      setError("cannot pick more than remaining qty")
+      setError("Cannot pick more than remaining qty")
 
       return;
     }

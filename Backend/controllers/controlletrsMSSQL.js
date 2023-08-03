@@ -2210,14 +2210,14 @@ const WBSDB = {
         PICKSTATUS,
         QTYPICKED,
       } = req.query;
-
-      if (!PICKINGROUTEID) {
-        return res.status(400).send({ message: 'PICKINGROUTEID is required.' });
+      console.log(req.query)
+      if (!PICKINGROUTEID || !TRANSREFID || !ITEMID) {
+        return res.status(400).send({ message: 'PICKINGROUTEID, TRANSREFID and ITEMID are required.' });
       }
 
       let query = `
-        UPDATE dbo.WMS_Sales_PickingList_CL
-        SET `;
+            UPDATE dbo.WMS_Sales_PickingList_CL
+            SET `;
 
       const updateFields = [];
       const request = pool2.request();
@@ -2232,15 +2232,7 @@ const WBSDB = {
         request.input('INVENTLOCATIONID', sql.NVarChar(10), INVENTLOCATIONID);
       }
 
-      if (TRANSREFID !== undefined) {
-        updateFields.push('TRANSREFID = @TRANSREFID');
-        request.input('TRANSREFID', sql.NVarChar(20), TRANSREFID);
-      }
 
-      if (ITEMID !== undefined) {
-        updateFields.push('ITEMID = @ITEMID');
-        request.input('ITEMID', sql.NVarChar(20), ITEMID);
-      }
 
       if (QTY !== undefined) {
         updateFields.push('QTY = @QTY');
@@ -2269,7 +2261,7 @@ const WBSDB = {
 
       if (inventTransId !== undefined) {
         updateFields.push('inventTransId = @inventTransId');
-        request.input('inventTransId', sql.NVarChar(20), inventTransId); // Please adjust this type according to your schema
+        request.input('inventTransId', sql.NVarChar(20), inventTransId);
       }
 
       if (DLVDATE !== undefined) {
@@ -2304,10 +2296,12 @@ const WBSDB = {
       query += updateFields.join(', ');
 
       query += `
-        WHERE PICKINGROUTEID = @PICKINGROUTEID
-      `;
+            WHERE PICKINGROUTEID = @PICKINGROUTEID AND TRANSREFID = @TRANSREFID AND ITEMID = @ITEMID
+        `;
 
       request.input('PICKINGROUTEID', sql.NVarChar(10), PICKINGROUTEID);
+      request.input('TRANSREFID', sql.NVarChar(20), TRANSREFID);
+      request.input('ITEMID', sql.NVarChar(20), ITEMID);
 
       const result = await request.query(query);
 
@@ -2320,8 +2314,7 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
 
   async deleteTblPickingDataCL(req, res, next) {
     try {

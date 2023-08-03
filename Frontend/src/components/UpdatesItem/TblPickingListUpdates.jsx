@@ -39,7 +39,7 @@ const TblPickingListUpdates = ({ inputs, title,
         // console.log(parsedData)
         return parsedData
     })
-    console.log(rowdata)
+
 
     // Handle Submit
     const handleSubmit = async (event) => {
@@ -60,6 +60,8 @@ const TblPickingListUpdates = ({ inputs, title,
             }
 
             updatedData["PICKINGROUTEID"] = id;
+            updatedData["TRANSREFID"] = rowdata["TRANSREFID"];
+            updatedData["ITEMID"] = rowdata["ITEMID"];
 
             if (Object.keys(updatedData).length <= 1) {
                 setError("No changes detected.");
@@ -92,6 +94,10 @@ const TblPickingListUpdates = ({ inputs, title,
             setError("Failed to Update");
         }
     };
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return new Date(dateString).toISOString().split('T')[0];
+    }
 
     return (
         <>
@@ -143,14 +149,16 @@ const TblPickingListUpdates = ({ inputs, title,
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                defaultValue={rowdata && rowdata[input.name]}
+                                                // defaultValue={rowdata && rowdata[input.name]}
+                                                defaultValue={input.type === 'date' && rowdata ? formatDate(rowdata[input.name]) : rowdata[input.name]}
                                                 onChange={(e) =>
                                                     setFormData({
                                                         ...formData,
                                                         [input.name]: e.target.value,
                                                     })
                                                 }
-                                                disabled={input.name === "PICKINGROUTEID" ? true : false}
+
+                                                disabled={["PICKINGROUTEID", "ITEMID", "TRANSREFID"].includes(input.name)}
                                             />
                                         </div>
 
@@ -160,7 +168,7 @@ const TblPickingListUpdates = ({ inputs, title,
 
                                     <div className="buttonAdd" >
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{ background: '#e69138' }}
                                             type="submit"
                                         >Update</button>
                                     </div>

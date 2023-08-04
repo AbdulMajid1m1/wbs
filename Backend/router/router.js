@@ -622,3 +622,5 @@ router.get("/getAllTblDZones", checkAuthentication, WBSDB.getAllTblDZones);
 
 // --------- tbl_Shipment_Counter APIs start ---------
 
+router.put("/updateRemainingQtyInTblShipmentCounter", checkAuthentication, WBSDB.updateRemainingQtyInTblShipmentCounter);
+

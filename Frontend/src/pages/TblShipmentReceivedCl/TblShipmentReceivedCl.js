@@ -21,32 +21,21 @@ const TblShipmentReceivedCl = () => {
   };
 
 
+
   useEffect(() => {
     const getAllAssetsList = async () => {
       try {
-
-
-        userRequest.get("/getAllTblShipmentReceivedCL")
-
-          .then(response => {
-            console.log(response?.data);
-            setData(response?.data ?? [])
-            setIsLoading(false)
-
-          })
-          .catch(error => {
-            console.error(error);
-            setIsLoading(false)
-            setError(error?.response?.data?.message ?? "Something went wrong")
-
-
-          });
-
-      }
-      catch (error) {
-        console.log(error);
+        const response = await userRequest.get("/getAllTblShipmentReceivedCL");
+        console.log(response?.data);
+        setData(response?.data ?? []);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+        setError(error?.response?.data?.message ?? "Something went wrong");
       }
     };
+
     getAllAssetsList();
   }, []);
 
@@ -70,25 +59,10 @@ const TblShipmentReceivedCl = () => {
         PrintName={"Print Shipment"}
         loading={isLoading}
         setIsLoading={setIsLoading}
-     
+
       />
 
-      {/* {isLoading &&
 
-        <div className='loading-spinner-background'
-          style={{
-            zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
-            display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
-          }}
-        >
-          <SyncLoader
-            size={18}
-            color={"#FFA500"}
-            // height={4}
-            loading={isLoading}
-          />
-        </div>
-      } */}
     </div>
   )
 }

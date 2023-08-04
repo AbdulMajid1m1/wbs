@@ -2210,14 +2210,14 @@ const WBSDB = {
         PICKSTATUS,
         QTYPICKED,
       } = req.query;
-
-      if (!PICKINGROUTEID) {
-        return res.status(400).send({ message: 'PICKINGROUTEID is required.' });
+      console.log(req.query)
+      if (!PICKINGROUTEID || !TRANSREFID || !ITEMID) {
+        return res.status(400).send({ message: 'PICKINGROUTEID, TRANSREFID and ITEMID are required.' });
       }
 
       let query = `
-        UPDATE dbo.WMS_Sales_PickingList_CL
-        SET `;
+            UPDATE dbo.WMS_Sales_PickingList_CL
+            SET `;
 
       const updateFields = [];
       const request = pool2.request();
@@ -2232,15 +2232,7 @@ const WBSDB = {
         request.input('INVENTLOCATIONID', sql.NVarChar(10), INVENTLOCATIONID);
       }
 
-      if (TRANSREFID !== undefined) {
-        updateFields.push('TRANSREFID = @TRANSREFID');
-        request.input('TRANSREFID', sql.NVarChar(20), TRANSREFID);
-      }
 
-      if (ITEMID !== undefined) {
-        updateFields.push('ITEMID = @ITEMID');
-        request.input('ITEMID', sql.NVarChar(20), ITEMID);
-      }
 
       if (QTY !== undefined) {
         updateFields.push('QTY = @QTY');
@@ -2269,7 +2261,7 @@ const WBSDB = {
 
       if (inventTransId !== undefined) {
         updateFields.push('inventTransId = @inventTransId');
-        request.input('inventTransId', sql.NVarChar(20), inventTransId); // Please adjust this type according to your schema
+        request.input('inventTransId', sql.NVarChar(20), inventTransId);
       }
 
       if (DLVDATE !== undefined) {
@@ -2304,10 +2296,12 @@ const WBSDB = {
       query += updateFields.join(', ');
 
       query += `
-        WHERE PICKINGROUTEID = @PICKINGROUTEID
-      `;
+            WHERE PICKINGROUTEID = @PICKINGROUTEID AND TRANSREFID = @TRANSREFID AND ITEMID = @ITEMID
+        `;
 
       request.input('PICKINGROUTEID', sql.NVarChar(10), PICKINGROUTEID);
+      request.input('TRANSREFID', sql.NVarChar(20), TRANSREFID);
+      request.input('ITEMID', sql.NVarChar(20), ITEMID);
 
       const result = await request.query(query);
 
@@ -2320,8 +2314,7 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
 
   async deleteTblPickingDataCL(req, res, next) {
     try {
@@ -5509,150 +5502,6 @@ const WBSDB = {
 
   // packingsliptable_CL controller starts here
 
-
-  // async insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl(req, res, next) {
-  //   try {
-  //     // let PICKSTATUS;
-  //     const packingSlipArray = req.body;
-  //     const { PICKINGROUTEID, ITEMID, QTYPICKED, QTY } = req.query; // no need of this itemid now
-  //     if (!PICKINGROUTEID || !ITEMID || !QTYPICKED || !QTY) {
-  //       return res.status(400).send({ message: "Please provide PICKINGROUTEID, ITEMID, QTYPICKED and QTY" });
-  //     }
-  //     if (packingSlipArray.length === 0) {
-  //       return res.status(400).send({ message: "Please provide data to insert." });
-  //     }
-
-  //     let updateQty = QTY;
-  //     let updateQtyPicked = QTYPICKED;
-  //     console.log(QTYPICKED, QTY, 'qty picked and qty', ITEMID, ITEMID);
-
-  //     for (const packingSlip of packingSlipArray) {
-
-  //       if (!packingSlip.INVENTLOCATIONID && !packingSlip.ITEMID) {
-  //         return res.status(400).send({ message: "Please provide INVENTLOCATIONID and ITEMID" });
-  //       }
-
-
-  //       const fields = [
-  //         "INVENTLOCATIONID",
-  //         "ORDERED",
-  //         "PACKINGSLIPID",
-  //         "ASSIGNEDUSERID",
-  //         "ITEMID",
-  //         ...(packingSlip.SALESID ? ["SALESID"] : []),
-  //         ...(packingSlip.NAME ? ["NAME"] : []),
-  //         ...(packingSlip.CONFIGID ? ["CONFIGID"] : []),
-  //         ...(packingSlip.VEHICLESHIPPLATENUMBER ? ["VEHICLESHIPPLATENUMBER"] : []),
-  //         ...(packingSlip.DATETIMECREATED ? ["DATETIMECREATED"] : []),
-  //       ];
-
-  //       let values = fields.map((field) => "@" + field);
-
-  //       let query = `INSERT  INTO packingsliptable_CL 
-  //       (${fields.join(', ')}) 
-  //       VALUES 
-  //         (${values.join(', ')})
-  //       `;
-
-  //       let request = pool2.request();
-
-  //       request.input("INVENTLOCATIONID", sql.NVarChar, packingSlip.INVENTLOCATIONID);
-  //       request.input("ORDERED", sql.Float, packingSlip.ORDERED);
-  //       request.input("PACKINGSLIPID", sql.NVarChar, packingSlip.PACKINGSLIPID);
-  //       request.input("ASSIGNEDUSERID", sql.NVarChar, packingSlip.ASSIGNEDUSERID);
-  //       request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID.trim());
-  //       if (packingSlip.SALESID) request.input("SALESID", sql.NVarChar, packingSlip.SALESID);
-  //       if (packingSlip.NAME) request.input("NAME", sql.NVarChar, packingSlip.NAME);
-  //       if (packingSlip.CONFIGID) request.input("CONFIGID", sql.NVarChar, packingSlip.CONFIGID);
-  //       if (packingSlip.VEHICLESHIPPLATENUMBER) request.input("VEHICLESHIPPLATENUMBER", sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
-  //       if (packingSlip.DATETIMECREATED) request.input("DATETIMECREATED", sql.DateTime, new Date(packingSlip.DATETIMECREATED));
-
-  //       await request.query(query);
-
-  //       // PickingListLastFrom page
-  //       const result = await insertTransactionHistoryData("PickingList", packingSlip?.ITEMID.trim(), req?.token?.UserID);
-  //       console.log(result.message);
-
-  //       let deleteQuery = `DELETE FROM tblMappedBarcodes WHERE ItemCode=@ITEMID AND BinLocation=@oldBinLocation AND ItemSerialNo = @ItemSerialNo`;
-
-  //       let deleteRequest = pool2.request();
-  //       deleteRequest.input("ITEMID", sql.NVarChar, packingSlip?.ITEMID.trim());
-  //       deleteRequest.input("oldBinLocation", sql.NVarChar, packingSlip?.oldBinLocation);
-  //       deleteRequest.input("ItemSerialNo", sql.NVarChar, packingSlip?.ItemSerialNo);
-
-  //       await deleteRequest.query(deleteQuery);
-
-
-  //       // check if status is already picked
-  //       const check = pool2.request()
-  //       let checkQuery = `SELECT * FROM WMS_Sales_PickingList_CL WHERE PICKINGROUTEID = @CHECKPICKINGROUTEID AND ITEMID = @checkItemId AND PICKSTATUS = 'Picked' AND ASSIGNEDTOUSERID = @USERID`;
-  //       check.input("CHECKPICKINGROUTEID", sql.NVarChar, PICKINGROUTEID);
-  //       check.input("checkItemId", sql.NVarChar, packingSlip.ITEMID.trim());
-  //       check.input("USERID", sql.NVarChar, req.token?.UserID)
-  //       const checkResult = await check.query(checkQuery);
-  //       if (checkResult.recordset.length > 0) {
-  //         return res.status(400).send({ message: `Item with ITEMID ${packingSlip.ITEMID.trim()} is already picked` });
-  //       }
-
-  //       console.log(PICKINGROUTEID, packingSlip.ITEMID.trim(), req.token?.UserID, updateQty, updateQtyPicked,)
-
-  //       let checkQuery2 = `SELECT QTYPICKED, PICKSTATUS, QTY
-  //                 FROM WMS_Sales_PickingList_CL
-  //                 WHERE PICKINGROUTEID = @PICKINGROUTEID
-  //                 AND ITEMID = @singleitemId AND ASSIGNEDTOUSERID = @USERID`;
-
-
-  //       let updateQuery = `UPDATE WMS_Sales_PickingList_CL 
-  //                 SET PICKSTATUS = CASE
-  //                                   WHEN QTY = QTYPICKED THEN 'Picked'
-  //                                   ELSE 'Partial'
-  //                                 END,
-  //                     QTYPICKED = CASE
-  //                                   WHEN QTY = QTYPICKED THEN QTYPICKED
-  //                                   ELSE ISNULL(QTYPICKED, 0) + 1
-  //                                 END,
-  //                     QTY = CASE 
-  //                             WHEN QTY = QTYPICKED THEN QTY 
-  //                             ELSE QTY - 1
-  //                           END
-  //                 WHERE PICKINGROUTEID = @PICKINGROUTEID 
-  //                 AND ITEMID = @singleitemId 
-  //                 AND ASSIGNEDTOUSERID = @USERID`;
-
-  //       let request2 = pool2.request();
-  //       request2.input("PICKINGROUTEID", sql.NVarChar, PICKINGROUTEID);
-  //       request2.input("singleitemId", sql.NVarChar, packingSlip.ITEMID.trim());
-  //       request2.input("USERID", sql.NVarChar, req.token?.UserID);
-
-  //       request2.query(updateQuery, async (error, result) => {
-  //         if (error) {
-  //           // Handle the error
-  //           console.error(error);
-  //           return;
-  //         }
-
-  //         // Retrieve the updated values
-  //         const checkResult = await request2.query(checkQuery2);
-  //         console.log(checkResult.recordset[0])
-
-  //         const updatedQTYPICKED = checkResult?.recordset[0]?.QTYPICKED;
-  //         const updatedQTY = checkResult?.recordset[0]?.QTY;
-  //         console.log(checkResult.recordset[0])
-  //       });
-  //     };
-
-
-
-
-  //     return res.status(201).send({ message: 'Data inserted successfully.' });
-
-  //   } catch (error) {
-  //     console.log(error);
-  //     return res.status(500).send({ message: error.message });
-  //   }
-  // },
-
-
   async insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl(req, res, next) {
     try {
       const packingSlipArray = req.body;
@@ -5728,8 +5577,12 @@ const WBSDB = {
         deleteRequest.input("oldBinLocation", sql.NVarChar, packingSlip.oldBinLocation);
         deleteRequest.input("ItemSerialNo", sql.NVarChar, packingSlip.ItemSerialNo);
 
-        await deleteRequest.query(deleteQuery);
-
+        const deleteResult = await deleteRequest.query(deleteQuery);
+        // Check if any rows were affected
+        if (deleteResult.rowsAffected[0] === 0) {
+          // No rows were deleted, return error
+          return res.status(400).send({ message: 'Unable to delete from tblMappedBarcodes.' });
+        }
         let updateQuery = `UPDATE WMS_Sales_PickingList_CL 
         SET PICKSTATUS = CASE
                             WHEN QTY = QTYPICKED THEN 'Picked'
@@ -8724,7 +8577,7 @@ const WBSDB = {
     }
   },
 
-  // tbl_Shipment_Counter controller start
+  // tbl_Shipment_Received_CL controller start
   async validateShipmentIdFromShipmentReceivedCl(req, res, next) {
     try {
       const { SHIPMENTID } = req.query;
@@ -8753,7 +8606,50 @@ const WBSDB = {
 
 
 
-};
+  // tbl_Shipment_Counter controller start
+  async updateRemainingQtyInTblShipmentCounter(req, res, next) {
+    try {
+      const { SHIPMENTID } = req.query; // Get the shipmentId from the URL parameter
+      if (!SHIPMENTID.trim())
+        return res.status(400).json({ message: "SHIPMENTID is Required" });
+
+      // Update the REMAININGQTY by adding 1 to the current value, and validate SHIPMENTID in the same query
+      const query = `
+        UPDATE tbl_Shipment_Counter
+        SET [REMAININGQTY] = [REMAININGQTY] + 1
+        WHERE [SHIPMENTID] = @SHIPMENTID;
+  
+        IF @@ROWCOUNT = 0
+        BEGIN
+          SELECT 'Shipment not found.' as message;
+        END
+        ELSE
+        BEGIN
+          SELECT 'REMAININGQTY updated successfully.' as message;
+        END
+      `;
+
+      let request = pool2.request();
+      request.input('SHIPMENTID', sql.NVarChar, SHIPMENTID);
+
+      const result = await request.query(query);
+
+      if (result.recordsets[0].length === 0) {
+        // If the query returned no rows, it means the shipmentId was not found
+        return res.status(404).json({ message: 'Shipment not found.' });
+      }
+
+      const message = result.recordsets[0][0].message;
+
+      res.status(200).json({ message: message });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to update REMAININGQTY.' });
+    }
+  },
+
+
+}
 
 
 

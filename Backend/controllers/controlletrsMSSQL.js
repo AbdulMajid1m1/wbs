@@ -5583,23 +5583,24 @@ const WBSDB = {
           // No rows were deleted, return error
           return res.status(400).send({ message: 'Unable to delete from tblMappedBarcodes.' });
         }
-        let updateQuery = `UPDATE WMS_Sales_PickingList_CL 
-        SET PICKSTATUS = CASE
-                            WHEN QTY = QTYPICKED THEN 'Picked'
-                            ELSE 'Partial'
-                          END,
-            QTYPICKED = CASE
-                          WHEN QTY = QTYPICKED THEN QTYPICKED + 1
-                          ELSE ISNULL(QTYPICKED, 0) + 1
-                        END,
+      
+
+          let updateQuery = `
+            UPDATE WMS_Sales_PickingList_CL 
+            SET PICKSTATUS = CASE
+                WHEN (QTY - 1) = 0 THEN 'Picked'
+                ELSE 'Partial'
+            END,
+            QTYPICKED = ISNULL(QTYPICKED, 0) + 1,
             QTY = CASE 
-                    WHEN QTY = QTYPICKED THEN QTY - 1
-                    ELSE QTY - 1
-                  END
-        WHERE PICKINGROUTEID = @PICKINGROUTEID 
-        AND ITEMID = @singleitemId 
-        AND ASSIGNEDTOUSERID = @USERID
-      `;
+                WHEN QTY > 0 THEN QTY - 1
+                ELSE 0
+            END
+            WHERE PICKINGROUTEID = @PICKINGROUTEID 
+            AND ITEMID = @singleitemId 
+            AND ASSIGNEDTOUSERID = @USERID
+        `;
+
 
         let request2 = pool2.request();
         request2.input("PICKINGROUTEID", sql.NVarChar, PICKINGROUTEID);

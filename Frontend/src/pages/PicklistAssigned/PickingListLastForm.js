@@ -263,8 +263,18 @@ const PickingListLastForm = () => {
 
       // clear the filtered data and user input
       setRemainingQty(remainingQty - filteredData.length)
+      if (parsedData) {
+        parsedData.QTYPICKED = parseInt(parsedData.QTYPICKED || 0) + filteredData.length;
+        parsedData.QTY = parseInt(parsedData.QTY || 0) - filteredData.length;
+      }
       setFilteredData([]);
       setUserInput("");
+      console.log(parsedData)
+      sessionStorage.setItem("PickingRowData", JSON.stringify(parsedData));
+
+      setTimeout(() => {
+        navigate(-1)
+      }, 1000);
 
     }
     catch (error) {
@@ -478,7 +488,7 @@ const PickingListLastForm = () => {
                     checked={selectionType === 'Pallet'}
                     onChange={e => setSelectionType(e.target.value)}
                     className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    disabled
+                    // disabled
                   />
                   <span className="ml-2 text-[#00006A]">BY PALLETE</span>
                 </label>
@@ -657,7 +667,7 @@ export default PickingListLastForm
 
 
 // const baseUrl = 'http://37.224.47.116:7474/api'
- //const baseUrl = "http://localhost:3005/api";
- //const baseUrl = "http://gs1ksa.org:3005/api";
- const baseUrl = "http://10.10.12.153:3005/api"; 
+//const baseUrl = "http://localhost:3005/api";
+//const baseUrl = "http://gs1ksa.org:3005/api";
+const baseUrl = "http://10.10.12.153:3005/api";
 // export default baseUrl;

@@ -12,12 +12,10 @@ import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const PickingListForm = () => {
   const navigate = useNavigate();
-
-
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
-  const [journalRowIndex, setJournalRowIndex] = useState(JSON.parse(sessionStorage.getItem('PickingRowIndex')) || '');
+  const [data, setData] = useState([]);
+  const [pickingRowIndex, setPickingRowIndex] = useState(JSON.parse(sessionStorage.getItem('pickingRowIndex')) || null);
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -34,6 +32,31 @@ const PickingListForm = () => {
   };
 
 
+  useEffect(() => {
+    const savedData = JSON.parse(sessionStorage.getItem('pickingListRows')) || [];
+    if (savedData.length !== 0) {
+      setTransferTag(savedData?.[0]?.PICKINGROUTEID);
+    }
+
+    let savedIndex = sessionStorage.getItem('pickingRowIndex');
+
+    // Check if savedIndex is not null and parse it as integer
+    if (savedIndex !== null) {
+      savedIndex = parseInt(savedIndex, 10);
+    }
+
+
+    // Set the updated data for the selected row
+    if (savedData[savedIndex]) {
+      savedData[savedIndex] = JSON.parse(sessionStorage.getItem('PickingRowData')) || savedData[savedIndex];
+    }
+
+    setData(savedData);
+    setPickingRowIndex(savedIndex);
+  }, []);
+
+
+
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
   }
@@ -47,16 +70,21 @@ const PickingListForm = () => {
         console.log(response?.data);
 
         setData(response?.data ?? []);
-        sessionStorage.setItem('allJournalRows', JSON.stringify(response?.data ?? []));
+        sessionStorage.setItem('pickingListRows', JSON.stringify(response?.data ?? []));
         setIsLoading(false)
-        setMessage(response?.data?.message ?? 'Show All data');
+        setPickingRowIndex(null);
+
 
       })
 
       .catch(error => {
         console.error(error);
         setIsLoading(false)
-        setError(error?.data?.message ?? 'Wrong Route ID');
+        setData([]);
+        sessionStorage.setItem('pickingListRows', JSON.stringify([]));
+        sessionStorage.setItem('PickingRowData', JSON.stringify({}));
+        sessionStorage.setItem('pickingRowIndex', null);
+        setError(error?.response.data?.message ?? 'Wrong Route ID');
 
       });
 
@@ -64,11 +92,18 @@ const PickingListForm = () => {
 
   const handleRowClick = (item, index) => {
     // save data in session storage
+    console.log(item);
+    if (parseInt(item?.QTY) === 0) {
+      setError('Quantity is 0');
+      return;
+    }
+
+
 
     sessionStorage.setItem('PickingRowData', JSON.stringify(item));
 
     sessionStorage.setItem("PickingRowQTYPICKED", item?.QTYPICKED);
-    sessionStorage.setItem('PickingRowIndex', index);
+    sessionStorage.setItem('pickingRowIndex', index);
     navigate('/pickinglistlast')
   }
 
@@ -158,6 +193,7 @@ const PickingListForm = () => {
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
                     placeholder="Route ID"
                     onChange={handleChangeValue}
+                    value={transferTag || ''}
                   />
                   <button
                     type='submit'
@@ -196,7 +232,7 @@ const PickingListForm = () => {
                     {data.map((item, index) => (
                       <tr key={index} onClick={() => handleRowClick(item, index)}
 
-                        style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
+                        style={pickingRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
 
                       >
                         <td>{item.PICKINGROUTEID}</td>
@@ -226,16 +262,6 @@ const PickingListForm = () => {
 
               <div className='mt-6'>
                 <div className='w-full flex justify-between place-items-end'>
-                  {/* <div>
-                  <button
-                    type='submit'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
-                    <span className='flex justify-center items-center'>
-                      <p>Save</p>
-                    </span>
-                  </button>
-                  </div> */}
-
                   <div>
                     <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                     <input

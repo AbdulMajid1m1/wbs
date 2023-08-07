@@ -168,6 +168,8 @@ router.get("/getAllTblDispatchingCL", checkAuthentication, checkRole([roles[3]])
 
 router.post("/insertTblDispatchingDataCL", checkAuthentication, checkRole([roles[3], roles[43]]), WBSDB.insertTblDispatchingDataCL);
 
+router.post("/insertTblDispatchingDetailsDataCL", checkAuthentication, checkRole([roles[3], roles[43]]), WBSDB.insertTblDispatchingDetailsDataCL);
+
 router.delete("/deleteTblDispatchingDataCL", checkAuthentication, checkRole([roles[3]]), WBSDB.deleteTblDispatchingDataCL);
 
 router.put("/updateTblDispatchingDataCL", checkAuthentication, checkRole([roles[3]]), WBSDB.updateTblDispatchingDataCL);
@@ -276,7 +278,7 @@ router.post("/getMappedBarcodedsByPalletCodeAndBinLocation", checkAuthentication
 
 router.post("/getMappedBarcodedsByItemCodeAndBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[49]]), WBSDB.getMappedBarcodedsByItemCodeAndBinLocation);
 
-router.delete("/deleteTblMappedBarcodesDataByItemCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.deleteTblMappedBarcodesDataByItemCode);
+router.delete("/deleteTblMappedBarcodesDataBySerialNumber", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.deleteTblMappedBarcodesDataBySerialNumber);
 
 
 router.get("/getDistinctMappedBarcodeBinLocations", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[39]]), WBSDB.getDistinctMappedBarcodeBinLocations);
@@ -400,7 +402,7 @@ router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentic
 
 // packingsliptable_CL APIS Start -----
 router.post("/insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl);
-
+router.get("/getPackingSlipTableClByItemIdAndPackingSlipId", checkAuthentication, WBSDB.getPackingSlipTableClByItemIdAndPackingSlipId);
 router.post("/insertIntoPackingSlipTableCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableCl);
 
 

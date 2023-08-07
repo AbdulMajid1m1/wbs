@@ -228,7 +228,7 @@ const PickingListLastForm = () => {
         INVENTLOCATIONID: locationInputValue,
         ORDERED: parsedData?.QTY,
         PACKINGSLIPID: parsedData?.TRANSREFID,// comming from previous page
-        ASSIGNEDUSERID: item.ASSIGNEDTOUSERID, // comming from mapped barcode data
+        ASSIGNEDUSERID: parsedData?.ASSIGNEDTOUSERID, // comming from mapped barcode data
         SALESID: parsedData?.PICKINGROUTEID, // comming from previous page
         ITEMID: parsedData?.ITEMID, // comming from previous page
         NAME: parsedData?.ITEMNAME, // comming from previous page

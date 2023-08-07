@@ -110,6 +110,7 @@ import ItemUnAllocation from './pages/ItemUnAllocation/ItemUnAllocation'
 import SecondItemUnAllocation from './pages/ItemUnAllocation/SecondItemUnAllocation'
 import WmsPalletIDInquiry from './pages/WmsPalletIDInquiry/WmsPalletIDInquiry'
 import { RefreshProvider } from './contexts/RefreshContext'
+import DispatchingSecondScreen from './pages/DispatchingPickingSlip/DispatchingSecondScreen'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -162,6 +163,7 @@ const App = () => {
         <Route path="/pickinglistlast" element={<PickingListLastForm />} />
 
         <Route path="/dispatchingslip" element={<DispatchingPickingSlip />} />
+        <Route path="/dispatchingslip-step-two" element={<DispatchingSecondScreen />} />
 
         <Route path='/rma' element={<ReturnRMA />} />
         <Route path="/rmalastform" element={<ReturnRMALast />} />

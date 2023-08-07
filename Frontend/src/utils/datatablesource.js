@@ -244,48 +244,6 @@ export const TblReceiptsManagementColumn = [
 ];
 
 
-export const TblPackingSlipTableColumn = [
-  {
-    field: "SALESID",
-    headerName: "SALES ID",
-    width: 180,
-  },
-  {
-    field: "ITEMID",
-    headerName: "ITEM ID",
-    width: 180,
-  },
-  {
-    field: "NAME",
-    headerName: "NAME",
-    width: 180,
-  },
-  {
-    field: "INVENTLOCATIONID",
-    headerName: "INVENT LOCATION ID",
-    width: 180,
-  },
-  {
-    field: "CONFIGID",
-    headerName: "CONFIG ID",
-    width: 180,
-  },
-  {
-    field: "ORDERED",
-    headerName: "ORDERED",
-    width: 180,
-  },
-  {
-    field: "PACKINGSLIPID",
-    headerName: "PACKING SLIP ID",
-    width: 180,
-  },
-  {
-    field: "VEHICLESHIPPLATENUMBER",
-    headerName: "VEHICLE SHIP PLATE NUMBER",
-    width: 180,
-  },
-];
 
 export const AllItems = [
   {

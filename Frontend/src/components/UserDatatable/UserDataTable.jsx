@@ -502,11 +502,11 @@ const UserDataTable = ({
         case "ItemCode":
           try {
             const response = await userRequest.delete(
-              "deleteTblMappedBarcodesDataByItemCode",
+              "deleteTblMappedBarcodesDataBySerialNumber",
               {
                 headers: {
                   ...userRequest.defaults.headers,
-                  ItemCode: rowdata.ItemCode,
+                  itemserialno: rowdata?.ItemSerialNo,
                 },
               }
             );

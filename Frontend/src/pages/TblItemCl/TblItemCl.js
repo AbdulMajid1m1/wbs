@@ -17,7 +17,7 @@ const TblItemCl = () => {
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
     const { refreshLoading, setRefreshLoading } = useContext(RefreshContext);
-
+    const [generateSerialPopUp, setGenerateSerialPopUp] = useState(false);
     const handleRefresh = async () => {
         setRefreshLoading(true);
 
@@ -46,6 +46,11 @@ const TblItemCl = () => {
         setMessage(null);
 
     };
+    const handleGenerateSerialPopUp = async () => {
+        setGenerateSerialPopUp(!generateSerialPopUp)
+    }
+
+  
 
 
 
@@ -69,10 +74,13 @@ const TblItemCl = () => {
 
             <UserDataTable data={data || []} addNewNavigation="/itemsnew" title="Stock Master (Warehouse Operation)" columnsName={AllItems} backButton={true}
                 Refresh={true}
+                GenerateSerial={true}
                 uniqueId="itemTableId"
                 handleRefresh={handleRefresh}
                 refreshLoading={refreshLoading}
                 loading={isLoading}
+                handleGenerateSerialPopUp={handleGenerateSerialPopUp}
+                generateSerialPopUp={generateSerialPopUp}
             // setIsLoading={setIsLoading}
 
 

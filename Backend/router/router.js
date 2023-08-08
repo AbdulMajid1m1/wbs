@@ -126,6 +126,7 @@ router.get("/getShipmentRecievedCLDataBySerialNumberAndBinLocation", checkAuthen
 
 router.post("/insertShipmentRecievedDataCL", checkAuthentication, WBSDB.insertShipmentRecievedDataCL);
 router.post("/generateSerialNumberforReceving", checkAuthentication, WBSDB.generateSerialNumberforReceving);
+router.post("/generateSerialNumberforStockMasterAndInsertIntoMappedBarcode", checkAuthentication, WBSDB.generateSerialNumberforStockMasterAndInsertIntoMappedBarcode);
 
 router.delete("/deleteShipmentRecievedDataCL", checkAuthentication, WBSDB.deleteShipmentRecievedDataCL);
 

@@ -26,7 +26,7 @@ const WmsItemMapping = () => {
   const [userconfig, setUserConfig] = useState("");
   const [userdate, setUserDate] = useState(null);
   const [userqrcode, setUserQrCode] = useState("");
-  const [userbinlocation, setUserBinlocation] = useState("");
+  const [userbinlocation, setUserBinlocation] = useState("AZ-W01-Z001-A0001");
   const [reference, setReference] = useState("");
   // const [length, setLength] = useState("");
   // const [width, setWidth] = useState("");

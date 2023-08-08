@@ -34,13 +34,14 @@ const DispatchingSecondScreen = () => {
     useEffect(() => {
         const getDataFromPackingSlipCl = async () => {
             try {
-                const res = await userRequest.get("/getPackingSlipTableClByItemIdAndPackingSlipId?ITEMID=" + parsedData?.ITEMID + "&PACKINGSLIPID=" + parsedData?.PACKINGSLIPID);
+                const res = await userRequest.get("/getPackingSlipTableClByItemIdAndPackingSlipId?ITEMID=" + parsedData?.ITEMID + "&SALESID=" + parsedData?.SALESID);
                 setNewTableData(res?.data ?? []);
+                // SALESID
             }
             catch (error) {
                 console.log(error)
                 setNewTableData([]);
-                setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+                setError(error?.response?.data?.message ?? 'Something went wrong');
 
 
             }
@@ -79,14 +80,11 @@ const DispatchingSecondScreen = () => {
         let trimInput = userInput?.trim()
         // filter the data based on the user input and selection type
         const filtered = newTableData.filter((item) => {
-            if (selectionType === 'Pallet') {
-                return item.PalletCode?.trim() === trimInput;
-            } else if (selectionType === 'Serial') {
-                return item?.ITEMSERIALNO?.trim() === trimInput;
-            } else {
-                return true;
-            }
+            return item?.ITEMSERIALNO?.trim() === trimInput;
         });
+
+        console.log(filtered)
+
 
         if (filtered.length === 0) {
             setTimeout(() => {
@@ -94,6 +92,14 @@ const DispatchingSecondScreen = () => {
             }, 300);
             return;
         }
+
+        if (filtered?.[0]?.DISPATCH === 'yes') {
+            setTimeout(() => {
+                setError(`This item with Serial Number ${filtered?.[0]?.ITEMSERIALNO?.trim()} is already dispatched`);
+            }, 400);
+            return;
+        }
+
 
         setFilteredData((prevData) => {
             // Filter out items that are already in prevData
@@ -149,9 +155,6 @@ const DispatchingSecondScreen = () => {
 
 
     const handleInputUser = (e) => {
-
-
-
         filterData();
     }
 
@@ -204,6 +207,7 @@ const DispatchingSecondScreen = () => {
             setMessage(responses[0]?.data?.message ?? "Data Saved Successfully");
 
             setVehicleBarcode('');
+            setFilteredData([]);
         }
         catch (error) {
             console.error(error);
@@ -233,13 +237,13 @@ const DispatchingSecondScreen = () => {
                                         </span>
                                     </button>
                                 </div>
-                                <span className='text-white -mt-7'>PACKING SLIP ID:</span>
+                                <span className='text-white -mt-7'> SALES ID:</span>
                                 <input
                                     //   value={parsedData.TRANSFERID}
                                     className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                     block w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
 
-                                    value={parsedData?.PACKINGSLIPID}
+                                    value={parsedData?.SALESID}
                                     disabled
                                 />
 
@@ -291,6 +295,7 @@ const DispatchingSecondScreen = () => {
                                             <th>SALESID</th>
                                             <th>ITEMID</th>
                                             <th>ITEMSERIALNO</th>
+                                            <th>DISPATCH</th>
                                             <th>NAME</th>
                                             <th>INVENTLOCATIONID</th>
                                             <th>CONFIGID</th>
@@ -310,6 +315,7 @@ const DispatchingSecondScreen = () => {
                                                 <td>{data.SALESID}</td>
                                                 <td>{data.ITEMID}</td>
                                                 <td>{data.ITEMSERIALNO}</td>
+                                                <td>{data.DISPATCH}</td>
                                                 <td>{data.NAME}</td>
                                                 <td>{data.INVENTLOCATIONID}</td>
                                                 <td>{data.CONFIGID}</td>
@@ -355,7 +361,7 @@ const DispatchingSecondScreen = () => {
                                     />
                                     <span className="ml-2 text-[#00006A]">BY SERIAL</span>
                                 </label>
-                                <label className="inline-flex items-center mt-1">
+                                {/* <label className="inline-flex items-center mt-1">
                                     <input
                                         type="radio"
                                         name="selectionType"
@@ -366,7 +372,7 @@ const DispatchingSecondScreen = () => {
                                         disabled
                                     />
                                     <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                                </label>
+                                </label> */}
                             </div>
                         </div>
 

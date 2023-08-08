@@ -9,6 +9,7 @@ import "./BinToBinInternal.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { Autocomplete, TextField } from '@mui/material';
 
 const BinToBinInternal = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const BinToBinInternal = () => {
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [newFilterData, setNewFilterData] = useState(data);
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -43,6 +45,7 @@ const BinToBinInternal = () => {
         console.log(response?.data);
 
         setData(response?.data ?? []);
+        setNewFilterData(response?.data ?? []);
         setIsLoading(false)
         setMessage(response?.data?.message ?? 'Data Displayed');
       })
@@ -59,22 +62,30 @@ const BinToBinInternal = () => {
 
   // define the function to filter data based on user input and selection type
   const filterData = () => {
-    const filtered = data.filter((item) => {
+    const filtered = newFilterData?.filter((item) => {
       if (selectionType === 'Pallet') {
-        return item.PalletCode === userInput;
+        return item.PalletCode?.trim() === userInput.trim();
       } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo === userInput;
+        return item.ItemSerialNo.trim() === userInput.trim();
       } else {
         return true;
       }
     });
-    setFilteredData(filtered); // update the filtered data state variable
+    if (filtered?.length === 0) {
+      setTimeout(() => {
+        setError(`Please scan a valid ${selectionType}`);
+      }, 500);
+      return
+    }
+
+    setFilteredData((prev) => [...prev, ...filtered]);
+    setUserInput(""); // reset the user input state variable
   };
 
   // use useEffect to trigger the filtering of data whenever the user input changes
-  useEffect(() => {
-    filterData();
-  }, [userInputSubmit, selectionType]);
+  // useEffect(() => {
+  //   filterData();
+  // }, [userInputSubmit, selectionType]);
 
 
   // reset function
@@ -96,10 +107,19 @@ const BinToBinInternal = () => {
     setUserInputSubmit(!userInputSubmit);
     // reset the scan location state variable
     setBinLocation("");
-
-
   };
 
+  const handleAutoComplete = (event, value) => {
+
+    let itemCode = value?.trim();
+    if (!itemCode) {
+      setNewFilterData(data);
+      return;
+    }
+    console.log(value);
+    const newData = data.filter(item => item.ItemCode.trim() === itemCode);
+    setNewFilterData(newData);
+  };
 
   const handleBinLocation = (e) => {
     e.preventDefault();
@@ -156,7 +176,8 @@ const BinToBinInternal = () => {
 
 
   const handleInputUser = (e) => {
-    setUserInputSubmit(!userInputSubmit);
+    // setUserInputSubmit(!userInputSubmit);
+    filterData();
   }
 
 
@@ -235,6 +256,60 @@ const BinToBinInternal = () => {
               </div>
             </form>
 
+            {data?.length > 0 && (
+
+
+
+              <div className="mb-6 mt-6">
+                <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
+                <Autocomplete
+                  id="zone"
+                  options={Array.from(new Set(data.map((item) => item.ItemCode))).filter(Boolean)}
+                  getOptionLabel={(option) => option || ""}
+                  onChange={handleAutoComplete}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Serach Container ID here"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+              </div>
+            )}
+
             <div className='mb-6'>
               <div className='flex justify-between'>
                 <div>
@@ -247,7 +322,7 @@ const BinToBinInternal = () => {
                     id="totals"
                     className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[45%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Totals"
-                    value={data.length}
+                    value={newFilterData?.length}
                   />
                 </div>
               </div>
@@ -277,7 +352,7 @@ const BinToBinInternal = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, index) => (
+                    {newFilterData?.map((item, index) => (
                       <tr key={index}>
                         <td>{item.ItemCode}</td>
                         <td>{item.ItemDesc}</td>

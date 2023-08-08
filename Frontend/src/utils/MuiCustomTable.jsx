@@ -75,13 +75,13 @@ export const MuiCustomTable = styled(DataGrid)(({ theme, secondaryColor }) => {
     const colorOptions = {
         primary: defaultColors,
         secondary: {
-            oddRow: '#e69138',
-            oddRowHover: alpha('#e69138', 0.5),
-            oddRowSelected: alpha('#e69138', 0.8),
+            oddRow: '#F98E1A',
+            oddRowHover: alpha('#F98E1A', 0.5),
+            oddRowSelected: alpha('#F98E1A', 0.8),
             evenRow: '#FFFFFF',
             evenRowHover: alpha('#F8F6F4', 1),
-            evenRowSelected: alpha('#e69138', 0.8),
-            columnHeader: '#e69138',
+            evenRowSelected: alpha('#F98E1A', 0.8),
+            columnHeader: '#F98E1A',
             columnHeaderText: '#FFFFFF',
             columnMenuIcon: '#FFFFFF',
             iconButton: '#FFFFFF',

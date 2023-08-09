@@ -1252,7 +1252,7 @@ const WBSDB = {
   async getTransferDistributionByTransferId(req, res, next,) {
     try {
       let query = `
-        SELECT * FROM dbo.Transfer_Distribution
+        SELECT * FROM dbo.tbl_shipment_palletizing
         WHERE TRANSFERID = @TRANSFERID
       `;
       const { TRANSFERID } = req.query;
@@ -6327,7 +6327,7 @@ const WBSDB = {
       }
 
       // Update StockMasterSerialNo in TblSysNo
-      const newStockMasterSerialNo = StockMasterSerialNo + SerialQTY;
+      const newStockMasterSerialNo = parseInt(StockMasterSerialNo) + parseInt(SerialQTY);
 
       const updateTblSysNoQuery = `
            UPDATE TblSysNo SET StockMasterSerialNo = @newStockMasterSerialNo

@@ -855,9 +855,14 @@ const WBSDB = {
 
     try {
       const serialNumberList = req.query.serialNumberList;
+      const binLocation = req.query.binLocation;
+      if (!binLocation) {
+        return res.status(400).send({ message: "binLocation is required." });
+      }
       if (!serialNumberList) {
         return res.status(400).send({ message: "serialNumberList is required." });
       }
+
       if (serialNumberList.length === 0) {
         return res.status(400).send({ message: "serialNumberList cannot be empty." });
       }
@@ -913,7 +918,6 @@ const WBSDB = {
               [ITEMNAME] AS [ItemDesc],
               [REMARKS] AS [Remarks],
               [USERID] AS [User],
-              [BIN] AS [BinLocation],
               [SERIALNUM] AS [ItemSerialNo],
               GETDATE() AS [MapDate],
               @PalletID AS [PalletCode],
@@ -983,7 +987,7 @@ const WBSDB = {
             .input('ItemDesc', sql.NVarChar, shipmentData.ItemDesc)
             .input('Remarks', sql.NVarChar, shipmentData.Remarks)
             .input('User', sql.NVarChar, req?.token?.UserID)
-            .input('BinLocation', sql.NVarChar, shipmentData.BinLocation)
+            .input('BinLocation', sql.NVarChar, binLocation)
             .input('ItemSerialNo', sql.NVarChar, shipmentData.ItemSerialNo)
             .input('MapDate', sql.Date, new Date())
             .input('PalletCode', sql.NVarChar, shipmentData.PalletCode)
@@ -1003,12 +1007,14 @@ const WBSDB = {
         const updateQuery = `
           UPDATE tbl_Shipment_Received_CL
           SET PALLETCODE = @PalletID,        
-          PALLET_DATE = @currentDate
+          PALLET_DATE = @currentDate,
+          BIN=@binLocation
           WHERE SERIALNUM = @SerialNumber
         `;
         await pool2.request()
           .input('PalletID', sql.NVarChar, palletID)
           .input('SerialNumber', sql.NVarChar, serialNumber)
+          .input("binLocation", sql.NVarChar, binLocation)
           .input("currentDate", sql.DateTime, currentDate)
           .query(updateQuery);
 
@@ -5467,33 +5473,37 @@ const WBSDB = {
     try {
       const { PICKINGROUTEID } = req.query;
       if (!PICKINGROUTEID) {
-        return res.status(400).send({ message: "Please provide data to insert" });
+        return res.status(400).send({ message: "PICKINGROUTEID is required" });
       }
-      console.log(req?.token)
-      console.log(req?.token?.UserID)
 
       let query = `
       SELECT * FROM dbo.WMS_Sales_PickingList_CL
-      WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID =@userId
-      AND PICKSTATUS = 'Partial'
+      WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID = @userId
+    
       `;
 
       let request = pool2.request();
-      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID)
-      request.input('userId', sql.NVarChar, req.token?.UserID)
+      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+      request.input('userId', sql.NVarChar, req.token?.UserID);
 
       const data = await request.query(query);
+
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No Record available" });
       }
+      console.log("retst")
+      console.log(data.recordset[0])
+
+      // Check if any of the records have the status "Picked"
+      console.log(data.recordsets[0]?.PICKSTATUS)
+
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
-
-
     }
   },
+
 
 
 

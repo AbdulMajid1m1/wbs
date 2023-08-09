@@ -84,7 +84,7 @@ const PickingListForm = () => {
         sessionStorage.setItem('pickingListRows', JSON.stringify([]));
         sessionStorage.setItem('PickingRowData', JSON.stringify({}));
         sessionStorage.setItem('pickingRowIndex', null);
-        setError(error?.response.data?.message ?? 'Wrong Route ID');
+        setError(error?.response.data?.message ?? "Something Went Wrong!");
 
       });
 
@@ -93,8 +93,8 @@ const PickingListForm = () => {
   const handleRowClick = (item, index) => {
     // save data in session storage
     console.log(item);
-    if (parseInt(item?.QTY) === 0) {
-      setError('Quantity is 0');
+    if (parseInt(item?.QTY) === 0 || item?.PICKSTATUS === 'Picked') {
+      setError('Item already picked! & Ready For Dispatch');
       return;
     }
 

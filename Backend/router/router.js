@@ -234,6 +234,7 @@ router.get("/getStockMasterDataByItemId", checkAuthentication, checkRole([roles[
 // --------------- tblMappedBarcodes APIS Start ------
 
 router.get("/getAllTblMappedBarcodes", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[41]]), WBSDB.getAllTblMappedBarcodes);
+router.get("/getAllTblMappedBarcodesDeleted", checkAuthentication, WBSDB.getAllTblMappedBarcodesDeleted);
 router.get("/getLimitedTblMappedBarcodes", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[41]]), WBSDB.getLimitedTblMappedBarcodes);
 
 router.post("/getAllTblMappedBarcodesByValueAndOperator", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[41]]), WBSDB.getAllTblMappedBarcodesByValueAndOperator);

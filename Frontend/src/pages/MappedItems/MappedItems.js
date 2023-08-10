@@ -9,6 +9,7 @@ import CustomSnakebar from '../../utils/CustomSnakebar';
 const MappedItems = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [count, setCount] = useState(null);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
 
@@ -24,12 +25,9 @@ const MappedItems = () => {
         const getAllAssetsList = async () => {
 
             try {
-                const response = await userRequest.get("/getAllTblMappedBarcodes")
-
-                console.log(response?.data);
-
-                setAllData(response?.data ?? [])
-                setIsLoading(false)
+                const response = await userRequest.get("/getLimitedTblMappedBarcodes")
+                setAllData(response?.data?.data ?? [])
+                setCount(response?.data?.totalCount || null)
 
             }
             catch (error) {
@@ -41,10 +39,6 @@ const MappedItems = () => {
             }
         };
         getAllAssetsList();
-
-
-
-
 
 
     }, []);
@@ -61,6 +55,7 @@ const MappedItems = () => {
                 uniqueId="ItemCode"
                 loading={isLoading}
                 setIsLoading={setIsLoading}
+                TotalCount={count}
 
 
             />

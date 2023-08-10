@@ -26,8 +26,6 @@ const PrintingItemBarcode = () => {
 
                 const res = await userRequest.get("/getLimitedTblMappedBarcodes")
 
-                console.log(res?.data);
-
                 setData(res?.data?.data ?? [])
                 setCount(res?.data?.totalCount || null)
 

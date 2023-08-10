@@ -244,6 +244,7 @@ const UserDataTable = ({
           }
           break;
         case "PrintBarCode":
+        case "ItemCode":
           setIsLoading(true)
           try {
 
@@ -401,6 +402,7 @@ const UserDataTable = ({
       uniqueId === "wProfitLostClId" ||
       uniqueId === "journalCountingClId" ||
       uniqueId === "wmsInventoryClId" ||
+      uniqueId === "PICKINGROUTEID" ||
       uniqueId === "mobileWmsInventoryId"
     ) {
       handleRowClickInParent(item);
@@ -1178,6 +1180,8 @@ const UserDataTable = ({
 
   let smallHeightTableScreens = [
     'journalMovementClId',
+    'PICKINGROUTEID',
+    'barcodeDeletedId',
     'journalMovementClDetId',
     "wProfitLostClId",
     'wProfitLostClDetsId',

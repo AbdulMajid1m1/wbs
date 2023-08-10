@@ -2437,6 +2437,69 @@ const WBSDB = {
     }
   },
 
+  // async insertTblDispatchingDetailsDataCL(req, res, next) {
+  //   try {
+  //     const packingSlipArray = req.body;
+
+  //     for (const packingSlip of packingSlipArray) {
+  //       const fields = [
+  //         "PACKINGSLIPID",
+  //         "VEHICLESHIPPLATENUMBER",
+  //         ...(packingSlip.INVENTLOCATIONID ? ["INVENTLOCATIONID"] : []),
+  //         ...(packingSlip.ITEMID ? ["ITEMID"] : []),
+  //         ...(packingSlip.ORDERED ? ["ORDERED"] : []),
+  //         ...(packingSlip.NAME ? ["NAME"] : []),
+  //         ...(packingSlip.CONFIGID ? ["CONFIGID"] : []),
+  //         ...(packingSlip.SALESID ? ["SALESID"] : []),
+  //       ];
+
+  //       if (!packingSlip.PACKINGSLIPID || !packingSlip.VEHICLESHIPPLATENUMBER) {
+  //         return res.status(400).send({ message: "PACKINGSLIPID and VEHICLESHIPPLATENUMBER are required" });
+  //       }
+
+  //       let values = fields.map((field) => "@" + field);
+
+  //       let query = `INSERT INTO [WBSSQL].[dbo].[tbl_Dispatching_CL] 
+  //         (${fields.join(', ')}) 
+  //         VALUES 
+  //           (${values.join(', ')})
+  //         `;
+
+  //       let request = pool2.request();
+
+  //       request.input("PACKINGSLIPID", sql.NVarChar, packingSlip.PACKINGSLIPID);
+  //       request.input("VEHICLESHIPPLATENUMBER", sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
+  //       if (packingSlip.INVENTLOCATIONID) request.input("INVENTLOCATIONID", sql.NVarChar, packingSlip.INVENTLOCATIONID);
+  //       if (packingSlip.ITEMID) request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID);
+  //       if (packingSlip.ORDERED) request.input("ORDERED", sql.Float, packingSlip.ORDERED);
+  //       if (packingSlip.NAME) request.input("NAME", sql.NVarChar, packingSlip.NAME);
+  //       if (packingSlip.CONFIGID) request.input("CONFIGID", sql.NVarChar, packingSlip.CONFIGID);
+  //       if (packingSlip.SALESID) request.input("SALESID", sql.NVarChar, packingSlip.SALESID);
+
+  //       await request.query(query);
+  //       //  Now updating DISPATCH for the current packing slip
+  //       const updateQuery = `
+  //         UPDATE [WBSSQL].[dbo].[packingsliptable_CL]
+  //         SET DISPATCH = 'yes'
+  //         WHERE ITEMSERIALNO = @ITEMSERIALNO2
+  //       `;
+  //       request.input("ITEMSERIALNO2", sql.NVarChar, packingSlip.ITEMSERIALNO);
+
+  //       await request.query(updateQuery);
+
+
+
+  //       // DispatchingPickingSlip page
+  //       const result = await insertTransactionHistoryData("DispatchingPickingSlip", packingSlip?.ITEMID, req?.token?.UserID);
+  //       console.log(result.message);
+  //     }
+
+  //     return res.status(201).send({ message: 'Data inserted successfully.' });
+  //   } catch (error) {
+  //     return res.status(500).send({ message: error.message });
+  //   }
+  // },
+
   async insertTblDispatchingDetailsDataCL(req, res, next) {
     const packingSlipArray = req.body;
 
@@ -2448,7 +2511,10 @@ const WBSDB = {
 
       const request = new sql.Request(transaction);
 
-      for (const packingSlip of packingSlipArray) {
+      for (let i = 0; i < packingSlipArray.length; i++) {
+        const packingSlip = packingSlipArray[i];
+        const index = i;
+
         const fields = [
           "PACKINGSLIPID",
           "VEHICLESHIPPLATENUMBER",
@@ -2461,41 +2527,41 @@ const WBSDB = {
           ...(packingSlip.SALESID ? ["SALESID"] : [])
         ];
 
-        if (!packingSlip.PACKINGSLIPID || !packingSlip.VEHICLESHIPPLATENUMBER || !packingSlip.ITEMSERIALNO) {
-          throw new Error("PACKINGSLIPID and VEHICLESHIPPLATENUMBER are required");
-        }
+        const indexedFields = fields.map((field) => field + index);
 
-        const values = fields.map((field) => "@" + field);
+        const values = indexedFields.map((field) => "@" + field);
 
         const insertQuery = `
-                INSERT INTO tbl_DispatchingDetails_CL
-                (${fields.join(', ')}) 
-                VALUES (${values.join(', ')})
-            `;
+          INSERT INTO tbl_DispatchingDetails_CL
+          (${fields.join(', ')}) 
+          VALUES (${values.join(', ')})
+        `;
 
-        request.input("PACKINGSLIPID", sql.NVarChar, packingSlip.PACKINGSLIPID);
-        request.input("VEHICLESHIPPLATENUMBER", sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
-        request.input("ITEMSERIALNO", sql.NVarChar, packingSlip.ITEMSERIALNO);
-        if (packingSlip.INVENTLOCATIONID) request.input("INVENTLOCATIONID", sql.NVarChar, packingSlip.INVENTLOCATIONID);
-        if (packingSlip.ITEMID) request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID);
-        if (packingSlip.ORDERED) request.input("ORDERED", sql.Float, packingSlip.ORDERED);
-        if (packingSlip.NAME) request.input("NAME", sql.NVarChar, packingSlip.NAME);
-        if (packingSlip.CONFIGID) request.input("CONFIGID", sql.NVarChar, packingSlip.CONFIGID);
-        if (packingSlip.SALESID) request.input("SALESID", sql.NVarChar, packingSlip.SALESID);
+        request.input("PACKINGSLIPID" + index, sql.NVarChar, packingSlip.PACKINGSLIPID);
+        request.input("VEHICLESHIPPLATENUMBER" + index, sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
+        request.input("ITEMSERIALNO" + index, sql.NVarChar, packingSlip.ITEMSERIALNO);
+        if (packingSlip.INVENTLOCATIONID) request.input("INVENTLOCATIONID" + index, sql.NVarChar, packingSlip.INVENTLOCATIONID);
+        if (packingSlip.ITEMID) request.input("ITEMID" + index, sql.NVarChar, packingSlip.ITEMID);
+        if (packingSlip.ORDERED) request.input("ORDERED" + index, sql.Float, packingSlip.ORDERED);
+        if (packingSlip.NAME) request.input("NAME" + index, sql.NVarChar, packingSlip.NAME);
+        if (packingSlip.CONFIGID) request.input("CONFIGID" + index, sql.NVarChar, packingSlip.CONFIGID);
+        if (packingSlip.SALESID) request.input("SALESID" + index, sql.NVarChar, packingSlip.SALESID);
 
         await request.query(insertQuery);
 
         const result = await insertTransactionHistoryData("DispatchingPickingSlipDetails", packingSlip?.ITEMID, req?.token?.UserID);
         console.log(result.message);
 
-        // Now updating DISPATCH for the current packing slip
         const updateQuery = `
-                UPDATE [WBSSQL].[dbo].[packingsliptable_CL]
-                SET DISPATCH = 'yes'
-                WHERE ITEMSERIALNO = @ITEMSERIALNO
-            `;
+          UPDATE [WBSSQL].[dbo].[packingsliptable_CL]
+          SET DISPATCH = 'yes',
+          VEHICLESHIPPLATENUMBER=@VEHICLESHIPPLATENUMBER${index}
+          WHERE ITEMSERIALNO = @ITEMSERIALNO${index}
+        `;
 
         await request.query(updateQuery);
+
+
       }
 
       await transaction.commit();
@@ -2504,9 +2570,8 @@ const WBSDB = {
       await transaction.rollback();
       return res.status(500).send({ message: error.message });
     }
-  },
-
-
+  }
+  ,
   async getAllTblDispatchingCL(req, res, next) {
     try {
 
@@ -3467,6 +3532,27 @@ const WBSDB = {
 
       let query = `
             SELECT * FROM dbo.tblMappedBarcodes
+          `;
+      let request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+
+      return res.status(200).send(data.recordsets[0]);
+    }
+    catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  async getAllTblMappedBarcodesDeleted(req, res, next) {
+    try {
+
+      let query = `
+            SELECT * FROM dbo.tblMappedBarcodes_Deleted
           `;
       let request = pool2.request();
       const data = await request.query(query);

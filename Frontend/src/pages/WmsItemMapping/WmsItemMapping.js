@@ -8,8 +8,13 @@ import CustomSnakebar from '../../utils/CustomSnakebar';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
 import { AllItems, WmsItemMappedColumn } from '../../utils/datatablesource';
 import { TextField, Autocomplete, CircularProgress } from '@mui/material';
+import Swal from 'sweetalert2';
 
 const WmsItemMapping = () => {
+  // useRef to move foucs on desired element
+  const serialNoRef = useRef(null);
+  const gtinRef = useRef(null);
+
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -135,27 +140,13 @@ const WmsItemMapping = () => {
           Height: height,
           Weight: weight,
         }).then(response => {
-          console.log(response?.data); 
+          console.log(response?.data);
 
 
         })
           .catch(error => {
             console.error(error);
           });
-
-
-
-
-
-        // setUserConfig("");
-        // setUserDate(null);
-        // setUserQrCode("");
-        // setUserBinlocation("");
-        // setReference("");
-        // setHeight(null);
-        // setLength(null);
-        // setWidth(null);
-        // setWeight(null);
 
 
       })
@@ -229,7 +220,58 @@ const WmsItemMapping = () => {
 
   }
 
-  
+  const handleBlur = async () => {
+    if (userserial === "" || !userserial) return;
+    try {
+      const res = await userRequest.post('/getItemInfoByItemSerialNo', {}, {
+        headers: { itemserialno: userserial }
+      });
+      Swal.fire({
+        title: 'Serial No. already exists',
+        text: "Do you want to update the data?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#F98E1A',
+        cancelButtonColor: '#fc5a34',
+        confirmButtonText: 'Yes, Update it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          gtinRef.current.focus();
+          return
+        }
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          setUserSerial("");
+          // focus on the input field
+          serialNoRef.current.focus();
+          return
+
+        }
+
+      })
+
+    }
+    catch (error) {
+      console.log(error);
+      // check if status is 404 then show the setErrorMessage serial number is valid
+      if (error?.response?.status === 404) {
+
+        gtinRef.current.focus();
+        return
+      }
+      else {
+        Swal.fire({
+          title: 'Error!',
+          text: error?.response?.data?.message,
+          icon: 'error',
+          confirmButtonText: 'OK'
+
+        }
+        )
+      }
+    }
+  }
+
+
 
   return (
     <>
@@ -291,11 +333,8 @@ const WmsItemMapping = () => {
               >Search Bar</label>
 
               <Autocomplete
-
-
                 id="searchInput"
                 options={dataList}
-
                 getOptionLabel={(option) => `${option?.ITEMID} - ${option?.ITEMNAME}`}
                 onChange={handleAutoComplete}
                 onInputChange={(event, newInputValue) => handleAutoCompleteInputChnage(event, newInputValue)}
@@ -355,11 +394,14 @@ const WmsItemMapping = () => {
               <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
               <input
                 id="scan"
+                name='serialNo'
+                ref={serialNoRef}
                 // required
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan Serial'
                 value={userserial}
                 onChange={(e) => setUserSerial(e.target.value)}
+                onBlur={handleBlur}
               />
             </div>
 
@@ -368,6 +410,7 @@ const WmsItemMapping = () => {
               <input
                 id="gtin"
                 // required
+                ref={gtinRef}
                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder='Scan GTIN'
                 value={usergtin}

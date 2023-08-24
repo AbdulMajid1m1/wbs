@@ -54,8 +54,8 @@ const TblAllLocationsUpdates = ({ inputs, title,
                     updatedData[inputName] = formData[inputName];
                 }
             }
-
-            updatedData["LOCATIONS_HFID"] = id;
+            const idAsNumber = Number(id);
+            updatedData["LOCATIONS_HFID"] = idAsNumber;
 
             if (Object.keys(updatedData).length <= 1) {
                 setError("No changes detected.");
@@ -103,7 +103,7 @@ const TblAllLocationsUpdates = ({ inputs, title,
                     {/* Spinners */}
                     <BeatLoader
                         size={18}
-                        color={"#6439ff"}
+                        color={"#0079FF"}
                         // height={4}
                         loading={isLoading}
                     />
@@ -150,7 +150,7 @@ const TblAllLocationsUpdates = ({ inputs, title,
 
                                     <div className="buttonAdd" >
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{ background: '#e69138' }}
                                             type="submit"
                                         >Update</button>
                                     </div>

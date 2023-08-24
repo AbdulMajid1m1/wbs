@@ -92,6 +92,8 @@ const checkRole = (roleNames) => {
   };
 };
 
+
+
 const fetchIsAdminFromDatabase = async (userId) => {
   const isAdminQuery = 'SELECT IsAdmin FROM tblUsers WHERE UserID = @userId';
 

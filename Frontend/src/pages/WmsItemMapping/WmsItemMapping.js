@@ -18,10 +18,8 @@ const WmsItemMapping = () => {
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-
   const storedUser = localStorage.getItem('currentUser');
   const initialUser = storedUser ? JSON.parse(storedUser) : {};
-
   const [currentUser, setCurrentUser] = useState(initialUser);
   const [selectedOption, setSelectedOption] = useState();
   const [dataList, setDataList] = useState([]);
@@ -33,11 +31,6 @@ const WmsItemMapping = () => {
   const [userqrcode, setUserQrCode] = useState("");
   const [userbinlocation, setUserBinlocation] = useState("AZ-W01-Z001-A0001");
   const [reference, setReference] = useState("");
-  // const [length, setLength] = useState("");
-  // const [width, setWidth] = useState("");
-  // const [height, setHeight] = useState("");
-  // const [weight, setWeight] = useState("");
-
   const [rowData, setRowData] = useState();
   const [searchText, setSearchText] = useState('');
   const abortControllerRef = useRef(null);
@@ -334,6 +327,7 @@ const WmsItemMapping = () => {
 
               <Autocomplete
                 id="searchInput"
+                
                 options={dataList}
                 getOptionLabel={(option) => `${option?.ITEMID} - ${option?.ITEMNAME}`}
                 onChange={handleAutoComplete}

@@ -773,32 +773,6 @@ const WBSDB = {
   },
 
 
-
-  // async vaildatehipmentPalletizingSerialNumber(req, res, next) {
-  //   try {
-  //     const { ItemSerialNo } = req.query;
-  //     // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
-  //     if (!ItemSerialNo) return res.status(400).send({ message: "ItemSerialNo is required." });
-  //     const checkMappedBarcodesQuery = `
-  //       SELECT COUNT(*) as count
-  //       FROM dbo.tbl_Shipment_Received_CL
-  //       WHERE SERIALNUM = @ItemSerialNo
-  //     `;
-
-  //     let request1 = pool2.request();
-  //     request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
-  //     const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
-
-  //     if (checkMappedBarcodesResult.recordset[0].count === 0) {
-  //       return res.status(400).send({ message: "Error: Serial number not found in tbl_Shipment_Received_CL." });
-  //     }
-  //     return res.status(200).send({ message: "Success: Serial number is valid" });
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // },
-
   async vaildatehipmentPalletizingSerialNumber(req, res, next) {
     try {
       const { ItemSerialNo, SHIPMENTID } = req.query;
@@ -1230,7 +1204,6 @@ const WBSDB = {
 
   // ------------ tbl_Shipment_Received_CL controllers Start ------------
 
-
   async getAllTblShipmentReceivedCL(req, res, next) {
 
     try {
@@ -1251,10 +1224,6 @@ const WBSDB = {
     }
   },
 
-
-
-
-
   async getTransferDistributionByTransferId(req, res, next,) {
     try {
       let query = `
@@ -1274,6 +1243,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
   async getTblShipmentReceivedCLStats(req, res, next) {
     try {
       let query = `
@@ -1305,7 +1275,7 @@ const WBSDB = {
   // post request to insert data 
 
   async insertShipmentRecievedDataCL(req, res, next) {
-    console.log(req.token);
+
     try {
       const {
         SHIPMENTID,
@@ -2855,7 +2825,7 @@ const WBSDB = {
   WHERE LOCATIONS_HFID = @LOCATIONS_HFID
 `;
 
-      request.input('LOCATIONS_HFID', sql.Numeric, LOCATIONS_HFID);
+      request.input('LOCATIONS_HFID', sql.Numeric, Number(LOCATIONS_HFID));
 
       const result = await request.query(query);
 

@@ -870,7 +870,8 @@ const UserDataTable = ({
     const dataWithoutId = data.map(({ id, ...rest }) => rest);
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(dataWithoutId); // Pass the new array to the 'json_to_sheet' method
-    XLSX.utils.book_append_sheet(wb, ws, title);
+    const validTitle = title.length > 31 ? title.substr(0, 31) : title;
+    XLSX.utils.book_append_sheet(wb, ws, validTitle);
     if (returnBlob) {
       const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([wbout], { type: 'application/octet-stream' });

@@ -94,7 +94,6 @@ const PutAwayScreen3 = () => {
     }
     else {
       try {
-        // const response = await userRequest.get(`/vaildatehipmentPalletizingSerialNumber?ItemSerialNo=${serialNumber}&SHIPMENTID=${selectedPutAwayData.SHIPMENTID}`);
         const response = await userRequest.get(`/vaildatehipmentPalletizingSerialNumber?ItemSerialNo=${serialNumber}&SHIPMENTID=${parsedData12}`);
         setMessage(response?.data?.message || 'Inserted Successfully');
         setSerialNumberList([...serialnumberlist, serialNumber]);

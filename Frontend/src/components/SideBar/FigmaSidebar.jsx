@@ -668,26 +668,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Dispatching</p>
                     </div>
                     
-
-                    <div className='main-images-container' onClick={() => navigate('/itemallocation')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/itemallocation')
-                        }
-                    >
-                        <img src={wmsallocation} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Item Re Allocation</p>
-                    </div>
-       
-                    <div className='main-images-container' onClick={() => navigate('/itemunallocation')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/itemunallocation')
-                        }
-                    >
-                        <img src={unallocation} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Un-Allocated Items</p>
-                    </div>
-
-
+                    
                     <div className='main-images-container' onClick={() => navigate('/transferpage1')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/transferpage1')
@@ -716,16 +697,6 @@ const FigmaSidebar = () => {
                     </div>
 
                     
-                    <div className='main-images-container' onClick={() => navigate('/profitloss')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/profitloss')
-                        }
-                    >
-                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Profit and Loss</p>
-                    </div>
-
-                    
                     <div className='main-images-container' onClick={() => navigate('/rma')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/rma')
@@ -745,6 +716,16 @@ const FigmaSidebar = () => {
                     </div>
 
                     
+                    <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/wmsphysicalbinlocation')
+                        }
+                    >
+                        <img src={wmslocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Inventory By Bin Location</p>
+                    </div>
+
+                    
                     <div className='main-images-container' onClick={() => navigate('/journalfirst')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/journalfirst')
@@ -754,9 +735,8 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Journal Movement Counting</p>
                     </div>
 
-
-                    
-                      <div className='main-images-container' onClick={() => navigate('/wmsphysical')}
+ 
+                    <div className='main-images-container' onClick={() => navigate('/wmsphysical')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/wmsphysical')
                         }
@@ -765,14 +745,33 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Physical Count (WMS)</p>
                     </div>
 
-
-                    <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/wmsphysicalbinlocation')
+                    
+                    <div className='main-images-container' onClick={() => navigate('/profitloss')}
+                        onContextMenu={(event) =>
+                            handleContextMenu(event, '/profitloss')
                         }
                     >
-                        <img src={wmslocation} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Inventory By Bin Location</p>
+                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Profit and Loss</p>
+                    </div>
+
+
+                    <div className='main-images-container' onClick={() => navigate('/itemallocation')}
+                        onContextMenu={(event) =>
+                            handleContextMenu(event, '/itemallocation')
+                        }
+                    >
+                        <img src={wmsallocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Item Re Allocation</p>
+                    </div>
+       
+                    <div className='main-images-container' onClick={() => navigate('/itemunallocation')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/itemunallocation')
+                        }
+                    >
+                        <img src={unallocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Un-Allocated Items</p>
                     </div>
 
 

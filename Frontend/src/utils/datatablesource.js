@@ -2856,18 +2856,13 @@ export const ZoneReceivingColoumn = [
 
 export const ZoneDispacthingColumn = [
   {
-    field: "DZONE",
-    headerName: "DZONE",
-    width: 180,
-  },
-  {
-    field: "id",
-    headerName: "ID",
-    width: 180,
-  },
-  {
     field: "tbl_DZONESID",
     headerName: "tbl DZONES ID",
+    width: 180,
+  },
+  {
+    field: "DZONE",
+    headerName: "DZONE",
     width: 180,
   },
 

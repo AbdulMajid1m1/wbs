@@ -319,11 +319,16 @@ const WmsInventory = () => {
 
 
 
-            <div className='mt-3'>
+            <div className='mt-3'
+              style={{
+                marginLeft: "-20px", marginRight: "-20px"
+              }}
+            >
               <UserDataTable data={selectedOption} columnsName={AllItems} backButton={false}
                 handleRowClickInParent={handleRowClickInParent}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                secondaryColor="secondary"
                 uniqueId={"mobileWmsInventoryId"}
                 checkboxSelection={"disabled"}
 
@@ -389,7 +394,7 @@ const WmsInventory = () => {
 
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }

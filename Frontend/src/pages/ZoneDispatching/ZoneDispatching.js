@@ -54,7 +54,7 @@ const ZoneDispatching = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
             
 
-            <UserDataTable data={alldata} addNewNavigation="/" title="Zone Dispatching" 
+            <UserDataTable data={alldata} addNewNavigation="/tblzonedispatching" title="Zone Dispatching" 
                 columnsName={ZoneDispacthingColumn} 
                   backButton={true}
                     uniqueId="zoneDispatchingId"

@@ -155,6 +155,7 @@ const ReceiptsManagement = () => {
 
                 <DashboardTable data={filterData} title={"Receipts Management"} columnsName={TblReceiptsManagementColumn}
                   uniqueId="receiptsManagement"
+                  
                   secondaryColor="secondary" // to get orange color in table
 
                 />

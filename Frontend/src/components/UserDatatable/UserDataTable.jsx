@@ -50,7 +50,7 @@ const UserDataTable = ({
   TotalCount,
   loading,
   setIsLoading,
-
+  secondaryColor,
   handleGenerateSerialPopUp,
   GenerateSerial,
   generateSerialPopUp,
@@ -665,7 +665,7 @@ const UserDataTable = ({
         case "zoneDispatchingId":
           try {
             const response = await userRequest.delete(
-              "/deleteRzoneData?tbl_RZONESID=" + rowdata.tbl_RZONESID
+              "/deleteDzoneData?tbl_DZONESID=" + rowdata.tbl_DZONESID
             );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");
@@ -738,6 +738,9 @@ const UserDataTable = ({
       case "palletMasterId":
         navigate("/tblpalletupdate/" + rowData?.PalletNumber)
         break;
+      case "zoneDispatchingId":
+        navigate("/tblzonedispatchingupdate/" + rowData?.tbl_DZONESID)
+        break;
 
       case "usersAccountsId":
         navigate("/user-accounts/" + rowData?.UserID + "/" + rowData?.Fullname)
@@ -754,11 +757,12 @@ const UserDataTable = ({
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'auto',
-      minWidth: 0, // add this property
-      maxWidth: '100%', // add this property
+      minWidth: 0,
+      maxWidth: '100%',
+      overflowX: 'auto',
     };
     return (
-      <div style={{ ...style, overflowX: 'auto' }}>
+      <div style={{ ...style }}>
         {params.value}
       </div>
     );
@@ -1416,6 +1420,7 @@ const UserDataTable = ({
 
         <MuiCustomTable
           loading={loading}
+          secondaryColor={secondaryColor ? secondaryColor : null}
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
           }

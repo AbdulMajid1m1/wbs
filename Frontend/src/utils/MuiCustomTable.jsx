@@ -7,7 +7,7 @@ import { gridClasses } from '@mui/x-data-grid';
 const ODD_OPACITY = 0.2;
 const EVEN_OPACITY = 0.5;
 
-function customCheckbox(theme) {
+function customCheckbox(theme, secondaryColor) {
     return {
         '& .MuiCheckbox-root svg': {
             width: 16,
@@ -21,8 +21,8 @@ function customCheckbox(theme) {
             display: 'none',
         },
         '& .MuiCheckbox-root.Mui-checked:not(.MuiCheckbox-indeterminate) svg': {
-            backgroundColor: '#1890ff',
-            borderColor: '#1890ff',
+            backgroundColor: secondaryColor === 'secondary' ? '#F98E1A' : '#1890ff',
+            borderColor: secondaryColor === 'secondary' ? '#F98E1A' : '#1890ff',
         },
         '& .MuiCheckbox-root.Mui-checked .MuiIconButton-label:after': {
             position: 'absolute',
@@ -154,6 +154,6 @@ export const MuiCustomTable = styled(DataGrid)(({ theme, secondaryColor }) => {
         '& .MuiDataGrid-iconSeparator': {
             color: colors.iconSeparator,
         },
-        ...customCheckbox(theme),
+        ...customCheckbox(theme, secondaryColor),
     };
 });

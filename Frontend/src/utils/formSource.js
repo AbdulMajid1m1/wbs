@@ -1031,3 +1031,50 @@ export const TblPalletMasterInput = [
 
 ];
 
+
+
+
+export const TblZoneDispatchingInput = [
+  // {
+  //   id: "zoneDispatchingIdInput1",
+  //   label: "tbl_DZONESID*",
+  //   name: "tbl DZONESID",
+  //   type: "text",
+  //   placeholder: "tbl DZONESID",
+  // },
+  {
+    id: "zoneDispatchingIdInput2",
+    label: "DZONE*",
+    name: "DZONE",
+    type: "text",
+    placeholder: "DZONE",
+  },
+
+
+
+
+];
+
+
+
+
+export const TblZoneDispatchingUpdateColumn = [
+  {
+    id: "zoneDispatchingIdInput1",
+    label: "tbl DZONESID*",
+    name: "tbl_DZONESID",
+    type: "text",
+    placeholder: "tbl DZONESID",
+  },
+  {
+    id: "zoneDispatchingIdInput2",
+    label: "DZONE*",
+    name: "DZONE",
+    type: "text",
+    placeholder: "DZONE",
+  },
+
+
+
+
+];

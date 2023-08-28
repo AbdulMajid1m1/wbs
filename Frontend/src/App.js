@@ -112,6 +112,8 @@ import { RefreshProvider } from './contexts/RefreshContext'
 import ZoneReceiving from './pages/ZoneReceiving/ZoneReceiving'
 import ZoneDispatching from './pages/ZoneDispatching/ZoneDispatching'
 import DispatchingSecondScreen from './pages/DispatchingPickingSlip/DispatchingSecondScreen'
+import AddZoneDispatching from './components/AddNew/AddZoneDispatching'
+import TblZoneDispatchingUpdate from './components/UpdatesItem/TblZoneDispatchingUpdate'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -298,7 +300,11 @@ const App = () => {
 
 
                 <Route path='/zonereceiving' element={<ZoneReceiving />} />
+                
                 <Route path='/zonedispatching' element={<ZoneDispatching />} />
+                <Route path='/tblzonedispatching' element={<AddZoneDispatching title="Add Zones Dispatching" />} />
+                <Route path='/tblzonedispatchingupdate/:id' element={<TblZoneDispatchingUpdate title="Zone Dispatching Data Update" />} />
+               
 
                 {/*  <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
 

@@ -12,6 +12,7 @@ const corsOptions = {
     'http://localhost:3006',
     'http://gs1ksa.org:3006',
     "http://10.10.12.153:3006",
+    "http://192.168.100.9:3006"
   ],
   credentials: true
 };

@@ -51,6 +51,9 @@ const UserDataTable = ({
   loading,
   setIsLoading,
 
+  handleGenerateSerialPopUp,
+  GenerateSerial,
+  generateSerialPopUp,
 
 }) => {
   const navigate = useNavigate();
@@ -65,6 +68,7 @@ const UserDataTable = ({
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [muiFilteredData, setMuiFilteredData] = useState([]);
+  const [serialQty, setSerialQty] = useState(0);
 
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const resetSnakeBarMessages = () => {
@@ -72,6 +76,50 @@ const UserDataTable = ({
     setMessage(null);
 
   };
+
+  const handleGenerateSerialBtnClicked = () => {
+    if (selectedRow.length == 0) {
+      setError("Please select a row")
+      return;
+    }
+    handleGenerateSerialPopUp();
+  }
+
+
+  const handleGenerateSerial = async (data, serialQty) => {
+    console.log(data);
+    if (serialQty == 0) {
+      setError("Please enter serial quantity")
+      return;
+    }
+    handleGenerateSerialPopUp();
+    try {
+      const res = await userRequest.post('/generateSerialNumberforStockMasterAndInsertIntoMappedBarcode',
+        // ITEMNAME, Width, Height, Length, Weight
+        {
+          ITEMID: data?.ITEMID,
+          ITEMNAME: data?.ITEMNAME,
+          Width: data?.Width,
+          Height: data?.Height,
+          Length: data?.Length,
+          Weight: data?.Weight,
+          SerialQTY: serialQty
+        });
+      console.log(res?.data);
+      setMessage(res?.data?.message ?? "Serial Generated Successfully")
+      setSerialQty(0);
+      setSelectedRow([]);
+      setRowSelectionModel([]);
+
+    }
+    catch (error) {
+      console.error(error);
+      setError(error?.response?.data?.message ?? "Something went wrong")
+    }
+
+
+  }
+
 
   // if checkboxSelection is giving in props then use it other wise by default it is false
   const checkboxSelectionValue = checkboxSelection == 'disabled' ? false : true;
@@ -197,6 +245,7 @@ const UserDataTable = ({
           }
           break;
         case "PrintBarCode":
+        case "ItemCode":
           setIsLoading(true)
           try {
 
@@ -354,6 +403,7 @@ const UserDataTable = ({
       uniqueId === "wProfitLostClId" ||
       uniqueId === "journalCountingClId" ||
       uniqueId === "wmsInventoryClId" ||
+      uniqueId === "PICKINGROUTEID" ||
       uniqueId === "mobileWmsInventoryId"
     ) {
       handleRowClickInParent(item);
@@ -503,11 +553,11 @@ const UserDataTable = ({
         case "ItemCode":
           try {
             const response = await userRequest.delete(
-              "deleteTblMappedBarcodesDataByItemCode",
+              "deleteTblMappedBarcodesDataBySerialNumber",
               {
                 headers: {
                   ...userRequest.defaults.headers,
-                  ItemCode: rowdata.ItemCode,
+                  itemserialno: rowdata?.ItemSerialNo,
                 },
               }
             );
@@ -586,6 +636,21 @@ const UserDataTable = ({
           try {
             const response = await userRequest.delete(
               "/deletePalletMasterData?PalletNumber=" + rowdata.PalletNumber
+            );
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
+          }
+          break;
+
+        // Zone Receiving data Delete Api 
+        case "zoneReceivingId":
+          try {
+            const response = await userRequest.delete(
+              "/deletePalletMasterData?PalletNumber=" + rowdata.tbl_RZONESID
             );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");
@@ -821,7 +886,8 @@ const UserDataTable = ({
     const dataWithoutId = data.map(({ id, ...rest }) => rest);
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(dataWithoutId); // Pass the new array to the 'json_to_sheet' method
-    XLSX.utils.book_append_sheet(wb, ws, title);
+    const validTitle = title.length > 31 ? title.substr(0, 31) : title;
+    XLSX.utils.book_append_sheet(wb, ws, validTitle);
     if (returnBlob) {
       const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([wbout], { type: 'application/octet-stream' });
@@ -1131,6 +1197,8 @@ const UserDataTable = ({
 
   let smallHeightTableScreens = [
     'journalMovementClId',
+    'PICKINGROUTEID',
+    'barcodeDeletedId',
     'journalMovementClDetId',
     "wProfitLostClId",
     'wProfitLostClDetsId',
@@ -1316,6 +1384,7 @@ const UserDataTable = ({
                   )}
                 </span>
               )}
+              {GenerateSerial && <button onClick={handleGenerateSerialBtnClicked}>Generate Serial</button>}
               {emailButton && <button onClick={handleOpenPopup}>Send to Email</button>}
 
             </span>
@@ -1470,6 +1539,50 @@ const UserDataTable = ({
             </div>
           </div>
         )}
+
+        {generateSerialPopUp && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black opacity-50" onClick={handleGenerateSerialPopUp}></div>
+
+            {/* Popup */}
+            <div className="bg-white p-4 md:p-8 rounded-lg shadow-xl w-11/12 md:w-1/2 z-10">
+              <h1 className="text-xl md:text-2xl font-bold mb-4">Generate Serial</h1>
+              <div className="mb-4">
+                <p><strong>Item ID:</strong>{selectedRow[selectedRow.length - 1]?.data?.ITEMID}</p>
+                <p><strong>Item Description:</strong> {selectedRow[selectedRow.length - 1]?.data?.ITEMNAME}</p>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Enter Quantity:</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  className="mt-1 p-2 w-full border rounded-md"
+                  value={serialQty}
+                  onChange={(e) => setSerialQty(e.target.value)}
+                />
+              </div>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-200"
+                  onClick={handleGenerateSerialPopUp}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  onClick={() => handleGenerateSerial(selectedRow[selectedRow.length - 1]?.data, serialQty)}
+                >
+                  Generate
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
+
+
 
 
 

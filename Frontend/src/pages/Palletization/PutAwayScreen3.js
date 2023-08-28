@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaPrescriptionBottle } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 
 const PutAwayScreen3 = () => {
   const navigate = useNavigate();
+  const autocompleteRef = useRef();
   const [palletIds, setPalletIds] = useState([]);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -28,9 +29,9 @@ const PutAwayScreen3 = () => {
   const storedData = sessionStorage.getItem('putawaydatashipmentId');
 
 
-  const parsedData12 =storedData
+  const parsedData12 = storedData
   console.log(parsedData12)
-
+  const [location, setLocation] = useState([])
 
   const [options, setOptions] = useState([]);
   useEffect(() => {
@@ -43,8 +44,30 @@ const PutAwayScreen3 = () => {
         console.error(error);
         setError(error?.response?.data?.message ?? 'Something went wrong, please try again later');
       });
+
+    const getLocationData = async () => {
+      try {
+        const res = await userRequest.get("/getAllTblLocationsCL")
+        console.log(res?.data)
+        setLocation(res?.data ?? [])
+
+      }
+      catch (error) {
+        console.log(error)
+        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+
+      }
+    }
+
+    getLocationData();
   }, []);
 
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const resetAutocomplete = () => {
+    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  };
+
+  const [locationInputValue, setLocationInputValue] = useState('');
 
 
   const [serialnumberlist, setSerialNumberList] = useState([]);
@@ -71,7 +94,6 @@ const PutAwayScreen3 = () => {
     }
     else {
       try {
-        // const response = await userRequest.get(`/vaildatehipmentPalletizingSerialNumber?ItemSerialNo=${serialNumber}&SHIPMENTID=${selectedPutAwayData.SHIPMENTID}`);
         const response = await userRequest.get(`/vaildatehipmentPalletizingSerialNumber?ItemSerialNo=${serialNumber}&SHIPMENTID=${parsedData12}`);
         setMessage(response?.data?.message || 'Inserted Successfully');
         setSerialNumberList([...serialnumberlist, serialNumber]);
@@ -125,10 +147,17 @@ const PutAwayScreen3 = () => {
       setError('Please enter serial number');
       return;
     }
+    if (locationInputValue?.trim() === '' || !locationInputValue) {
+      setError('Please select location');
+      return;
+    }
+
+    console.log(locationInputValue)
     userRequest.post('/generateAndUpdatePalletIds', null, {
       params: {
         // serialNumberList: ['SN12347', 'SN12342']
-        serialNumberList: serialnumberlist
+        serialNumberList: serialnumberlist,
+        binLocation: locationInputValue,
       }
     })
       .then(response => {
@@ -156,6 +185,11 @@ const PutAwayScreen3 = () => {
     const updatedList = [...serialnumberlist];
     updatedList.splice(index, 1);
     setSerialNumberList(updatedList);
+  };
+
+  const handleFromSelect = (event, value) => {
+    setLocationInputValue(value);
+
   };
 
   return (
@@ -415,24 +449,7 @@ const PutAwayScreen3 = () => {
             <div className="mb-6">
               <label htmlFor='serial' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Serial Number</label>
 
-              {/* // creae excel like Tables  */}
-              {/* <div className="table-putaway-generate1">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Serial Number</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {serialnumberlist.map((serialNumber, index) => (
-                      <tr key={index}>
-                        <td>{serialNumber}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div > */}
+
               <div className="table-putaway-generate1">
                 <table>
                   <thead>
@@ -453,6 +470,64 @@ const PutAwayScreen3 = () => {
                 </table>
               </div>
             </div>
+
+
+            <div className="mb-6">
+              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
+              <div className='w-full'>
+                <Autocomplete
+                  ref={autocompleteRef}
+                  key={autocompleteKey}
+                  id="location"
+                  // options={location.filter(item => item.BinLocation)}
+                  // getOptionLabel={(option) => option.BinLocation}
+                  options={Array.from(new Set(location.map(item => item?.BIN))).filter(Boolean)}
+                  getOptionLabel={(option) => option}
+                  onChange={handleFromSelect}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="TO Location"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+
+              </div>
+            </div >
 
             <div className='mt-6'>
               <button

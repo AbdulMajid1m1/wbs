@@ -115,7 +115,7 @@ const WmsBinlocation = () => {
 
   // handle the save button click
   const handleSaveBtnClick = async () => {
-    if(selectedBy === ''){
+    if (selectedBy === '') {
       setError('Please select the selected by type!');
       return;
     }

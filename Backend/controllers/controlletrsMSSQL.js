@@ -58,6 +58,8 @@ function ssccCheckDigit(barcode) {
 }
 
 
+
+
 // transaction history insert function 
 async function insertTransactionHistoryData(TransactionName, ItemID, userId) {
   try {
@@ -182,6 +184,31 @@ async function executeUpdateBatch(records) {
 
   const updateQuery = updateQueries.join(';');
   await pool2.request().query(updateQuery);
+}
+
+
+//  insert into tblMappedBarcodes_Deleted table function
+async function insertIntoMappedBarcodeDeleted(packingSlip) {
+  const insertQuery = `
+    INSERT INTO tblMappedBarcodes_Deleted 
+    (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans, Length, Width, Height, Weight, QrCode, TrxDate) 
+    VALUES 
+    (@ItemCode, @ItemDesc, @GTIN, @Remarks, @User, @Classification, @MainLocation, @BinLocation, @IntCode, @ItemSerialNo, @MapDate, @PalletCode, @Reference, @SID, @CID, @PO, @Trans, @Length, @Width, @Height, @Weight, @QrCode, @TrxDate)
+  `;
+
+  const request = pool2.request();
+
+  Object.keys(packingSlip).forEach((field) => {
+    if (field === 'MapDate' || field === 'TrxDate') {
+      request.input(field, sql.Date, packingSlip[field] ? new Date(packingSlip[field]) : null);
+    } else if (field === 'Trans' || field === 'Length' || field === 'Width' || field === 'Height' || field === 'Weight') {
+      request.input(field, sql.Numeric(10, 2), packingSlip[field]);
+    } else {
+      request.input(field, sql.NVarChar, packingSlip[field] ? packingSlip[field].trim() : null);
+    }
+  });
+
+  await request.query(insertQuery);
 }
 
 
@@ -746,32 +773,6 @@ const WBSDB = {
   },
 
 
-
-  // async vaildatehipmentPalletizingSerialNumber(req, res, next) {
-  //   try {
-  //     const { ItemSerialNo } = req.query;
-  //     // Check if the SERIALNUMBER exists in tbl_mappedBarcodes
-  //     if (!ItemSerialNo) return res.status(400).send({ message: "ItemSerialNo is required." });
-  //     const checkMappedBarcodesQuery = `
-  //       SELECT COUNT(*) as count
-  //       FROM dbo.tbl_Shipment_Received_CL
-  //       WHERE SERIALNUM = @ItemSerialNo
-  //     `;
-
-  //     let request1 = pool2.request();
-  //     request1.input("ItemSerialNo", sql.NVarChar, ItemSerialNo);
-  //     const checkMappedBarcodesResult = await request1.query(checkMappedBarcodesQuery);
-
-  //     if (checkMappedBarcodesResult.recordset[0].count === 0) {
-  //       return res.status(400).send({ message: "Error: Serial number not found in tbl_Shipment_Received_CL." });
-  //     }
-  //     return res.status(200).send({ message: "Success: Serial number is valid" });
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send({ message: error.message });
-  //   }
-  // },
-
   async vaildatehipmentPalletizingSerialNumber(req, res, next) {
     try {
       const { ItemSerialNo, SHIPMENTID } = req.query;
@@ -828,9 +829,14 @@ const WBSDB = {
 
     try {
       const serialNumberList = req.query.serialNumberList;
+      const binLocation = req.query.binLocation;
+      if (!binLocation) {
+        return res.status(400).send({ message: "binLocation is required." });
+      }
       if (!serialNumberList) {
         return res.status(400).send({ message: "serialNumberList is required." });
       }
+
       if (serialNumberList.length === 0) {
         return res.status(400).send({ message: "serialNumberList cannot be empty." });
       }
@@ -886,7 +892,6 @@ const WBSDB = {
               [ITEMNAME] AS [ItemDesc],
               [REMARKS] AS [Remarks],
               [USERID] AS [User],
-              [BIN] AS [BinLocation],
               [SERIALNUM] AS [ItemSerialNo],
               GETDATE() AS [MapDate],
               @PalletID AS [PalletCode],
@@ -956,7 +961,7 @@ const WBSDB = {
             .input('ItemDesc', sql.NVarChar, shipmentData.ItemDesc)
             .input('Remarks', sql.NVarChar, shipmentData.Remarks)
             .input('User', sql.NVarChar, req?.token?.UserID)
-            .input('BinLocation', sql.NVarChar, shipmentData.BinLocation)
+            .input('BinLocation', sql.NVarChar, binLocation)
             .input('ItemSerialNo', sql.NVarChar, shipmentData.ItemSerialNo)
             .input('MapDate', sql.Date, new Date())
             .input('PalletCode', sql.NVarChar, shipmentData.PalletCode)
@@ -976,12 +981,14 @@ const WBSDB = {
         const updateQuery = `
           UPDATE tbl_Shipment_Received_CL
           SET PALLETCODE = @PalletID,        
-          PALLET_DATE = @currentDate
+          PALLET_DATE = @currentDate,
+          BIN=@binLocation
           WHERE SERIALNUM = @SerialNumber
         `;
         await pool2.request()
           .input('PalletID', sql.NVarChar, palletID)
           .input('SerialNumber', sql.NVarChar, serialNumber)
+          .input("binLocation", sql.NVarChar, binLocation)
           .input("currentDate", sql.DateTime, currentDate)
           .query(updateQuery);
 
@@ -1197,7 +1204,6 @@ const WBSDB = {
 
   // ------------ tbl_Shipment_Received_CL controllers Start ------------
 
-
   async getAllTblShipmentReceivedCL(req, res, next) {
 
     try {
@@ -1218,14 +1224,10 @@ const WBSDB = {
     }
   },
 
-
-
-
-
   async getTransferDistributionByTransferId(req, res, next,) {
     try {
       let query = `
-        SELECT * FROM dbo.Transfer_Distribution
+        SELECT * FROM dbo.tbl_shipment_palletizing
         WHERE TRANSFERID = @TRANSFERID
       `;
       const { TRANSFERID } = req.query;
@@ -1241,6 +1243,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
   async getTblShipmentReceivedCLStats(req, res, next) {
     try {
       let query = `
@@ -1272,7 +1275,7 @@ const WBSDB = {
   // post request to insert data 
 
   async insertShipmentRecievedDataCL(req, res, next) {
-    console.log(req.token);
+
     try {
       const {
         SHIPMENTID,
@@ -2355,7 +2358,6 @@ const WBSDB = {
   async insertTblDispatchingDataCL(req, res, next) {
     try {
       const packingSlipArray = req.body;
-      console.log(req?.token);
 
       for (const packingSlip of packingSlipArray) {
         const fields = [
@@ -2405,6 +2407,141 @@ const WBSDB = {
     }
   },
 
+  // async insertTblDispatchingDetailsDataCL(req, res, next) {
+  //   try {
+  //     const packingSlipArray = req.body;
+
+  //     for (const packingSlip of packingSlipArray) {
+  //       const fields = [
+  //         "PACKINGSLIPID",
+  //         "VEHICLESHIPPLATENUMBER",
+  //         ...(packingSlip.INVENTLOCATIONID ? ["INVENTLOCATIONID"] : []),
+  //         ...(packingSlip.ITEMID ? ["ITEMID"] : []),
+  //         ...(packingSlip.ORDERED ? ["ORDERED"] : []),
+  //         ...(packingSlip.NAME ? ["NAME"] : []),
+  //         ...(packingSlip.CONFIGID ? ["CONFIGID"] : []),
+  //         ...(packingSlip.SALESID ? ["SALESID"] : []),
+  //       ];
+
+  //       if (!packingSlip.PACKINGSLIPID || !packingSlip.VEHICLESHIPPLATENUMBER) {
+  //         return res.status(400).send({ message: "PACKINGSLIPID and VEHICLESHIPPLATENUMBER are required" });
+  //       }
+
+  //       let values = fields.map((field) => "@" + field);
+
+  //       let query = `INSERT INTO [WBSSQL].[dbo].[tbl_Dispatching_CL] 
+  //         (${fields.join(', ')}) 
+  //         VALUES 
+  //           (${values.join(', ')})
+  //         `;
+
+  //       let request = pool2.request();
+
+  //       request.input("PACKINGSLIPID", sql.NVarChar, packingSlip.PACKINGSLIPID);
+  //       request.input("VEHICLESHIPPLATENUMBER", sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
+  //       if (packingSlip.INVENTLOCATIONID) request.input("INVENTLOCATIONID", sql.NVarChar, packingSlip.INVENTLOCATIONID);
+  //       if (packingSlip.ITEMID) request.input("ITEMID", sql.NVarChar, packingSlip.ITEMID);
+  //       if (packingSlip.ORDERED) request.input("ORDERED", sql.Float, packingSlip.ORDERED);
+  //       if (packingSlip.NAME) request.input("NAME", sql.NVarChar, packingSlip.NAME);
+  //       if (packingSlip.CONFIGID) request.input("CONFIGID", sql.NVarChar, packingSlip.CONFIGID);
+  //       if (packingSlip.SALESID) request.input("SALESID", sql.NVarChar, packingSlip.SALESID);
+
+  //       await request.query(query);
+  //       //  Now updating DISPATCH for the current packing slip
+  //       const updateQuery = `
+  //         UPDATE [WBSSQL].[dbo].[packingsliptable_CL]
+  //         SET DISPATCH = 'yes'
+  //         WHERE ITEMSERIALNO = @ITEMSERIALNO2
+  //       `;
+  //       request.input("ITEMSERIALNO2", sql.NVarChar, packingSlip.ITEMSERIALNO);
+
+  //       await request.query(updateQuery);
+
+
+
+  //       // DispatchingPickingSlip page
+  //       const result = await insertTransactionHistoryData("DispatchingPickingSlip", packingSlip?.ITEMID, req?.token?.UserID);
+  //       console.log(result.message);
+  //     }
+
+  //     return res.status(201).send({ message: 'Data inserted successfully.' });
+  //   } catch (error) {
+  //     return res.status(500).send({ message: error.message });
+  //   }
+  // },
+
+  async insertTblDispatchingDetailsDataCL(req, res, next) {
+    const packingSlipArray = req.body;
+
+    // Start the transaction
+    const transaction = new sql.Transaction(pool2);
+
+    try {
+      await transaction.begin();
+
+      const request = new sql.Request(transaction);
+
+      for (let i = 0; i < packingSlipArray.length; i++) {
+        const packingSlip = packingSlipArray[i];
+        const index = i;
+
+        const fields = [
+          "PACKINGSLIPID",
+          "VEHICLESHIPPLATENUMBER",
+          "ITEMSERIALNO",
+          ...(packingSlip.INVENTLOCATIONID ? ["INVENTLOCATIONID"] : []),
+          ...(packingSlip.ITEMID ? ["ITEMID"] : []),
+          ...(packingSlip.ORDERED ? ["ORDERED"] : []),
+          ...(packingSlip.NAME ? ["NAME"] : []),
+          ...(packingSlip.CONFIGID ? ["CONFIGID"] : []),
+          ...(packingSlip.SALESID ? ["SALESID"] : [])
+        ];
+
+        const indexedFields = fields.map((field) => field + index);
+
+        const values = indexedFields.map((field) => "@" + field);
+
+        const insertQuery = `
+          INSERT INTO tbl_DispatchingDetails_CL
+          (${fields.join(', ')}) 
+          VALUES (${values.join(', ')})
+        `;
+
+        request.input("PACKINGSLIPID" + index, sql.NVarChar, packingSlip.PACKINGSLIPID);
+        request.input("VEHICLESHIPPLATENUMBER" + index, sql.NVarChar, packingSlip.VEHICLESHIPPLATENUMBER);
+        request.input("ITEMSERIALNO" + index, sql.NVarChar, packingSlip.ITEMSERIALNO);
+        if (packingSlip.INVENTLOCATIONID) request.input("INVENTLOCATIONID" + index, sql.NVarChar, packingSlip.INVENTLOCATIONID);
+        if (packingSlip.ITEMID) request.input("ITEMID" + index, sql.NVarChar, packingSlip.ITEMID);
+        if (packingSlip.ORDERED) request.input("ORDERED" + index, sql.Float, packingSlip.ORDERED);
+        if (packingSlip.NAME) request.input("NAME" + index, sql.NVarChar, packingSlip.NAME);
+        if (packingSlip.CONFIGID) request.input("CONFIGID" + index, sql.NVarChar, packingSlip.CONFIGID);
+        if (packingSlip.SALESID) request.input("SALESID" + index, sql.NVarChar, packingSlip.SALESID);
+
+        await request.query(insertQuery);
+
+        const result = await insertTransactionHistoryData("DispatchingPickingSlipDetails", packingSlip?.ITEMID, req?.token?.UserID);
+        console.log(result.message);
+
+        const updateQuery = `
+          UPDATE [WBSSQL].[dbo].[packingsliptable_CL]
+          SET DISPATCH = 'yes',
+          VEHICLESHIPPLATENUMBER=@VEHICLESHIPPLATENUMBER${index}
+          WHERE ITEMSERIALNO = @ITEMSERIALNO${index}
+        `;
+
+        await request.query(updateQuery);
+
+
+      }
+
+      await transaction.commit();
+      return res.status(201).send({ message: 'Data inserted successfully.' });
+    } catch (error) {
+      await transaction.rollback();
+      return res.status(500).send({ message: error.message });
+    }
+  }
+  ,
   async getAllTblDispatchingCL(req, res, next) {
     try {
 
@@ -2688,7 +2825,7 @@ const WBSDB = {
   WHERE LOCATIONS_HFID = @LOCATIONS_HFID
 `;
 
-      request.input('LOCATIONS_HFID', sql.Numeric, LOCATIONS_HFID);
+      request.input('LOCATIONS_HFID', sql.Numeric, Number(LOCATIONS_HFID));
 
       const result = await request.query(query);
 
@@ -3365,6 +3502,27 @@ const WBSDB = {
 
       let query = `
             SELECT * FROM dbo.tblMappedBarcodes
+          `;
+      let request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+
+      return res.status(200).send(data.recordsets[0]);
+    }
+    catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  async getAllTblMappedBarcodesDeleted(req, res, next) {
+    try {
+
+      let query = `
+            SELECT * FROM dbo.tblMappedBarcodes_Deleted
           `;
       let request = pool2.request();
       const data = await request.query(query);
@@ -4336,34 +4494,39 @@ const WBSDB = {
   },
 
 
-  async deleteTblMappedBarcodesDataByItemCode(req, res, next) {
+  async deleteTblMappedBarcodesDataBySerialNumber(req, res, next) {
     try {
-      const itemCode = req.headers['itemcode'];
-      if (!itemCode) {
-        return res.status(400).send({ message: 'itemCode is required.' });
+      const ItemSerialNo = req.headers['itemserialno'];
+      if (!ItemSerialNo) {
+        return res.status(400).send({ message: 'itemserialno is required.' });
       }
 
-      const query = `
-      DELETE FROM dbo.tblMappedBarcodes
-      WHERE ItemCode = @itemCode
-    `;
+      const deleteQuery = `
+        DELETE FROM dbo.tblMappedBarcodes
+        OUTPUT DELETED.ItemCode, DELETED.ItemDesc, DELETED.GTIN, DELETED.Remarks, DELETED.[User], DELETED.Classification, DELETED.MainLocation, DELETED.BinLocation, DELETED.IntCode, DELETED.ItemSerialNo, DELETED.MapDate, DELETED.PalletCode, DELETED.Reference, DELETED.SID, DELETED.CID, DELETED.PO, DELETED.Trans, DELETED.Length, DELETED.Width, DELETED.Height, DELETED.Weight, DELETED.QrCode, DELETED.TrxDate
+        WHERE ItemSerialNo = @ItemSerialNo
+      `;
 
       let request = pool2.request();
-      request.input('itemCode', sql.VarChar(100), itemCode);
+      request.input('ItemSerialNo', sql.VarChar, ItemSerialNo);
 
-      const result = await request.query(query);
+      const result = await request.query(deleteQuery);
 
       if (result.rowsAffected[0] === 0) {
-        return res.status(404).send({ message: 'Item record not found.' });
+        return res.status(404).send({ message: 'Record not found.' });
       }
 
-      res.status(200).send({ message: 'Data deleted successfully.' });
+      const deletedRecord = result.recordset[0];
+
+      // Call insertIntoMappedBarcodeDeleted function with the deleted record
+      await insertIntoMappedBarcodeDeleted(deletedRecord);
+
+      res.status(200).send({ message: 'Data deleted successfully.', deletedRecord });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
-
 
   async getAllTblRZones(req, res, next) {
 
@@ -5366,33 +5529,37 @@ const WBSDB = {
     try {
       const { PICKINGROUTEID } = req.query;
       if (!PICKINGROUTEID) {
-        return res.status(400).send({ message: "Please provide data to insert" });
+        return res.status(400).send({ message: "PICKINGROUTEID is required" });
       }
-      console.log(req?.token)
-      console.log(req?.token?.UserID)
 
       let query = `
       SELECT * FROM dbo.WMS_Sales_PickingList_CL
-      WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID =@userId
-      AND PICKSTATUS = 'Partial'
+      WHERE PICKINGROUTEID = @PICKINGROUTEID AND ASSIGNEDTOUSERID = @userId
+    
       `;
 
       let request = pool2.request();
-      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID)
-      request.input('userId', sql.NVarChar, req.token?.UserID)
+      request.input('PICKINGROUTEID', sql.NVarChar, PICKINGROUTEID);
+      request.input('userId', sql.NVarChar, req.token?.UserID);
 
       const data = await request.query(query);
+
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No Record available" });
       }
+      console.log("retst")
+      console.log(data.recordset[0])
+
+      // Check if any of the records have the status "Picked"
+      console.log(data.recordsets[0]?.PICKSTATUS)
+
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
-
-
     }
   },
+
 
 
 
@@ -5502,6 +5669,61 @@ const WBSDB = {
 
   // packingsliptable_CL controller starts here
 
+  async getPackingSlipTableClByItemIdAndPackingSlipId(req, res, next) {
+    try {
+      const { SALESID } = req.query;
+      console.log("salesid", SALESID);
+
+      if (!SALESID) {
+        return res.status(400).send({ message: "Please provide SALESID." });
+      }
+
+      // Fetch ITEMID from WMS_Sales_PickingList_CL using TRANSREFID (SALESID)
+      const itemIdQuery = `
+            SELECT TOP 1 [ITEMID]
+            FROM WMS_Sales_PickingList_CL
+            WHERE [TRANSREFID] = @SALESID
+        `;
+
+      const itemIdResult = await pool2.request()
+        .input('SALESID', sql.NVarChar, SALESID)
+        .query(itemIdQuery);
+      console.log(itemIdResult)
+
+      const ITEMID = itemIdResult.recordset[0]?.ITEMID;
+
+      if (!ITEMID) {
+        return res.status(404).send({ message: "No data found for the provided SALESID." });
+      }
+
+      console.log("Fetched ITEMID:", ITEMID);
+
+      // Fetch data from packingsliptable_CL using ITEMID and SALESID
+      const query = `
+            SELECT *
+            FROM dbo.packingsliptable_CL
+            WHERE ITEMID = @ITEMID
+            AND PACKINGSLIPID = @SALESID
+        `;
+
+      const request = pool2.request();
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('SALESID', sql.NVarChar, SALESID);
+
+      const data = await request.query(query);
+      console.log("Data fetched:", data);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
   async insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl(req, res, next) {
     try {
       const packingSlipArray = req.body;
@@ -5535,6 +5757,7 @@ const WBSDB = {
           "PACKINGSLIPID",
           "ASSIGNEDUSERID",
           "ITEMID",
+          "ITEMSERIALNO",
           ...(packingSlip.SALESID ? ["SALESID"] : []),
           ...(packingSlip.NAME ? ["NAME"] : []),
           ...(packingSlip.CONFIGID ? ["CONFIGID"] : []),
@@ -5559,8 +5782,13 @@ const WBSDB = {
             request.input(field, sql.DateTime, new Date(packingSlip[field]));
           } else if (field === "ORDERED" && packingSlip[field]) {
             request.input(field, sql.Float, packingSlip[field]);
+          }
+          else if (field === "ITEMSERIALNO") {
+            request.input(field, sql.NVarChar, packingSlip?.ItemSerialNo.trim())
+
           } else {
             request.input(field, sql.NVarChar, packingSlip[field] ? packingSlip[field].trim() : null);
+
           }
         });
 
@@ -5568,9 +5796,16 @@ const WBSDB = {
 
         // PickingListLastFrom page
         const result = await insertTransactionHistoryData("PickingList", packingSlip.ITEMID.trim(), req.token.UserID);
-        console.log(result.message);
 
-        let deleteQuery = `DELETE FROM tblMappedBarcodes WHERE ItemCode=@ITEMID AND BinLocation=@oldBinLocation AND ItemSerialNo = @ItemSerialNo`;
+
+        // let deleteQuery = `DELETE FROM tblMappedBarcodes WHERE ItemCode=@ITEMID AND BinLocation=@oldBinLocation AND ItemSerialNo = @ItemSerialNo`;
+        let deleteQuery = `
+          DELETE FROM tblMappedBarcodes 
+          OUTPUT DELETED.ItemCode, DELETED.ItemDesc, DELETED.GTIN, DELETED.Remarks, DELETED.[User], DELETED.Classification, DELETED.MainLocation, DELETED.BinLocation, DELETED.IntCode, DELETED.ItemSerialNo, DELETED.MapDate, DELETED.PalletCode, DELETED.Reference, DELETED.SID, DELETED.CID, DELETED.PO, DELETED.Trans, DELETED.Length, DELETED.Width, DELETED.Height, DELETED.Weight, DELETED.QrCode, DELETED.TrxDate
+          WHERE ItemCode=@ITEMID 
+          AND BinLocation=@oldBinLocation 
+          AND ItemSerialNo = @ItemSerialNo
+        `;
 
         let deleteRequest = pool2.request();
         deleteRequest.input("ITEMID", sql.NVarChar, packingSlip.ITEMID.trim());
@@ -5583,9 +5818,21 @@ const WBSDB = {
           // No rows were deleted, return error
           return res.status(400).send({ message: 'Unable to delete from tblMappedBarcodes.' });
         }
-      
 
-          let updateQuery = `
+
+        // Retrieve the deleted data from the delete result
+        const deletedRecord = deleteResult.recordset[0];
+
+
+        // Update the Remarks column with packingSlip.routeID
+        deletedRecord.Remarks = PICKINGROUTEID;
+
+        // Insert deleted data into mappedbarcode_deleted table
+        await insertIntoMappedBarcodeDeleted(deletedRecord);
+
+
+
+        let updateQuery = `
             UPDATE WMS_Sales_PickingList_CL 
             SET PICKSTATUS = CASE
                 WHEN (QTY - 1) = 0 THEN 'Picked'
@@ -5616,7 +5863,7 @@ const WBSDB = {
 
         // Retrieve the updated values
         const updatedValues = await request2.query(checkQuery2);
-        console.log(updatedValues.recordset[0]);
+
 
       }
 
@@ -5957,15 +6204,16 @@ const WBSDB = {
 
       for (const returnSalesOrder of returnSalesOrderArray) {
 
-        // let checkQuery = "SELECT ITEMSERIALNO FROM WMS_ReturnSalesOrder_CL WHERE ITEMSERIALNO = @itemSerialNo";
+        let checkQuery = "SELECT ITEMSERIALNO FROM WMS_ReturnSalesOrder_CL WHERE ITEMSERIALNO = @itemSerialNo";
         let request = pool2.request();
-        // let result = await request.query(checkQuery);
+        request.input('itemSerialNo', sql.VarChar, returnSalesOrder.ITEMSERIALNO);
+        let result = await request.query(checkQuery);
 
-        // if (result.recordset.length > 0) {
-        //   // If the serial number exists, return an error
-        //   return res.status(400).send({ message: `The serial number ${returnSalesOrder.ITEMSERIALNO} already exists. Please provide unique serial numbers.` });
-        // } else {
-        let query = `INSERT INTO WMS_ReturnSalesOrder_CL
+        if (result.recordset.length > 0) {
+          // If the serial number exists, return an error
+          return res.status(400).send({ message: `The serial number ${returnSalesOrder.ITEMSERIALNO} already exists. Please provide unique serial numbers.` });
+        } else {
+          let query = `INSERT INTO WMS_ReturnSalesOrder_CL
             ([ITEMID], [NAME], [EXPECTEDRETQTY], [SALESID], [RETURNITEMNUM],
             [INVENTSITEID], [INVENTLOCATIONID], [CONFIGID], [WMSLOCATIONID],
             [TRXDATETIME], [TRXUSERID], [ITEMSERIALNO], [ASSIGNEDTOUSERID])
@@ -5974,26 +6222,25 @@ const WBSDB = {
               @INVENTSITEID, @INVENTLOCATIONID, @CONFIGID, @WMSLOCATIONID,
               @TRXDATETIME, @TRXUSERID, @itemSerialNo, @ASSIGNEDTOUSERID)`;
 
-        request.input('itemSerialNo', sql.VarChar, returnSalesOrder.ITEMSERIALNO);
-        request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
-        request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
-        request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
-        request.input("SALESID", sql.NVarChar, returnSalesOrder.SALESID);
-        request.input("RETURNITEMNUM", sql.NVarChar, returnSalesOrder.RETURNITEMNUM);
-        request.input("INVENTSITEID", sql.NVarChar, returnSalesOrder.INVENTSITEID);
-        request.input("INVENTLOCATIONID", sql.NVarChar, returnSalesOrder.INVENTLOCATIONID);
-        request.input("CONFIGID", sql.NVarChar, returnSalesOrder.CONFIGID);
-        request.input("WMSLOCATIONID", sql.NVarChar, returnSalesOrder.WMSLOCATIONID);
-        request.input("TRXDATETIME", sql.DateTime, currentDateTime);
-        request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
-        request.input("ASSIGNEDTOUSERID", sql.NVarChar, req?.token?.UserID);
+          request.input("ITEMID", sql.NVarChar, returnSalesOrder.ITEMID);
+          request.input("NAME", sql.NVarChar, returnSalesOrder.NAME);
+          request.input("EXPECTEDRETQTY", sql.Float, returnSalesOrder.EXPECTEDRETQTY);
+          request.input("SALESID", sql.NVarChar, returnSalesOrder.SALESID);
+          request.input("RETURNITEMNUM", sql.NVarChar, returnSalesOrder.RETURNITEMNUM);
+          request.input("INVENTSITEID", sql.NVarChar, returnSalesOrder.INVENTSITEID);
+          request.input("INVENTLOCATIONID", sql.NVarChar, returnSalesOrder.INVENTLOCATIONID);
+          request.input("CONFIGID", sql.NVarChar, returnSalesOrder.CONFIGID);
+          request.input("WMSLOCATIONID", sql.NVarChar, returnSalesOrder.WMSLOCATIONID);
+          request.input("TRXDATETIME", sql.DateTime, currentDateTime);
+          request.input("TRXUSERID", sql.NVarChar, req?.token?.UserID);
+          request.input("ASSIGNEDTOUSERID", sql.NVarChar, req?.token?.UserID);
 
-        await request.query(query);
+          await request.query(query);
 
-        // ReturnRMA page
-        const result = await insertTransactionHistoryData("returnRma", returnSalesOrder?.ITEMID, req?.token?.UserID);
-        console.log(result.message);
-        // }
+          // ReturnRMA page
+          const result = await insertTransactionHistoryData("returnRma", returnSalesOrder?.ITEMID, req?.token?.UserID);
+          console.log(result.message);
+        }
       }
 
       return res.status(201).send({ message: 'Data inserted successfully.' });
@@ -6075,7 +6322,7 @@ const WBSDB = {
       const SSCC_AutoCounterStr = SSCC_AutoCounter.toString();
       SSCC_AutoCounter = SSCC_AutoCounterStr.padStart(5, '0');
 
-      let SERIALNO = ITEMID + " " + SSCC_AutoCounter;
+      let SERIALNO = ITEMID + "-" + SSCC_AutoCounter;
 
 
 
@@ -6102,6 +6349,70 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
+
+
+  async generateSerialNumberforStockMasterAndInsertIntoMappedBarcode(req, res, next) {
+    try {
+      const { SerialQTY, ITEMID, ITEMNAME, Width, Height, Length, Weight } = req.body;
+      const currentDate = new Date();
+
+      // Fetch the last StockMasterSerialNo from TblSysNo using pool2
+      const query = `SELECT TOP 1 StockMasterSerialNo AS StockMasterSerialNoLatest FROM TblSysNo ORDER BY StockMasterSerialNo DESC`;
+      const result = await pool2.request().query(query);
+      console.log(result.recordset[0])
+      let StockMasterSerialNo = result.recordset[0]?.StockMasterSerialNoLatest;
+      if (StockMasterSerialNo === undefined || StockMasterSerialNo === null) {
+        return res.status(500).send({ message: "StockMasterSerialNo is null" });
+      }
+
+      // Start a transaction for a consistent data insert
+      const transaction = new sql.Transaction(pool2);
+      await transaction.begin();
+
+      // Prepare the data to insert into the mappedbarcode table
+      for (let i = 0; i < SerialQTY; i++) {
+        let currentSerial = ITEMID + "-" + String(StockMasterSerialNo + i).padStart(5, '0');
+
+        const insertIntoMappedBarcode = `
+                INSERT INTO tblMappedBarcodes (ItemCode, ItemDesc, Width, Height, Length, Weight, ItemSerialNo, MapDate, [User])
+                VALUES (@ITEMID, @ITEMNAME, @Width, @Height, @Length, @Weight, @currentSerial, @mapDate, @user)
+            `;
+
+        await transaction.request()
+          .input('ITEMID', sql.VarChar(100), ITEMID)
+          .input('ITEMNAME', sql.NVarChar(255), ITEMNAME)
+          .input('Width', sql.Float, Width)
+          .input('Height', sql.Float, Height)
+          .input('Length', sql.Float, Length)
+          .input('Weight', sql.Float, Weight)
+          .input('currentSerial', sql.VarChar(200), currentSerial)
+          .input('mapDate', sql.Date, currentDate)
+          .input('user', sql.VarChar(50), req?.token?.UserID)
+          .query(insertIntoMappedBarcode);
+
+      }
+
+      // Update StockMasterSerialNo in TblSysNo
+      const newStockMasterSerialNo = parseInt(StockMasterSerialNo) + parseInt(SerialQTY);
+
+      const updateTblSysNoQuery = `
+           UPDATE TblSysNo SET StockMasterSerialNo = @newStockMasterSerialNo
+       `;
+
+      await transaction.request()
+        .input('newStockMasterSerialNo', sql.Numeric(10, 0), newStockMasterSerialNo)
+        .query(updateTblSysNoQuery);
+
+      // Commit the transaction if all operations are successful
+      await transaction.commit();
+
+      res.status(200).send({ message: "Serial numbers generated and inserted into mappedbarcode table successfully." });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: error.message });
+    }
+  }
+  ,
 
 
 

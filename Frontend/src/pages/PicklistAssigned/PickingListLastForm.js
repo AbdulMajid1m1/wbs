@@ -228,7 +228,7 @@ const PickingListLastForm = () => {
         INVENTLOCATIONID: locationInputValue,
         ORDERED: parsedData?.QTY,
         PACKINGSLIPID: parsedData?.TRANSREFID,// comming from previous page
-        ASSIGNEDUSERID: item.ASSIGNEDTOUSERID, // comming from mapped barcode data
+        ASSIGNEDUSERID: parsedData?.ASSIGNEDTOUSERID, // comming from mapped barcode data
         SALESID: parsedData?.PICKINGROUTEID, // comming from previous page
         ITEMID: parsedData?.ITEMID, // comming from previous page
         NAME: parsedData?.ITEMNAME, // comming from previous page
@@ -288,6 +288,9 @@ const PickingListLastForm = () => {
 
   const handleRemoveSerialNumber = (index) => {
     const updatedList = [...filteredData];
+    setNewTableData((prevData) => {
+      return [...prevData, filteredData[index]];
+    });
     updatedList.splice(index, 1);
     setFilteredData(updatedList);
 
@@ -480,18 +483,7 @@ const PickingListLastForm = () => {
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                   flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
               >
-                <label className="inline-flex items-center mt-1">
-                  <input
-                    type="radio"
-                    name="selectionType"
-                    value="Pallet"
-                    checked={selectionType === 'Pallet'}
-                    onChange={e => setSelectionType(e.target.value)}
-                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
-                    // disabled
-                  />
-                  <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                </label>
+
                 <label className="inline-flex items-center mt-1">
                   <input
                     type="radio"
@@ -502,6 +494,18 @@ const PickingListLastForm = () => {
                     className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
                   />
                   <span className="ml-2 text-[#00006A]">BY SERIAL</span>
+                </label>
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="Pallet"
+                    checked={selectionType === 'Pallet'}
+                    onChange={e => setSelectionType(e.target.value)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                    disabled
+                  />
+                  <span className="ml-2 text-[#00006A]">BY PALLETE</span>
                 </label>
               </div>
             </div>

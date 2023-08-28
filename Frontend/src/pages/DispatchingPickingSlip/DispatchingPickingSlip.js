@@ -2,17 +2,17 @@ import React, { useContext, useState } from 'react'
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 import userRequest from "../../utils/userRequest"
-import { TblPackingSlipTableColumn } from '../../utils/datatablesource';
 import DispatchingPickingSlipTable from '../../components/DispatchingPickingTable/DispatchingPickingTable';
 import CustomSnakebar from '../../utils/CustomSnakebar';
-
+import { SyncLoader } from 'react-spinners';
 
 const DispatchingPickingSlip = () => {
 
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [packingSlipData, setPackingSlipData] = useState('');
-  const [vehicleBarcode, setVehicleBarcode] = useState('');
+  // const [vehicleBarcode, setVehicleBarcode] = useState('');
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   // to reset snakebar messages
@@ -28,60 +28,61 @@ const DispatchingPickingSlip = () => {
 
   const handleForm = (e) => {
     e.preventDefault();
-
+    setIsLoading(true)
     userRequest.get(`/getPackingSlipTableByPackingSlipId?packingSlipId=${packingSlipData}`)
       .then(response => {
         console.log(response?.data);
         setData(response?.data ?? []);
+        setIsLoading(false)
       })
 
       .catch(error => {
         console.error(error);
+        setIsLoading(false)
+        setError(error?.response?.data?.message ?? "Something went wrong")
+        setData([]);
 
       });
   }
 
-  const handleSaveBtnClick = async () => {
 
-    console.log(data);
-    try {
-
-
-      // const res = await userRequest.post(`/insertTblDispatchingDataCL?vehicleShipPlateNumber=${vehicleBarcode}`,
-      //   data)
-
-      let apiData = data.map((item) => {
-        return {
-          ...item,
-          VEHICLESHIPPLATENUMBER: vehicleBarcode
-        }
-      })
-
-      const res = await userRequest.post(`/insertTblDispatchingDataCL`,
-        apiData)
-
-      console.log(res?.data);
-      setMessage(res?.data?.message ?? "Data Saved Successfully");
-
-      // clear the data
-      setData([]);
-      setVehicleBarcode('');
-      setPackingSlipData('');
+  const handleRowClick = (item, index) => {
+    // save data in session storage
+    console.log(item);
 
 
-    }
 
-    catch (error) {
-      console.error(error);
-      setError(error?.response?.data?.message ?? "Something went wrong");
-    }
+
+    sessionStorage.setItem('selectedDispactchingRowData', JSON.stringify(item));
+
+
+    navigate('/dispatchingslip-step-two')
   }
-
 
 
 
   return (
     <>
+
+      {isLoading &&
+
+        <div className='loading-spinner-background'
+          style={{
+            zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+
+
+          }}
+        >
+          <SyncLoader
+
+            size={18}
+            color={"#FFA500"}
+            // height={4}
+            loading={isLoading}
+          />
+        </div>
+      }
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
       {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
@@ -118,15 +119,56 @@ const DispatchingPickingSlip = () => {
               </div>
             </form >
 
-            <div className="mb-6" style={{ marginLeft: '-20px', marginRight: '-20px' }}>
+            {/* <div className="mb-6" style={{ marginLeft: '-20px', marginRight: '-20px' }}>
 
               <DispatchingPickingSlipTable
                 data={data}
                 secondaryColor="secondary"
                 title={"Dispatching Picking Slip"}
                 columnsName={TblPackingSlipTableColumn}
-                uniqueId="" />
-            </div >
+                uniqueId="dispatchingFirstScreen" />
+            </div > */}
+
+
+            <div className='mb-6'>
+              <label className='text-[#00006A] font-semibold'>List of Items on Bin<span className='text-[#FF0404]'>*</span></label>
+              {/* // create excel-like Tables  */}
+              <div className="table-location-generate1">
+                <table>
+                  <thead>
+                    <tr>
+                      {/* Table header columns */}
+                      <th>SALESID</th>
+                      <th>ITEMID</th>
+                      <th>NAME</th>
+                      <th>INVENTLOCATIONID</th>
+                      <th>CONFIGID</th>
+                      <th>ORDERED</th>
+                      <th>PACKINGSLIPID</th>
+                      <th>VEHICLESHIPPLATENUMBER</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Map over the fetched data to render rows */}
+                    {data.map((item, index) => (
+                      <tr key={index} onClick={() => handleRowClick(item, index)} >
+                        {/* Table data cells */}
+                        <td>{item.SALESID}</td>
+                        <td>{item.ITEMID}</td>
+                        <td>{item.NAME}</td>
+                        <td>{item.INVENTLOCATIONID}</td>
+                        <td>{item.CONFIGID}</td>
+                        <td>{item.ORDERED}</td>
+                        <td>{item.PACKINGSLIPID}</td>
+                        <td>{item.VEHICLESHIPPLATENUMBER}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
 
 
             <div className='flex justify-end items-center gap-3'>
@@ -138,28 +180,6 @@ const DispatchingPickingSlip = () => {
               />
             </div>
 
-            <div className="mb-6">
-              <label htmlFor='barcode' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Vehicle Barcode Serial #(Vehicle Plate#)<span className='text-[#FF0404]'>*</span></label>
-              <input
-                id="barcode"
-                className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Vehicle Barcode"
-                value={vehicleBarcode}
-                onChange={(e) => setVehicleBarcode(e.target.value)}
-              />
-            </div >
-
-            <div className='mb-6'>
-              <button
-                type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
-                <span className='flex justify-center items-center'
-                  onClick={handleSaveBtnClick}
-                >
-                  <p>Save</p>
-                </span>
-              </button>
-            </div>
 
 
           </div >

@@ -57,7 +57,7 @@ const ZoneReceiving = () => {
             <UserDataTable data={alldata} addNewNavigation="/tblzonenew" title="Zone Receiving" 
                 columnsName={ZoneReceivingColoumn} 
                   backButton={true}
-                    uniqueId="zoneMasterId"
+                    uniqueId="zoneReceivingId"
                     loading={isLoading}
                     setIsLoading={setIsLoading}
                          

@@ -10,7 +10,6 @@ import UpdateData from './components/UpdatesItem/UpdateData'
 import AllItemsAddNew from './components/AddNew/AllItemsAddNew'
 import UpdateAllItems from './components/UpdatesItem/UpdateAllItems'
 import MainDashboard from './components/MainDashboard/MainDashboard'
-
 import TblAllLocations from './pages/TblAllLocations/TblAllLocations'
 import TblLocationsUpdates from './components/UpdatesItem/TblLocationsUpdates'
 import AddNewTblLocations from './components/AddNew/AddNewTblLocations'
@@ -112,6 +111,7 @@ import WmsPalletIDInquiry from './pages/WmsPalletIDInquiry/WmsPalletIDInquiry'
 import { RefreshProvider } from './contexts/RefreshContext'
 import ZoneReceiving from './pages/ZoneReceiving/ZoneReceiving'
 import ZoneDispatching from './pages/ZoneDispatching/ZoneDispatching'
+import DispatchingSecondScreen from './pages/DispatchingPickingSlip/DispatchingSecondScreen'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -164,6 +164,7 @@ const App = () => {
         <Route path="/pickinglistlast" element={<PickingListLastForm />} />
 
         <Route path="/dispatchingslip" element={<DispatchingPickingSlip />} />
+        <Route path="/dispatchingslip-step-two" element={<DispatchingSecondScreen />} />
 
         <Route path='/rma' element={<ReturnRMA />} />
         <Route path="/rmalastform" element={<ReturnRMALast />} />
@@ -217,7 +218,7 @@ const App = () => {
                 <Route path='/allitems/:id' element={<UpdateAllItems title="Update All Items" />} />
                 <Route path='/dashboard' element={<ReceiptsProvider><MainDashboard /> </ReceiptsProvider>} />
                 <Route path='/tblLocation' element={<TblAllLocations />} />
-                <Route path='/tblLocationupdate/:id' element={<TblLocationsUpdates title="Updates All Tbl Locations" />} />
+                <Route path='/tblLocationupdate/:id' element={<TblLocationsUpdates title="Update Tbl Locations" />} />
                 <Route path='/tbl-new-location' element={<AddNewTblLocations title="Add Tbl Locations" />} />
                 <Route path='/tbldispatching' element={<TblDispatchingCL />} />
                 <Route path='/tbldispatchingupdates/:id' element={<TblDispatchingUpdates title="All Dispatching Updates" />} />

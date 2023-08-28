@@ -54,7 +54,7 @@ const ZoneReceiving = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
             
 
-            <UserDataTable data={alldata} addNewNavigation="/tblzonenew" title="Zone Receiving" 
+            <UserDataTable data={alldata} addNewNavigation="/tblrzone" title="Zone Receiving" 
                 columnsName={ZoneReceivingColoumn} 
                   backButton={true}
                     uniqueId="zoneReceivingId"

@@ -2,12 +2,12 @@ import "../AddNew/AddNew.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { TblZoneDispatchingUpdateColumn } from "../../utils/formSource";
+import { TblRZoneUpdateColumn } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 
 
-const TblZoneDispatchingUpdate = ({ inputs, title,
+const TblRZoneUpdate = ({ inputs, title,
 }) => {
 
 const params = useParams();
@@ -39,7 +39,7 @@ const handleSubmit = async event => {
 
   try {
     const updatedData = {
-        tbl_DZONESID: id,
+        tbl_RZONESID: id,
       ...formData
     };
 
@@ -50,7 +50,7 @@ const handleSubmit = async event => {
     }
 
     userRequest
-      .put("/updateDzoneData", updatedData)
+      .put("/updateRzoneData", updatedData)
       .then(response => {
         setIsLoading(false);
         console.log(response.data);
@@ -117,7 +117,7 @@ const handleSubmit = async event => {
 
                             <div className="right">
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {TblZoneDispatchingUpdateColumn.map((input) => (
+                                    {TblRZoneUpdateColumn.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
@@ -129,7 +129,7 @@ const handleSubmit = async event => {
                                                         [input.name]: e.target.value,
                                                     })
                                                 }
-                                                disabled={input.name === "tbl_DZONESID"} // Add the disabled attribute conditionally
+                                                disabled={input.name === "tbl_RZONESID"} // Add the disabled attribute conditionally
                                           
                                           />
                                         </div>
@@ -154,4 +154,4 @@ const handleSubmit = async event => {
     );
 };
 
-export default TblZoneDispatchingUpdate;
+export default TblRZoneUpdate;

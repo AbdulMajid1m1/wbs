@@ -741,6 +741,9 @@ const UserDataTable = ({
       case "zoneDispatchingId":
         navigate("/tblzonedispatchingupdate/" + rowData?.tbl_DZONESID)
         break;
+      case "zoneReceivingId":
+        navigate("/tblnewrzone/" + rowData?.tbl_RZONESID)
+        break;
 
       case "usersAccountsId":
         navigate("/user-accounts/" + rowData?.UserID + "/" + rowData?.Fullname)

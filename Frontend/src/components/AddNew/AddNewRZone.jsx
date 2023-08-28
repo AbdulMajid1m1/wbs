@@ -1,76 +1,70 @@
-import "../AddNew/AddNew.css";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import "./AddNew.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
-import { TblZoneDispatchingUpdateColumn } from "../../utils/formSource";
+import { TblRzoneInput, TblZoneDispatchingInput } from "../../utils/formSource";
 import userRequest from "../../utils/userRequest";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 
-
-const TblZoneDispatchingUpdate = ({ inputs, title,
+const AddNewRZone = ({ inputs, title,
+    method, apiEndPoint
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    // get selectedRow from session storage
+    const selectedRow = JSON.parse(sessionStorage.getItem("selectedRow"));
+    console.log(selectedRow);
+    const [formValues, setFormValues] = useState(selectedRow);
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
 
-const params = useParams();
-const { id } = params;
-const [rowData, setRowData] = useState({});
-const [isLoading, setIsLoading] = useState(false);
-const [formData, setFormData] = useState({});
-const [error, setError] = useState(false);
-const [message, setMessage] = useState("");
-const navigate = useNavigate();
-
-useEffect(() => {
-  const storedData = sessionStorage.getItem('edit');
-  const parsedData = JSON.parse(storedData);
-  setRowData(parsedData);
-}, []);
-
+    const navigate = useNavigate();
 
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
 
     };
+    const handleSubmit = async event => {
+        // if form is not valid, do not submit
+        if (!event.target.checkValidity()) {
+            return;
+        }
+        event.preventDefault();
+        try {
+            setIsLoading(true);
 
-
-const handleSubmit = async event => {
-  event.preventDefault();
-  setIsLoading(true);
-
-  try {
-    const updatedData = {
-        tbl_DZONESID: id,
-      ...formData
+            const data = {
+                RZONE: event.target.RZONE.value,
+              };
+            
+            userRequest.post('/insertIntoRzone', data)
+            .then((response) => {
+              setIsLoading(false);
+              console.log(response.data);
+              setMessage("Successfully Added");
+              setTimeout(() => {
+                navigate(-1)
+              }, 1000);
+            })
+            .catch((error) => {
+              setIsLoading(false);
+              console.log(error);
+              setError(error?.response?.data?.message ?? "Failed to Add");
+            });
+        } catch (error) {
+            setIsLoading(false);
+            console.log(error);
+            setError("Failed to Add");
+        }
     };
 
-    if (Object.keys(updatedData).length === 1) {
-      setError("No changes detected.");
-      setIsLoading(false);
-      return;
-    }
-
-    userRequest
-      .put("/updateDzoneData", updatedData)
-      .then(response => {
-        setIsLoading(false);
-        console.log(response.data);
-        setMessage("Successfully Updated");
-        setTimeout(() => {
-          navigate(-1);
-        }, 1000);
-      })
-      .catch(error => {
-        setIsLoading(false);
-        console.log(error);
-        setError(error?.response?.data?.message ?? "Failed to Update");
-      });
-  } catch (error) {
-    setIsLoading(false);
-    console.log(error);
-    setError("Failed to Update");
-  }
-};
-
+    const handleInputChange = (event, inputName) => {
+        const value = event.target.value;
+        setFormValues({
+            ...formValues,
+            [inputName]: value,
+        });
+    };
     return (
         <>
 
@@ -84,7 +78,6 @@ const handleSubmit = async event => {
 
                     }}
                 >
-                    {/* Spinners */}
                     <BeatLoader
                         size={18}
                         color={"#6439ff"}
@@ -116,22 +109,18 @@ const handleSubmit = async event => {
 
 
                             <div className="right">
+                                
                                 <form onSubmit={handleSubmit} id="myForm" >
-                                    {TblZoneDispatchingUpdateColumn.map((input) => (
+                                    {TblRzoneInput.map((input) => (
 
                                         <div className="formInput" key={input.id}>
                                             <label htmlFor={input.name}>{input.label}</label>
                                             <input type={input.type} placeholder={input.placeholder} name={input.name} id={input.id} required
-                                                defaultValue={rowData && rowData[input.name]}
-                                                onChange={(e) =>
-                                                    setFormData({
-                                                        ...formData,
-                                                        [input.name]: e.target.value,
-                                                    })
-                                                }
-                                                disabled={input.name === "tbl_DZONESID"} // Add the disabled attribute conditionally
-                                          
-                                          />
+                                                // defaultValue={selectedRow && selectedRow[input.name]}
+                                                value={formValues ? formValues[input.name] : ''}
+                                                onChange={(event) => handleInputChange(event, input.name)}
+
+                                            />
                                         </div>
                                     ))}
 
@@ -139,7 +128,7 @@ const handleSubmit = async event => {
                                         <button
                                             style={{background: '#e69138'}}
                                             type="submit"
-                                        >Update</button>
+                                        >Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -154,4 +143,4 @@ const handleSubmit = async event => {
     );
 };
 
-export default TblZoneDispatchingUpdate;
+export default AddNewRZone;

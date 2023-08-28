@@ -650,7 +650,7 @@ const UserDataTable = ({
         case "zoneReceivingId":
           try {
             const response = await userRequest.delete(
-              "/deletePalletMasterData?PalletNumber=" + rowdata.tbl_RZONESID
+              "/deleteRzoneData?tbl_RZONESID=" + rowdata.tbl_RZONESID
             );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");
@@ -660,6 +660,22 @@ const UserDataTable = ({
             success = false;
           }
           break;
+
+
+        case "zoneDispatchingId":
+          try {
+            const response = await userRequest.delete(
+              "/deleteRzoneData?tbl_RZONESID=" + rowdata.tbl_RZONESID
+            );
+            console.log(response);
+            setMessage(response?.data?.message ?? "User deleted successfully");
+            success = true; // to update the state of the table
+          } catch (error) {
+            setError(error?.message ?? "Something went wrong");
+            success = false;
+          }
+          break;
+
 
 
 

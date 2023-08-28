@@ -57,7 +57,7 @@ const ZoneDispatching = () => {
             <UserDataTable data={alldata} addNewNavigation="/" title="Zone Dispatching" 
                 columnsName={ZoneDispacthingColumn} 
                   backButton={true}
-                    uniqueId=""
+                    uniqueId="zoneDispatchingId"
                     loading={isLoading}
                     setIsLoading={setIsLoading}
                          

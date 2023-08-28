@@ -2478,7 +2478,7 @@ export const WmsByBinlocationColumn = [
   {
     field: "BinLocation",
     headerName: "BY BINLOCATION",
-    width:1300,
+    width:600,
 
   },
 

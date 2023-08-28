@@ -27,7 +27,7 @@ const WmsBinlocation = () => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const [data, setData] = useState([]);
-  const [selectedBy, setSelectedBy] = useState([]);
+  const [selectedBy, setSelectedBy] = useState('binlocation');
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   // to reset snakebar messages
@@ -198,18 +198,21 @@ const WmsBinlocation = () => {
 
                 <h2 className='text-center text-[#fff]'>WMS Binlocation</h2>
 
+
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>
                     <img src={icon} className='h-auto w-8 object-contain' alt='' />
                   </span>
                 </button>
               </div>
+              <h2 className='text-center text-[#fff]'>By Binlocation</h2>
             </div>
 
             <div className=''>
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
+            {/* 
             <div className='mb-6'>
               <label className='text-[#00006A] text-center font-semibold'>BY</label>
 
@@ -256,7 +259,7 @@ const WmsBinlocation = () => {
                 }}
               />
 
-            </div>
+            </div> */}
 
 
             <div className='-mt-6'

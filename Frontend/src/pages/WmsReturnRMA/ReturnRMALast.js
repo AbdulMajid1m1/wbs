@@ -7,31 +7,29 @@ import CustomSnakebar from '../../utils/CustomSnakebar';
 import { Autocomplete, TextField } from '@mui/material';
 import Barcode from "react-barcode";
 import logo from "../../images/alessalogo2.png"
+import { SyncLoader } from 'react-spinners';
 
 
 const ReturnRMALast = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState([])
-  const [scanInputValue, setScanInputValue] = useState('');
   const [selectionType, setSelectionType] = useState('Serial');
   const [barcode, setBarcode] = useState('noBarcode');
-  const [locationInputValue, setLocationInputValue] = useState('');
-  const [tableData, setTableData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   // const [newTableData, setNewTableData] = useState([]);
   const [selectedValue, setSelectedValue] = useState(null);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
-  const [data, setData] = useState([]);
   const [modelNumber, setModelNumber] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [userInputSubmit, setUserInputSubmit] = useState(false);
   const [newBarcode, setNewBarcode] = useState("");
-  const [addUser, setAddUser] = useState(false);
-  const [usersList, setUsersList] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [scanLocationToList, setScanLocationToList] = useState([]);
+  const [binlocation, setBinlocation] = useState('');
 
-
-
+  // State to keep track of the selected rows
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectAllRows, setSelectAllRows] = useState(false);
 
 
   const autocompleteRef = useRef(); // Ref to access the Autocomplete component
@@ -62,7 +60,7 @@ const ReturnRMALast = () => {
       }
       catch (error) {
         console.log(error)
-        setError(error?.response?.data?.message ?? 'Cannot fetch location data');
+        setError(error?.response?.data?.message ?? 'Cannot fetch Receving Zones data');
 
       }
     }
@@ -70,6 +68,25 @@ const ReturnRMALast = () => {
     getLocationData();
 
   }, [parsedData?.ITEMID])
+
+  useEffect(() => {
+    const getScanLocationData = async () => {
+      try {
+        const res = await userRequest.get("/getAllTblLocationsCL")
+        console.log(res?.data)
+        setScanLocationToList(res?.data ?? [])
+
+      }
+      catch (error) {
+        console.log(error)
+        setError(error?.response?.data?.message ?? 'Cannot fetch Scan to Location data');
+
+      }
+    }
+
+    getScanLocationData();
+
+  }, [])
 
   const handleFromSelect = (event, value) => {
     setSelectedValue(value);
@@ -86,7 +103,7 @@ const ReturnRMALast = () => {
       setError("Please select a location")
       return;
     }
-   
+
 
     try {
       const response = await userRequest.post("/generateBarcodeForRma",
@@ -213,6 +230,101 @@ const ReturnRMALast = () => {
     }
   };
 
+  const handlescanLocationToSelect = (event, value) => {
+    setBinlocation(value);
+  };
+
+
+  const handleSaveBtnClick = async () => {
+    if (filteredData?.length === 0) {
+      setError("Please scan a barcode");
+
+      return;
+    }
+    if (selectedRows.length === 0) {
+      setError("Please select at least one row");
+      return;
+    }
+    if (binlocation === "") {
+      setError("Please select a Scan location to");
+      return;
+    }
+
+    try {
+      setIsLoading(true)
+      const selectedData = selectedRows.map((index) => filteredData[index]); // Filter the selected rows from the data array
+
+      const mappedData = selectedData.map((item) => ({
+        ...(item?.ITEMID && { itemcode: item?.ITEMID }),
+        itemdesc: item?.NAME,
+        classification: item?.RETURNITEMNUM,
+        mainlocation: item?.INVENTSITEID,
+        binlocation: binlocation,
+        intcode: item?.CONFIGID,
+        itemserialno: item?.ITEMSERIALNO,
+        mapdate: item?.TRXDATETIME ?? "",
+        user: item?.ASSIGNEDTOUSERID ?? "",
+        gtin: "",
+        remarks: "",
+        palletcode: "",
+        reference: "",
+        sid: "",
+        cid: "",
+        po: "",
+      }));
+      console.log(mappedData);
+
+      const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
+      console.log(res?.data);
+
+      let insertedSerialNumbers = mappedData?.map((record) => {
+        return record?.itemserialno;
+      })
+
+      console.log(insertedSerialNumbers)
+      const deleteRes = await userRequest.delete("/deleteMultipleRecordsFromWmsReturnSalesOrderCl", { data: insertedSerialNumbers })
+      console.log(deleteRes?.data);
+
+      setMessage("Data Inserted Successfully.");
+      // Clear form fields and data state
+      setBinlocation("");
+      // setFilteredData([]);
+      setSelectedRows([]); // Clear selected rows after successful insertion
+      // filter the data array to remove the selected rows
+      setFilteredData(filteredData.filter((_, index) => !selectedRows.includes(index)));
+    } catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message ?? "Something went wrong");
+
+    }
+    finally {
+      setIsLoading(false)
+    }
+
+
+  }
+
+  const handleRowSelect = (index) => {
+    if (selectedRows.includes(index)) {
+      setSelectedRows(selectedRows.filter((rowIndex) => rowIndex !== index));
+    } else {
+      setSelectedRows([...selectedRows, index]);
+    }
+    setSelectAllRows(false); // If individual row is selected/deselected, deselect "Select All" heading checkbox
+  };
+
+  const handleSelectAllRows = () => {
+    setSelectAllRows(!selectAllRows); // Toggle the selectAllRows state
+    if (!selectAllRows) {
+      // If currently not all rows are selected, select all rows
+      setSelectedRows(data.map((_, index) => index));
+    } else {
+      // If currently all rows are selected, deselect all rows
+      setSelectedRows([]);
+    }
+  };
+
+
 
 
   return (
@@ -220,7 +332,25 @@ const ReturnRMALast = () => {
 
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
       {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+      {isLoading &&
 
+        <div className='loading-spinner-background'
+          style={{
+            zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+
+
+          }}
+        >
+          <SyncLoader
+
+            size={18}
+            color={"#FFA500"}
+            // height={4}
+            loading={isLoading}
+          />
+        </div>
+      }
       <div className="bg-black before:animate-pulse before:bg-gradient-to-b before:from-gray-900 overflow-hidden before:via-[#00FF00] before:to-gray-900 before:absolute ">
         <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
           <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-500 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg">
@@ -279,7 +409,7 @@ const ReturnRMALast = () => {
 
 
 
-           
+
             {/* Barcode Radio Button */}
             <div class="text-center mb-4">
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
@@ -483,6 +613,14 @@ const ReturnRMALast = () => {
                   <table>
                     <thead>
                       <tr>
+                        <th className="flex items-center gap-1">
+
+                          <input
+                            type="checkbox"
+                            checked={selectAllRows} // Use the selectAllRows state for the checked value
+                            onChange={handleSelectAllRows} // Call a new function for the onChange event
+                          />
+                        </th>
                         <th>ITEMID</th>
                         <th>NAME</th>
                         <th>EXPECTEDRETQTY</th>
@@ -498,7 +636,16 @@ const ReturnRMALast = () => {
                     <tbody>
                       {filteredData.map((data, index) => (
                         <tr key={"rmaCl" + index}
+                          className={selectedRows.includes(index) ? 'selected' : ''}
+                          onClick={() => handleRowSelect(index)}
                         >
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={selectedRows.includes(index)}
+                              onChange={() => handleRowSelect(index)}
+                            />
+                          </td>
 
                           <td>{data?.ITEMID}</td>
                           <td>{data?.NAME}</td>
@@ -526,11 +673,87 @@ const ReturnRMALast = () => {
                   id="totals"
                   className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Totals"
-                  value={filteredData.length}
+                  value={filteredData?.length}
                 />
               </div>
 
             </form>
+
+            <div className="mb-6">
+              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Location To:<span className='text-[#FF0404]'>*</span></label>
+              <div className='w-full'>
+                <Autocomplete
+                  ref={autocompleteRef}
+                  key={`${autocompleteKey} ScanLocationTo`}
+                  id="ScanLocationTo"
+                  // options={location.filter(item => item.BinLocation)}
+                  // getOptionLabel={(option) => option.BinLocation}
+                  options={Array.from(new Set(scanLocationToList.map(item => item?.BIN))).filter(Boolean)}
+                  getOptionLabel={(option) => option}
+                  onChange={handlescanLocationToSelect}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="TO Location"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+
+              </div>
+            </div >
+
+
+            <div className='mt-6'>
+              <div className='w-full flex justify-between place-items-end'>
+                <div className='w-full'>
+                  <button onClick={handleSaveBtnClick}
+                    type='submit'
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[35%]'>
+                    <span className='flex justify-center items-center'
+                    >
+                      <p>Save</p>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+
+
 
           </div>
         </div >

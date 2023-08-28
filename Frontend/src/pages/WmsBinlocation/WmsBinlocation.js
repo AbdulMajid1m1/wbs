@@ -259,12 +259,16 @@ const WmsBinlocation = () => {
             </div>
 
 
-            <div className='-mt-6'>
+            <div className='-mt-6'
+              style={{
+                marginLeft: "-20px", marginRight: "-20px"
+              }}>
               <UserDataTable data={data} columnsName={WmsByBinlocationColumn} backButton={false}
                 handleRowClickInParent={handleRowClickInParent}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
                 uniqueId={"mobileWmsInventoryId"}
+                secondaryColor="secondary"
 
               />
             </div>

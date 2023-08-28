@@ -49,7 +49,7 @@ const UserDataTable = ({
   TotalCount,
   loading,
   setIsLoading,
-
+  secondaryColor,
   handleGenerateSerialPopUp,
   GenerateSerial,
   generateSerialPopUp,
@@ -1339,6 +1339,7 @@ const UserDataTable = ({
 
         <MuiCustomTable
           loading={loading}
+          secondaryColor={secondaryColor ? secondaryColor : null}
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
           }
@@ -1646,7 +1647,7 @@ const PrintLabelsBarCode = ({ selectedRow, index }) => {
             </div>
           </div>
           <div id='inside-BRCode'>
-            <Barcode  value={`${selectedRow.data.ItemCode}-${selectedRow.data.ItemSerialNo}`} width={1.3} height={60} />
+            <Barcode value={`${selectedRow.data.ItemCode}-${selectedRow.data.ItemSerialNo}`} width={1.3} height={60} />
           </div>
         </div>
       </div>

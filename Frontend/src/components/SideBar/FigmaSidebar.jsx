@@ -376,7 +376,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Truck Master Data</p>
                     </div>
 
-                    <div
+                    {/* <div
                         className={`main-images-container ${selectedItem === '/zonemaster' ? 'selected-item' : ''}`}
                         onClick={() => handleItemClick('/zonemaster')}       
                     // className='main-images-container' onClick={() => navigate('/zonemaster')}
@@ -386,7 +386,7 @@ const FigmaSidebar = () => {
                     >
                         <img src={zonemaster} className='main-inside-image bg-white rounded-full' alt='' />
                         <p className='sidebar-text'>Zone Master</p>
-                    </div>
+                    </div> */}
 
 
                     <div

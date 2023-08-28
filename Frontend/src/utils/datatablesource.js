@@ -2832,7 +2832,7 @@ export const PalletMasterColumn = [
 export const ZoneReceivingColoumn = [
   {
     field: "tbl_RZONESID",
-    headerName: "tbl RZONES ID",
+    headerName: "TBL RZONES ID",
     width: 180,
   },
   {
@@ -2857,7 +2857,7 @@ export const ZoneReceivingColoumn = [
 export const ZoneDispacthingColumn = [
   {
     field: "tbl_DZONESID",
-    headerName: "tbl DZONES ID",
+    headerName: "TBL DZONES ID",
     width: 180,
   },
   {

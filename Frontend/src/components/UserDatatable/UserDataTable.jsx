@@ -40,6 +40,7 @@ const UserDataTable = ({
   handleSaveData,
   PrintName,
   printBarCode,
+  printItemBarCode,
   PrintBarCodeName,
   detectAddRole,
   height,
@@ -1193,6 +1194,51 @@ const UserDataTable = ({
 
 
 
+  const handlePrintItemBarcode = () => {
+    if (selectedRow.length === 0) {
+      // If no row is selected, show an alert message
+      // alert('Please select a row to print.');
+      setError('Please select a row to print.');
+      return;
+    }
+    const printWindow = window.open('', 'Print Window', 'height=400,width=800');
+    const html = '<html><head><title>Print Barcode</title>' +
+      '<style>' +
+      '@page { size: 3in 2in; margin: 0; }' +
+      'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
+      '#header { display: flex; justify-content: center; padding: 1px;}' +
+      '#imglogo {height: 40px; width: 100px;}' +
+      '#itemcode { font-size: 15px; display: flex; justify-content: center;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;  margin-top: -16px;}' +
+      '#paragh { font-size: 15px; font-weight: 600; }' +
+      '</style>' +
+      '</head><body>' +
+      '<div id="printBarcode"></div>' +
+      '</body></html>';
+
+    printWindow.document.write(html);
+    const barcodeContainer = printWindow.document.getElementById('printBarcode');
+    const barcode = document.getElementById('barcode').cloneNode(true);
+    barcodeContainer.appendChild(barcode);
+
+    const logoImg = new Image();
+    logoImg.src = logo;
+
+    logoImg.onload = function () {
+      printWindow.document.getElementById('imglogo').src = logoImg.src;
+
+      printWindow.print();
+      printWindow.close();
+      setTimeout(() => {
+        setSelectedRow([]);
+        setRowSelectionModel([]);
+
+      }, 500);
+    };
+  }
+
+
+
 
   return (
     <>
@@ -1277,6 +1323,7 @@ const UserDataTable = ({
             {printButton && <button onClick={handlePrint}>{PrintName}</button>}
             {AddUser && <button onClick={handleAddUserPopup}>{UserName}</button>}
             {printBarCode && <button onClick={handlePrintBarCode}>{PrintBarCodeName}</button>}
+            {printItemBarCode && <button onClick={handlePrintItemBarcode}>{PrintBarCodeName}</button>}
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>
@@ -1546,8 +1593,11 @@ const PrintLabelsBarCode = ({ selectedRow, index }) => {
               <img src={logo} id='imglogo' alt='' />
             </div>
           </div>
+          <div id="itemcode">
+              <p>{selectedRow.data.ItemCode}</p>
+          </div>
           <div id='inside-BRCode'>
-            <Barcode  value={`${selectedRow.data.ItemCode}-${selectedRow.data.ItemSerialNo}`} width={1.3} height={60} />
+            <Barcode  value={selectedRow.data.ItemSerialNo} width={1.3} height={60} />
           </div>
         </div>
       </div>

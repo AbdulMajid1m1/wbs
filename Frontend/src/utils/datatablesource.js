@@ -2869,3 +2869,52 @@ export const PalletMasterColumn = [
 
 
 ]
+
+
+
+
+export const ZoneReceivingColoumn = [
+  {
+    field: "tbl_RZONESID",
+    headerName: "tbl RZONES ID",
+    width: 180,
+  },
+  {
+    field: "RZONE",
+    headerName: "RZONE",
+    width: 180,
+  },
+  // {
+  //   field: "id",
+  //   headerName: "ID",
+  //   width: 180,
+  // },
+
+
+
+
+]
+
+
+
+
+export const ZoneDispacthingColumn = [
+  {
+    field: "DZONE",
+    headerName: "DZONE",
+    width: 180,
+  },
+  {
+    field: "id",
+    headerName: "ID",
+    width: 180,
+  },
+  {
+    field: "tbl_DZONESID",
+    headerName: "tbl DZONES ID",
+    width: 180,
+  },
+
+
+
+]

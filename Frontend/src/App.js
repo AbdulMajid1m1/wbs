@@ -110,6 +110,8 @@ import ItemUnAllocation from './pages/ItemUnAllocation/ItemUnAllocation'
 import SecondItemUnAllocation from './pages/ItemUnAllocation/SecondItemUnAllocation'
 import WmsPalletIDInquiry from './pages/WmsPalletIDInquiry/WmsPalletIDInquiry'
 import { RefreshProvider } from './contexts/RefreshContext'
+import ZoneReceiving from './pages/ZoneReceiving/ZoneReceiving'
+import ZoneDispatching from './pages/ZoneDispatching/ZoneDispatching'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -294,6 +296,8 @@ const App = () => {
                 <Route path='/tblpalletupdate/:id' element={<TblPalletMasterUpdate title="Pallet Master Data Update" />} />
 
 
+                <Route path='/zonereceiving' element={<ZoneReceiving />} />
+                <Route path='/zonedispatching' element={<ZoneDispatching />} />
 
                 {/*  <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
 

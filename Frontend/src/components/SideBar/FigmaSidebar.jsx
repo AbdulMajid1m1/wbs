@@ -44,6 +44,8 @@ import palletmaster from "../../images/palletmaster.png"
 import unallocation from "../../images/unallocation.png"
 import palletid from "../../images/palletid.png"
 import settingicon from "../../images/settingicon.png"
+import zonereceving from "../../images/zonereceiving.png"
+import dispatching from "../../images/dispatching.png"
 
 import Cookies from 'js-cookie'
 
@@ -385,6 +387,33 @@ const FigmaSidebar = () => {
                         <img src={zonemaster} className='main-inside-image bg-white rounded-full' alt='' />
                         <p className='sidebar-text'>Zone Master</p>
                     </div>
+
+
+                    <div
+                        className={`main-images-container ${selectedItem === '/zonereceiving' ? 'selected-item' : ''}`}
+                        onClick={() => handleItemClick('/zonereceiving')}       
+                    // className='main-images-container' onClick={() => navigate('/zonemaster')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/zonereceiving')
+                          }
+                    >
+                        <img src={zonereceving} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Zone Receiving</p>
+                    </div>
+
+
+                    <div
+                        className={`main-images-container ${selectedItem === '/zonedispatching' ? 'selected-item' : ''}`}
+                        onClick={() => handleItemClick('/zonedispatching')}       
+                    // className='main-images-container' onClick={() => navigate('/zonemaster')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/zonedispatching')
+                          }
+                    >
+                        <img src={dispatching} className='main-inside-image bg-white rounded-full' alt='' />
+                        <p className='sidebar-text'>Zone Dispatching</p>
+                    </div>
+
 
                     <div 
                         className={`main-images-container ${selectedItem === '/binmaster' ? 'selected-item' : ''}`}

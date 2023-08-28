@@ -293,6 +293,11 @@ router.get("/getDistinctMappedBarcodeBinLocations", checkAuthentication, checkRo
 
 router.get("/getAllTblRZones", checkAuthentication, checkRole([roles[42]]), WBSDB.getAllTblRZones);
 
+router.post("/insertIntoRzone", checkAuthentication, checkRole([roles[42]]), WBSDB.insertIntoRzone);
+
+router.put("/updateRzoneData", checkAuthentication, checkRole([roles[42]]), WBSDB.updateRzoneData);
+
+router.delete("/deleteRzoneData", checkAuthentication, checkRole([roles[42]]), WBSDB.deleteRzoneData);
 
 // ------------- tbl_RZONES APIS End ---------------
 
@@ -623,7 +628,14 @@ router.delete("/deleteUserRoleAssignedData/:RoleId", checkAuthentication, checkR
 
 router.get("/getAllTblDZones", checkAuthentication, WBSDB.getAllTblDZones);
 
+// POST - Add a new record to tbl_DZONES
+router.post("/insertIntoDzone", checkAuthentication, WBSDB.insertIntoDzone);
 
+// PUT - Update a record in tbl_DZONES
+router.put("/updateDzoneData", checkAuthentication, WBSDB.updateDzoneData);
+
+// DELETE - Delete a record from tbl_DZONES
+router.delete("/deleteDzoneData", checkAuthentication, WBSDB.deleteDzoneData);
 // --------- tbl_Shipment_Counter APIs start ---------
 
 router.put("/updateRemainingQtyInTblShipmentCounter", checkAuthentication, WBSDB.updateRemainingQtyInTblShipmentCounter);

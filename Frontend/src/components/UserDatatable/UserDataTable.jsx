@@ -722,11 +722,12 @@ const UserDataTable = ({
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'auto',
-      minWidth: 0, // add this property
-      maxWidth: '100%', // add this property
+      minWidth: 0,
+      maxWidth: '100%',
+      overflowX: 'auto',
     };
     return (
-      <div style={{ ...style, overflowX: 'auto' }}>
+      <div style={{ ...style }}>
         {params.value}
       </div>
     );

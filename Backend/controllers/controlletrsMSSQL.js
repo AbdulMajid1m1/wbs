@@ -4543,6 +4543,91 @@ const WBSDB = {
   },
 
 
+  async insertIntoRzone(req, res, next) {
+    try {
+      const { RZONE } = req.body;
+      if (!RZONE) {
+        return res.status(400).send({ message: 'RZONE is required.' });
+      }
+      const query = `
+        INSERT INTO dbo.tbl_RZONES (RZONE)
+        VALUES (@RZONE);
+      `;
+
+      const request = pool2.request();
+      request.input('RZONE', sql.NVarChar, RZONE);
+      await request.query(query);
+
+      res.status(201).send({ message: 'Record created successfully' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateRzoneData(req, res) {
+    try {
+
+      const { RZONE, tbl_RZONESID } = req.body;
+
+      if (!RZONE) {
+        return res.status(400).send({ message: 'RZONE is required.' });
+      }
+
+      if (!tbl_RZONESID) {
+        return res.status(400).send({ message: 'tbl_RZONESID is required.' });
+      }
+
+
+      const query = `
+        UPDATE dbo.tbl_RZONES
+        SET RZONE = @RZONE
+        WHERE tbl_RZONESID = @tbl_RZONESID;
+      `;
+
+      const request = pool2.request();
+      request.input('tbl_RZONESID', sql.Numeric, tbl_RZONESID);
+      request.input('RZONE', sql.NVarChar, RZONE);
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'RZONE record not found.' });
+      }
+
+      res.status(200).send({ message: 'Record updated successfully' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async deleteRzoneData(req, res) {
+    try {
+      const tbl_RZONESID = req.query.tbl_RZONESID;
+      if (!tbl_RZONESID) {
+        return res.status(400).send({ message: 'tbl_RZONESID is required.' });
+      }
+
+      const query = `
+        DELETE FROM dbo.tbl_RZONES
+        WHERE tbl_RZONESID = @tbl_RZONESID;
+      `;
+
+      const request = pool2.request();
+      request.input('tbl_RZONESID', sql.Numeric, tbl_RZONESID);
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'RZONE record not found.' });
+      }
+
+      res.status(200).send({ message: 'Record deleted successfully' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
 
   // ------ tb_location_CL table conroller Start --------
   async validateZoneCode(req, res) {
@@ -8886,6 +8971,87 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
 
+    }
+  },
+
+  async insertIntoDzone(req, res, next) {
+    try {
+      const { DZONE } = req.body;
+      if (!DZONE) {
+        return res.status(400).send({ message: 'DZONE is required.' });
+      }
+      const query = `
+      INSERT INTO dbo.tbl_DZONES (DZONE)
+      VALUES (@DZONE);
+    `;
+
+      const request = pool2.request();
+      request.input('DZONE', sql.NVarChar, DZONE);
+      await request.query(query);
+
+      res.status(201).send({ message: 'Record created successfully' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateDzoneData(req, res) {
+    try {
+      const { DZONE, tbl_DZONESID } = req.body;
+      if (!DZONE) {
+        return res.status(400).send({ message: 'DZONE is required.' });
+      }
+      if (!tbl_DZONESID) {
+        return res.status(400).send({ message: 'tbl_DZONESID is required.' });
+      }
+
+      const query = `
+      UPDATE dbo.tbl_DZONES
+      SET DZONE = @DZONE
+      WHERE tbl_DZONESID = @tbl_DZONESID;
+    `;
+
+      const request = pool2.request();
+      request.input('tbl_DZONESID', sql.Numeric, tbl_DZONESID);
+      request.input('DZONE', sql.NVarChar, DZONE);
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'DZONE record not found.' });
+      }
+
+      res.status(200).send({ message: 'Record updated successfully' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async deleteDzoneData(req, res) {
+    try {
+      const tbl_DZONESID = req.query.tbl_DZONESID;
+      if (!tbl_DZONESID) {
+        return res.status(400).send({ message: 'tbl_DZONESID is required.' });
+      }
+
+      const query = `
+      DELETE FROM dbo.tbl_DZONES
+      WHERE tbl_DZONESID = @tbl_DZONESID;
+    `;
+
+      const request = pool2.request();
+      request.input('tbl_DZONESID', sql.Numeric, tbl_DZONESID);
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).send({ message: 'DZONE record not found.' });
+      }
+
+      res.status(200).send({ message: 'Record deleted successfully' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
     }
   },
 

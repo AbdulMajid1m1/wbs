@@ -43,6 +43,7 @@ import wmsbintobin from "../../images/wmsbintobin.png"
 import palletmaster from "../../images/palletmaster.png"
 import unallocation from "../../images/unallocation.png"
 import palletid from "../../images/palletid.png"
+import settingicon from "../../images/settingicon.png"
 
 import Cookies from 'js-cookie'
 
@@ -55,7 +56,7 @@ const FigmaSidebar = () => {
     const [showMasterData, setShowMasterData] = useState(false);
     const [wmsMobileApp, setWmsMobileApp] = useState(false);
     const [kpiDashboard, setKpiDashbaord] = useState(false);
-
+    const [settingtitle, setSettingTitle] = useState(false);
 
     const navigate = useNavigate();
 
@@ -859,28 +860,32 @@ const FigmaSidebar = () => {
                 </div>
             )}
 
-            <div className='main-images-container'>
-                <img src={setting} className='main-inside-image' alt='' />
+            <div className='main-images-container' onClick={() => setSettingTitle(!settingtitle)}>
+                <img src={settingicon} className='main-inside-image bg-white rounded-full' alt='' />
                 <p className='sidebar-text'>Settings</p>
             </div>
-
-            <div
+            
+            {settingtitle && (
+            <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+                <div
                 className={`main-images-container ${selectedItem === '/user-accounts' ? 'selected-item' : ''}`}
                 onClick={() => handleItemClick('/user-accounts')}
                 onContextMenu={(event) =>
                     handleContextMenu(event, '/user-accounts')
                 }  
-            // className='main-images-container'
-            //     onClick={() => navigate('/user-accounts')}
-            >
-                <img src={setting} className='main-inside-image' alt='' />
-                <p className='sidebar-text'>Users Account</p>
-            </div>
+                // className='main-images-container'
+                //     onClick={() => navigate('/user-accounts')}
+                >
+                    <img src={setting} className='main-inside-image' alt='' />
+                    <p className='sidebar-text'>Users Account</p>
+                </div>
 
-            <div className='main-images-container' onClick={handleLogout}>
-                <img src={exit} className='main-inside-image' alt='' />
-                <p className='sidebar-text'>Log-Out</p>
+                <div className='main-images-container' onClick={handleLogout}>
+                    <img src={exit} className='main-inside-image' alt='' />
+                    <p className='sidebar-text'>Log-Out</p>
+                </div>
             </div>
+            )}
 
 
             <div className='main-images-container'>

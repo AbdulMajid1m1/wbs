@@ -254,32 +254,17 @@ const ReturnRMALast = () => {
       setIsLoading(true)
       const selectedData = selectedRows.map((index) => filteredData[index]); // Filter the selected rows from the data array
 
-      const mappedData = selectedData.map((item) => ({
-        ...(item?.ITEMID && { itemcode: item?.ITEMID }),
-        itemdesc: item?.NAME,
-        classification: item?.RETURNITEMNUM,
-        mainlocation: item?.INVENTSITEID,
-        binlocation: binlocation,
-        intcode: item?.CONFIGID,
-        itemserialno: item?.ITEMSERIALNO,
-        mapdate: item?.TRXDATETIME ?? "",
-        user: item?.ASSIGNEDTOUSERID ?? "",
-        gtin: "",
-        remarks: "",
-        palletcode: "",
-        reference: "",
-        sid: "",
-        cid: "",
-        po: "",
-      }));
-      console.log(mappedData);
+      const insertedSerialNumbers = selectedData.map((record) => {
+        return record?.ITEMSERIALNO;
+      });
 
-      const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
-      console.log(res?.data);
 
-      let insertedSerialNumbers = mappedData?.map((record) => {
-        return record?.itemserialno;
-      })
+      // const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
+      // console.log(res?.data);
+
+      // let insertedSerialNumbers = mappedData?.map((record) => {
+      //   return record?.itemserialno;
+      // })
 
       console.log(insertedSerialNumbers)
       const deleteRes = await userRequest.delete("/deleteMultipleRecordsFromWmsReturnSalesOrderCl", { data: insertedSerialNumbers })
@@ -287,8 +272,7 @@ const ReturnRMALast = () => {
 
       setMessage("Data Inserted Successfully.");
       // Clear form fields and data state
-      setBinlocation("");
-      // setFilteredData([]);
+
       setSelectedRows([]); // Clear selected rows after successful insertion
       // filter the data array to remove the selected rows
       setFilteredData(filteredData.filter((_, index) => !selectedRows.includes(index)));
@@ -317,7 +301,7 @@ const ReturnRMALast = () => {
     setSelectAllRows(!selectAllRows); // Toggle the selectAllRows state
     if (!selectAllRows) {
       // If currently not all rows are selected, select all rows
-      setSelectedRows(data.map((_, index) => index));
+      setSelectedRows(filteredData?.map((_, index) => index));
     } else {
       // If currently all rows are selected, deselect all rows
       setSelectedRows([]);

@@ -109,7 +109,13 @@ import ItemUnAllocation from './pages/ItemUnAllocation/ItemUnAllocation'
 import SecondItemUnAllocation from './pages/ItemUnAllocation/SecondItemUnAllocation'
 import WmsPalletIDInquiry from './pages/WmsPalletIDInquiry/WmsPalletIDInquiry'
 import { RefreshProvider } from './contexts/RefreshContext'
+import ZoneReceiving from './pages/ZoneReceiving/ZoneReceiving'
+import ZoneDispatching from './pages/ZoneDispatching/ZoneDispatching'
 import DispatchingSecondScreen from './pages/DispatchingPickingSlip/DispatchingSecondScreen'
+import AddZoneDispatching from './components/AddNew/AddZoneDispatching'
+import TblZoneDispatchingUpdate from './components/UpdatesItem/TblZoneDispatchingUpdate'
+import AddNewRZone from './components/AddNew/AddNewRZone'
+import TblRZoneUpdate from './components/UpdatesItem/TblRZoneUpdate'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -293,6 +299,21 @@ const App = () => {
                 <Route path='/palletmaster' element={<PalletMaster />} />
                 <Route path='/tblpalletnew' element={<AddNewPalletMaster title="Add Pallet Master Data" />} />
                 <Route path='/tblpalletupdate/:id' element={<TblPalletMasterUpdate title="Pallet Master Data Update" />} />
+
+
+                <Route path='/zonereceiving' element={<ZoneReceiving />} />
+                <Route path='/tblrzone' element={<AddNewRZone title="Add RZones" />} />
+                <Route path='/tblnewrzone/:id' element={<TblRZoneUpdate title="Zone Receiving Data Update" />} />
+               
+                <Route path='/zonedispatching' element={<ZoneDispatching />} />
+                <Route path='/tblzonedispatching' element={<AddZoneDispatching title="Add Zones Dispatching" />} />
+                <Route path='/tblzonedispatchingupdate/:id' element={<TblZoneDispatchingUpdate title="Zone Dispatching Data Update" />} />
+               
+
+                {/*  <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
+
+
+
 
 
               </Routes>

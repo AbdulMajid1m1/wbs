@@ -58,7 +58,7 @@ const PrintingItemBarcode = () => {
                 uniqueId="PrintBarCode"
                 actionColumnVisibility={false}
                 printButton={false}
-                printBarCode={true}
+                printItemBarCode={true}
                 PrintBarCodeName={"Print Item Barcode"}
                 TotalCount={count}
                 loading={isLoading}

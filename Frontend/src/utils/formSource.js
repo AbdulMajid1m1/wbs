@@ -1031,3 +1031,98 @@ export const TblPalletMasterInput = [
 
 ];
 
+
+
+
+export const TblZoneDispatchingInput = [
+  // {
+  //   id: "zoneDispatchingIdInput1",
+  //   label: "tbl_DZONESID*",
+  //   name: "tbl DZONESID",
+  //   type: "text",
+  //   placeholder: "tbl DZONESID",
+  // },
+  {
+    id: "zoneDispatchingIdInput2",
+    label: "DZONE*",
+    name: "DZONE",
+    type: "text",
+    placeholder: "DZONE",
+  },
+
+
+
+
+];
+
+
+
+
+export const TblZoneDispatchingUpdateColumn = [
+  {
+    id: "zoneDispatchingIdInput1",
+    label: "tbl DZONESID*",
+    name: "tbl_DZONESID",
+    type: "text",
+    placeholder: "tbl DZONESID",
+  },
+  {
+    id: "zoneDispatchingIdInput2",
+    label: "DZONE*",
+    name: "DZONE",
+    type: "text",
+    placeholder: "DZONE",
+  },
+
+
+
+
+];
+
+
+
+
+export const TblRzoneInput = [
+  // {
+  //   id: "zoneDispatchingIdInput1",
+  //   label: "tbl_DZONESID*",
+  //   name: "tbl DZONESID",
+  //   type: "text",
+  //   placeholder: "tbl DZONESID",
+  // },
+  {
+    id: "zoneDispatchingIdInput2",
+    label: "RZONE*",
+    name: "RZONE",
+    type: "text",
+    placeholder: "RZONE",
+  },
+
+
+
+
+];
+
+
+
+
+export const TblRZoneUpdateColumn = [
+  {
+    id: "zoneRZoneIdInput1",
+    label: "tbl RZONESID*",
+    name: "tbl_RZONESID",
+    type: "text",
+    placeholder: "tbl RZONESID",
+  },
+  {
+    id: "zoneRZoneIdInput2",
+    label: "RZONE*",
+    name: "RZONE",
+    type: "text",
+    placeholder: "RZONE",
+  },
+
+
+
+
+];

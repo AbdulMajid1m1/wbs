@@ -3185,12 +3185,15 @@ const WBSDB = {
     try {
       const packingSlipId = req.headers['packingslipid']; // Get PACKINGSLIPID from headers
       console.log(packingSlipId);
+      if (!packingSlipId) {
+        return res.status(400).send({ message: "Packing slip id is required." });
+      }
       let query = `
         SELECT * FROM dbo.tbl_Dispatching
         WHERE PACKINGSLIPID = @packingSlipId
       `;
       let request = pool1.request();
-      request.input('packingSlipId', sql.NVarChar(255), packingSlipId); // Remove parseInt() from this line
+      request.input('packingSlipId', sql.NVarChar(255), packingSlipId);
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
@@ -8798,6 +8801,10 @@ const WBSDB = {
       SELECT * FROM tblUserRolesAssigned WHERE UserID = @userId
       `;
       const { userId } = req.query;
+      if (!userId) {
+        return res.status(400).send({ message: "Please provide userId to get roles assigned to user." });
+      }
+
       let request = pool2.request();
       request.input('userId', sql.NVarChar, userId);
       const data = await request.query(query);

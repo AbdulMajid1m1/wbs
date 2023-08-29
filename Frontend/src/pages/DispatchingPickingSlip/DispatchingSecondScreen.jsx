@@ -18,7 +18,8 @@ const DispatchingSecondScreen = () => {
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
     const [vehicleBarcode, setVehicleBarcode] = useState('');
-    const [vehicleList, setVehicleList] = useState([]);
+
+    const [isPlateNumberExist, setIsPlateNumberExist] = useState(false);
     // to reset snakebar messages
     const resetSnakeBarMessages = () => {
         setError(null);
@@ -58,8 +59,11 @@ const DispatchingSecondScreen = () => {
     useEffect(() => {
         const getTruckMasterData = async () => {
             try {
-                const res = await userRequest.get("/getAllWmsTruckMaster");
-                setVehicleList(res?.data ?? []);
+                const res = await userRequest.get("/getPackingSlipTableByPackingSlipId?packingSlipId=" + parsedData?.PACKINGSLIPID
+                );
+                setVehicleBarcode(res?.data?.[0]?.VEHICLESHIPPLATENUMBER ?? '');
+                setIsPlateNumberExist(res?.data?.[0]?.VEHICLESHIPPLATENUMBER ? true : false);
+
                 // SALESID
             }
             catch (error) {
@@ -460,75 +464,18 @@ const DispatchingSecondScreen = () => {
 
 
 
-                        {/* <div className="mb-6">
+                        <div className="mb-6">
                             <label htmlFor='barcode' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Vehicle Barcode Serial #(Vehicle Plate#)<span className='text-[#FF0404]'>*</span></label>
                             <input
                                 id="barcode"
                                 className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Vehicle Barcode"
                                 value={vehicleBarcode}
+                                disabled={isPlateNumberExist}
                                 onChange={(e) => setVehicleBarcode(e.target.value)}
                             />
-                        </div > */}
-
-                        <div className="mb-6">
-                            <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Vehicle Plate<span className='text-[#FF0404]'>*</span></label>
-
-
-                            <div className='w-full'>
-                                <Autocomplete
-                                    ref={autocompleteRef}
-                                    key={autocompleteKey}
-                                    id="plateno"
-                                    // options={location.filter(item => item.BinLocation)}
-                                    // getOptionLabel={(option) => option.BinLocation}
-                                    options={Array.from(new Set(vehicleList.map(item => item?.PlateNo))).filter(Boolean)}
-                                    getOptionLabel={(option) => option}
-                                    onChange={handleVehicleSelect}
-
-                                    // onChange={(event, value) => {
-                                    //   if (value) {
-                                    //     console.log(`Selected: ${value}`);
-
-                                    //   }
-                                    // }}
-                                    onInputChange={(event, value) => {
-                                        if (!value) {
-                                            // perform operation when input is cleared
-                                            console.log("Input cleared");
-
-                                        }
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                className: "text-white",
-                                            }}
-                                            InputLabelProps={{
-                                                ...params.InputLabelProps,
-                                                style: { color: "white" },
-                                            }}
-
-                                            className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                                            placeholder="TO Location"
-                                            required
-                                        />
-                                    )}
-                                    classes={{
-                                        endAdornment: "text-white",
-                                    }}
-                                    sx={{
-                                        '& .MuiAutocomplete-endAdornment': {
-                                            color: 'white',
-                                        },
-                                    }}
-                                />
-
-                            </div>
                         </div >
+
 
                         <div className='mb-6'>
                             <button

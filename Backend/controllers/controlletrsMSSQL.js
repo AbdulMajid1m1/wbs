@@ -3750,6 +3750,18 @@ const WBSDB = {
 
   async insertManyIntoMappedBarcode(req, res, next) {
     const { records } = req.body;
+    console.log(records);
+    if (!records) {
+      return res.status(400).send({ message: "Records are required." });
+    }
+    if (!Array.isArray(records)) {
+      return res.status(400).send({ message: "Records must be an array." });
+    }
+    if (records.length === 0) {
+      return res.status(400).send({ message: "Records array must not be empty." });
+    }
+
+
     let duplicateSerialNumbers = [];
     try {
       const transaction = new sql.Transaction(pool2);
@@ -3774,9 +3786,16 @@ const WBSDB = {
           sid,
           cid,
           po,
-          trans
-        } = record;
+          trans,
+          length,
+          width,
+          height,
+          weight,
+          qrcode,
+          trxdate
 
+        } = record;
+        let date = new Date().toISOString() // date for mysql type date
         // Check if the serial number already exists
         const duplicateCheckQuery = 'SELECT COUNT(*) AS Count FROM dbo.tblMappedBarcodes WHERE ItemSerialNo = @itemSerialNo';
         const duplicateCheckResult = await transaction.request().input('itemSerialNo', sql.VarChar(200), itemserialno).query(duplicateCheckQuery);
@@ -3787,9 +3806,9 @@ const WBSDB = {
           // Insert the record
           const insertQuery = `
             INSERT INTO dbo.tblMappedBarcodes
-            (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans)
+            (ItemCode, ItemDesc, GTIN, Remarks, [User], Classification, MainLocation, BinLocation, IntCode, ItemSerialNo, MapDate, PalletCode, Reference, SID, CID, PO, Trans,Length,Width,Height,Weight,QRCode,TrxDate)
             VALUES
-            (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans)
+            (@itemCode, @itemDesc, @gtin, @remarks, @user, @classification, @mainLocation, @binLocation, @intCode, @itemSerialNo, @mapDate, @palletCode, @reference, @sid, @cid, @po, @trans,@length,@width,@height,@weight,@qrcode,@trxdate)
           `;
 
           const request = transaction.request();
@@ -3805,14 +3824,19 @@ const WBSDB = {
           request.input('binLocation', sql.VarChar(200), binlocation?.trim());
           request.input('intCode', sql.VarChar(150), intcode?.trim());
           request.input('itemSerialNo', sql.VarChar(200), itemserialno?.trim());
-          request.input('mapDate', sql.Date, mapdate);
+          request.input('mapDate', sql.Date, date);
           request.input('palletCode', sql.VarChar(255), palletcode?.trim());
           request.input('reference', sql.VarChar(100), reference?.trim());
           request.input('sid', sql.VarChar(50), sid?.trim());
           request.input('cid', sql.VarChar(50), cid?.trim());
           request.input('po', sql.VarChar(50), po?.trim());
           request.input('trans', sql.Numeric(10, 0), trans);
-
+          request.input("width", sql.Numeric(10, 2), width);
+          request.input("height", sql.Numeric(10, 2), height);
+          request.input("weight", sql.Numeric(10, 2), weight);
+          request.input("length", sql.VarChar(255), length);
+          request.input("qrcode", sql.VarChar(255), qrcode)
+          request.input("trxdate", sql.Date, trxdate)
 
           await request.query(insertQuery);
         }

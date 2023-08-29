@@ -23,107 +23,105 @@ const ReceiptsThirdScreen = () => {
     fetchItemCount();
   }, [])
 
-  //   const insertData = async () => {
-  //  if (SERIALNUM === null || SERIALNUM === '') {
-  //       return;
-  //     }
-  //     console.log(statedata);
-  //     console.log(statedata?.POQTY)
-  //     statedata.REMAININGQTY = statedata.POQTY - 1;
-
-  //     const queryParameters = new URLSearchParams(statedata).toString();
-  //     try {
-
-  //       const response = await userRequest.post(
-  //         `/insertShipmentRecievedDataCL?${queryParameters}`)
-
-  //       console.log(response?.data);
-  //       fetchItemCount();
-  //       setTableData((prev) => [...prev, { SERIALNUM: SERIALNUM, RCVDCONFIGID: statedata.RCVDCONFIGID, REMARKS: statedata.REMARKS }]);
-  //     }
-  //     catch (error) {
-
-  //       console.error(error);
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'Error',
-  //         text: error.response?.data?.message ?? 'Something went wrong!',
-  //       })
-  //     }
-  //     finally {
-  //       setSERIALNUM('');
-  //       document.getElementById('SERIALNUM').value = '';
-  //     }
-  //     try {
-  //       const updateDimensions = await userRequest.put("/updateStockMasterData", {
-  //         ITEMID: statedata?.ITEMID,
-  //         Length: statedata?.LENGTH,
-  //         Width: statedata?.WIDTH,
-  //         Height: statedata?.HEIGHT,
-  //         Weight: statedata?.WEIGHT,
-
-  //       })
-  //       console.log(updateDimensions?.data);
-
-  //     }
-  //     catch (error) {
-  //       console.error(error);
-
-  //     }
-
-  //   }
-
   const insertData = async (InputSerialNum) => {
-    if (InputSerialNum === null || InputSerialNum === '') {
-      return Promise.reject('Serial Number is required');
+    if (!InputSerialNum) {
+      throw new Error('Serial Number is required');
     }
 
-    console.log(statedata);
-    console.log(statedata?.POQTY)
-    statedata.REMAININGQTY = statedata.POQTY - 1;
-    statedata.SERIALNUM = InputSerialNum;
+    const updatedStateData = {
+      ...statedata,
+      REMAININGQTY: statedata.POQTY - 1,
+      SERIALNUM: InputSerialNum,
+    };
 
-    const queryParameters = new URLSearchParams(statedata).toString();
+    console.log(updatedStateData);
+
+    const mappedbarcodeData = {
+      itemcode: updatedStateData?.ITEMID,
+      itemdesc: updatedStateData?.ITEMNAME,
+      gtin: updatedStateData?.GTIN,
+      remarks: updatedStateData?.REMARKS,
+      classification: updatedStateData?.CLASSIFICATION,
+      mainlocation: updatedStateData?.ARRIVALWAREHOUSE,
+      binlocation: updatedStateData?.BIN,
+      itemserialno: updatedStateData?.SERIALNUM,
+      trxdate: updatedStateData?.RCVD_DATE,
+      palletcode: updatedStateData?.PALLETCODE,
+      reference: updatedStateData?.SHIPMENTID,
+      sid: updatedStateData?.PURCHID,
+      cid: updatedStateData?.CONTAINERID,
+      po: updatedStateData?.POQTY.toString(),
+      length: updatedStateData?.LENGTH,
+      width: updatedStateData?.WIDTH,
+      height: updatedStateData?.HEIGHT,
+      weight: updatedStateData?.WEIGHT,
+    };
+
+
+    // convert  mappedbarcodeData object key to small letters
+
+    const apiBody = {
+      records: [
+        mappedbarcodeData
+      ]
+
+    };
+
+    console.log(apiBody);
+
+    const queryParameters = new URLSearchParams(updatedStateData).toString();
+
     try {
+      const [response, updateDimensions] = await Promise.all([
+        userRequest.post(`/insertShipmentRecievedDataCL?${queryParameters}`),
+        userRequest.put("/updateStockMasterData", {
+          ITEMID: statedata.ITEMID,
+          Length: statedata.LENGTH,
+          Width: statedata.WIDTH,
+          Height: statedata.HEIGHT,
+          Weight: statedata.WEIGHT,
+        }),
+        userRequest.post("/insertManyIntoMappedBarcode", apiBody),
 
-      const response = await userRequest.post(
-        `/insertShipmentRecievedDataCL?${queryParameters}`)
+      ]);
 
-      console.log(response?.data);
+
+
+
+
       fetchItemCount();
-      setTableData((prev) => [...prev, { SERIALNUM: InputSerialNum, RCVDCONFIGID: statedata.RCVDCONFIGID, REMARKS: statedata.REMARKS }]);
-    }
-    catch (error) {
 
-      console.error(error);
+      setTableData((prev) => [
+        ...prev,
+        {
+          SERIALNUM: InputSerialNum,
+          RCVDCONFIGID: statedata.RCVDCONFIGID,
+          REMARKS: statedata.REMARKS,
+        },
+      ]);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Operation completed successfully!',
+        timer: 3000,
+        confirmButtonColor: '#F98E1A',
+      });
+
+    } catch (error) {
+      console.log(error);
+
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.response?.data?.message ?? 'Something went wrong!',
-      })
-    }
-    finally {
-      setSERIALNUM('');
+        text: error.response?.data?.message || 'Something went wrong!',
+      });
+    } finally {
       document.getElementById('SERIALNUM').value = '';
     }
 
-    try {
-      const updateDimensions = await userRequest.put("/updateStockMasterData", {
-        ITEMID: statedata?.ITEMID,
-        Length: statedata?.LENGTH,
-        Width: statedata?.WIDTH,
-        Height: statedata?.HEIGHT,
-        Weight: statedata?.WEIGHT,
-      })
-
-      console.log(updateDimensions?.data);
-
-    } catch (error) {
-      console.error(error);
-      setRefreshLoading(false);
-    }
-    return Promise.resolve(); // Return a Promise when the function completes
-  }
+    return;  // No need to explicitly return Promise.resolve() in an async function
+  };
 
 
   const handleFormSubmit = async (e) => {
@@ -155,7 +153,7 @@ const ReceiptsThirdScreen = () => {
       console.error(error);
       setRefreshLoading(false);
     }
-   
+
   }
 
 

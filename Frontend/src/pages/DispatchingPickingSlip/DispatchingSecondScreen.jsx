@@ -18,6 +18,7 @@ const DispatchingSecondScreen = () => {
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
     const [vehicleBarcode, setVehicleBarcode] = useState('');
+    const [vehicleList, setVehicleList] = useState([]);
     // to reset snakebar messages
     const resetSnakeBarMessages = () => {
         setError(null);
@@ -45,6 +46,8 @@ const DispatchingSecondScreen = () => {
 
 
             }
+
+
         }
 
         getDataFromPackingSlipCl();
@@ -52,7 +55,24 @@ const DispatchingSecondScreen = () => {
 
 
     }, [parsedData?.ITEMID, parsedData?.PACKINGSLIPID])
+    useEffect(() => {
+        const getTruckMasterData = async () => {
+            try {
+                const res = await userRequest.get("/getAllWmsTruckMaster");
+                setVehicleList(res?.data ?? []);
+                // SALESID
+            }
+            catch (error) {
+                console.log(error)
 
+                setError(error?.response?.data?.message ?? 'Something went wrong');
+
+
+            }
+        }
+
+        getTruckMasterData()
+    }, [])
 
 
     const autocompleteRef = useRef(); // Ref to access the Autocomplete component
@@ -215,7 +235,10 @@ const DispatchingSecondScreen = () => {
         }
     }
 
-
+    const handleVehicleSelect = (event, value) => {
+        console.log(value)
+        setVehicleBarcode(value);
+    };
 
 
     return (
@@ -262,25 +285,10 @@ const DispatchingSecondScreen = () => {
                                     </div>
 
 
-                                    {/* <div className='text-[#FFFFFF]'>
-                    <span>GROUPID {parsedData.EXPEDITIONSTATUS}</span>
-                  </div> */}
+
                                 </div>
                             </div>
 
-                            {/* <div>
-                <div className='flex gap-6 justify-center items-center text-xs mt-2 sm:mt-0 sm:text-lg'>
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Remaining Quantity</span>
-                    <span>{remainingQty}</span>
-                  </div>
-
-                  <div className='flex flex-col justify-center items-center sm:text-lg gap-2 text-[#FFFFFF]'>
-                    <span>Picked Quantity</span>
-                    <span>{filteredData.length}</span>
-                  </div>
-                </div>
-              </div> */}
 
                         </div>
 
@@ -452,7 +460,7 @@ const DispatchingSecondScreen = () => {
 
 
 
-                        <div className="mb-6">
+                        {/* <div className="mb-6">
                             <label htmlFor='barcode' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Vehicle Barcode Serial #(Vehicle Plate#)<span className='text-[#FF0404]'>*</span></label>
                             <input
                                 id="barcode"
@@ -461,6 +469,65 @@ const DispatchingSecondScreen = () => {
                                 value={vehicleBarcode}
                                 onChange={(e) => setVehicleBarcode(e.target.value)}
                             />
+                        </div > */}
+
+                        <div className="mb-6">
+                            <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Vehicle Plate<span className='text-[#FF0404]'>*</span></label>
+
+
+                            <div className='w-full'>
+                                <Autocomplete
+                                    ref={autocompleteRef}
+                                    key={autocompleteKey}
+                                    id="plateno"
+                                    // options={location.filter(item => item.BinLocation)}
+                                    // getOptionLabel={(option) => option.BinLocation}
+                                    options={Array.from(new Set(vehicleList.map(item => item?.PlateNo))).filter(Boolean)}
+                                    getOptionLabel={(option) => option}
+                                    onChange={handleVehicleSelect}
+
+                                    // onChange={(event, value) => {
+                                    //   if (value) {
+                                    //     console.log(`Selected: ${value}`);
+
+                                    //   }
+                                    // }}
+                                    onInputChange={(event, value) => {
+                                        if (!value) {
+                                            // perform operation when input is cleared
+                                            console.log("Input cleared");
+
+                                        }
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                className: "text-white",
+                                            }}
+                                            InputLabelProps={{
+                                                ...params.InputLabelProps,
+                                                style: { color: "white" },
+                                            }}
+
+                                            className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                                            placeholder="TO Location"
+                                            required
+                                        />
+                                    )}
+                                    classes={{
+                                        endAdornment: "text-white",
+                                    }}
+                                    sx={{
+                                        '& .MuiAutocomplete-endAdornment': {
+                                            color: 'white',
+                                        },
+                                    }}
+                                />
+
+                            </div>
                         </div >
 
                         <div className='mb-6'>

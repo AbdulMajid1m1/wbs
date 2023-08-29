@@ -465,6 +465,16 @@ const UserDataTable = ({
             const updateRemainingQty = await userRequest.put("/updateRemainingQtyInTblShipmentCounter?SHIPMENTID=" + rowdata?.SHIPMENTID)
 
             console.log(updateRemainingQty?.data);
+            const MappedBacodeResponse = await userRequest.delete(
+              "deleteTblMappedBarcodesDataBySerialNumber",
+              {
+                headers: {
+                  ...userRequest.defaults.headers,
+                  itemserialno: rowdata?.SERIALNUM,
+                },
+              }
+            );
+            console.log(MappedBacodeResponse);
 
             success = true; // to update the state of the table
           } catch (error) {
@@ -1731,10 +1741,10 @@ const PrintLabelsBarCode = ({ selectedRow, index }) => {
             </div>
           </div>
           <div id="itemcode">
-              <p>{selectedRow.data.ItemCode}</p>
+            <p>{selectedRow.data.ItemCode}</p>
           </div>
           <div id='inside-BRCode'>
-            <Barcode  value={selectedRow.data.ItemSerialNo} width={1.3} height={60} />
+            <Barcode value={selectedRow.data.ItemSerialNo} width={1.3} height={60} />
           </div>
         </div>
       </div>

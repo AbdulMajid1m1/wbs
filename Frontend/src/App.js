@@ -42,7 +42,7 @@ import { ReceiptsProvider } from './contexts/ReceiptsContext'
 import { RecevingByContainerIdProvider } from './contexts/RecevingByContainerId';
 import TblShipmentReceivedCl from './pages/TblShipmentReceivedCl/TblShipmentReceivedCl'
 import TblShipmentUpdate from './components/UpdatesItem/TblShipmentUpdate'
-import KPIDashboardReceiving from './pages/KPIDashboardReceiving/KPIDashboardReceiving'
+// import KPIDashboardReceiving from './pages/KPIDashboardReceiving/KPIDashboardReceiving'
 import PutAwayScreen1 from './pages/Palletization/PutAwayScreen1'
 import PutAwayScreen2 from './pages/Palletization/PuAwayScreen2'
 import PutAwayScreen3 from './pages/Palletization/PutAwayScreen3'
@@ -250,7 +250,7 @@ const App = () => {
                 <Route path='/addnewpalletizing' element={<AddNewPalletizing title="Add Palletizing" />} />
                 <Route path='/updatepalletizing/:id' element={<TblUpdatePalletizing title="Update Palletizing Data" />} />
 
-                <Route path='/kpireceiving' element={<KPIDashboardReceiving />} />
+                {/* <Route path='/kpireceiving' element={<KPIDashboardReceiving />} /> */}
                 <Route path='/reallocation' element={<ReallocationPicked />} />
                 <Route path='/bintobincl' element={<BinToBinCL />} />
                 <Route path='/journallist' element={<JournalList />} />

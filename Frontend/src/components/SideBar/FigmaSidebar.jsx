@@ -863,7 +863,7 @@ const FigmaSidebar = () => {
             )}
 
 
-            <div className='main-images-container' onClick={() => setKpiDashbaord(!kpiDashboard)}>
+            {/* <div className='main-images-container' onClick={() => setKpiDashbaord(!kpiDashboard)}>
                 <img src={packing} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>KPI Dashboard's</p>
             </div>
@@ -887,15 +887,13 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Dispatching</p>
                     </div>
                 </div>
-            )}
+            )} */}
 
-            <div className='main-images-container' onClick={() => setSettingTitle(!settingtitle)}>
+            {/* <div className='main-images-container' onClick={() => setSettingTitle(!settingtitle)}>
                 <img src={settingicon} className='main-inside-image bg-white rounded-full' alt='' />
                 <p className='sidebar-text'>Settings</p>
-            </div>
+            </div> */}
             
-            {settingtitle && (
-            <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                 <div
                 className={`main-images-container ${selectedItem === '/user-accounts' ? 'selected-item' : ''}`}
                 onClick={() => handleItemClick('/user-accounts')}
@@ -913,8 +911,6 @@ const FigmaSidebar = () => {
                     <img src={exit} className='main-inside-image' alt='' />
                     <p className='sidebar-text'>Log-Out</p>
                 </div>
-            </div>
-            )}
 
 
             <div className='main-images-container'>

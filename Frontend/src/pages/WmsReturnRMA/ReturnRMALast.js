@@ -195,33 +195,27 @@ const ReturnRMALast = () => {
     try {
       await userRequest.post(`/insertIntoWmsReturnSalesOrderCl`, [apiData]);
 
-      // if (newTableData?.length > 0) {
-      const insertData = {
-        ItemDesc: parsedData?.NAME,
-        ItemCode: parsedData?.ITEMID,
-        ItemSerialNo: newBarcodeValue,
-        MapDate: new Date().toLocaleDateString(),
-        PalletCode: null,
-        BinLocation: selectedValue
-      };
 
-      const lowerCaseInsertData = Object.fromEntries(
-        Object.entries(insertData).map(([k, v]) => [k.toLowerCase(), v])
-      );
+      // const insertData = {
+      //   ItemDesc: parsedData?.NAME,
+      //   ItemCode: parsedData?.ITEMID,
+      //   ItemSerialNo: newBarcodeValue,
+      //   MapDate: new Date().toLocaleDateString(),
+      //   PalletCode: null,
+      //   BinLocation: selectedValue
+      // };
+
+      // const lowerCaseInsertData = Object.fromEntries(
+      //   Object.entries(insertData).map(([k, v]) => [k.toLowerCase(), v])
+      // );
 
 
-      const response = await userRequest.post(
-        "/insertManyIntoMappedBarcodeFromRma",
-        { records: [lowerCaseInsertData] }
-      );
+      // const response = await userRequest.post(
+      //   "/insertManyIntoMappedBarcode",
+      //   { records: [lowerCaseInsertData] }
+      // );
 
-      // setNewTableData(prev => [...prev, insertData]);
-      setMessage(response?.data?.message ?? 'Data inserted successfully');
-      // }
-      // else {
-      //   setError("No Data to insert into tblMappedBarcode") //check this
-      //   return;
-      // }
+      // setMessage(response?.data?.message ?? 'Data inserted successfully');
 
       setFilteredData(prev => [...prev, apiData]);
       setUserInput("");
@@ -254,17 +248,33 @@ const ReturnRMALast = () => {
       setIsLoading(true)
       const selectedData = selectedRows.map((index) => filteredData[index]); // Filter the selected rows from the data array
 
-      const insertedSerialNumbers = selectedData.map((record) => {
-        return record?.ITEMSERIALNO;
-      });
+      const mappedData = selectedData.map((item) => ({
+        ...(item?.ITEMID && { itemcode: item?.ITEMID }),
+        itemdesc: item?.NAME,
+        classification: item?.RETURNITEMNUM,
+        mainlocation: item?.INVENTSITEID,
+        binlocation: binlocation,
+        intcode: item?.CONFIGID,
+        itemserialno: item?.ITEMSERIALNO,
+        // mapdate: item?.TRXDATETIME ?? "",
+        user: item?.ASSIGNEDTOUSERID ?? "",
+        gtin: "",
+        remarks: "",
+        palletcode: "",
+        reference: "",
+        sid: "",
+        cid: "",
+        po: "",
+      }));
 
 
-      // const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
-      // console.log(res?.data);
 
-      // let insertedSerialNumbers = mappedData?.map((record) => {
-      //   return record?.itemserialno;
-      // })
+      const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
+      console.log(res?.data);
+
+      let insertedSerialNumbers = mappedData?.map((record) => {
+        return record?.itemserialno;
+      })
 
       console.log(insertedSerialNumbers)
       const deleteRes = await userRequest.delete("/deleteMultipleRecordsFromWmsReturnSalesOrderCl", { data: insertedSerialNumbers })

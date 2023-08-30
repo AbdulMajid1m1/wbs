@@ -97,6 +97,7 @@ const WmsPhysicalInventory = () => {
           setMessage("Item Scanned Successfully");
           setUserInput("");
           setFilteredData(prev => [...prev, apiData]);
+          setMessage("Item Scanned Successfully");
 
 
         }
@@ -199,7 +200,7 @@ const WmsPhysicalInventory = () => {
                       <th>ITEMNAME</th>
                       <th>ITEMGROUPID</th>
                       <th>GROUPNAME</th>
-                      <th>INVENTORYBY</th>
+                      {/* <th>INVENTORYBY</th> */}
                       <th>TRXDATETIME</th>
                       <th>TRXUSERIDASSIGNED</th>
                       <th>TRXUSERIDASSIGNEDBY</th>
@@ -216,7 +217,7 @@ const WmsPhysicalInventory = () => {
                         <td>{data.ITEMNAME}</td>
                         <td>{data.ITEMGROUPID}</td>
                         <td>{data.GROUPNAME}</td>
-                        <td>{data.INVENTORYBY}</td>
+                        {/* <td>{data.INVENTORYBY}</td> */}
                         <td>{data.TRXDATETIME}</td>
                         <td>{data.TRXUSERIDASSIGNED}</td>
                         <td>{data.TRXUSERIDASSIGNEDBY}</td>
@@ -251,7 +252,7 @@ const WmsPhysicalInventory = () => {
               <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
                   flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
               >
-                <label className="inline-flex items-center mt-1">
+                {/* <label className="inline-flex items-center mt-1">
                   <input
                     type="radio"
                     name="selectionType"
@@ -262,7 +263,7 @@ const WmsPhysicalInventory = () => {
                     disabled
                   />
                   <span className="ml-2 text-[#00006A]">BY PALLETE</span>
-                </label>
+                </label> */}
                 <label className="inline-flex items-center mt-1">
                   <input
                     type="radio"
@@ -306,7 +307,7 @@ const WmsPhysicalInventory = () => {
                         <th>ITEMGROUPID</th>
                         <th>GROUPNAME</th>
                         <th>JOURNALID</th>
-                        <th>INVENTORYBY</th>
+                        {/* <th>INVENTORYBY</th> */}
                         <th>TRXDATETIME</th>
                         <th>TRXUSERIDASSIGNED</th>
                         <th>TRXUSERIDASSIGNEDBY</th>
@@ -314,7 +315,7 @@ const WmsPhysicalInventory = () => {
                         <th>ITEMSERIALNO</th>
 
                         <th>QTYSCANNED</th>
-                        <th>BINLOCATION</th>
+                        {/* <th>BINLOCATION</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -325,7 +326,7 @@ const WmsPhysicalInventory = () => {
                           <td>{item.ITEMGROUPID}</td>
                           <td>{item.GROUPNAME}</td>
                           <td>{item.JOURNALID}</td>
-                          <td>{item.INVENTORYBY}</td>
+                          {/* <td>{item.INVENTORYBY}</td> */}
                           <td>{item.TRXDATETIME}</td>
                           <td>{item.TRXUSERIDASSIGNED}</td>
                           <td>{item.TRXUSERIDASSIGNEDBY}</td>
@@ -333,7 +334,7 @@ const WmsPhysicalInventory = () => {
                           <td>{item.ITEMSERIALNO}</td>
 
                           <td>{item.QTYSCANNED}</td>
-                          <td>{item.BINLOCATION}</td>
+                          {/* <td>{item.BINLOCATION}</td> */}
                         </tr>
                       ))}
                     </tbody>
@@ -357,21 +358,7 @@ const WmsPhysicalInventory = () => {
 
             </form>
 
-
-
-            {/* <div className='mb-6'>
-              <button
-                type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-[25%]'>
-                <span className='flex justify-center items-center'
-                >
-                  <p>Save</p>
-                </span>
-              </button>
-            </div> */}
-
           </div>
-          {/* </div> */}
         </div>
       </div>
     </>

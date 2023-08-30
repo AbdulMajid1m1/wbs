@@ -53,7 +53,6 @@ const PhysicalInventoryBinLocation = () => {
     setIsLoading(true);
     console.log('Selected value:', value);
 
-    // Make the API request to fetch the table data based on the selected value
     userRequest.get(`/getWmsJournalCountingOnlyCLByBinLocation?binloacation=${value.BINLOCATION}`)
       .then(response => {
         // Set the retrieved data as the table data

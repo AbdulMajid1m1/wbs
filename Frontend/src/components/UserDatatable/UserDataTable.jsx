@@ -1734,7 +1734,7 @@ const PrintLabelsBarCode = ({ selectedRow, index }) => {
               <p>{selectedRow.data.ItemCode}</p>
           </div>
           <div id='inside-BRCode'>
-            <Barcode  value={selectedRow.data.ItemSerialNo} width={1} height={50} />
+            <Barcode  value={selectedRow.data.ItemSerialNo} width={1} height={60} />
           </div>
         </div>
       </div>

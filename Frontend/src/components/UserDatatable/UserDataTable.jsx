@@ -1287,8 +1287,6 @@ const UserDataTable = ({
 
   const handlePrintItemBarcode = () => {
     if (selectedRow.length === 0) {
-      // If no row is selected, show an alert message
-      // alert('Please select a row to print.');
       setError('Please select a row to print.');
       return;
     }
@@ -1296,12 +1294,12 @@ const UserDataTable = ({
     const html = '<html><head><title>Print Barcode</title>' +
       '<style>' +
       '@page { size: 3in 2in; margin: 0; }' +
-      'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
+      'body { font-size: 13px; line-height: 0.3;}' +
       '#header { display: flex; justify-content: center; padding: 1px;}' +
       '#imglogo {height: 40px; width: 100px;}' +
-      '#itemcode { font-size: 11px; display: flex; justify-content: center;}' +
+      '#itemcode { font-size: 13px; font-weight: 600; display: flex; justify-content: center;}' +
       '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 1px;}' +
-      '#paragh { font-size: 15px; font-weight: 600; }' +
+      '#itemSerialNo { font-size: 13px; display: flex; justify-content: center; font-weight: 600; margin-top: 5px;}' +
       '</style>' +
       '</head><body>' +
       '<div id="printBarcode"></div>' +
@@ -1329,7 +1327,31 @@ const UserDataTable = ({
   }
 
 
-
+  const PrintLabelsBarCode = ({ selectedRow, index }) => {
+    return (
+      <div>
+        <div id="barcode" key={index}>
+          <div id="barcode" className='hidden'>
+            <div id='header'>
+              <div>
+                <img src={logo} id='imglogo' alt='' />
+              </div>
+            </div>
+            <div>
+                <p id="itemcode">{selectedRow.data.ItemCode}</p>
+            </div>
+            <div id='inside-BRCode'>
+              <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={65} />
+            </div>
+            <div id="itemSerialNo">
+                <p>{selectedRow.data.ItemSerialNo}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
 
   return (
     <>
@@ -1720,31 +1742,30 @@ const PrintingShipmentReceived = ({ selectedRow, index }) => {
 
 
 
-const PrintLabelsBarCode = ({ selectedRow, index }) => {
-  return (
-    <div>
-      <div id="barcode" key={index}>
-        <div id="barcode" className='hidden'>
-          <div id='header'>
-            <div>
-              <img src={logo} id='imglogo' alt='' />
-            </div>
-          </div>
-          <div id="itemcode">
-              <p>{selectedRow.data.ItemCode}</p>
-          </div>
-          <div id='inside-BRCode'>
-            {/* <Barcode  value={selectedRow.data.ItemSerialNo} width={1} height={60} /> */}
-            <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={70} />
-          </div>
-          <div id="itemcode">
-              <p>{selectedRow.data.ItemSerialNo}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+// const PrintLabelsBarCode = ({ selectedRow, index }) => {
+//   return (
+//     <div>
+//       <div id="barcode" key={index}>
+//         <div id="barcode" className='hidden'>
+//           <div id='header'>
+//             <div>
+//               <img src={logo} id='imglogo' alt='' />
+//             </div>
+//           </div>
+//           <div id="itemcode">
+//               <p>{selectedRow.data.ItemCode}</p>
+//           </div>
+//           <div id='inside-BRCode'>
+//             <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={70} />
+//           </div>
+//           <div id="itemcode">
+//               <p>{selectedRow.data.ItemSerialNo}</p>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 
 

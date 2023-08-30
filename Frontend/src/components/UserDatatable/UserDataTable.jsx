@@ -1341,7 +1341,7 @@ const UserDataTable = ({
                 <p id="itemcode">{selectedRow.data.ItemCode}</p>
             </div>
             <div id='inside-BRCode'>
-              <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={65} />
+              <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={60} />
             </div>
             <div id="itemSerialNo">
                 <p>{selectedRow.data.ItemSerialNo}</p>

@@ -1315,7 +1315,7 @@ const UserDataTable = ({
       '#header { display: flex; justify-content: center; padding: 1px;}' +
       '#imglogo {height: 40px; width: 100px;}' +
       '#itemcode { font-size: 15px; display: flex; justify-content: center;}' +
-      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;  margin-top: -16px;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;  margin-top: -8px;}' +
       '#paragh { font-size: 15px; font-weight: 600; }' +
       '</style>' +
       '</head><body>' +
@@ -1749,7 +1749,11 @@ const PrintLabelsBarCode = ({ selectedRow, index }) => {
             <p>{selectedRow.data.ItemCode}</p>
           </div>
           <div id='inside-BRCode'>
-            <Barcode  value={selectedRow.data.ItemSerialNo} width={1} height={50} />
+            {/* <Barcode  value={selectedRow.data.ItemSerialNo} width={1} height={60} /> */}
+            <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={70} />
+          </div>
+          <div id="itemcode">
+              <p>{selectedRow.data.ItemSerialNo}</p>
           </div>
         </div>
       </div>

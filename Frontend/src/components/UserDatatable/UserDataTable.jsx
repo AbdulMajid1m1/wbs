@@ -16,7 +16,6 @@ import * as XLSX from 'xlsx';
 import { MuiCustomTable } from "../../utils/MuiCustomTable";
 import { ClipLoader } from 'react-spinners';
 import CustomToolbar from "../../utils/Components/CustomToolbar";
-import Swal from "sweetalert2";
 
 const UserDataTable = ({
   columnsName = [],
@@ -65,6 +64,7 @@ const UserDataTable = ({
   const [shipmentIdSearch, setShipmentIdSearch] = useState("");
   const [containerIdSearch, setContainerIdSearch] = useState("");
   const [expectedStatusSearch, setExpectedStatusSearch] = useState("");
+  const [updatedRows, setUpdatedRows] = useState([]);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [muiFilteredData, setMuiFilteredData] = useState([]);
@@ -312,7 +312,27 @@ const UserDataTable = ({
   };
 
 
- 
+  useEffect(() => {
+    const fetchData = async () => {
+      const newRows = await Promise.all(selectedRow.map(async (row) => {
+        try {
+          const response = await userRequest.get(`/getStockMasterDataByItemId?ITEMID=${row.data.ITEMID}`);
+          const itemGroup = response?.data[0]?.GROUPNAME; // add optional chaining
+          console.log(response)
+          return { ...row, itemGroup: itemGroup || '' }; // add a fallback value for itemGroup
+
+        } catch (error) {
+          console.log("this is error in userdata table in useeffect with uniqueId")
+          console.log(error);
+        }
+        return row; // if the API call fails, return the original row
+      }));
+
+      setUpdatedRows(newRows);
+    };
+
+    fetchData();
+  }, [selectedRow]);
 
 
   const handlePrint = () => {
@@ -429,19 +449,7 @@ const UserDataTable = ({
 
 
   const handleDelete = async (id, rowdata) => {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel',
-      confirmButtonColor: 'crimson',
-      cancelButtonColor: 'green',
-      reverseButtons: true,
-    });
-
-    if (result.isConfirmed) {
+    if (window.confirm("Are you sure you want to delete this user?")) {
       let success = false;
 
       switch (uniqueId) {
@@ -457,16 +465,6 @@ const UserDataTable = ({
             const updateRemainingQty = await userRequest.put("/updateRemainingQtyInTblShipmentCounter?SHIPMENTID=" + rowdata?.SHIPMENTID)
 
             console.log(updateRemainingQty?.data);
-            const MappedBacodeResponse = await userRequest.delete(
-              "deleteTblMappedBarcodesDataBySerialNumber",
-              {
-                headers: {
-                  ...userRequest.defaults.headers,
-                  itemserialno: rowdata?.SERIALNUM,
-                },
-              }
-            );
-            console.log(MappedBacodeResponse);
 
             success = true; // to update the state of the table
           } catch (error) {
@@ -668,19 +666,6 @@ const UserDataTable = ({
           try {
             const response = await userRequest.delete(
               "/deleteDzoneData?tbl_DZONESID=" + rowdata.tbl_DZONESID
-            );
-            console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
-            success = true; // to update the state of the table
-          } catch (error) {
-            setError(error?.message ?? "Something went wrong");
-            success = false;
-          }
-          break;
-        case "usersAccountsId":
-          try {
-            const response = await userRequest.delete(
-              "/deleteTblUsersData?UserID=" + rowdata?.UserID
             );
             console.log(response);
             setMessage(response?.data?.message ?? "User deleted successfully");
@@ -1314,8 +1299,8 @@ const UserDataTable = ({
       'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
       '#header { display: flex; justify-content: center; padding: 1px;}' +
       '#imglogo {height: 40px; width: 100px;}' +
-      '#itemcode { font-size: 11px; display: flex; justify-content: center;}' +
-      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 1px;}' +
+      '#itemcode { font-size: 15px; display: flex; justify-content: center;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;  margin-top: -16px;}' +
       '#paragh { font-size: 15px; font-weight: 600; }' +
       '</style>' +
       '</head><body>' +
@@ -1746,14 +1731,10 @@ const PrintLabelsBarCode = ({ selectedRow, index }) => {
             </div>
           </div>
           <div id="itemcode">
-            <p>{selectedRow.data.ItemCode}</p>
+              <p>{selectedRow.data.ItemCode}</p>
           </div>
           <div id='inside-BRCode'>
-            {/* <Barcode  value={selectedRow.data.ItemSerialNo} width={1} height={60} /> */}
-            <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={70} />
-          </div>
-          <div id="itemcode">
-              <p>{selectedRow.data.ItemSerialNo}</p>
+            <Barcode  value={selectedRow.data.ItemSerialNo} width={1} height={50} />
           </div>
         </div>
       </div>

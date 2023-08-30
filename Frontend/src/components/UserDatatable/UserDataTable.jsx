@@ -1314,8 +1314,8 @@ const UserDataTable = ({
       'body { font-size: 13px; line-height: 0.3; border: 1px solid black;}' +
       '#header { display: flex; justify-content: center; padding: 1px;}' +
       '#imglogo {height: 40px; width: 100px;}' +
-      '#itemcode { font-size: 15px; display: flex; justify-content: center;}' +
-      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 5px;  margin-top: -8px;}' +
+      '#itemcode { font-size: 11px; display: flex; justify-content: center;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 1px;}' +
       '#paragh { font-size: 15px; font-weight: 600; }' +
       '</style>' +
       '</head><body>' +

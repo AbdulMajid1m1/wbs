@@ -42,6 +42,7 @@ const UserDataTable = ({
   printBarCode,
   printItemBarCode,
   PrintBarCodeName,
+  PrintGtin,
   detectAddRole,
   height,
   Refresh,
@@ -54,7 +55,6 @@ const UserDataTable = ({
   handleGenerateSerialPopUp,
   GenerateSerial,
   generateSerialPopUp,
-  PrintGtin,
 
 }) => {
   const navigate = useNavigate();
@@ -1326,7 +1326,47 @@ const UserDataTable = ({
 
       }, 500);
     };
-    
+  }
+  const handlePrintGtin = () => {
+    if (selectedRow.length === 0) {
+      setError('Please select a row to print.');
+      return;
+    }
+    const printWindow = window.open('', 'Print Window', 'height=400,width=800');
+    const html = '<html><head><title>Print Barcode</title>' +
+      '<style>' +
+      '@page { size: 3in 2in; margin: 0; }' +
+      'body { font-size: 13px; line-height: 0.1;}' +
+      '#header { display: flex; justify-content: center;}' +
+      '#imglogo {height: 40px; width: 100px;}' +
+      '#itemcode { font-size: 13px; font-weight: 600; display: flex; justify-content: center;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 1px;}' +
+      '#itemSerialNo { font-size: 13px; display: flex; justify-content: center; font-weight: 600; margin-top: 3px;}' +
+      '#main-print { height: 100%; width: 100%;}' +
+      '</style>' +
+      '</head><body>' +
+      '<div id="printBarcode"></div>' +
+      '</body></html>';
+
+    printWindow.document.write(html);
+    const barcodeContainer = printWindow.document.getElementById('printBarcode');
+    const barcode = document.getElementById('printGtinId').cloneNode(true);
+    barcodeContainer.appendChild(barcode);
+
+    const logoImg = new Image();
+    logoImg.src = logo;
+
+    logoImg.onload = function () {
+      printWindow.document.getElementById('imglogo').src = logoImg.src;
+
+      printWindow.print();
+      printWindow.close();
+      setTimeout(() => {
+        setSelectedRow([]);
+        setRowSelectionModel([]);
+
+      }, 500);
+    };
   }
 
 
@@ -1344,7 +1384,6 @@ const UserDataTable = ({
               <p id="itemcode">{selectedRow.data.ItemCode}</p>
             </div>
             <div id='inside-BRCode'>
-
               <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={50} />
             </div>
             <div id="itemSerialNo">
@@ -1355,9 +1394,7 @@ const UserDataTable = ({
       </div>
     );
   };
-  
-  
-  const PrintItemLabelsGTIN = ({ selectedRow, index }) => {
+  const PrintLabelsGtin = ({ selectedRow, index }) => {
     return (
       <div id="main-print">
         <div id="" key={index}>
@@ -1371,8 +1408,10 @@ const UserDataTable = ({
               <p id="itemcode">{selectedRow.data.ItemCode}</p>
             </div>
             <div id='inside-BRCode'>
-              {/* <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={50} /> */}
-              <Barcode value={selectedRow.data.GTIN} width={1} height={50}/>
+              <Barcode value={selectedRow?.data?.GTIN} width={1} height={50} />
+            </div>
+            <div id="itemSerialNo">
+              <p>{selectedRow?.data?.GTIN}</p>
             </div>
           </div>
         </div>
@@ -1465,9 +1504,8 @@ const UserDataTable = ({
             {printButton && <button onClick={handlePrint}>{PrintName}</button>}
             {AddUser && <button onClick={handleAddUserPopup}>{UserName}</button>}
             {printBarCode && <button onClick={handlePrintBarCode}>{PrintBarCodeName}</button>}
-           
             {printItemBarCode && <button onClick={handlePrintItemBarcode}>{PrintBarCodeName}</button>}
-            {printItemBarCode && <button onClick={handlePrintItemBarcode}>{PrintGtin}</button>}
+            {printItemBarCode && <button onClick={handlePrintGtin}>{PrintGtin}</button>}
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>
@@ -1669,8 +1707,6 @@ const UserDataTable = ({
                 {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
                     uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
-                    uniqueId === "PrintItemlabels" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
-                    // uniqueId === "PrintGTIN" ? <PrintItemLabelsGTIN selectedRow={selectedRow} index={index} /> :
                       uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> : null}
 
               </div>
@@ -1679,11 +1715,11 @@ const UserDataTable = ({
         )}
 
         {selectedRow.length > 0 && (
-          <div id="printGtin">
+          <div id="printGtinId">
             {selectedRow.map((selectedRow, index) => (
-              <div id="printGtin" className='hidden' key={index}>
-                {   
-                uniqueId === "PrintGTIN" ? <PrintItemLabelsGTIN selectedRow={selectedRow} index={index} /> : null}
+              <div id="printGtinId" className='hidden' key={index}>
+                {/* <PrintLabelsBarCode selectedRow={selectedRow} index={index} />  */}
+                <PrintLabelsGtin selectedRow={selectedRow} index={index} />
 
               </div>
             ))}

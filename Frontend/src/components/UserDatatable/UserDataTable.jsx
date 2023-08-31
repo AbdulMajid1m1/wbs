@@ -1341,7 +1341,7 @@ const UserDataTable = ({
       '#imglogo {height: 40px; width: 100px;}' +
       '#itemcode { font-size: 13px; font-weight: 600; display: flex; justify-content: center;}' +
       '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 1px;}' +
-      '#itemSerialNo { font-size: 13px; display: flex; justify-content: center; font-weight: 600; margin-top: 3px;}' +
+      '#gtinNo { font-size: 13px; display: flex; justify-content: center; font-weight: 600; margin-top: 3px;}' +
       '#main-print { height: 100%; width: 100%;}' +
       '</style>' +
       '</head><body>' +
@@ -1408,11 +1408,11 @@ const UserDataTable = ({
               <p id="itemcode">{selectedRow.data.ItemCode}</p>
             </div>
             <div id='inside-BRCode'>
-              <Barcode value={selectedRow?.data?.GTIN} width={1} height={50} />
+              <Barcode value={selectedRow.data.GTIN} width={1} height={50} />
             </div>
-            <div id="itemSerialNo">
+            {/* <div id="gtinNo">
               <p>{selectedRow?.data?.GTIN}</p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

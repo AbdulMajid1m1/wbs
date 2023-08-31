@@ -59,6 +59,7 @@ const PrintingItemLabels = () => {
                 actionColumnVisibility={false}
                 printButton={false}
                 printItemBarCode={true}
+                printItemGtin={true}
                 PrintBarCodeName={"Print Item Serial Number"}
                 PrintGtin={"Print GTIN"}
                 TotalCount={count}

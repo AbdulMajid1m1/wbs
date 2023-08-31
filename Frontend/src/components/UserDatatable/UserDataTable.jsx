@@ -41,6 +41,7 @@ const UserDataTable = ({
   PrintName,
   printBarCode,
   printItemBarCode,
+  printItemGtin,
   PrintBarCodeName,
   PrintGtin,
   detectAddRole,
@@ -1317,7 +1318,6 @@ const UserDataTable = ({
 
     logoImg.onload = function () {
       printWindow.document.getElementById('imglogo').src = logoImg.src;
-
       printWindow.print();
       printWindow.close();
       setTimeout(() => {
@@ -1505,7 +1505,7 @@ const UserDataTable = ({
             {AddUser && <button onClick={handleAddUserPopup}>{UserName}</button>}
             {printBarCode && <button onClick={handlePrintBarCode}>{PrintBarCodeName}</button>}
             {printItemBarCode && <button onClick={handlePrintItemBarcode}>{PrintBarCodeName}</button>}
-            {printItemBarCode && <button onClick={handlePrintGtin}>{PrintGtin}</button>}
+            {printItemGtin && <button onClick={handlePrintGtin}>{PrintGtin}</button>}
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>
@@ -1706,7 +1706,7 @@ const UserDataTable = ({
               <div id="barcode" className='hidden' key={index}>
                 {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
-                    uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
+                    uniqueId === "PrintBarCode" || uniqueId === "PrintItemlabels" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
                       uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> : null}
 
               </div>

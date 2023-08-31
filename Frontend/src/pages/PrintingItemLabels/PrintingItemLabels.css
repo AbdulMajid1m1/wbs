@@ -61,6 +61,36 @@
 .assetCategoryForm .newContainer .top .right form .formInput, .assetCategoryForm .newContainer .bottom .right form .formInput {
     width: 40%;
 }
+
+@media (max-width: 768px) {
+    .assetCategoryForm {
+        flex-direction: column;
+    }
+    .assetCategoryForm .img-circle-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .assetCategoryForm .newContainer .top, .assetCategoryForm .newContainer .bottom {
+        flex-direction: column;
+    }
+    .assetCategoryForm .newContainer .top .topSpan, .assetCategoryForm .newContainer .bottom .topSpan {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .assetCategoryForm .newContainer .top .left, .assetCategoryForm .newContainer .bottom .left {
+        flex: 1;
+    }
+    .assetCategoryForm .newContainer .top .right, .assetCategoryForm .newContainer .bottom .right {
+        flex: 1;
+    }
+    .assetCategoryForm .newContainer .top .right form, .assetCategoryForm .newContainer .bottom .right form {
+        flex-direction: column;
+    }
+    .assetCategoryForm .newContainer .top .right form .formInput, .assetCategoryForm .newContainer .bottom .right form .formInput {
+        width: 100%;
+    }
+}
+
 .assetCategoryForm .newContainer .top .right form .formInput label, .assetCategoryForm .newContainer .bottom .right form .formInput label {
     display: flex;
     align-items: center;
@@ -88,7 +118,7 @@
 }
 .assetCategoryForm .newContainer .top .right .buttonAdd, .assetCategoryForm .newContainer .bottom .right .buttonAdd {
     display: flex;
-    justify-content: right;
+    justify-content: left;
     margin-right: 5%;
     width: 100%;
 }

@@ -56,7 +56,10 @@ const PrintingItemLabels = () => {
 
       printWindow.print();
       printWindow.close();
-
+      setTimeout(() => {
+        setUserGtinData('');
+      }
+        , 500);
       
     };
   }
@@ -100,11 +103,11 @@ const PrintingItemLabels = () => {
       printWindow.document.getElementById('imglogo').src = logoImg.src;
       printWindow.print();
       printWindow.close();
-    //   setTimeout(() => {
-    //     setSelectedRow([]);
-    //     setRowSelectionModel([]);
-
-    //   }, 500);
+        setTimeout(() => {
+            setItemCode('');
+            setSerialNumber('');
+         }, 500);
+        
     };
   }
  
@@ -120,7 +123,7 @@ const PrintingItemLabels = () => {
                         <div className="top">
                             <span className="topSpan">
 
-                                <h1>GTIN Number</h1>
+                                <h1>Printing Pallet label</h1>
                                 <button
                                     onClick={() => navigate(-1)}
                                 >Go Back</button>
@@ -134,7 +137,7 @@ const PrintingItemLabels = () => {
                                 <form id="myForm" >
                                         <div className="formInput">
                                             <label>Enter GTIN To Print<span className="text-red-500 font-semibold">*</span></label>
-                                            <input type="text" onChange={(e) => setUserGtinData(e.target.value)} placeholder="Enter GTIN Number"/>
+                                            <input className="mt-2" type="text" value={userGtinData} onChange={(e) => setUserGtinData(e.target.value)} placeholder="Enter GTIN Number"/>
                                         </div>
                                     <div className="buttonAdd">
                                         <button
@@ -160,7 +163,7 @@ const PrintingItemLabels = () => {
                     <div className="newContainer">
                         <div className="top">
                             <span className="topSpan">
-                                <h1>Enter Serial Number</h1>
+                                <h1>Printing Serial Number</h1>
                             </span>
                         </div>
                         <div className="bottom">
@@ -170,10 +173,10 @@ const PrintingItemLabels = () => {
                                 <form id="myForm" >
                                     <div className="formInput">
                                         <label className="mt-5">Enter item ID/Code<span className="text-red-500 font-semibold">*</span></label>
-                                        <input type="text" onChange={(e) => setItemCode(e.target.value)} placeholder="Enter item ID/Code"/>
+                                        <input className="mt-2" type="text" value={itemCode} onChange={(e) => setItemCode(e.target.value)} placeholder="Enter item ID/Code"/>
 
                                         <label className="mt-5">Enter Serial Number<span className="text-red-500 font-semibold">*</span></label>
-                                        <input type="text" onChange={(e) => setSerialNumber(e.target.value)} placeholder="Enter Serial Number"/>
+                                        <input className="mt-2" type="text" value={serialNumber} onChange={(e) => setSerialNumber(e.target.value)} placeholder="Enter Serial Number"/>
                                     </div>
                                     <div className="buttonAdd">
                                         <button

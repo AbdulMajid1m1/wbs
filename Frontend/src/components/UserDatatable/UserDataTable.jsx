@@ -1670,7 +1670,7 @@ const UserDataTable = ({
                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
                     uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
                     uniqueId === "PrintItemlabels" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
-                    uniqueId === "PrintGTIN" ? <PrintItemLabelsGTIN selectedRow={selectedRow} index={index} /> :
+                    // uniqueId === "PrintGTIN" ? <PrintItemLabelsGTIN selectedRow={selectedRow} index={index} /> :
                       uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> : null}
 
               </div>

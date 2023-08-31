@@ -281,6 +281,17 @@ const FigmaSidebar = () => {
                         <img src={printing} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Printing Item Barcode</p>
                     </div>
+                    <div
+                        className={`main-images-container ${selectedItem === '/printing-item-label' ? 'selected-item' : ''}`}
+                        onClick={() => handleItemClick('/printing-item-label')}    
+                    // className='main-images-container' onClick={() => navigate('/printingbarcode')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/printing-item-label')
+                          }
+                    >
+                        <img src={printing} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Printing Item Labels</p>
+                    </div>
 
                     {/* <div className='main-images-container'>
                         <img src={items} className='main-inside-image' alt='' />

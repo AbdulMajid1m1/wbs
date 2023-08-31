@@ -116,6 +116,7 @@ import AddZoneDispatching from './components/AddNew/AddZoneDispatching'
 import TblZoneDispatchingUpdate from './components/UpdatesItem/TblZoneDispatchingUpdate'
 import AddNewRZone from './components/AddNew/AddNewRZone'
 import TblRZoneUpdate from './components/UpdatesItem/TblRZoneUpdate'
+import PrintingItemLabels from './pages/PrintingItemLabels/PrintingItemLabels'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -275,6 +276,7 @@ const App = () => {
 
                 <Route path='/printinglabels' element={<PrintingPalletLabels />} />
                 <Route path='/printingbarcode' element={<PrintingItemBarcode />} />
+                <Route path='/printing-item-label' element={<PrintingItemLabels />} />
 
                 <Route path='/truckdata' element={<TruckMasterData />} />
                 <Route path='/tbltrcukupdate/:id' element={<TblTruckMasterUpdate title="Truck Master Data Update" />} />
@@ -304,11 +306,11 @@ const App = () => {
                 <Route path='/zonereceiving' element={<ZoneReceiving />} />
                 <Route path='/tblrzone' element={<AddNewRZone title="Add RZones" />} />
                 <Route path='/tblnewrzone/:id' element={<TblRZoneUpdate title="Zone Receiving Data Update" />} />
-               
+
                 <Route path='/zonedispatching' element={<ZoneDispatching />} />
                 <Route path='/tblzonedispatching' element={<AddZoneDispatching title="Add Zones Dispatching" />} />
                 <Route path='/tblzonedispatchingupdate/:id' element={<TblZoneDispatchingUpdate title="Zone Dispatching Data Update" />} />
-               
+
 
                 {/*  <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
 

@@ -1294,12 +1294,13 @@ const UserDataTable = ({
     const html = '<html><head><title>Print Barcode</title>' +
       '<style>' +
       '@page { size: 3in 2in; margin: 0; }' +
-      'body { font-size: 13px; line-height: 0.3;}' +
-      '#header { display: flex; justify-content: center; padding: 1px;}' +
+      'body { font-size: 13px; line-height: 0.1;}' +
+      '#header { display: flex; justify-content: center;}' +
       '#imglogo {height: 40px; width: 100px;}' +
       '#itemcode { font-size: 13px; font-weight: 600; display: flex; justify-content: center;}' +
       '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 1px;}' +
-      '#itemSerialNo { font-size: 13px; display: flex; justify-content: center; font-weight: 600; margin-top: 5px;}' +
+      '#itemSerialNo { font-size: 13px; display: flex; justify-content: center; font-weight: 600; margin-top: 3px;}' +
+      '#main-print { height: 100%; width: 100%;}' +
       '</style>' +
       '</head><body>' +
       '<div id="printBarcode"></div>' +
@@ -1329,9 +1330,9 @@ const UserDataTable = ({
 
   const PrintLabelsBarCode = ({ selectedRow, index }) => {
     return (
-      <div>
-        <div id="barcode" key={index}>
-          <div id="barcode" className='hidden'>
+      <div id="main-print">
+        <div id="" key={index}>
+          <div id="" className='hidden'>
             <div id='header'>
               <div>
                 <img src={logo} id='imglogo' alt='' />
@@ -1341,7 +1342,7 @@ const UserDataTable = ({
                 <p id="itemcode">{selectedRow.data.ItemCode}</p>
             </div>
             <div id='inside-BRCode'>
-              <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={60} />
+              <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={50} />
             </div>
             <div id="itemSerialNo">
                 <p>{selectedRow.data.ItemSerialNo}</p>

@@ -46,7 +46,7 @@ import palletid from "../../images/palletid.png"
 import settingicon from "../../images/settingicon.png"
 import zonereceving from "../../images/zonereceiving.png"
 import dispatching from "../../images/dispatching.png"
-
+import itemlabels from "../../images/itemlabels.png"
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
@@ -289,7 +289,7 @@ const FigmaSidebar = () => {
                             handleContextMenu(event, '/printing-item-label')
                           }
                     >
-                        <img src={printing} className='main-inside-image rounded-full bg-white' alt='' />
+                        <img src={itemlabels} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Printing Item Labels</p>
                     </div>
 

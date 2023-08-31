@@ -138,7 +138,7 @@ const PrintingItemLabels = () => {
                                         </div>
                                     <div className="buttonAdd">
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{background: '#1E3B8B'}}
                                             type="button"
                                             onClick={handlePrintGtin}
                                         >Print</button>
@@ -177,7 +177,7 @@ const PrintingItemLabels = () => {
                                     </div>
                                     <div className="buttonAdd">
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{background: '#1E3B8B'}}
                                             type="button"
                                             onClick={handlePrintItemBarcode}
                                         >Print</button>

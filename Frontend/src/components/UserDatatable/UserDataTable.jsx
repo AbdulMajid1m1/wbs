@@ -1408,7 +1408,7 @@ const UserDataTable = ({
               <p id="itemcode">{selectedRow.data.ItemCode}</p>
             </div>
             <div id='inside-BRCode'>
-              <Barcode value={selectedRow.data.GTIN} width={1} height={50} />
+              <Barcode value={selectedRow.data.GTIN} width={1} height={50} fontSize={14}/>
             </div>
             {/* <div id="gtinNo">
               <p>{selectedRow?.data?.GTIN}</p>

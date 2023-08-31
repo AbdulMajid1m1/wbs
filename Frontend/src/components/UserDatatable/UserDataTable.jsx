@@ -1326,6 +1326,7 @@ const UserDataTable = ({
 
       }, 500);
     };
+    
   }
 
 
@@ -1348,6 +1349,30 @@ const UserDataTable = ({
             </div>
             <div id="itemSerialNo">
               <p>{selectedRow.data.ItemSerialNo}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  
+  const PrintItemLabelsGTIN = ({ selectedRow, index }) => {
+    return (
+      <div id="main-print">
+        <div id="" key={index}>
+          <div id="" className='hidden'>
+            <div id='header'>
+              <div>
+                <img src={logo} id='imglogo' alt='' />
+              </div>
+            </div>
+            <div>
+              <p id="itemcode">{selectedRow.data.ItemCode}</p>
+            </div>
+            <div id='inside-BRCode'>
+              {/* <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={50} /> */}
+              <Barcode value={selectedRow.data.GTIN} width={1} height={50}/>
             </div>
           </div>
         </div>
@@ -1645,7 +1670,20 @@ const UserDataTable = ({
                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
                     uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
                     uniqueId === "PrintItemlabels" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
+                    uniqueId === "PrintGTIN" ? <PrintItemLabelsGTIN selectedRow={selectedRow} index={index} /> :
                       uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> : null}
+
+              </div>
+            ))}
+          </div>
+        )}
+
+        {selectedRow.length > 0 && (
+          <div id="printGtin">
+            {selectedRow.map((selectedRow, index) => (
+              <div id="printGtin" className='hidden' key={index}>
+                {   
+                uniqueId === "PrintGTIN" ? <PrintItemLabelsGTIN selectedRow={selectedRow} index={index} /> : null}
 
               </div>
             ))}

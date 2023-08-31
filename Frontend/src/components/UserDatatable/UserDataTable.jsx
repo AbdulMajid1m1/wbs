@@ -70,7 +70,7 @@ const UserDataTable = ({
   const [error, setError] = useState(null);
   const [muiFilteredData, setMuiFilteredData] = useState([]);
   const [serialQty, setSerialQty] = useState(0);
-  const [printItemLabelListener, setPrintItemLabelListener] = useState(false);
+
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -1286,8 +1286,7 @@ const UserDataTable = ({
 
 
 
-  const handlePrintItemBarcode = (listenerValue) => {
-    setPrintItemLabelListener(listenerValue)
+  const handlePrintItemBarcode = () => {
     if (selectedRow.length === 0) {
       setError('Please select a row to print.');
       return;
@@ -1330,7 +1329,7 @@ const UserDataTable = ({
   }
 
 
-  const PrintLabelsBarCode = ({ selectedRow, index, printItemLabelListener }) => {
+  const PrintLabelsBarCode = ({ selectedRow, index }) => {
     return (
       <div id="main-print">
         <div id="" key={index}>
@@ -1344,9 +1343,8 @@ const UserDataTable = ({
               <p id="itemcode">{selectedRow.data.ItemCode}</p>
             </div>
             <div id='inside-BRCode'>
-              {!printItemLabelListener ? (<QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={50} />) :
-                (<Barcode value={selectedRow.data.GTIN} width={100} height={50} />)
-              }
+
+              <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={50} />
             </div>
             <div id="itemSerialNo">
               <p>{selectedRow.data.ItemSerialNo}</p>
@@ -1442,9 +1440,9 @@ const UserDataTable = ({
             {printButton && <button onClick={handlePrint}>{PrintName}</button>}
             {AddUser && <button onClick={handleAddUserPopup}>{UserName}</button>}
             {printBarCode && <button onClick={handlePrintBarCode}>{PrintBarCodeName}</button>}
-
-            {printItemBarCode && <button onClick={() => handlePrintItemBarcode(false)}>{PrintBarCodeName}</button>}
-            {printItemBarCode && <button onClick={() => handlePrintItemBarcode(true)}>{PrintGtin}</button>}
+           
+            {printItemBarCode && <button onClick={handlePrintItemBarcode}>{PrintBarCodeName}</button>}
+            {printItemBarCode && <button onClick={handlePrintItemBarcode}>{PrintGtin}</button>}
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>
@@ -1645,9 +1643,9 @@ const UserDataTable = ({
               <div id="barcode" className='hidden' key={index}>
                 {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
-                    uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} type={printItemLabelListener} /> :
-                      uniqueId === "PrintItemlabels" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
-                        uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> : null}
+                    uniqueId === "PrintBarCode" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
+                    uniqueId === "PrintItemlabels" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
+                      uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> : null}
 
               </div>
             ))}

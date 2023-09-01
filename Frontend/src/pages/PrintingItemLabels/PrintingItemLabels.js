@@ -28,7 +28,7 @@ const PrintingItemLabels = () => {
       return;
     }
     const printWindow = window.open('', 'Print Window', 'height=400,width=800');
-    const html = '<html><head><title>Print Barcode</title>' +
+    const html = '<html><head><title>Gtin</title>' +
       '<style>' +
       '@page { size: 3in 2in; margin: 0; }' +
       'body { font-size: 13px; line-height: 0.1;}' +
@@ -76,7 +76,7 @@ const PrintingItemLabels = () => {
         return;
       }
     const printWindow = window.open('', 'Print Window', 'height=400,width=800');
-    const html = '<html><head><title>Print Barcode</title>' +
+    const html = '<html><head><title>Serial Number</title>' +
       '<style>' +
       '@page { size: 3in 2in; margin: 0; }' +
       'body { font-size: 13px; line-height: 0.1;}' +

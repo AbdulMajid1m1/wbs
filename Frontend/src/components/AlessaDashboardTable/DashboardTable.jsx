@@ -85,7 +85,7 @@ const DashboardTable = ({
     const handleRowClick = async (rowData, idx) => {
         if (uniqueId === "receiptsManagement") {
             console.log("rowData", rowData);
-            updateData(rowData);
+            // updateData(rowData);
             updateData({ ...rowData, POQTY: rowData?.QTY });
             console.log("itemcode", rowData?.ITEMID);
             try {

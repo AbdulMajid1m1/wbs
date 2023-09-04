@@ -1301,6 +1301,10 @@ const WBSDB = {
         WEIGHT,
       } = req.query;
 
+      if (!POQTY) {
+        return res.status(400).send({ message: 'POQTY is required.' });
+      }
+      
       const localDateString = new Date().toISOString();
       // check if not found in tbl_Shipment_Received_CL then insert into tbl_Shipment_Received_CL
       const checkShipmentCounterQuery = `
@@ -1383,7 +1387,7 @@ const WBSDB = {
       request4.input("PALLETCODE", sql.NVarChar, PALLETCODE?.trim());
       request4.input("BIN", sql.NVarChar, BIN?.trim());
       request4.input("REMARKS", sql.NVarChar, REMARKS?.trim());
-      request4.input("POQTY", sql.Numeric(18, 0), POQTY);
+      request4.input("POQTY", sql.Numeric(18, 0), POQTY ?? 0);
       request4.input("RCVQTY", sql.Numeric(18, 0), 1);
       request4.input("REMAININGQTY", sql.Numeric(18, 0), REMAININGQTY - 1);
       request4.input("USERID", sql.NVarChar, req.token.UserID);

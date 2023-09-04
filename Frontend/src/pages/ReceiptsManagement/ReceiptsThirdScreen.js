@@ -50,7 +50,8 @@ const ReceiptsThirdScreen = () => {
       reference: updatedStateData?.SHIPMENTID,
       sid: updatedStateData?.PURCHID,
       cid: updatedStateData?.CONTAINERID,
-      po: updatedStateData?.POQTY.toString(),
+      // po: updatedStateData?.POQTY?.toString(),
+      ...(updatedStateData?.POQTY ? { po: updatedStateData?.POQTY?.toString() } : {}),
       length: updatedStateData?.LENGTH,
       width: updatedStateData?.WIDTH,
       height: updatedStateData?.HEIGHT,
@@ -68,6 +69,7 @@ const ReceiptsThirdScreen = () => {
     };
 
     console.log(apiBody);
+    console.log(updatedStateData);
 
     const queryParameters = new URLSearchParams(updatedStateData).toString();
 

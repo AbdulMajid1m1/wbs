@@ -6,6 +6,7 @@ import { ReceiptsContext } from '../../contexts/ReceiptsContext';
 import { TblReceiptsManagementColumn } from '../../utils/datatablesource';
 import DashboardTable from '../../components/AlessaDashboardTable/DashboardTable';
 import { Autocomplete, TextField } from '@mui/material';
+import Swal from 'sweetalert2';
 
 
 const ReceiptsManagement = () => {
@@ -50,6 +51,21 @@ const ReceiptsManagement = () => {
 
       .catch(error => {
         console.error(error);
+        // show error message in sweet alert
+        setData([]);
+        setFilterData([]);
+        setSelectedRow(null);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error?.response?.data?.message ?? 'Something went wrong!',
+          // change button text and color
+          confirmButtonText: 'Close',
+          confirmButtonColor: '#e69138',
+          timer: 5000
+        })
+
+
 
       });
   }
@@ -155,7 +171,7 @@ const ReceiptsManagement = () => {
 
                 <DashboardTable data={filterData} title={"Receipts Management"} columnsName={TblReceiptsManagementColumn}
                   uniqueId="receiptsManagement"
-                  
+
                   secondaryColor="secondary" // to get orange color in table
 
                 />

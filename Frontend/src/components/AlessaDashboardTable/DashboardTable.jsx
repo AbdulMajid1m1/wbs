@@ -84,10 +84,12 @@ const DashboardTable = ({
 
     const handleRowClick = async (rowData, idx) => {
         if (uniqueId === "receiptsManagement") {
-            console.log("rowData", rowData);
+            
             // updateData(rowData);
-            updateData({ ...rowData, POQTY: rowData?.QTY });
-            console.log("itemcode", rowData?.ITEMID);
+            rowData.POQTY = rowData?.QTY;
+            
+            updateData(rowData);
+
             try {
 
                 const itemData = await userRequest.post("/getOneMapBarcodeDataByItemCode", {},
@@ -101,7 +103,9 @@ const DashboardTable = ({
                 console.log(itemData);
                 let itemName = itemData?.data[0]?.ItemDesc;
                 let itemDesc = itemData?.data[0]?.Classification;
-                updateData({ ...rowData, ITEMNAME: itemName, CLASSIFICATION: itemDesc });
+                rowData.ITEMNAME = itemName;
+                rowData.CLASSIFICATION = itemDesc;
+                updateData(rowData);
             }
             catch (err) {
                 console.log(err);

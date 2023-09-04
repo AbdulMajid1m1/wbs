@@ -278,7 +278,7 @@ const ReceiptsThirdScreen = () => {
 
                 <button disabled style={{ width: '16rem', position: 'relative' }}
                   onClick={handleGenerateSerialNumber}
-                  type='submit'
+                  type='button'
                   className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm mb-3'
                 >
                   <ClipLoader color="#ffff" loading={refreshLoading} size={16} />
@@ -287,7 +287,7 @@ const ReceiptsThirdScreen = () => {
               ) : (
                 <button
                   onClick={handleGenerateSerialNumber}
-                  type='submit'
+                  type='button'
                   style={{ width: '16rem' }}
                   className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm mb-3'
                 >

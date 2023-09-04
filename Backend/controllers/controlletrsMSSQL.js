@@ -3757,6 +3757,10 @@ const WBSDB = {
 
   async insertManyIntoMappedBarcode(req, res, next) {
     const { records } = req.body;
+    // if it is not an array or if it is an empty array
+    if (!records || !Array.isArray(records) || records.length === 0) {
+      return res.status(400).send({ message: "Records must be a non-empty array." });
+    }
     console.log(records);
     if (!records) {
       return res.status(400).send({ message: "Records are required." });

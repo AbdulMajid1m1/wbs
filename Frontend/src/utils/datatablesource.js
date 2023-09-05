@@ -1170,7 +1170,9 @@ export const wmsInventoryColumns = [
     width: 180,
 
   },
-   
+  
+
+  
 ]
 
 

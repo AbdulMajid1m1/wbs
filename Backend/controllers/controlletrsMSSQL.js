@@ -3277,6 +3277,36 @@ const WBSDB = {
     }
   },
 
+  async getDistinctMapBarcodeDataByItemCode(req, res, next) {
+    try {
+      const ItemCode = req.headers['itemcode']; // Get ITEMID from headers
+      console.log(ItemCode);
+      let query = `
+        WITH CTE AS (
+          SELECT *, 
+                 ROW_NUMBER() OVER(PARTITION BY [BinLocation] ORDER BY (SELECT NULL)) AS rn
+          FROM dbo.tblMappedBarcodes
+          WHERE ItemCode  = @ItemCode
+        )
+        SELECT * 
+        FROM CTE 
+        WHERE rn = 1 
+      `;
+      let request = pool2.request();
+      request.input('ItemCode', sql.NVarChar(100), ItemCode);
+      
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  
+
   async getOneMapBarcodeDataByItemCode(req, res, next) {
     try {
       const ItemCode = req.headers['itemcode']; // Get ITEMID from headers
@@ -3346,24 +3376,28 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-
   async getmapBarcodeDataByMultipleBinLocations(req, res, next) {
     try {
       const { binLocations } = req.body;
       if (!binLocations || binLocations.length === 0) {
         return res.status(400).send({ message: "No bin locations provided." });
       }
-
+  
       let query = `
-        SELECT * FROM dbo.tblMappedBarcodes
-        WHERE BinLocation IN (${binLocations.map((_, index) => `@Param${index}`).join(',')})
+        WITH CTE AS (
+          SELECT *, 
+                 ROW_NUMBER() OVER(PARTITION BY ItemCode ORDER BY (SELECT NULL)) AS rn 
+          FROM dbo.tblMappedBarcodes
+          WHERE BinLocation IN (${binLocations.map((_, index) => `@Param${index}`).join(',')})
+        )
+        SELECT * FROM CTE WHERE rn = 1 ORDER BY ItemCode;
       `;
-
+  
       let request = pool2.request();
       binLocations.forEach((binLocation, index) => {
         request.input(`Param${index}`, sql.VarChar(200), binLocation);
       });
-
+  
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
@@ -3374,7 +3408,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-
+  
 
 
   async getDistinctMappedBarcodeBinLocations(req, res, next) {

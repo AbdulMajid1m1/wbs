@@ -25,7 +25,6 @@ const WmsInventory = () => {
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [selectedBy, setSelectedBy] = useState('itemId and bin location');
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   const [selectedClassification, setSelectedClassification] = useState(null);
@@ -111,13 +110,14 @@ const WmsInventory = () => {
         return {
           // ...row,
           TRXUSERIDASSIGNED: assignedTo,
-          INVENTORYBY: selectedBy,
+          INVENTORYBY: selectionType,
           BINLOCATION: row?.BinLocation,
           ITEMID: row?.ItemCode,
           ITEMNAME: row?.ItemDesc,
           CLASSFICATION: row?.Classification,
         }
       });
+
 
       const res = await userRequest.post('/insertIntoWmsJournalCountingOnlyCL', apiData)
 
@@ -151,7 +151,7 @@ const WmsInventory = () => {
 
   useEffect(() => {
     if (stockMasterData) {
-      console.log(stockMasterData);
+     
       setBinLocationsList(stockMasterData);
     }
   }, [stockMasterData]);
@@ -178,7 +178,7 @@ const WmsInventory = () => {
 
   useEffect(() => {
     if (uniqueItemData) {
-      console.log(uniqueItemData);
+     
       setUniqueItemCodeFilterList(uniqueItemData);
     }
   }, [uniqueItemData]);
@@ -270,7 +270,7 @@ const WmsInventory = () => {
 
     setIsLoading(true)
     try {
-      const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
+      const res = await userRequest.post("/getDistinctMapBarcodeDataByItemCode", {},
         {
           headers: {
             itemcode: value

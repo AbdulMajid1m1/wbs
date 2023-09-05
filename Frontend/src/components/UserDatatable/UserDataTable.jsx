@@ -472,7 +472,18 @@ const UserDataTable = ({
             const response = await userRequest.delete(
               "deleteShipmentRecievedDataCL?SERIALNUM=" + rowdata.SERIALNUM
             );
+            console.log(rowdata.SERIALNUM)
             console.log(response);
+
+            const mappedbarcodeRes = await userRequest.delete(
+              "/deleteTblMappedBarcodesDataBySerialNumber",
+              {
+                headers: {
+                  "itemserialno": rowdata?.SERIALNUM,
+                },
+              }
+            );
+            console.log(mappedbarcodeRes?.data);
 
 
             const updateRemainingQty = await userRequest.put("/updateRemainingQtyInTblShipmentCounter?SHIPMENTID=" + rowdata?.SHIPMENTID)
@@ -481,7 +492,8 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            console.log(error)
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -496,7 +508,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -510,7 +522,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -525,7 +537,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -540,7 +552,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -555,7 +567,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -578,7 +590,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -593,7 +605,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -608,7 +620,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -623,7 +635,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -639,7 +651,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -654,7 +666,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -669,7 +681,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;
@@ -684,7 +696,7 @@ const UserDataTable = ({
 
             success = true; // to update the state of the table
           } catch (error) {
-            setError(error?.message ?? "Something went wrong");
+            setError(error?.response?.data?.message ?? "Something went wrong");
             success = false;
           }
           break;

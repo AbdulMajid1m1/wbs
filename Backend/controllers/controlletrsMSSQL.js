@@ -7441,29 +7441,30 @@ const WBSDB = {
           QTYDIFFERENCE,
           QTYONHAND,
           BINLOCATION,
+          CLASSFICATION,
         } = countingOnlyDataArray[i];
 
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        // today.setHours(0, 0, 0, 0);
 
-        const checkQuery = `
-          SELECT *
-          FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
-          WHERE ITEMID = @ITEMID
-            AND TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
-            AND CONVERT(date, TRXDATETIME) = @TRXDATETIME
-        `;
+        // const checkQuery = `
+        //   SELECT *
+        //   FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+        //   WHERE ITEMID = @ITEMID
+        //     AND TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
+        //     AND CONVERT(date, TRXDATETIME) = @TRXDATETIME
+        // `;
 
-        const checkRequest = pool2.request();
-        checkRequest.input('ITEMID', sql.NVarChar, ITEMID);
-        checkRequest.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
-        checkRequest.input('TRXDATETIME', sql.Date, today);
+        // const checkRequest = pool2.request();
+        // checkRequest.input('ITEMID', sql.NVarChar, ITEMID);
+        // checkRequest.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        // checkRequest.input('TRXDATETIME', sql.Date, today);
 
-        const checkResult = await checkRequest.query(checkQuery);
+        // const checkResult = await checkRequest.query(checkQuery);
 
-        if (checkResult.recordset.length > 0) {
-          return res.status(400).send({ message: `Record with ITEMID '${ITEMID}' already exists for today` });
-        }
+        // if (checkResult.recordset.length > 0) {
+        //   return res.status(400).send({ message: `Record with ITEMID '${ITEMID}' already exists for today` });
+        // }
 
         let fields = [
           "ITEMID",
@@ -7477,7 +7478,8 @@ const WBSDB = {
           "QTYSCANNED",
           "QTYDIFFERENCE",
           "QTYONHAND",
-          "BINLOCATION"
+          "BINLOCATION",
+          "CLASSFICATION"
 
         ];
 
@@ -7504,6 +7506,7 @@ const WBSDB = {
         insertRequest.input('QTYDIFFERENCE', sql.Float, QTYDIFFERENCE);
         insertRequest.input('QTYONHAND', sql.Float, QTYONHAND);
         insertRequest.input('BINLOCATION', sql.NVarChar, BINLOCATION);
+        insertRequest.input('CLASSFICATION', sql.VarChar, CLASSFICATION);
 
         await insertRequest.query(insertQuery);
 

@@ -1143,6 +1143,42 @@ export const MappedItemsColumn = [
 
 
 ]
+export const wmsInventoryColumns = [
+  {
+    field: "ItemCode",
+    headerName: "ITEM CODE",
+    width: 160,
+
+  },
+  {
+    field: "ItemDesc",
+    headerName: "ITEM DESCRIPTION",
+    width: 220,
+
+  },
+  
+  {
+    field: "Classification",
+    headerName: "CLASSIFICATION",
+    width: 100,
+
+  },
+ 
+  {
+    field: "BinLocation",
+    headerName: "BIN LOCATION",
+    width: 180,
+
+  },
+  
+  {
+    field: "ItemSerialNo",
+    headerName: "ITEM SERIAL NO",
+    width: 150,
+
+  },
+  
+]
 
 
 

@@ -6,7 +6,7 @@ import icon from "../../images/close.png"
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
-import { AllItems, MappedItemsColumn } from '../../utils/datatablesource';
+import { wmsInventoryColumns } from '../../utils/datatablesource';
 import { TextField, Autocomplete, CircularProgress, Checkbox } from '@mui/material';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { useQuery } from '@tanstack/react-query';
@@ -21,7 +21,7 @@ const WmsInventory = () => {
   const storedUser = localStorage.getItem('currentUser');
   const initialUser = storedUser ? JSON.parse(storedUser) : {};
   const [currentUser, setCurrentUser] = useState(initialUser);
-  const [assignedTo, setAssignedTo] = useState(initialUser?.UserID ?? '');
+  const [assignedTo, setAssignedTo] = useState(null);
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -31,7 +31,11 @@ const WmsInventory = () => {
   const [selectedClassification, setSelectedClassification] = useState(null);
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [itemCodeFilterList, setItemCodeFilterList] = useState([]);
+  const [uniqueItemCodeFilterList, setUniqueItemCodeFilterList] = useState([]);
   const [classificationFilterList, setClassificationFilterList] = useState([]);
+  const previousLocationsRef = useRef([]);
+  const [selectionType, setSelectionType] = useState('itemCode');
+  const [dataGridbinLocationsList, setDataGridbinLocationsList] = useState([]);
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -92,17 +96,26 @@ const WmsInventory = () => {
   // handle the save button click
   const handleSaveBtnClick = async () => {
 
-    if (assignedTo === '') {
+    if (!assignedTo) {
       setError('Please select the assigned to user!');
       return;
     }
+    if (filteredData?.length === 0) {
+      setError('Please select the bin locations!');
+      return;
+    }
     try {
-      let apiData = selectedOption.map(row => {
+      setIsLoading(true);
+      
+      let apiData = filteredData?.map(row => {
         return {
-          ...row,
+          // ...row,
           TRXUSERIDASSIGNED: assignedTo,
           INVENTORYBY: selectedBy,
-          // BINLOCATION: location,
+          BINLOCATION: row?.BinLocation,
+          ITEMID: row?.ItemCode,
+          ITEMNAME: row?.ItemDesc,
+          CLASSFICATION: row?.Classification,
         }
       });
 
@@ -110,15 +123,13 @@ const WmsInventory = () => {
       const res = await userRequest.post('/insertIntoWmsJournalCountingOnlyCL', apiData)
       console.log(res);
       setMessage(res?.data?.message ?? 'Data saved successfully!');
-
-      // filter out the selected rows from the data array on the basis of ITEMID on both arrays of objects
-      // setData(data.filter(item => !selectedRows.some(row => row?.ITEMID === item?.ITEMID)));
-      setData([])
-
-
+      Reset()
     } catch (error) {
       console.error(error);
       setError(error?.response?.data?.message ?? 'Something went wrong!');
+    }
+    finally {
+      setIsLoading(false);
     }
   }
 
@@ -152,15 +163,55 @@ const WmsInventory = () => {
     }
   }, [stockMasterError]);
 
-  const handleBinLocationSelect = async (e, value) => {
+  const {
+    isLoading: uniqueItemIdLoading,
+    error: uniqueItemIdError,
+    data: uniqueItemData
+  } = useQuery({
+    queryKey: ['uniqueItemIds'],
+    queryFn: () =>
+      userRequest.get("/getDistinctMappedBarcodeItemIds").then(
 
-    console.log('Selected value:', value);
-    if (!value || value.length === 0) {
+        (res) => res.data,
+      ),
+  })
+
+
+  useEffect(() => {
+    if (uniqueItemData) {
+      console.log(uniqueItemData);
+      setUniqueItemCodeFilterList(uniqueItemData);
+    }
+  }, [uniqueItemData]);
+
+  useEffect(() => {
+    if (uniqueItemIdError) {
+      setError('An error has occurred: ' + uniqueItemIdError.message);
+    }
+  }, [uniqueItemIdError]);
+
+  const handleBinLocationSelect = async (e, value, reason) => {
+    console.log(reason)
+    console.log(value);
+
+    // If reason is clear or reset, clear the data and return
+    if (reason === 'clear' || reason === 'reset') {
       setData([]);
       setFilteredData([]);
-      
       console.log("Input cleared");
+      previousLocationsRef.current = [];
       return;
+    }
+
+    // If a location was unselected
+    if (value.length < previousLocationsRef.current.length) {
+      const removedLocation = previousLocationsRef.current.find(loc => !value.includes(loc));
+      if (removedLocation) {
+        const newFilteredData = filteredData.filter(item => item.BinLocation !== removedLocation);
+        setFilteredData(newFilteredData);
+        previousLocationsRef.current = value;
+        return; // Exit without making an API call
+      }
     }
     setIsLoading(true)
     try {
@@ -179,6 +230,72 @@ const WmsInventory = () => {
     finally {
       setIsLoading(false)
     }
+
+    previousLocationsRef.current = value;
+
+  }
+  const handleGridBinLocationSelect = async (e, value, reason) => {
+
+    console.log('Selected value:', value);
+
+    // If reason is clear or reset, clear the data and return
+    if (reason === 'clear' || reason === 'reset') {
+      console.log("Input cleared");
+      setFilteredData(data);
+
+      return;
+    }
+
+    if (value.length === 0) {
+      setFilteredData(data);
+      return;
+    }
+
+
+
+    // filter filteredData on the basis of selected bin locations
+    const newFilteredData = data.filter(item => value.includes(item.BinLocation));
+    setFilteredData(newFilteredData);
+
+
+
+  }
+  const handleUniqueItemIdFilter = async (e, value) => {
+
+    console.log(value);
+    if (!value) {
+      setData([]);
+      setFilteredData([]);
+      console.log("Input cleared");
+    }
+
+    setIsLoading(true)
+    try {
+      const res = await userRequest.post("/getmapBarcodeDataByItemCode", {},
+        {
+          headers: {
+            itemcode: value
+          }
+        })
+      console.log(res?.data);
+      const data = res?.data ?? [];
+      setData(data);
+      setFilteredData(data);
+
+      const dataGridbinLocationsList = Array.from(new Set(data?.map(item => item?.BinLocation))).filter(Boolean);
+      console.log(dataGridbinLocationsList);
+      setDataGridbinLocationsList(dataGridbinLocationsList);
+
+    }
+    catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message ?? 'Something went wrong!');
+    }
+    finally {
+      setIsLoading(false)
+    }
+
+
   }
   const handleClassificationFilter = (event, value) => {
     setSelectedClassification(value);
@@ -212,6 +329,26 @@ const WmsInventory = () => {
 
     setFilteredData(newFilteredData);
   };
+
+  const handleRadioChange = (e) => {
+    setSelectionType(e.target.value);
+    Reset()
+  };
+
+
+  const Reset = () => {
+
+    setData([]);
+    setFilteredData([]);
+    setItemCodeFilterList([]);
+    setClassificationFilterList([]);
+    setSelectedClassification(null);
+    setSelectedItemId(null);
+    setDataGridbinLocationsList([]);
+    previousLocationsRef.current = [];
+    setAutocompleteKey(key => key + 1);
+  }
+
 
 
 
@@ -272,85 +409,48 @@ const WmsInventory = () => {
             <div className='mt-6'>
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
-            <div className="mt-6">
-              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Bin Locations<span className='text-[#FF0404]'>*</span></label>
 
-              <div className='w-full'>
-                <Autocomplete
-                  multiple
-                  ref={autocompleteRef}
-                  key={autocompleteKey}
-                  disableCloseOnSelect
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox
-                        icon={iconMui}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option}
-                    </li>
-                  )}
-                  id="location"
-                  options={Array.from(new Set(binLocationsList?.map(item => item?.BinLocation))).filter(Boolean)}
-                  getOptionLabel={(option) => option}
-                  onChange={handleBinLocationSelect}
-
-
-                  onInputChange={(event, value) => {
-                    if (!value) {
-                      // perform operation when input is cleared
-                      console.log("Input cleared");
-
-                    }
-                  }}
-                  // renderInput={(params) => (
-                  //   <TextField
-                  //     {...params}
-                  //     InputProps={{
-                  //       ...params.InputProps,
-                  //       className: "text-white",
-                  //     }}
-                  //     InputLabelProps={{
-                  //       ...params.InputLabelProps,
-                  //       style: { color: "white" },
-                  //     }}
-
-                  //     className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                  //     p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                  //     placeholder="TO Location"
-                  //     required
-                  //   />
-                  // )
-                  renderInput={(params) => (
-                    <TextField {...params} label="Select Locaions" placeholder="location" />
-                  )
-
-
-                  }
-                  classes={{
-                    endAdornment: "text-white",
-                  }}
-                  sx={{
-                    '& .MuiAutocomplete-endAdornment': {
-                      color: 'white',
-                    },
-                  }}
-                />
+            <div className="mb-6 mt-4">
+              <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                    flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+              >
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="itemCode"
+                    checked={selectionType === 'itemCode'}
+                    onChange={e => handleRadioChange(e)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                  />
+                  <span className="ml-2 text-[#00006A]">By Item Code</span>
+                </label>
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="selectionType"
+                    value="binLocation"
+                    checked={selectionType === 'binLocation'}
+                    onChange={e => handleRadioChange(e)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                  />
+                  <span className="ml-2 text-[#00006A]">By Bin Locations</span>
+                </label>
 
               </div>
-            </div >
+            </div>
 
-
-            {filteredData.length > 0 && (
+            {selectionType === 'itemCode' && (
               <div className="mb-6 mt-6">
-                <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Classification</label>
+                <label htmlFor="uniqureItemIds" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
                 <Autocomplete
-                  id="classificationFilter"
-                  options={classificationFilterList}
+                  id="uniqureItemIds"
+                  ref={autocompleteRef}
+                  key={`itemCodebinLocaton ${autocompleteKey}`}
+
+                  options={Array.from(new Set(uniqueItemCodeFilterList?.map(item => item?.ItemCode))).filter(Boolean)}
                   getOptionLabel={(option) => option || ""}
-                  onChange={handleClassificationFilter}
+                  onChange={handleUniqueItemIdFilter}
                   onInputChange={(event, value) => {
                     if (!value) {
                       // perform operation when input is cleared
@@ -371,7 +471,7 @@ const WmsInventory = () => {
                       }}
 
                       className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Select Classification to filter"
+                      placeholder="Select Item ID to filter"
 
                     />
                   )}
@@ -386,11 +486,147 @@ const WmsInventory = () => {
                 />
               </div>
             )}
-            {filteredData.length > 0 && (
+            {filteredData?.length > 0 && selectionType === 'itemCode' && (
+              <div className="mt-6">
+                {/* <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Bin Locations<span className='text-[#FF0404]'>*</span></label> */}
+
+                <div className='w-full'>
+                  <Autocomplete
+                    ref={autocompleteRef}
+                    key={`itemCodebinLocaton ${autocompleteKey}`}
+                    multiple
+
+                    disableCloseOnSelect
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={iconMui}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option}
+                      </li>
+                    )}
+                    id="location"
+                    options={Array.from(new Set(dataGridbinLocationsList)).filter(Boolean)}
+                    getOptionLabel={(option) => option}
+                    onChange={handleGridBinLocationSelect}
+
+
+                    onInputChange={(event, value) => {
+                      if (!value) {
+                        // perform operation when input is cleared
+                        console.log("Input cleared");
+
+                      }
+                    }}
+                    // renderInput={(params) => (
+                    //   <TextField
+                    //     {...params}
+                    //     InputProps={{
+                    //       ...params.InputProps,
+                    //       className: "text-white",
+                    //     }}
+                    //     InputLabelProps={{
+                    //       ...params.InputLabelProps,
+                    //       style: { color: "white" },
+                    //     }}
+
+                    //     className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                    //     p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                    //     placeholder="TO Location"
+                    //     required
+                    //   />
+                    // )
+                    renderInput={(params) => (
+                      <TextField {...params} label="Bin Locaions" placeholder="select locations" />
+                    )
+
+
+                    }
+                    classes={{
+                      endAdornment: "text-white",
+                    }}
+                    sx={{
+                      '& .MuiAutocomplete-endAdornment': {
+                        color: 'white',
+                      },
+                    }}
+                  />
+
+                </div>
+              </div >
+            )}
+            {selectionType === 'binLocation' && (
+              <div className="mt-6">
+                {/* <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Bin Locations<span className='text-[#FF0404]'>*</span></label> */}
+
+                <div className='w-full'>
+                  <Autocomplete
+                    multiple
+                    ref={autocompleteRef}
+                    key={`binLocaton ${autocompleteKey}`}
+                    disableCloseOnSelect
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={iconMui}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option}
+                      </li>
+                    )}
+                    id="location"
+                    options={Array.from(new Set(binLocationsList?.map(item => item?.BinLocation))).filter(Boolean)}
+                    getOptionLabel={(option) => option}
+                    onChange={handleBinLocationSelect}
+
+
+                    onInputChange={(event, value) => {
+                      if (!value) {
+                        // perform operation when input is cleared
+                        console.log("Input cleared");
+
+                      }
+                    }}
+
+                    renderInput={(params) => (
+                      <TextField {...params} label="Bin Locaions" placeholder="select locations" />
+                    )
+
+
+                    }
+                    classes={{
+                      endAdornment: "text-white",
+                    }}
+                    sx={{
+                      '& .MuiAutocomplete-endAdornment': {
+                        color: 'white',
+                      },
+                    }}
+                  />
+
+                </div>
+              </div >
+            )}
+
+
+
+
+
+
+
+
+            {filteredData.length > 0 && selectionType === "binLocation" && (
               <div className="mb-6 mt-6">
-                <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
+                <label htmlFor="itemIdFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
                 <Autocomplete
                   id="itemIdFilter"
+                  ref={autocompleteRef}
+                  key={`itemId ${autocompleteKey}`}
                   options={itemCodeFilterList}
                   getOptionLabel={(option) => option || ""}
                   onChange={handleItemIdFilter}
@@ -429,12 +665,58 @@ const WmsInventory = () => {
                 />
               </div>
             )}
+
+            {filteredData.length > 0 && (
+              <div className="mb-6 mt-6">
+                <label htmlFor="classificationFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Classification</label>
+                <Autocomplete
+                  id="classificationFilter"
+                  ref={autocompleteRef}
+                  key={`Classification ${autocompleteKey}`}
+                  options={classificationFilterList}
+                  getOptionLabel={(option) => option || ""}
+                  onChange={handleClassificationFilter}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Select Classification to filter"
+
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+              </div>
+            )}
             <div className='mt-3'
               style={{
                 marginLeft: "-20px", marginRight: "-20px"
               }}
             >
-              <UserDataTable data={filteredData} columnsName={MappedItemsColumn} backButton={false}
+              <UserDataTable data={filteredData} columnsName={wmsInventoryColumns} backButton={false}
                 handleRowClickInParent={handleRowClickInParent}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
@@ -450,6 +732,8 @@ const WmsInventory = () => {
 
               <Autocomplete
                 id="userid"
+                ref={autocompleteRef}
+                key={`userid ${autocompleteKey}`}
                 options={userList}
                 //   getOptionLabel={(option) => option.Fullname ?? ''}
                 getOptionLabel={(option) => option.Fullname ? `${option.Fullname} - ${option.UserID}` : ''}

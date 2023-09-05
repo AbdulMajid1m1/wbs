@@ -437,6 +437,7 @@ router.get("/getAllWmsReturnSalesOrderCl", checkAuthentication, checkRole([roles
 router.post("/insertIntoWmsReturnSalesOrderCl", checkAuthentication, checkRole([roles[8]]), WBSDB.insertIntoWmsReturnSalesOrderCl);
 
 router.get("/getWmsReturnSalesOrderClByAssignedToUserId", checkAuthentication, checkRole([roles[8], roles[46]]), WBSDB.getWmsReturnSalesOrderClByAssignedToUserId);
+router.post("/getWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesId", checkAuthentication, checkRole([roles[8], roles[46]]), WBSDB.getWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesId);
 
 router.delete("/deleteMultipleRecordsFromWmsReturnSalesOrderCl", checkAuthentication, checkRole([roles[8], roles[46]]), WBSDB.deleteMultipleRecordsFromWmsReturnSalesOrderCl);
 

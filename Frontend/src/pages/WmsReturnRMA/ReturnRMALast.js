@@ -31,7 +31,7 @@ const ReturnRMALast = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectAllRows, setSelectAllRows] = useState(false);
 
-
+  const [receivedQty, setReceivedQty] = useState(null);
   const autocompleteRef = useRef(); // Ref to access the Autocomplete component
   const [autocompleteKey, setAutocompleteKey] = useState(0);
   const resetAutocomplete = () => {
@@ -46,7 +46,7 @@ const ReturnRMALast = () => {
 
   const storedData = sessionStorage.getItem('RmaRowData');
   const parsedData = JSON.parse(storedData);
-  console.log("parsedData")
+
   console.log(parsedData)
 
 
@@ -64,8 +64,27 @@ const ReturnRMALast = () => {
 
       }
     }
+    const getReceivedQty = async () => {
+      try {
+        const res = await userRequest.post(`/getWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesId`,
 
+          {
+            ITEMID: parsedData?.ITEMID,
+            RETURNITEMNUM: parsedData?.RETURNITEMNUM,
+            SALESID: parsedData?.SALESID,
+          }
+        )
+        console.log(res?.data)
+        setReceivedQty(res?.data?.returnItemsCount ?? null)
+      }
+      catch (error) {
+        console.log(error)
+
+        setError(error?.response?.data?.message ?? 'failed to fetch received qty');
+      }
+    }
     getLocationData();
+    getReceivedQty();
 
   }, [parsedData?.ITEMID])
 
@@ -218,6 +237,7 @@ const ReturnRMALast = () => {
       // setMessage(response?.data?.message ?? 'Data inserted successfully');
 
       setFilteredData(prev => [...prev, apiData]);
+      setReceivedQty(prev => prev + 1);
       setUserInput("");
     } catch (error) {
       setError(error?.response?.data?.message ?? 'Cannot save data');
@@ -394,7 +414,11 @@ const ReturnRMALast = () => {
 
                 <div className='w-full lg:w-1/2 sm:text-lg gap-2 text-[#FFFFFF]'>
                   <span>Picked: </span>
-                  <span>1</span> {/* Replace with {filteredData.length} when ready */}
+                  <span>{filteredData?.length}</span>
+                </div>
+                <div className='w-full lg:w-1/2 sm:text-lg gap-2 text-[#FFFFFF]'>
+                  <span>Recevied QTY: </span>
+                  <span>{receivedQty}</span>
                 </div>
               </div>
 

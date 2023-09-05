@@ -3353,17 +3353,17 @@ const WBSDB = {
       if (!binLocations || binLocations.length === 0) {
         return res.status(400).send({ message: "No bin locations provided." });
       }
-  
+
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes
         WHERE BinLocation IN (${binLocations.map((_, index) => `@Param${index}`).join(',')})
       `;
-   
+
       let request = pool2.request();
       binLocations.forEach((binLocation, index) => {
         request.input(`Param${index}`, sql.VarChar(200), binLocation);
       });
-  
+
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
@@ -3374,7 +3374,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-  
+
 
 
   async getDistinctMappedBarcodeBinLocations(req, res, next) {
@@ -6241,6 +6241,36 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
 
+    }
+  },
+  async getWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesId(req, res, next) {
+    try {
+      const { ITEMID, RETURNITEMNUM, SALESID } = req.body;
+      if (!ITEMID || !RETURNITEMNUM || !SALESID) {
+        return res.status(400).send({ message: "ITEMID, RETURNITEMNUM, and SALESID are required." });
+      }
+
+      const query = `
+        SELECT COUNT(*) AS returnItemsCount FROM WMS_ReturnSalesOrder_CL WHERE
+        ITEMID = @ITEMID AND RETURNITEMNUM = @RETURNITEMNUM AND SALESID = @SALESID
+      `;
+
+      const request = pool2.request();
+      request.input('ITEMID', sql.NVarChar, ITEMID);
+      request.input('RETURNITEMNUM', sql.NVarChar, RETURNITEMNUM);
+      request.input('SALESID', sql.NVarChar, SALESID);
+
+      const result = await request.query(query);
+      const returnItemsCount = result.recordsets[0][0].returnItemsCount;
+
+      if (returnItemsCount === 0) {
+        res.status(200).send({ returnItemsCount, message: "No matching items found." });
+      } else {
+        res.status(200).send({ returnItemsCount });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
     }
   },
 

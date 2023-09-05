@@ -245,6 +245,7 @@ router.post("/getOneMapBarcodeDataByItemCode", checkAuthentication, checkRole([r
 router.get("/getmapBarcodeDataByuser", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getmapBarcodeDataByuser); // tblMappedBarcodes
 
 router.get("/getmapBarcodeDataByBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getmapBarcodeDataByBinLocation);
+router.post("/getmapBarcodeDataByMultipleBinLocations", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getmapBarcodeDataByMultipleBinLocations);
 
 router.post("/insertIntoMappedBarcode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.insertIntoMappedBarcode);
 

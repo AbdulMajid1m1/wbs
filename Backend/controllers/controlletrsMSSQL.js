@@ -1304,7 +1304,7 @@ const WBSDB = {
       if (!POQTY) {
         return res.status(400).send({ message: 'POQTY is required.' });
       }
-      
+
       const localDateString = new Date().toISOString();
       // check if not found in tbl_Shipment_Received_CL then insert into tbl_Shipment_Received_CL
       const checkShipmentCounterQuery = `
@@ -3347,6 +3347,35 @@ const WBSDB = {
     }
   },
 
+  async getmapBarcodeDataByMultipleBinLocations(req, res, next) {
+    try {
+      const { binLocations } = req.body;
+      if (!binLocations || binLocations.length === 0) {
+        return res.status(400).send({ message: "No bin locations provided." });
+      }
+  
+      let query = `
+        SELECT * FROM dbo.tblMappedBarcodes
+        WHERE BinLocation IN (${binLocations.map((_, index) => `@Param${index}`).join(',')})
+      `;
+   
+      let request = pool2.request();
+      binLocations.forEach((binLocation, index) => {
+        request.input(`Param${index}`, sql.VarChar(200), binLocation);
+      });
+  
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  
+
 
   async getDistinctMappedBarcodeBinLocations(req, res, next) {
     try {
@@ -3779,7 +3808,7 @@ const WBSDB = {
 
   async insertManyIntoMappedBarcode(req, res, next) {
     const { records } = req.body;
-    
+
     if (!records) {
       return res.status(400).send({ message: "Records are required." });
     }

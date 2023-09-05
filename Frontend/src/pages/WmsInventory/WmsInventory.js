@@ -7,10 +7,14 @@ import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
 import { AllItems, MappedItemsColumn } from '../../utils/datatablesource';
-import { TextField, Autocomplete, CircularProgress } from '@mui/material';
+import { TextField, Autocomplete, CircularProgress, Checkbox } from '@mui/material';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { useQuery } from '@tanstack/react-query';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
+const iconMui = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const WmsInventory = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -151,13 +155,18 @@ const WmsInventory = () => {
   const handleBinLocationSelect = async (e, value) => {
 
     console.log('Selected value:', value);
-    if (!value) {
+    if (!value || value.length === 0) {
+      setData([]);
+      setFilteredData([]);
+      
       console.log("Input cleared");
       return;
     }
     setIsLoading(true)
     try {
-      const res = await userRequest.get("/getmapBarcodeDataByBinLocation?BinLocation=" + value)
+      const res = await userRequest.post("/getmapBarcodeDataByMultipleBinLocations", {
+        binLocations: value
+      })
       console.log(res?.data);
       const data = res?.data ?? [];
       setData(data);
@@ -268,8 +277,21 @@ const WmsInventory = () => {
 
               <div className='w-full'>
                 <Autocomplete
+                  multiple
                   ref={autocompleteRef}
                   key={autocompleteKey}
+                  disableCloseOnSelect
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={iconMui}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option}
+                    </li>
+                  )}
                   id="location"
                   options={Array.from(new Set(binLocationsList?.map(item => item?.BinLocation))).filter(Boolean)}
                   getOptionLabel={(option) => option}
@@ -283,24 +305,30 @@ const WmsInventory = () => {
 
                     }
                   }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        className: "text-white",
-                      }}
-                      InputLabelProps={{
-                        ...params.InputLabelProps,
-                        style: { color: "white" },
-                      }}
+                  // renderInput={(params) => (
+                  //   <TextField
+                  //     {...params}
+                  //     InputProps={{
+                  //       ...params.InputProps,
+                  //       className: "text-white",
+                  //     }}
+                  //     InputLabelProps={{
+                  //       ...params.InputLabelProps,
+                  //       style: { color: "white" },
+                  //     }}
 
-                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
-                      placeholder="TO Location"
-                      required
-                    />
-                  )}
+                  //     className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                  //     p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                  //     placeholder="TO Location"
+                  //     required
+                  //   />
+                  // )
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Locaions" placeholder="location" />
+                  )
+
+
+                  }
                   classes={{
                     endAdornment: "text-white",
                   }}

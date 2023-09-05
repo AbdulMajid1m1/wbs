@@ -56,8 +56,6 @@ const MappedItems = () => {
                 loading={isLoading}
                 setIsLoading={setIsLoading}
                 TotalCount={count}
-
-
             />
 
 

@@ -850,14 +850,14 @@ const FigmaSidebar = () => {
                     </div>
 
                   
-                    <div className='main-images-container' onClick={() => navigate('/wmsbinlocation')}
+                    {/* <div className='main-images-container' onClick={() => navigate('/wmsbinlocation')}
                           onContextMenu={(event) =>
                             handleContextMenu(event, '/wmsbinlocation')
                         }
                     >
                         <img src={move} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>WMS Inventory (by BIN)</p>
-                    </div>
+                    </div> */}
 
                    
                     <div className='main-images-container' onClick={() => navigate('/cyclecounting')}

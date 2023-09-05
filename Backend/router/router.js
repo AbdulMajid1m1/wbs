@@ -283,6 +283,7 @@ router.delete("/deleteTblMappedBarcodesDataBySerialNumber", checkAuthentication,
 
 
 router.get("/getDistinctMappedBarcodeBinLocations", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[39]]), WBSDB.getDistinctMappedBarcodeBinLocations);
+router.get("/getDistinctMappedBarcodeItemIds", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[39]]), WBSDB.getDistinctMappedBarcodeItemIds);
 
 // ------------- tblMappedBarcodes APIS End -------- 
 

@@ -34,7 +34,7 @@ const ReceiptsThirdScreen = () => {
       SERIALNUM: InputSerialNum,
     };
 
-    console.log(updatedStateData);
+    
 
     const mappedbarcodeData = {
       itemcode: updatedStateData?.ITEMID,
@@ -68,8 +68,7 @@ const ReceiptsThirdScreen = () => {
 
     };
 
-    console.log(apiBody);
-    console.log(updatedStateData);
+  
 
     const queryParameters = new URLSearchParams(updatedStateData).toString();
 

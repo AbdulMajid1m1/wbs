@@ -178,7 +178,7 @@ const WmsItemMapping = () => {
 
     console.log(newInputValue);
     setSearchText(newInputValue);
-    console.log("querying...")
+   
     try {
 
       // Cancel any pending requests

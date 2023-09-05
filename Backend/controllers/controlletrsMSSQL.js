@@ -3370,6 +3370,28 @@ const WBSDB = {
     }
 
   },
+  async getDistinctMappedBarcodeItemIds(req, res, next) {
+    try {
+      let query = `SELECT DISTINCT ItemCode FROM  tblMappedBarcodes ORDER BY ItemCode`
+      let request = pool2.request();
+
+      let data = await request.query(query)
+      data = data.recordsets[0]
+
+      if (data.length === 0) {
+        return res.status(404).send({ message: "No Records Found!" })
+      }
+
+      return res.status(200).send(data)
+
+
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+
+  },
 
 
 
@@ -3757,11 +3779,7 @@ const WBSDB = {
 
   async insertManyIntoMappedBarcode(req, res, next) {
     const { records } = req.body;
-    // if it is not an array or if it is an empty array
-    if (!records || !Array.isArray(records) || records.length === 0) {
-      return res.status(400).send({ message: "Records must be a non-empty array." });
-    }
-    console.log(records);
+    
     if (!records) {
       return res.status(400).send({ message: "Records are required." });
     }
@@ -3845,7 +3863,7 @@ const WBSDB = {
           request.input("width", sql.Numeric(10, 2), width);
           request.input("height", sql.Numeric(10, 2), height);
           request.input("weight", sql.Numeric(10, 2), weight);
-          request.input("length", sql.VarChar(255), length);
+          request.input("length", sql.Numeric(10, 2), length);
           request.input("qrcode", sql.VarChar(255), qrcode)
           request.input("trxdate", sql.Date, trxdate)
 

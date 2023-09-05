@@ -16,6 +16,7 @@ import * as XLSX from 'xlsx';
 import { MuiCustomTable } from "../../utils/MuiCustomTable";
 import { ClipLoader } from 'react-spinners';
 import CustomToolbar from "../../utils/Components/CustomToolbar";
+import Swal from "sweetalert2";
 
 const UserDataTable = ({
   columnsName = [],
@@ -451,7 +452,17 @@ const UserDataTable = ({
 
 
   const handleDelete = async (id, rowdata) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+
+    const confirmationResult = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to delete this record',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#0079FF',
+      confirmButtonText: 'Yes, delete it!'
+    });
+    if (confirmationResult.isConfirmed) {
       let success = false;
 
       switch (uniqueId) {
@@ -462,7 +473,7 @@ const UserDataTable = ({
               "deleteShipmentRecievedDataCL?SERIALNUM=" + rowdata.SERIALNUM
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
 
             const updateRemainingQty = await userRequest.put("/updateRemainingQtyInTblShipmentCounter?SHIPMENTID=" + rowdata?.SHIPMENTID)
 
@@ -482,7 +493,7 @@ const UserDataTable = ({
               "deleteShipmentRecievingDataCL?SHIPMENTID=" + rowdata.SHIPMENTID
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -496,7 +507,7 @@ const UserDataTable = ({
               "deleteTblLocationsDataCL?LOCATIONS_HFID=" + rowdata.LOCATIONS_HFID
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -511,7 +522,7 @@ const UserDataTable = ({
               "/deleteStockMasterDataByItemId?ITEMID=" + rowdata.ITEMID
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -526,7 +537,7 @@ const UserDataTable = ({
               "deleteTblDispatchingDataCL?PACKINGSLIPID=" + rowdata.PACKINGSLIPID
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -541,7 +552,7 @@ const UserDataTable = ({
               "deleteTblPickingDataCL?PICKINGROUTEID=" + rowdata.PICKINGROUTEID
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -563,8 +574,8 @@ const UserDataTable = ({
                 },
               }
             );
-            console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -579,7 +590,7 @@ const UserDataTable = ({
               "deleteShipmentPalletizingDataCL?TRANSFERID=" + rowdata.TRANSFERID
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -594,7 +605,7 @@ const UserDataTable = ({
               "/deleteTruckMasterData?PlateNo=" + rowdata.PlateNo
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -609,7 +620,7 @@ const UserDataTable = ({
               "/deleteBinLocationData?BinNumber=" + rowdata.BinNumber
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -625,7 +636,7 @@ const UserDataTable = ({
               "/deleteZonesData?Zones=" + rowdata.Zones
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -640,7 +651,7 @@ const UserDataTable = ({
               "/deletePalletMasterData?PalletNumber=" + rowdata.PalletNumber
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -655,7 +666,7 @@ const UserDataTable = ({
               "/deleteRzoneData?tbl_RZONESID=" + rowdata.tbl_RZONESID
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -670,7 +681,7 @@ const UserDataTable = ({
               "/deleteDzoneData?tbl_DZONESID=" + rowdata.tbl_DZONESID
             );
             console.log(response);
-            setMessage(response?.data?.message ?? "User deleted successfully");
+
             success = true; // to update the state of the table
           } catch (error) {
             setError(error?.message ?? "Something went wrong");
@@ -688,6 +699,7 @@ const UserDataTable = ({
 
       if (success) {
         setRecord(record.filter((item) => item.id !== id));
+        setMessage("Record deleted successfully");
       }
     }
   };
@@ -1408,7 +1420,7 @@ const UserDataTable = ({
               <p id="itemcode">{selectedRow.data.ItemCode}</p>
             </div>
             <div id='inside-BRCode'>
-              <Barcode value={selectedRow.data.GTIN} width={1} height={50} fontSize={14}/>
+              <Barcode value={selectedRow.data.GTIN} width={1} height={50} fontSize={14} />
             </div>
             {/* <div id="gtinNo">
               <p>{selectedRow?.data?.GTIN}</p>

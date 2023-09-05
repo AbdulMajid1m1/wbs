@@ -6,45 +6,48 @@ import icon from "../../images/close.png"
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import UserDataTable from '../../components/UserDatatable/UserDataTable';
-import { AllItems } from '../../utils/datatablesource';
+import { AllItems, MappedItemsColumn } from '../../utils/datatablesource';
 import { TextField, Autocomplete, CircularProgress } from '@mui/material';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import { useQuery } from '@tanstack/react-query';
 
-
 const WmsInventory = () => {
-
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-
   const storedUser = localStorage.getItem('currentUser');
   const initialUser = storedUser ? JSON.parse(storedUser) : {};
-
   const [currentUser, setCurrentUser] = useState(initialUser);
-  const [dataList, setDataList] = useState([]);
-  const [isOptionSelected, setIsOptionSelected] = useState(false);
   const [assignedTo, setAssignedTo] = useState(initialUser?.UserID ?? '');
-  const [selectedData, setSelectedData] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [searchText, setSearchText] = useState('');
-  const abortControllerRef = useRef(null);
-  const [selectedOption, setSelectedOption] = useState([]);
 
   const [data, setData] = useState([]);
-  const [selectedBy, setSelectedBy] = useState('itemid');
+  const [filteredData, setFilteredData] = useState([]);
+  const [selectedBy, setSelectedBy] = useState('itemId and bin location');
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
+  const [selectedClassification, setSelectedClassification] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [itemCodeFilterList, setItemCodeFilterList] = useState([]);
+  const [classificationFilterList, setClassificationFilterList] = useState([]);
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
     setMessage(null);
 
   };
+  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+
+  const [binLocationsList, setBinLocationsList] = useState([]);
+  // const resetAutocomplete = () => {
+  //   setLocationInputValue(''); // Clear the location input value
+  //   setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  // };
+
   const [userList, setUserList] = useState([]);
   useEffect(() => {
     userRequest.get('/getAllTblUsers')
       .then(response => {
-        console.log(response?.data);
+
         setUserList(response?.data ?? []);
       })
       .catch(error => {
@@ -57,11 +60,6 @@ const WmsInventory = () => {
 
   }, []);
 
-  const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState([]);
-  const [autocompleteLoading, setAutocompleteLoading] = useState(false);
-
-
   const handleAutoComplete = (event, value) => {
     console.log('Selected value:', value?.UserID);
 
@@ -69,19 +67,6 @@ const WmsInventory = () => {
   };
 
 
-  const handleSearchAutoComplete = (event, value) => {
-    console.log('Selected value:', value);
-    setIsOptionSelected(true);
-    // if a new option was selected
-    if (value.length > selectedOption.length) {
-      // check in array of objects for same ITEMID
-      if (selectedOption.some(item => item?.ITEMID === value[value.length - 1]?.ITEMID)) {
-        setError('Item already selected!');
-        return;
-      }
-    }
-    setSelectedOption(value); // store current selected option
-  };
 
 
 
@@ -113,19 +98,19 @@ const WmsInventory = () => {
           ...row,
           TRXUSERIDASSIGNED: assignedTo,
           INVENTORYBY: selectedBy,
+          // BINLOCATION: location,
         }
       });
 
-
+      console.log(apiData);
       const res = await userRequest.post('/insertIntoWmsJournalCountingOnlyCL', apiData)
       console.log(res);
       setMessage(res?.data?.message ?? 'Data saved successfully!');
-      setSelectedRows([]);
-      setSelectedData([]);
+
       // filter out the selected rows from the data array on the basis of ITEMID on both arrays of objects
       // setData(data.filter(item => !selectedRows.some(row => row?.ITEMID === item?.ITEMID)));
       setData([])
-      setSelectedOption([]);
+
 
     } catch (error) {
       console.error(error);
@@ -133,67 +118,98 @@ const WmsInventory = () => {
     }
   }
 
-  const handleAutoCompleteInputChnage = async (event, newInputValue) => {
-    if (isOptionSelected) {
-      setIsOptionSelected(false);
-      return;
-    }
-    if (!newInputValue || newInputValue.trim() === '') {
-      // perform operation when input is cleared
-      setDataList([]);
-      return;
-    }
-
-    if (!newInputValue || newInputValue.trim() === '') {
-      setDataList([]); // Clear the data list if there is no input
-      return;
-    }
-    setAutocompleteLoading(true);
-    setOpen(true);
 
 
-    console.log(newInputValue);
-    setSearchText(newInputValue);
-    console.log("querying...")
+
+  const {
+    isLoading: stockMasterLoading,
+    error: stockMasterError,
+    data: stockMasterData
+  } = useQuery({
+    queryKey: ['stockMaster'],
+    queryFn: () =>
+      userRequest.get("/getDistinctMappedBarcodeBinLocations").then(
+
+        (res) => res.data,
+      ),
+  })
+
+
+  useEffect(() => {
+    if (stockMasterData) {
+      console.log(stockMasterData);
+      setBinLocationsList(stockMasterData);
+    }
+  }, [stockMasterData]);
+
+  useEffect(() => {
+    if (stockMasterError) {
+      setError('An error has occurred: ' + stockMasterError.message);
+    }
+  }, [stockMasterError]);
+
+  const handleBinLocationSelect = async (e, value) => {
+
+    console.log('Selected value:', value);
+    if (!value) {
+      console.log("Input cleared");
+      return;
+    }
+    setIsLoading(true)
     try {
-
-      // Cancel any pending requests
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-
-      // Create a new AbortController
-      abortControllerRef.current = new AbortController();
-      const res = await userRequest.post("getInventTableWMSDataByItemIdOrItemName", {}, {
-        headers: { serachtext: newInputValue }
-        , signal: abortControllerRef?.current?.signal
-      })
-
-      console.log(res);
-      setDataList(res?.data ?? []);
-      setOpen(true);
-      setAutocompleteLoading(false);
+      const res = await userRequest.get("/getmapBarcodeDataByBinLocation?BinLocation=" + value)
+      console.log(res?.data);
+      const data = res?.data ?? [];
+      setData(data);
+      setFilteredData(data);
     }
     catch (error) {
-      if (error?.name === 'CanceledError') {
-        // Ignore abort errors
-        setDataList([]); // Clear the data list if there is no input
-        setAutocompleteLoading(true);
-        return;
-      }
-      console.error(error);
-      setDataList([]); // Clear the data list if an error occurs
-      setOpen(false);
-      setAutocompleteLoading(false);
+      console.log(error);
+      setError(error?.response?.data?.message ?? 'Something went wrong!');
+    }
+    finally {
+      setIsLoading(false)
+    }
+  }
+  const handleClassificationFilter = (event, value) => {
+    setSelectedClassification(value);
+  };
+
+  const handleItemIdFilter = (event, value) => {
+    setSelectedItemId(value);
+  };
+
+  useEffect(() => {
+    const classificationOptions = Array.from(new Set(filteredData.map(item => item?.Classification))).filter(Boolean);
+    const itemIdOptions = Array.from(new Set(filteredData.map(item => item?.ItemCode))).filter(Boolean);
+    setItemCodeFilterList(itemIdOptions);
+    setClassificationFilterList(classificationOptions);
+
+  }, [filteredData]);
+
+  useEffect(() => {
+    filterData(selectedClassification, selectedItemId);
+  }, [selectedClassification, selectedItemId]);
+
+  const filterData = (classification, itemId) => {
+    let newFilteredData = [...data];
+
+    if (classification) {
+      newFilteredData = newFilteredData.filter(item => item?.Classification === classification);
+    }
+    if (itemId) {
+      newFilteredData = newFilteredData.filter(item => item?.ItemCode === itemId);
     }
 
-  }
+    setFilteredData(newFilteredData);
+  };
 
 
 
 
   return (
     <>
+
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
       {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
@@ -239,7 +255,7 @@ const WmsInventory = () => {
                   </span>
                 </button>
               </div>
-              <h2 className='text-center text-[#fff]'>By Item ID</h2>
+              {/* <h2 className='text-center text-[#fff]'>By Item ID</h2> */}
 
             </div>
 
@@ -247,84 +263,150 @@ const WmsInventory = () => {
             <div className='mt-6'>
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
-
-
             <div className="mt-6">
-              <label htmlFor="searchInput" className="text-[#00006A] text-center font-semibold"
-                style={{ marginBottom: "10px" }}
-              >Search Bar</label>
+              <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Bin Locations<span className='text-[#FF0404]'>*</span></label>
 
-              <Autocomplete
-
-                multiple
-                id="searchInput"
-                options={dataList}
-                value={selectedOption}
-                getOptionLabel={(option) => `${option?.ITEMID} - ${option?.ITEMNAME}`}
-                onChange={handleSearchAutoComplete}
-                onInputChange={(event, newInputValue) => handleAutoCompleteInputChnage(event, newInputValue)}
-                loading={autocompleteLoading}
-                sx={{ marginTop: '10px' }}
-                open={open}
-                onOpen={() => {
-                  // setOpen(true);
-                }}
-                onClose={() => {
-                  setOpen(false);
-                }}
-                renderOption={(props, option) => (
-                  <li {...props}>
-                    {option ? `${option?.ITEMID} - ${option?.ITEMNAME}` : 'No options'}
-                  </li>
-                )}
-
-                renderInput={(params) => (
-                  <TextField
-                    required
-                    {...params}
-                    label="Search Item Number or Description here"
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <React.Fragment>
-                          {autocompleteLoading ? <CircularProgress color="inherit" size={20} /> : null}
-                          {params.InputProps.endAdornment}
-                        </React.Fragment>
-                      ),
-                    }}
-                    sx={{
-                      '& label.Mui-focused': {
-                        color: '#00006A',
-                      },
-                      '& .MuiInput-underline:after': {
-                        borderBottomColor: '#00006A',
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        '&:hover fieldset': {
-                          borderColor: '#000000',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#000000',
-                        },
-                      },
-                    }}
-                  />
-                )}
-
-              />
-
-            </div>
+              <div className='w-full'>
+                <Autocomplete
+                  ref={autocompleteRef}
+                  key={autocompleteKey}
+                  id="location"
+                  options={Array.from(new Set(binLocationsList?.map(item => item?.BinLocation))).filter(Boolean)}
+                  getOptionLabel={(option) => option}
+                  onChange={handleBinLocationSelect}
 
 
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                      placeholder="TO Location"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+
+              </div>
+            </div >
 
 
+            {filteredData.length > 0 && (
+              <div className="mb-6 mt-6">
+                <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Classification</label>
+                <Autocomplete
+                  id="classificationFilter"
+                  options={classificationFilterList}
+                  getOptionLabel={(option) => option || ""}
+                  onChange={handleClassificationFilter}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
 
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Select Classification to filter"
+
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+              </div>
+            )}
+            {filteredData.length > 0 && (
+              <div className="mb-6 mt-6">
+                <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
+                <Autocomplete
+                  id="itemIdFilter"
+                  options={itemCodeFilterList}
+                  getOptionLabel={(option) => option || ""}
+                  onChange={handleItemIdFilter}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Select Item ID to filter"
+
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+              </div>
+            )}
             <div className='mt-3'
               style={{
                 marginLeft: "-20px", marginRight: "-20px"
               }}
             >
-              <UserDataTable data={selectedOption} columnsName={AllItems} backButton={false}
+              <UserDataTable data={filteredData} columnsName={MappedItemsColumn} backButton={false}
                 handleRowClickInParent={handleRowClickInParent}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
@@ -336,7 +418,7 @@ const WmsInventory = () => {
             </div>
 
             <div className="mt-6">
-              <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIGN</label>
+              <label htmlFor="userid" className="text-[#00006A] text-center font-semibold">ASSIGN<span className='text-[#FF0404]'>*</span></label>
 
               <Autocomplete
                 id="userid"

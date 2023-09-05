@@ -106,7 +106,6 @@ const WmsBinlocation = () => {
     }
   }
   useEffect(() => {
-    console.log("selected Rew sata")
     console.log(selectedRows);
   }, [selectedRows]);
 

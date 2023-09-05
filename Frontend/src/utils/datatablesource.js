@@ -1170,14 +1170,7 @@ export const wmsInventoryColumns = [
     width: 180,
 
   },
-  
-  {
-    field: "ItemSerialNo",
-    headerName: "ITEM SERIAL NO",
-    width: 150,
-
-  },
-  
+   
 ]
 
 

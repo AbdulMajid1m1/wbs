@@ -106,7 +106,7 @@ const WmsInventory = () => {
     }
     try {
       setIsLoading(true);
-      
+
       let apiData = filteredData?.map(row => {
         return {
           // ...row,
@@ -119,9 +119,8 @@ const WmsInventory = () => {
         }
       });
 
-      console.log(apiData);
       const res = await userRequest.post('/insertIntoWmsJournalCountingOnlyCL', apiData)
-      console.log(res);
+
       setMessage(res?.data?.message ?? 'Data saved successfully!');
       Reset()
     } catch (error) {

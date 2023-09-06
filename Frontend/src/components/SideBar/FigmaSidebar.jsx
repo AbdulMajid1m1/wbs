@@ -146,6 +146,11 @@ const FigmaSidebar = () => {
                 onClick={() => setShowWarehouseDropdown(!showWarehouseDropdown)}>
                 <img src={inventory} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Warehouse Operation</p>
+                {showWarehouseDropdown ? (
+                    <i className='fas fa-solid fa-chevron-up text-white'></i>
+                    ) : (
+                    <i className='fas fa-solid fa-chevron-down text-white'></i>
+                )}
             </div>
 
         
@@ -474,6 +479,11 @@ const FigmaSidebar = () => {
             <div className='main-images-container' onClick={() => setShowMasterData(!showMasterData)}>
                 <img src={image} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Master Data (Axapta)</p>
+                {showMasterData ? (
+                    <i className='fas fa-solid fa-chevron-up text-white'></i>
+                    ) : (
+                    <i className='fas fa-solid fa-chevron-down text-white'></i>
+                )}
             </div>
 
             {showMasterData && (
@@ -641,6 +651,11 @@ const FigmaSidebar = () => {
             <div className='main-images-container' onClick={() => setWmsMobileApp(!wmsMobileApp)}>
                 <img src={wms} className='main-inside-image rounded-full bg-white' alt='' />
                 <p className='sidebar-text'>WMS Mobile App</p>
+                {wmsMobileApp ? (
+                    <i className='fas fa-solid fa-chevron-up text-white'></i>
+                    ) : (
+                    <i className='fas fa-solid fa-chevron-down text-white'></i>
+                )}
             </div>
 
             {wmsMobileApp && (

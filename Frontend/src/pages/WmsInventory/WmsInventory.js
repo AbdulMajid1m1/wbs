@@ -276,13 +276,13 @@ const WmsInventory = () => {
             itemcode: value
           }
         })
-      console.log(res?.data);
+      
       const data = res?.data ?? [];
       setData(data);
       setFilteredData(data);
 
       const dataGridbinLocationsList = Array.from(new Set(data?.map(item => item?.BinLocation))).filter(Boolean);
-      console.log(dataGridbinLocationsList);
+     
       setDataGridbinLocationsList(dataGridbinLocationsList);
 
     }

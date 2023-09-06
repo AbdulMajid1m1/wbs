@@ -214,28 +214,6 @@ const ReturnRMALast = () => {
     try {
       await userRequest.post(`/insertIntoWmsReturnSalesOrderCl`, [apiData]);
 
-
-      // const insertData = {
-      //   ItemDesc: parsedData?.NAME,
-      //   ItemCode: parsedData?.ITEMID,
-      //   ItemSerialNo: newBarcodeValue,
-      //   MapDate: new Date().toLocaleDateString(),
-      //   PalletCode: null,
-      //   BinLocation: selectedValue
-      // };
-
-      // const lowerCaseInsertData = Object.fromEntries(
-      //   Object.entries(insertData).map(([k, v]) => [k.toLowerCase(), v])
-      // );
-
-
-      // const response = await userRequest.post(
-      //   "/insertManyIntoMappedBarcode",
-      //   { records: [lowerCaseInsertData] }
-      // );
-
-      // setMessage(response?.data?.message ?? 'Data inserted successfully');
-
       setFilteredData(prev => [...prev, apiData]);
       setReceivedQty(prev => prev + 1);
       setUserInput("");
@@ -292,13 +270,13 @@ const ReturnRMALast = () => {
       const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
       console.log(res?.data);
 
-      let insertedSerialNumbers = mappedData?.map((record) => {
-        return record?.itemserialno;
-      })
+      // let insertedSerialNumbers = mappedData?.map((record) => {
+      //   return record?.itemserialno;
+      // })
 
-      console.log(insertedSerialNumbers)
-      const deleteRes = await userRequest.delete("/deleteMultipleRecordsFromWmsReturnSalesOrderCl", { data: insertedSerialNumbers })
-      console.log(deleteRes?.data);
+      // console.log(insertedSerialNumbers)
+      // const deleteRes = await userRequest.delete("/deleteMultipleRecordsFromWmsReturnSalesOrderCl", { data: insertedSerialNumbers })
+      // console.log(deleteRes?.data);
 
       setMessage("Data Inserted Successfully.");
       // Clear form fields and data state

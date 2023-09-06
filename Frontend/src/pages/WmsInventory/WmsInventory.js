@@ -115,6 +115,7 @@ const WmsInventory = () => {
           ITEMID: row?.ItemCode,
           ITEMNAME: row?.ItemDesc,
           CLASSFICATION: row?.Classification,
+          QTYONHAND: row?.TotalOnhandQty,
         }
       });
 
@@ -151,7 +152,7 @@ const WmsInventory = () => {
 
   useEffect(() => {
     if (stockMasterData) {
-     
+
       setBinLocationsList(stockMasterData);
     }
   }, [stockMasterData]);
@@ -178,7 +179,7 @@ const WmsInventory = () => {
 
   useEffect(() => {
     if (uniqueItemData) {
-     
+
       setUniqueItemCodeFilterList(uniqueItemData);
     }
   }, [uniqueItemData]);
@@ -276,13 +277,13 @@ const WmsInventory = () => {
             itemcode: value
           }
         })
-      
+
       const data = res?.data ?? [];
       setData(data);
       setFilteredData(data);
 
       const dataGridbinLocationsList = Array.from(new Set(data?.map(item => item?.BinLocation))).filter(Boolean);
-     
+
       setDataGridbinLocationsList(dataGridbinLocationsList);
 
     }

@@ -1171,6 +1171,13 @@ export const wmsInventoryColumns = [
 
   },
   
+  {
+    field: "TotalOnhandQty",
+    headerName: "TOTAL ONHAND QTY",
+    width: 180,
+
+  },
+  
 
   
 ]

@@ -255,18 +255,20 @@ const ReturnRMALast = () => {
 
     try {
       setIsLoading(true)
-      const apiData = filteredData.map((item) => ({
+
+      const selectedData = selectedRows.map((index) => filteredData[index]); // Filter the selected rows from the data array
+
+
+      const apiData = selectedData?.map((item) => ({
         ...parsedData,
         ITEMSERIALNO: item?.ITEMSERIALNO,
       }));
       console.log(apiData);
 
       const RsoResponse = await userRequest.post(`/insertIntoWmsReturnSalesOrderCl`, apiData);
-      console.log(RsoResponse?.data);
 
-      const selectedData = selectedRows.map((index) => filteredData[index]); // Filter the selected rows from the data array
 
-      const mappedData = selectedData.map((item) => ({
+      const mappedData = selectedData?.map((item) => ({
         ...(item?.ITEMID && { itemcode: item?.ITEMID }),
         itemdesc: item?.NAME,
         classification: item?.CONFIGID,
@@ -291,7 +293,7 @@ const ReturnRMALast = () => {
 
 
       const res = await userRequest.post("/insertManyIntoMappedBarcode", { records: mappedData });
-      console.log(res?.data);
+     
 
       // let insertedSerialNumbers = mappedData?.map((record) => {
       //   return record?.itemserialno;

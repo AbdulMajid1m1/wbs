@@ -43,8 +43,13 @@ const PhysicalInventoryBinLocation = () => {
         setOptions(response.data);
       })
       .catch(error => {
-        // Handle errors
-        console.error('Error fetching options:', error);
+        console.log(error);
+        if (error?.response?.status === 404) {
+          setError("No BinLocation found for this user")
+          return
+        }
+        setError(error?.response?.data?.message ?? "Something went wrong!");
+
       });
   }, []);
 
@@ -94,8 +99,6 @@ const PhysicalInventoryBinLocation = () => {
       // });
 
       let foundRecord = dataList.find(item => {
-        console.log(item.BINLOCATION + " equal to " + mappedData.BinLocation);
-        console.log(item.BINLOCATION === mappedData.BinLocation);
         return item.BINLOCATION === mappedData.BinLocation;
       });
 
@@ -148,8 +151,6 @@ const PhysicalInventoryBinLocation = () => {
           setError(error?.response?.data?.message ?? "Something went wrong!");
 
         }
-
-
 
 
       }

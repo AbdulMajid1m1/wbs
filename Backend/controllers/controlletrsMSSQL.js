@@ -3294,7 +3294,7 @@ const WBSDB = {
       `;
       let request = pool2.request();
       request.input('ItemCode', sql.NVarChar(100), ItemCode);
-      
+
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
@@ -3305,7 +3305,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-  
+
 
   async getOneMapBarcodeDataByItemCode(req, res, next) {
     try {
@@ -3382,7 +3382,7 @@ const WBSDB = {
       if (!binLocations || binLocations.length === 0) {
         return res.status(400).send({ message: "No bin locations provided." });
       }
-  
+
       let query = `
         WITH CTE AS (
           SELECT *, 
@@ -3392,12 +3392,12 @@ const WBSDB = {
         )
         SELECT * FROM CTE WHERE rn = 1 ORDER BY ItemCode;
       `;
-  
+
       let request = pool2.request();
       binLocations.forEach((binLocation, index) => {
         request.input(`Param${index}`, sql.VarChar(200), binLocation);
       });
-  
+
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
@@ -3408,7 +3408,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-  
+
 
 
   async getDistinctMappedBarcodeBinLocations(req, res, next) {
@@ -6356,6 +6356,14 @@ const WBSDB = {
     try {
       const returnSalesOrderArray = req.body;
       let currentDateTime = new Date();
+      if (Array.isArray(returnSalesOrderArray) === false) {
+        return res.status(400).send({ message: "Please provide an array of objects." });
+      }
+
+      if (returnSalesOrderArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+      console.log(returnSalesOrderArray);
 
       for (const returnSalesOrder of returnSalesOrderArray) {
 
@@ -6398,12 +6406,13 @@ const WBSDB = {
         }
       }
 
+
+
       return res.status(201).send({ message: 'Data inserted successfully.' });
     } catch (error) {
       return res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
 
   async generateBarcodeForRma(req, res, next) {
     try {

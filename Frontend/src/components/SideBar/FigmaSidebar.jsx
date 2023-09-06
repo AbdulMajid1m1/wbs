@@ -825,14 +825,14 @@ const FigmaSidebar = () => {
 
                     {showInventory && (
                       <div>
-                       <div className='main-images-container' onClick={() => navigate('/wmsinventory')}
+                       <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}
                          onContextMenu={(event) =>
-                            handleContextMenu(event, '/wmsinventory')
+                            handleContextMenu(event, '/wmsphysicalbinlocation')
                         }
                     >
-                        <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>WMS Inventory</p>
-                     </div>
+                        <img src={wmslocation} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Wms Inventory</p>
+                    </div>
 
                       <div className='main-images-container' onClick={() => navigate('/journalfirst')}
                          onContextMenu={(event) =>
@@ -911,7 +911,16 @@ const FigmaSidebar = () => {
 
                     {showControls && (
                        <div>
-                         <div className='main-images-container' onClick={() => navigate('/cyclecounting')}
+                        <div className='main-images-container' onClick={() => navigate('/wmsinventory')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/wmsinventory')
+                        }
+                       >
+                        <img src={inventory} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>WMS Inventory (Assign)</p>
+                     </div>
+                     
+                    <div className='main-images-container' onClick={() => navigate('/cyclecounting')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/cyclecounting')
                         }

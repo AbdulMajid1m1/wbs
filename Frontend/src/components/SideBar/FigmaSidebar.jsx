@@ -148,7 +148,7 @@ const FigmaSidebar = () => {
             <div className='main-images-container' 
                 onClick={() => setShowWarehouseDropdown(!showWarehouseDropdown)}>
                 <img src={inventory} className='main-inside-image' alt='' />
-                <p className='sidebar-text'>Warehouse Operation</p>
+                <p className='sidebar-text sm:-mr-3 mr-0'>Warehouse Operation</p>
                 {showWarehouseDropdown ? (
                     <ExpandLessIcon sx={{ color: 'white' }} />
                     ) : (
@@ -481,7 +481,7 @@ const FigmaSidebar = () => {
             )}
             <div className='main-images-container' onClick={() => setShowMasterData(!showMasterData)}>
                 <img src={image} className='main-inside-image' alt='' />
-                <p className='sidebar-text'>Master Data (Axapta)</p>
+                <p className='sidebar-text sm:-mr-3 mr-0'>Master Data (Axapta)</p>
                 {showMasterData ? (
                    <ExpandLessIcon sx={{ color: 'white' }} />
                    ) : (
@@ -653,7 +653,7 @@ const FigmaSidebar = () => {
 
             <div className='main-images-container' onClick={() => setWmsMobileApp(!wmsMobileApp)}>
                 <img src={wms} className='main-inside-image rounded-full bg-white' alt='' />
-                <p className='sidebar-text'>WMS Mobile App</p>
+                <p className='sidebar-text sm:-mr-3 mr-0'>WMS Mobile App</p>
                 {wmsMobileApp ? (
                     <ExpandLessIcon sx={{ color: 'white' }} />
                     ) : (
@@ -676,7 +676,7 @@ const FigmaSidebar = () => {
                     
                     <div className='main-images-container' onClick={() => setShowShipment(!showShipment)}>
                         <img src={shipmentTitle} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Shipments</p>
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Shipments</p>
                         {showShipment ? (
                             <ExpandLessIcon sx={{ color: 'white' }} />
                             ) : (
@@ -686,7 +686,7 @@ const FigmaSidebar = () => {
 
 
                     {showShipment && (
-                        <div>
+                        <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                           <div className='main-images-container' onClick={() => {
                             // remove item from session storage
                             sessionStorage.removeItem('receiptsData');
@@ -725,7 +725,7 @@ const FigmaSidebar = () => {
 
                     <div className='main-images-container' onClick={() => setShowdelivery(!showdelivery)}>
                         <img src={delivery} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Delivery</p>
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Delivery</p>
                         {showdelivery ? (
                             <ExpandLessIcon sx={{ color: 'white' }} />
                             ) : (
@@ -734,7 +734,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showdelivery && (
-                      <div>
+                     <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                          <div className='main-images-container' onClick={() => navigate('/pickinglistfrom')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/pickinglistfrom')
@@ -758,7 +758,7 @@ const FigmaSidebar = () => {
                     
                     <div className='main-images-container' onClick={() => setShowbintobin(!showbintobin)}>
                         <img src={bintobinMain} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Bin To Bin</p>
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Transfers</p>
                         {showbintobin ? (
                             <ExpandLessIcon sx={{ color: 'white' }} />
                             ) : (
@@ -767,7 +767,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showbintobin && (
-                      <div>
+                      <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                           <div className='main-images-container' onClick={() => navigate('/transferpage1')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/transferpage1')
@@ -800,7 +800,7 @@ const FigmaSidebar = () => {
 
                     <div className='main-images-container' onClick={() => setShowRma(!showRma)}>
                         <img src={rmaMain} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Rma</p>
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Rma</p>
                         {showRma ? (
                             <ExpandLessIcon sx={{ color: 'white' }} />
                             ) : (
@@ -809,7 +809,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showRma && (
-                      <div>
+                     <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                         <div className='main-images-container' onClick={() => navigate('/rma')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/rma')
@@ -833,7 +833,7 @@ const FigmaSidebar = () => {
                     
                     <div className='main-images-container' onClick={() => setShowInventory(!showInventory)}>
                         <img src={inventoryMain} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Inventory</p>
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Inventory</p>
                         {showInventory ? (
                            <ExpandLessIcon sx={{ color: 'white' }} />
                            ) : (
@@ -842,7 +842,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showInventory && (
-                      <div>
+                    <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                        <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/wmsphysicalbinlocation')
@@ -876,7 +876,7 @@ const FigmaSidebar = () => {
 
                     <div className='main-images-container' onClick={() => setShowUtility(!showUtility)}>
                         <img src={utility} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Utility</p>
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Utility</p>
                         {showUtility ? (
                             <ExpandLessIcon sx={{ color: 'white' }} />
                             ) : (
@@ -885,7 +885,7 @@ const FigmaSidebar = () => {
                     </div>
                     
                     {showUtility && (
-                       <div>
+                      <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                         <div className='main-images-container' onClick={() => navigate('/itemallocation')}
                         onContextMenu={(event) =>
                             handleContextMenu(event, '/itemallocation')
@@ -919,7 +919,7 @@ const FigmaSidebar = () => {
                     
                     <div className='main-images-container' onClick={() => setShowControls(!showControls)}>
                         <img src={controls} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Controls</p>
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Controls</p>
                         {showControls ? (
                             <ExpandLessIcon sx={{ color: 'white' }} />
                             ) : (
@@ -928,7 +928,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showControls && (
-                       <div>
+                      <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
                         <div className='main-images-container' onClick={() => navigate('/wmsinventory')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/wmsinventory')

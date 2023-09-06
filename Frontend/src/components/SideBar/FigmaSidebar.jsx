@@ -59,6 +59,9 @@ import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import userRequest from '../../utils/userRequest'
 
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 const FigmaSidebar = () => {
     const [showWarehouseDropdown, setShowWarehouseDropdown] = useState(false);
@@ -147,9 +150,9 @@ const FigmaSidebar = () => {
                 <img src={inventory} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Warehouse Operation</p>
                 {showWarehouseDropdown ? (
-                    <i className='fas fa-solid fa-chevron-up text-white'></i>
+                    <ExpandLessIcon sx={{ color: 'white' }} />
                     ) : (
-                    <i className='fas fa-solid fa-chevron-down text-white'></i>
+                    <ExpandMoreIcon sx={{ color: 'white' }} />
                 )}
             </div>
 
@@ -480,9 +483,9 @@ const FigmaSidebar = () => {
                 <img src={image} className='main-inside-image' alt='' />
                 <p className='sidebar-text'>Master Data (Axapta)</p>
                 {showMasterData ? (
-                    <i className='fas fa-solid fa-chevron-up text-white'></i>
-                    ) : (
-                    <i className='fas fa-solid fa-chevron-down text-white'></i>
+                   <ExpandLessIcon sx={{ color: 'white' }} />
+                   ) : (
+                   <ExpandMoreIcon sx={{ color: 'white' }} />
                 )}
             </div>
 
@@ -652,9 +655,9 @@ const FigmaSidebar = () => {
                 <img src={wms} className='main-inside-image rounded-full bg-white' alt='' />
                 <p className='sidebar-text'>WMS Mobile App</p>
                 {wmsMobileApp ? (
-                    <i className='fas fa-solid fa-chevron-up text-white'></i>
+                    <ExpandLessIcon sx={{ color: 'white' }} />
                     ) : (
-                    <i className='fas fa-solid fa-chevron-down text-white'></i>
+                    <ExpandMoreIcon sx={{ color: 'white' }} />
                 )}
             </div>
 
@@ -675,9 +678,9 @@ const FigmaSidebar = () => {
                         <img src={shipmentTitle} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Shipments</p>
                         {showShipment ? (
-                            <i className='fas fa-solid fa-chevron-up text-white'></i>
-                        ) : (
-                            <i className='fas fa-solid fa-chevron-down text-white'></i>
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
                         )}
                     </div>
 
@@ -724,9 +727,9 @@ const FigmaSidebar = () => {
                         <img src={delivery} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Delivery</p>
                         {showdelivery ? (
-                            <i className='fas fa-solid fa-chevron-up text-white'></i>
-                        ) : (
-                            <i className='fas fa-solid fa-chevron-down text-white'></i>
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
                         )}
                     </div>
 
@@ -757,9 +760,9 @@ const FigmaSidebar = () => {
                         <img src={bintobinMain} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Bin To Bin</p>
                         {showbintobin ? (
-                            <i className='fas fa-solid fa-chevron-up text-white'></i>
-                        ) : (
-                            <i className='fas fa-solid fa-chevron-down text-white'></i>
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
                         )}
                     </div>
 
@@ -799,9 +802,9 @@ const FigmaSidebar = () => {
                         <img src={rmaMain} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Rma</p>
                         {showRma ? (
-                            <i className='fas fa-solid fa-chevron-up text-white'></i>
-                        ) : (
-                            <i className='fas fa-solid fa-chevron-down text-white'></i>
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
                         )}
                     </div>
 
@@ -832,9 +835,9 @@ const FigmaSidebar = () => {
                         <img src={inventoryMain} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Inventory</p>
                         {showInventory ? (
-                            <i className='fas fa-solid fa-chevron-up text-white'></i>
-                        ) : (
-                            <i className='fas fa-solid fa-chevron-down text-white'></i>
+                           <ExpandLessIcon sx={{ color: 'white' }} />
+                           ) : (
+                           <ExpandMoreIcon sx={{ color: 'white' }} />
                         )}
                     </div>
 
@@ -875,9 +878,9 @@ const FigmaSidebar = () => {
                         <img src={utility} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Utility</p>
                         {showUtility ? (
-                            <i className='fas fa-solid fa-chevron-up text-white'></i>
-                        ) : (
-                            <i className='fas fa-solid fa-chevron-down text-white'></i>
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
                         )}
                     </div>
                     
@@ -918,9 +921,9 @@ const FigmaSidebar = () => {
                         <img src={controls} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Controls</p>
                         {showControls ? (
-                            <i className='fas fa-solid fa-chevron-up text-white'></i>
+                            <ExpandLessIcon sx={{ color: 'white' }} />
                             ) : (
-                            <i className='fas fa-solid fa-chevron-down text-white'></i>
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
                         )}
                     </div>
 

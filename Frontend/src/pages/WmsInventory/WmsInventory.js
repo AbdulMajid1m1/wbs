@@ -390,7 +390,7 @@ const WmsInventory = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>WMS Inventory</h2>
+                <h2 className='text-center text-[#fff]'>WMS Inventory (Assign)</h2>
 
 
 

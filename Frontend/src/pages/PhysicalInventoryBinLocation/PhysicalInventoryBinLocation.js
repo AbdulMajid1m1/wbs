@@ -213,7 +213,8 @@ const PhysicalInventoryBinLocation = () => {
                   </span>
                 </button>
 
-                <h2 className='text-center text-[#fff]'>Physical Inventory By BinLocation</h2>
+                {/* <h2 className='text-center text-[#fff]'>Physical Inventory By BinLocation</h2> */}
+                <h2 className='text-center text-[#fff]'>Wms Inventory</h2>
 
                 <button onClick={() => navigate(-1)} className='hover:bg-[#edc498] font-medium rounded-sm w-[15%] p-2 py-1 flex justify-center items-center '>
                   <span>

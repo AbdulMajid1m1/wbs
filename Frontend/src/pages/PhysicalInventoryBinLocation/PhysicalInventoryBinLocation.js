@@ -26,14 +26,14 @@ const PhysicalInventoryBinLocation = () => {
   const [itemCodeFilterList, setItemCodeFilterList] = useState([]);
   const [selectionType, setSelectionType] = useState('Serial');
   const [dataList, setDataList] = useState([]);
-  const [filterByItemDataList, setFilterByItemDataList] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [filteredDataList, setFilteredDataList] = useState([]);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
+  const [filterSelection, setFilterSelection] = useState('binLocation');
+
   const [dataGridbinLocationsList, setDataGridbinLocationsList] = useState([]);
-  const [isBinFilteredEnabled, setIsBinFilteredEnabled] = useState(false);
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -53,7 +53,6 @@ const PhysicalInventoryBinLocation = () => {
         let data = response?.data;
         setDataList(data);
         setFilteredDataList(data);
-        setFilterByItemDataList(data);
         const dataGridbinLocationsList = Array.from(new Set(data?.map(item => item?.BINLOCATION))).filter(Boolean);
         setDataGridbinLocationsList(dataGridbinLocationsList);
       })
@@ -75,12 +74,9 @@ const PhysicalInventoryBinLocation = () => {
       let filteredData = dataList.filter(item => value.includes(item.BINLOCATION));
       console.log(filteredData);
       setFilteredDataList(filteredData);
-      setFilterByItemDataList(filteredData);
-      setIsBinFilteredEnabled(true);
       return;
     }
     setFilteredDataList(dataList);
-    setIsBinFilteredEnabled(false);
 
   };
 
@@ -165,8 +161,7 @@ const PhysicalInventoryBinLocation = () => {
   }, [selectedItemId]);
 
   const filterData = (itemId) => {
-    let newFilteredData = [...filterByItemDataList];
-
+    let newFilteredData = [...dataList];
     if (itemId) {
       newFilteredData = newFilteredData.filter(item => item?.ITEMID === itemId);
     }
@@ -181,6 +176,10 @@ const PhysicalInventoryBinLocation = () => {
 
 
   }, [filteredDataList]);
+  const handleRadioChange = (e) => {
+    setFilterSelection(e.target.value);
+   
+  };
 
   return (
     <>
@@ -234,57 +233,42 @@ const PhysicalInventoryBinLocation = () => {
             <div className='mb-6'>
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
-            {/* 
-            <div className='mb-6'>
-              <label className='text-[#00006A] text-center font-semibold'>FROM:</label>
 
-              <Autocomplete
-                id="by"
-                options={options}
-                getOptionLabel={(option) => option.BINLOCATION ?? ''}
-                onChange={handleBySelection}
 
-                onInputChange={(event, value) => {
-                  if (!value) {
-                    // perform operation when input is cleared
-                    console.log("Input cleared");
-
-                  }
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    InputProps={{
-                      ...params.InputProps,
-                      className: "text-white",
-                    }}
-                    InputLabelProps={{
-                      ...params.InputLabelProps,
-                      style: { color: "white" },
-                    }}
-
-                    className="bg-gray-50 border border-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                    placeholder="Binlocation"
-                    required
+            <div className="mb-6 mt-4">
+              <div className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
+                    flex justify-center items-center gap-3 h-12 w-full p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+              >
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="filterSelection"
+                    value="itemCode"
+                    checked={filterSelection === 'itemCode'}
+                    onChange={e => handleRadioChange(e)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
                   />
-                )}
-                classes={{
-                  endAdornment: "text-white",
-                }}
-                sx={{
-                  '& .MuiAutocomplete-endAdornment': {
-                    color: 'white',
-                  },
-                }}
-              />
+                  <span className="ml-2 text-[#00006A]">Filter by Item Id</span>
+                </label>
+                <label className="inline-flex items-center mt-1">
+                  <input
+                    type="radio"
+                    name="filterSelection"
+                    value="binLocation"
+                    checked={filterSelection === 'binLocation'}
+                    onChange={e => handleRadioChange(e)}
+                    className="form-radio h-4 w-4 text-[#00006A] border-gray-300 rounded-md"
+                  />
+                  <span className="ml-2 text-[#00006A]">Filter by Bin Locations</span>
+                </label>
 
-            </div> */}
-
-
-
-            {dataList?.length > 0 && (
+              </div>
+            </div>
+          
+          
+            {dataList?.length > 0 && filterSelection === "binLocation" && (
               <div className="mt-6">
-                {/* <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Bin Locations<span className='text-[#FF0404]'>*</span></label> */}
+                <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Bin Locations</label>
 
                 <div className='w-full'>
                   <Autocomplete
@@ -339,7 +323,7 @@ const PhysicalInventoryBinLocation = () => {
             )}
 
 
-            {dataList?.length > 0 && isBinFilteredEnabled && (
+            {dataList?.length > 0 && filterSelection === "itemCode" && (
               <div className="mb-6 mt-6">
                 <label htmlFor="itemIdFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
                 <Autocomplete

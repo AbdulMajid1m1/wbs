@@ -71,7 +71,8 @@ const WarehouseStockInventory = () => {
         console.log(item);
         // filter data for second grid using item.ITEMID and JOURNALMOVEMENTCLID
         const filteredData = secondGridData.filter((data) => {
-            return data.ITEMID === item.ITEMID && data.JOURNALID === item.JOURNALID && data.TRXUSERIDASSIGNED === item.TRXUSERIDASSIGNED
+            // return data.ITEMID === item.ITEMID && data.JOURNALID === item.JOURNALID && data.TRXUSERIDASSIGNED === item.TRXUSERIDASSIGNED
+            return data.ITEMID === item.ITEMID 
         })
         console.log(filteredData);
         setFilteredData(filteredData)

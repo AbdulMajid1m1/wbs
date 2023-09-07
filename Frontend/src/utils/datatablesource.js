@@ -1170,7 +1170,16 @@ export const wmsInventoryColumns = [
     width: 180,
 
   },
-   
+  
+  {
+    field: "TotalOnhandQty",
+    headerName: "TOTAL ONHAND QTY",
+    width: 180,
+
+  },
+  
+
+  
 ]
 
 
@@ -2435,18 +2444,18 @@ export const WarehouseWmsInventoryColumn = [
     width: 230,
 
   },
-  {
-    field: "ITEMGROUPID",
-    headerName: "ITEM GROUP ID",
-    width: 180,
+  // {
+  //   field: "ITEMGROUPID",
+  //   headerName: "ITEM GROUP ID",
+  //   width: 180,
 
-  },
-  {
-    field: "GROUPNAME",
-    headerName: "GROUP NAME",
-    width: 180,
+  // },
+  // {
+  //   field: "GROUPNAME",
+  //   headerName: "GROUP NAME",
+  //   width: 180,
 
-  },
+  // },
   {
     field: "INVENTORYBY",
     headerName: "INVENTORY BY",
@@ -2472,6 +2481,12 @@ export const WarehouseWmsInventoryColumn = [
 
   },
   {
+    field: "QTYONHAND",
+    headerName: "QTY ON HAND",
+    width: 180,
+
+  },
+  {
     field: "QTYSCANNED",
     headerName: "QTY SCANNED",
     width: 180,
@@ -2483,18 +2498,13 @@ export const WarehouseWmsInventoryColumn = [
     width: 180,
 
   },
-  {
-    field: "QTYONHAND",
-    headerName: "QTY ON HAND",
-    width: 180,
+  
+  // {
+  //   field: "JOURNALID",
+  //   headerName: "JOURNAL ID",
+  //   width: 180,
 
-  },
-  {
-    field: "JOURNALID",
-    headerName: "JOURNAL ID",
-    width: 180,
-
-  },
+  // },
 
 
 

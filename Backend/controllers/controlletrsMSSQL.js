@@ -3277,6 +3277,84 @@ const WBSDB = {
     }
   },
 
+
+
+  async getDistinctMapBarcodeDataByItemCode(req, res, next) {
+    try {
+      const ItemCode = req.headers['itemcode']; // Get ITEMID from headers
+      console.log(ItemCode);
+      let query = `
+        WITH CTE AS (
+          SELECT *, 
+                 ROW_NUMBER() OVER(PARTITION BY [BinLocation] ORDER BY (SELECT NULL)) AS rn
+          FROM dbo.tblMappedBarcodes
+          WHERE ItemCode  = @ItemCode
+        )
+        SELECT * 
+        FROM CTE 
+        WHERE rn = 1 
+      `;
+      let request = pool2.request();
+      request.input('ItemCode', sql.NVarChar(100), ItemCode);
+
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+      // Fetch QtyonHands from tbl_StockInventory or tbl_StockInventory_Location for each record
+      const recordsWithQtyonHands = await Promise.all(
+        data.recordsets[0].map(async (record) => {
+          try {
+            let stockQuery;
+            if (record.BinLocation) {
+              stockQuery = `
+                SELECT TOP 1 [TotalOnhandQty]
+                FROM [WBSSQL].[dbo].[tbl_StockInventory_Location]
+                WHERE [ITEMID] = @ItemID AND [ITEMNAME] = @ItemName AND [BINLOCATION] = @BinLocation;
+              `;
+            } else {
+              stockQuery = `
+                SELECT TOP 1 [TotalOnhandQty]
+                FROM [WBSSQL].[dbo].[tbl_StockInventory]
+                WHERE [ITEMID] = @ItemID AND [ITEMNAME] = @ItemName;
+              `;
+            }
+
+            const stockRequest = pool2.request();
+            stockRequest.input('ItemID', sql.VarChar(50), record.ItemCode);
+            stockRequest.input('ItemName', sql.VarChar(200), record.ItemDesc);
+            if (record.BinLocation) {
+              stockRequest.input('BinLocation', sql.VarChar(100), record.BinLocation);
+            }
+
+            const stockData = await stockRequest.query(stockQuery);
+
+            // Add QtyonHands to the record, set to null if not found
+            return {
+              ...record,
+              TotalOnhandQty: stockData?.recordset[0]?.TotalOnhandQty ?? null,
+            };
+          } catch (stockError) {
+            // Log any specific error related to the stock query
+            console.log(`Error in stock query for ItemCode ${record.ItemCode}:`, stockError.message);
+            // Return the original record without QtyonHands (null by default)
+            return {
+              ...record,
+              TotalOnhandQty: null,
+            };
+          }
+        })
+      );
+
+      return res.status(200).send(recordsWithQtyonHands);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
   async getOneMapBarcodeDataByItemCode(req, res, next) {
     try {
       const ItemCode = req.headers['itemcode']; // Get ITEMID from headers
@@ -3354,9 +3432,15 @@ const WBSDB = {
         return res.status(400).send({ message: "No bin locations provided." });
       }
 
+      // Step 1: Fetch data from tblMappedBarcodes
       let query = `
-        SELECT * FROM dbo.tblMappedBarcodes
-        WHERE BinLocation IN (${binLocations.map((_, index) => `@Param${index}`).join(',')})
+        WITH CTE AS (
+          SELECT *, 
+                 ROW_NUMBER() OVER(PARTITION BY ItemCode ORDER BY (SELECT NULL)) AS rn 
+          FROM dbo.tblMappedBarcodes
+          WHERE BinLocation IN (${binLocations.map((_, index) => `@Param${index}`).join(',')})
+        )
+        SELECT * FROM CTE WHERE rn = 1 ORDER BY ItemCode;
       `;
 
       let request = pool2.request();
@@ -3365,16 +3449,62 @@ const WBSDB = {
       });
 
       const data = await request.query(query);
-      if (data.recordsets[0].length === 0) {
+
+      // Step 2 and 3: Populate TotalOnhandQty in each record
+      const recordsWithTotalOnhandQty = await Promise.all(
+        data.recordsets[0].map(async (record) => {
+          try {
+            let stockQuery;
+            if (record.BinLocation) {
+              stockQuery = `
+                SELECT TOP 1 [TotalOnhandQty]
+                FROM [WBSSQL].[dbo].[tbl_StockInventory_Location]
+                WHERE [ITEMID] = @ItemID AND [ITEMNAME] = @ItemName AND [BINLOCATION] = @BinLocation;
+              `;
+            } else {
+              stockQuery = `
+                SELECT TOP 1 [TotalOnhandQty]
+                FROM [WBSSQL].[dbo].[tbl_StockInventory]
+                WHERE [ITEMID] = @ItemID AND [ITEMNAME] = @ItemName;
+              `;
+            }
+
+            const stockRequest = pool2.request();
+            stockRequest.input('ItemID', sql.VarChar(50), record.ItemCode);
+            stockRequest.input('ItemName', sql.VarChar(200), record.ItemDesc);
+            if (record.BinLocation) {
+              stockRequest.input('BinLocation', sql.VarChar(100), record.BinLocation);
+            }
+
+            const stockData = await stockRequest.query(stockQuery);
+
+            // Add TotalOnhandQty to the record, set to null if not found
+            return {
+              ...record,
+              TotalOnhandQty: stockData?.recordset[0]?.TotalOnhandQty ?? null,
+            };
+          } catch (stockError) {
+            // Log any specific error related to the stock query
+            console.log(`Error in stock query for ItemCode ${record.ItemCode}:`, stockError.message);
+            // Return the original record without TotalOnhandQty (null by default)
+            return {
+              ...record,
+              TotalOnhandQty: null,
+            };
+          }
+        })
+      );
+
+      if (recordsWithTotalOnhandQty.length === 0) {
         return res.status(404).send({ message: "No data found." });
       }
-      return res.status(200).send(data.recordsets[0]);
+
+      return res.status(200).send(recordsWithTotalOnhandQty);
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
-
 
 
   async getDistinctMappedBarcodeBinLocations(req, res, next) {
@@ -3560,6 +3690,48 @@ const WBSDB = {
 
       let query = `
             SELECT * FROM dbo.tblMappedBarcodes
+          `;
+      let request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+
+      return res.status(200).send(data.recordsets[0]);
+    }
+    catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  async getAlltblStockInventory(req, res, next) {
+    try {
+
+      let query = `
+            SELECT * FROM dbo.tbl_StockInventory
+          `;
+      let request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+
+      return res.status(200).send(data.recordsets[0]);
+    }
+    catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+  async getAlltbltblStockInventoryLocation(req, res, next) {
+    try {
+
+      let query = `
+            SELECT * FROM dbo.tbl_StockInventory_Location
           `;
       let request = pool2.request();
       const data = await request.query(query);
@@ -6322,6 +6494,14 @@ const WBSDB = {
     try {
       const returnSalesOrderArray = req.body;
       let currentDateTime = new Date();
+      if (Array.isArray(returnSalesOrderArray) === false) {
+        return res.status(400).send({ message: "Please provide an array of objects." });
+      }
+
+      if (returnSalesOrderArray.length === 0) {
+        return res.status(400).send({ message: "Please provide data to insert." });
+      }
+      console.log(returnSalesOrderArray);
 
       for (const returnSalesOrder of returnSalesOrderArray) {
 
@@ -6364,12 +6544,13 @@ const WBSDB = {
         }
       }
 
+
+
       return res.status(201).send({ message: 'Data inserted successfully.' });
     } catch (error) {
       return res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
 
   async generateBarcodeForRma(req, res, next) {
     try {
@@ -7864,7 +8045,9 @@ const WBSDB = {
       // Update QTYSCANNED by incrementing it by 1
       const query = `
         UPDATE [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
-        SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1
+        SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1,
+        QTYDIFFERENCE = QTYONHAND - (ISNULL(QTYSCANNED,0) + 1)
+
         OUTPUT INSERTED.*
         WHERE TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
         AND BINLOCATION = @BINLOCATION

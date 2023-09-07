@@ -27,7 +27,8 @@ import zonemaster from "../../images/zonemaster.png"
 import binmaster from "../../images/binmaster.png"
 import history from "../../images/history.png"
 import printinglabel from "../../images/printinglabel.png"
-import printing from "../../images/printing.png"
+import printingbarcode from "../../images/printing.png"
+import stockinventoryicon from "../../images/stockinventory.png"
 // Mobile icons
 import wmspicking from "../../images/wmspicking.png"
 import wmslogin from "../../images/wmslogin.png"
@@ -54,6 +55,12 @@ import rmaMain from "../../images/rmaMain.png"
 import inventoryMain from "../../images/inventoryMain.png"
 import utility from "../../images/utility.png"
 import controls from "../../images/controls.png"
+import masterfiles from "../../images/masterfiles.png"
+import warehousedeliver from "../../images/warehousedelivery.png"
+import printingpage from "../../images/printingpage.png"
+import warehouseinventoryicon from "../../images/warehouseinventoryicon.png"
+import warehousesettingIcon from "../../images/warehousesetting.png"
+import warehouseutilityIcon from "../../images/warehouseutilityIcon.png"
 import Cookies from 'js-cookie'
 
 import { useNavigate } from 'react-router-dom'
@@ -74,6 +81,12 @@ const FigmaSidebar = () => {
     const [showInventory, setShowInventory] = useState(false);
     const [showUtility, setShowUtility] = useState(false);
     const [showControls, setShowControls] = useState(false);
+    const [showMasterFiles, setShowMasterFiles] = useState(false);
+    const [warehouseDelivery, setWarehouseDelivery] = useState(false);
+    const [printing, setPrinting] = useState(false);
+    const [warehouseinventory, setWarehouseInventory] = useState(false);
+    const [warehouseSetting, setWarehouseSetting] = useState(false);
+    const [warehouseUtility, setWarehouseUtility] = useState(false);
     const [kpiDashboard, setKpiDashbaord] = useState(false);
     const [settingtitle, setSettingTitle] = useState(false);
 
@@ -159,31 +172,62 @@ const FigmaSidebar = () => {
         
             {showWarehouseDropdown && (
                 <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
-                    <div
-                       className={`main-images-container ${selectedItem === '/itemscl' ? 'selected-item' : ''}`}
-                       onClick={() => handleItemClick('/itemscl')}
+
+                    {/* MasterFiles Menu */}
+                    <div className='main-images-container' onClick={() => setShowMasterFiles(!showMasterFiles)}>
+                        <img src={masterfiles} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text sm:-mr-3 mr-0'>MasterFiles</p>
+                        {showMasterFiles ? (
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
+                        )}
+                    </div>
+
+                    {showMasterFiles && (
+                      <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+                          <div
+                            className={`main-images-container ${selectedItem === '/itemscl' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/itemscl')}
+                                
+                            // className='main-images-container' onClick={() => navigate('/itemscl')}
+                                onContextMenu={(event) =>
+                                    handleContextMenu(event, '/itemscl')
+                                }
+                            >
+                                <img src={items} className='main-inside-image' alt='' />
+                                <p className='sidebar-text'>Stock Master</p>
+                            </div>
+
+                            <div
+                                className={`main-images-container ${selectedItem === '/warehouse-stock-inventory' ? 'selected-item' : ''}`}
+                                onClick={() => handleItemClick('/warehouse-stock-inventory')}
+                                    
+                                // className='main-images-container' onClick={() => navigate('/itemscl')}
+                                    onContextMenu={(event) =>
+                                        handleContextMenu(event, '/warehouse-stock-inventory')
+                                    }
+                                >
+                                <img src={stockinventoryicon} className='main-inside-image bg-white rounded-full' alt='' />
+                                <p className='sidebar-text'>Stock Inventory</p>
+                            </div>
+
+                           <div
+                            className={`main-images-container ${selectedItem === '/mappeditems' ? 'selected-item' : ''}`}
+                             onClick={() => handleItemClick('/mappeditems')}       
+                        // className='main-images-container' onClick={() => navigate('/mappeditems')}
+                            onContextMenu={(event) =>
+                                handleContextMenu(event, '/mappeditems')
+                             }
+                        >
+                        <img src={packing} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Mapped Items</p>
+                      </div>
+
+                      </div>
+                    )}
+
                     
-                    // className='main-images-container' onClick={() => navigate('/itemscl')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/itemscl')
-                          }
-                    >
-                        <img src={items} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Stock Master</p>
-                    </div>
-
-                    <div 
-                        className={`main-images-container ${selectedItem === '/palletmaster' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/palletmaster')}
-                        // className='main-images-container' onClick={() => navigate('/palletmaster')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/palletmaster')
-                          }
-                    >
-                        <img src={palletmaster} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Pallet Master</p>
-                    </div>
-
                     <div
                       className={`main-images-container ${selectedItem === '/shipmentreceived' ? 'selected-item' : ''}`}
                       onClick={() => handleItemClick('/shipmentreceived')}
@@ -196,38 +240,157 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Shipment Received</p>
                     </div>
 
+                    
+                     {/* Warehouse Delivery Menu */}
+                     <div className='main-images-container' onClick={() => setWarehouseDelivery(!warehouseDelivery)}>
+                        <img src={warehousedeliver} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Delivery</p>
+                        {warehouseDelivery ? (
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
+                        )}
+                    </div>
+
+                    {warehouseDelivery && (
+                      <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+                         <div 
+                            className={`main-images-container ${selectedItem === '/pickingcl' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/pickingcl')}
+                        // className='main-images-container' onClick={() => navigate('/pickingcl')}
+                            onContextMenu={(event) =>
+                                handleContextMenu(event, '/pickingcl')
+                            }
+                        >
+                            <img src={internal} className='main-inside-image' alt='' />
+                            <p className='sidebar-text'>Picking</p>
+                        </div>
+
+                        <div 
+                            className={`main-images-container ${selectedItem === '/tbldispatching' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/tbldispatching')}
+                            // className='main-images-container' onClick={() => navigate('/tbldispatching')}
+                            onContextMenu={(event) =>
+                                handleContextMenu(event, '/tbldispatching')
+                            }
+                        >
+                            <img src={shipment} className='main-inside-image' alt='' />
+                            <p className='sidebar-text'>Dispatching</p>
+                        </div>
+                      </div>
+                    )}
+
+
                     <div 
-                        className={`main-images-container ${selectedItem === '/tbldispatching' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/tbldispatching')}
-                        // className='main-images-container' onClick={() => navigate('/tbldispatching')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/tbldispatching')
+                        className={`main-images-container ${selectedItem === '/bintobincl' ? 'selected-item' : ''}`}
+                        onClick={() => handleItemClick('/bintobincl')}    
+                    // className='main-images-container' onClick={() => navigate('/bintobincl')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/bintobincl')
                           }
                     >
-                        <img src={shipment} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Dispatching</p>
+                        <img src={dispatch} className='main-inside-image rounded-full bg-white' alt='' />
+                        {/* <p className='sidebar-text'>2  Bin To Bin CL</p> */}
+                        <p className='sidebar-text'>Transfers</p>
+                    </div>
+
+                    
+                    <div
+                     className={`main-images-container ${selectedItem === '/warehousereturn' ? 'selected-item' : ''}`}
+                     onClick={() => handleItemClick('/warehousereturn')}
+                    // className='main-images-container' onClick={() => navigate('/warehousereturn')}
+                        onContextMenu={(event) =>
+                            handleContextMenu(event, '/warehousereturn')
+                          }
+                    >
+                        <img src={inventory} className='main-inside-image' alt='' />
+                        <p className='sidebar-text'>Return Sales Order</p>
+                    </div>
+
+
+                    <div className='main-images-container' onClick={() => setPrinting(!printing)}>
+                        <img src={printingpage} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Printing</p>
+                        {printing ? (
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
+                        )}
+                    </div>
+
+                    {printing && (
+                       <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+                          <div
+                            className={`main-images-container ${selectedItem === '/printinglabels' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/printinglabels')}  
+                            // className='main-images-container' onClick={() => navigate('/printinglabels')}
+                                onContextMenu={(event) =>
+                                handleContextMenu(event, '/printinglabels')
+                            }
+                        >
+                        <img src={printinglabel} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Printing Pallet Labels</p>
                     </div>
 
                     <div
-                       className={`main-images-container ${selectedItem === '/tblLocation' ? 'selected-item' : ''}`}
-                       onClick={() => handleItemClick('/tblLocation')} 
-                    // className='main-images-container' onClick={() => navigate('/tblLocation')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/tblLocation')
+                        className={`main-images-container ${selectedItem === '/printingbarcode' ? 'selected-item' : ''}`}
+                        onClick={() => handleItemClick('/printingbarcode')}    
+                    // className='main-images-container' onClick={() => navigate('/printingbarcode')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/printingbarcode')
                           }
                     >
-                        <img src={transfer} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Warehouse Locations</p>
+                        <img src={printingbarcode} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Printing Item Barcode</p>
+                    </div>
+                    
+                    <div
+                        className={`main-images-container ${selectedItem === '/printing-item-label' ? 'selected-item' : ''}`}
+                        onClick={() => handleItemClick('/printing-item-label')}    
+                    // className='main-images-container' onClick={() => navigate('/printingbarcode')}
+                         onContextMenu={(event) =>
+                            handleContextMenu(event, '/printing-item-label')
+                          }
+                    >
+                        <img src={itemlabels} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text'>Printing Item Labels</p>
+                    </div>  
+                       </div>
+                    )}
+
+                    
+                    <div className='main-images-container' onClick={() => setWarehouseInventory(!warehouseinventory)}>
+                        <img src={warehouseinventoryicon} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Inventory</p>
+                        {warehouseinventory ? (
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
+                        )}
                     </div>
 
-                    <div
-                        className={`main-images-container ${selectedItem === '/warehousemovement' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/warehousemovement')}   
-                    // className='main-images-container' onClick={() => navigate('/warehousemovement')}
+                    {warehouseinventory && (
+                      <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+                        <div
+                            className={`main-images-container ${selectedItem === '/warehouseinventory' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/warehouseinventory')} 
+                            // className='main-images-container' onClick={() => navigate('/warehouseinventory')}
+                                onContextMenu={(event) =>
+                                    handleContextMenu(event, '/warehouseinventory')
+                                }
+                        >
+                            <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
+                            <p className='sidebar-text'>Wms Inventory</p>
+                        </div>
+
+                        <div
+                            className={`main-images-container ${selectedItem === '/warehousemovement' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/warehousemovement')}   
+                        // className='main-images-container' onClick={() => navigate('/warehousemovement')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/warehousemovement')
                           }
-                    >
+                        >
                         <img src={picklist} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Journal Movement</p>
                     </div>
@@ -255,84 +418,131 @@ const FigmaSidebar = () => {
                         <img src={cycle} className='main-inside-image rounded-full bg-white' alt='' />
                         <p className='sidebar-text'>Journal Counting</p>
                     </div>
+                      </div>
+                    )}
 
-                    <div
-                     className={`main-images-container ${selectedItem === '/warehousereturn' ? 'selected-item' : ''}`}
-                     onClick={() => handleItemClick('/warehousereturn')}
-                    // className='main-images-container' onClick={() => navigate('/warehousereturn')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/warehousereturn')
-                          }
-                    >
-                        <img src={inventory} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Return Sales Order</p>
-                    </div>
 
-                    <div
-                       className={`main-images-container ${selectedItem === '/warehouseinventory' ? 'selected-item' : ''}`}
-                       onClick={() => handleItemClick('/warehouseinventory')} 
-                    // className='main-images-container' onClick={() => navigate('/warehouseinventory')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/warehouseinventory')
-                          }
-                    >
-                        <img src={profit} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Wms Inventory</p>
+                    <div className='main-images-container' onClick={() => setWarehouseSetting(!warehouseSetting)}>
+                        <img src={warehousesettingIcon} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Settings</p>
+                        {warehouseSetting ? (
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
+                        )}
                     </div>
 
-                    <div
-                       className={`main-images-container ${selectedItem === '/printinglabels' ? 'selected-item' : ''}`}
-                       onClick={() => handleItemClick('/printinglabels')}  
-                    // className='main-images-container' onClick={() => navigate('/printinglabels')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/printinglabels')
-                          }
-                    >
-                        <img src={printinglabel} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Printing Pallet Labels</p>
+                    {warehouseSetting && (
+                       <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+                          <div
+                            className={`main-images-container ${selectedItem === '/tblLocation' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/tblLocation')} 
+                            // className='main-images-container' onClick={() => navigate('/tblLocation')}
+                                onContextMenu={(event) =>
+                                    handleContextMenu(event, '/tblLocation')
+                                }
+                            >
+                                <img src={transfer} className='main-inside-image' alt='' />
+                                <p className='sidebar-text'>Warehouse Locations</p>
+                            </div>
+
+                            <div
+                                className={`main-images-container ${selectedItem === '/zonereceiving' ? 'selected-item' : ''}`}
+                                onClick={() => handleItemClick('/zonereceiving')}       
+                            // className='main-images-container' onClick={() => navigate('/zonemaster')}
+                                onContextMenu={(event) =>
+                                    handleContextMenu(event, '/zonereceiving')
+                                }
+                            >
+                                <img src={zonereceving} className='main-inside-image bg-white rounded-full' alt='' />
+                                <p className='sidebar-text'>Zone Receiving</p>
+                            </div>
+
+
+                            <div
+                                className={`main-images-container ${selectedItem === '/zonedispatching' ? 'selected-item' : ''}`}
+                                onClick={() => handleItemClick('/zonedispatching')}       
+                            // className='main-images-container' onClick={() => navigate('/zonemaster')}
+                                onContextMenu={(event) =>
+                                    handleContextMenu(event, '/zonedispatching')
+                                }
+                            >
+                                <img src={dispatching} className='main-inside-image bg-white rounded-full' alt='' />
+                                <p className='sidebar-text'>Zone Dispatching</p>
+                            </div>
+
+                            <div 
+                                className={`main-images-container ${selectedItem === '/palletmaster' ? 'selected-item' : ''}`}
+                                onClick={() => handleItemClick('/palletmaster')}
+                                // className='main-images-container' onClick={() => navigate('/palletmaster')}
+                                onContextMenu={(event) =>
+                                    handleContextMenu(event, '/palletmaster')
+                                }
+                            >
+                                <img src={palletmaster} className='main-inside-image rounded-full bg-white' alt='' />
+                                <p className='sidebar-text'>Pallet Master</p>
+                            </div>
+
+                            <div
+                                className={`main-images-container ${selectedItem === '/truckdata' ? 'selected-item' : ''}`}
+                                onClick={() => handleItemClick('/truckdata')}      
+                            // className='main-images-container' onClick={() => navigate('/truckdata')}
+                                onContextMenu={(event) =>
+                                    handleContextMenu(event, '/truckdata')
+                                }
+                            >
+                                <img src={truckdata} className='main-inside-image bg-white rounded-full' alt='' />
+                                <p className='sidebar-text'>Truck Master Data</p>
+                            </div>
+                       </div>
+                    )}
+
+                    
+                    <div className='main-images-container' onClick={() => setWarehouseUtility(!warehouseUtility)}>
+                        <img src={warehouseutilityIcon} className='main-inside-image rounded-full bg-white' alt='' />
+                        <p className='sidebar-text sm:-mr-3 mr-0'>Utility</p>
+                        {warehouseUtility ? (
+                            <ExpandLessIcon sx={{ color: 'white' }} />
+                            ) : (
+                            <ExpandMoreIcon sx={{ color: 'white' }} />
+                        )}
                     </div>
 
-                    <div
-                        className={`main-images-container ${selectedItem === '/printingbarcode' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/printingbarcode')}    
-                    // className='main-images-container' onClick={() => navigate('/printingbarcode')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/printingbarcode')
-                          }
-                    >
-                        <img src={printing} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Printing Item Barcode</p>
-                    </div>
-                    <div
-                        className={`main-images-container ${selectedItem === '/printing-item-label' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/printing-item-label')}    
-                    // className='main-images-container' onClick={() => navigate('/printingbarcode')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/printing-item-label')
-                          }
-                    >
-                        <img src={itemlabels} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>Printing Item Labels</p>
-                    </div>
+                    {warehouseUtility && (
+                      <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+                        <div
+                            className={`main-images-container ${selectedItem === '/reallocation' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/reallocation')}          
+                        // className='main-images-container' onClick={() => navigate('/reallocation')}
+                            onContextMenu={(event) =>
+                                handleContextMenu(event, '/reallocation')
+                            }
+                        >
+                            <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
+                            <p className='sidebar-text'>1 Reallocation Picked</p>
+                        </div>
+
+                        <div
+                            className={`main-images-container ${selectedItem === '/transhistory' ? 'selected-item' : ''}`}
+                            onClick={() => handleItemClick('/transhistory')}   
+                        // className='main-images-container' onClick={() => navigate('/transhistory')}
+                            onContextMenu={(event) =>
+                                handleContextMenu(event, '/transhistory')
+                            }
+                        >
+                            <img src={history} className='main-inside-image bg-white rounded-full' alt='' />
+                            <p className='sidebar-text'>Transaction History</p>
+                        </div>
+                      </div>
+                    )}
+
 
                     {/* <div className='main-images-container'>
                         <img src={items} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>PutAway</p>
-                    </div> */}
+                    </div> */}      
 
-                    <div 
-                       className={`main-images-container ${selectedItem === '/pickingcl' ? 'selected-item' : ''}`}
-                       onClick={() => handleItemClick('/pickingcl')}
-                    // className='main-images-container' onClick={() => navigate('/pickingcl')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/pickingcl')
-                          }
-                    >
-                        <img src={internal} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Picking</p>
-                    </div>
-
-                    <div
+                    {/* <div
                         className={`main-images-container ${selectedItem === '/shipmentpalletizing' ? 'selected-item' : ''}`}
                         onClick={() => handleItemClick('/shipmentpalletizing')}     
                     // className='main-images-container' onClick={() => navigate('/shipmentpalletizing')}
@@ -342,50 +552,9 @@ const FigmaSidebar = () => {
                     >
                         <img src={picklist} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Pallets</p>
-                    </div>
-
-                    <div
-                         className={`main-images-container ${selectedItem === '/mappeditems' ? 'selected-item' : ''}`}
-                         onClick={() => handleItemClick('/mappeditems')}       
-                    // className='main-images-container' onClick={() => navigate('/mappeditems')}
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, '/mappeditems')
-                          }
-                    >
-                        <img src={packing} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Mapped Items</p>
-                    </div>
-
-                    <div
-                        className={`main-images-container ${selectedItem === '/reallocation' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/reallocation')}          
-                    // className='main-images-container' onClick={() => navigate('/reallocation')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/reallocation')
-                          }
-                    >
-                        <img src={stocking} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>1 Reallocation Picked</p>
-                    </div>
-
-                    <div 
-                        className={`main-images-container ${selectedItem === '/bintobincl' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/bintobincl')}    
-                    // className='main-images-container' onClick={() => navigate('/bintobincl')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/bintobincl')
-                          }
-                    >
-                        <img src={dispatch} className='main-inside-image rounded-full bg-white' alt='' />
-                        <p className='sidebar-text'>2  Bin To Bin CL</p>
-                    </div>
-
-                    {/* <div className='main-images-container' onClick={() => navigate('/Picklistassign')}>
-                        <img src={internal} className='main-inside-image' alt='' />
-                        <p className='sidebar-text'>Picklist Assigned</p>
                     </div> */}
 
-                    <div
+                    {/* <div
                         className={`main-images-container ${selectedItem === '/pickingsales' ? 'selected-item' : ''}`}
                         onClick={() => handleItemClick('/pickingsales')}     
                     // className='main-images-container' onClick={() => navigate('/pickingsales')}
@@ -395,19 +564,8 @@ const FigmaSidebar = () => {
                     >
                         <img src={packing} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Pick List Assigned</p>
-                    </div>
-
-                    <div
-                        className={`main-images-container ${selectedItem === '/truckdata' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/truckdata')}      
-                    // className='main-images-container' onClick={() => navigate('/truckdata')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/truckdata')
-                          }
-                    >
-                        <img src={truckdata} className='main-inside-image bg-white rounded-full' alt='' />
-                        <p className='sidebar-text'>Truck Master Data</p>
-                    </div>
+                    </div> */}
+                   
 
                     {/* <div
                         className={`main-images-container ${selectedItem === '/zonemaster' ? 'selected-item' : ''}`}
@@ -421,34 +579,7 @@ const FigmaSidebar = () => {
                         <p className='sidebar-text'>Zone Master</p>
                     </div> */}
 
-
-                    <div
-                        className={`main-images-container ${selectedItem === '/zonereceiving' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/zonereceiving')}       
-                    // className='main-images-container' onClick={() => navigate('/zonemaster')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/zonereceiving')
-                          }
-                    >
-                        <img src={zonereceving} className='main-inside-image bg-white rounded-full' alt='' />
-                        <p className='sidebar-text'>Zone Receiving</p>
-                    </div>
-
-
-                    <div
-                        className={`main-images-container ${selectedItem === '/zonedispatching' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/zonedispatching')}       
-                    // className='main-images-container' onClick={() => navigate('/zonemaster')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/zonedispatching')
-                          }
-                    >
-                        <img src={dispatching} className='main-inside-image bg-white rounded-full' alt='' />
-                        <p className='sidebar-text'>Zone Dispatching</p>
-                    </div>
-
-
-                    <div 
+                    {/* <div 
                         className={`main-images-container ${selectedItem === '/binmaster' ? 'selected-item' : ''}`}
                         onClick={() => handleItemClick('/binmaster')}       
                     // className='main-images-container' onClick={() => navigate('/binmaster')}
@@ -458,24 +589,12 @@ const FigmaSidebar = () => {
                     >
                         <img src={binmaster} className='main-inside-image bg-white rounded-full' alt='' />
                         <p className='sidebar-text'>Bin Master</p>
-                    </div>
+                    </div> */}
 
-                    <div
-                        className={`main-images-container ${selectedItem === '/transhistory' ? 'selected-item' : ''}`}
-                        onClick={() => handleItemClick('/transhistory')}   
-                    // className='main-images-container' onClick={() => navigate('/transhistory')}
-                         onContextMenu={(event) =>
-                            handleContextMenu(event, '/transhistory')
-                          }
-                    >
-                        <img src={history} className='main-inside-image bg-white rounded-full' alt='' />
-                        <p className='sidebar-text'>Transaction History</p>
-                    </div>
-
-                    <div className='main-images-container'>
+                    {/* <div className='main-images-container'>
                         <img src={items} className='main-inside-image' alt='' />
                         <p className='sidebar-text'>Physical Count</p>
-                    </div>
+                    </div> */}
 
                 </div>
             )}

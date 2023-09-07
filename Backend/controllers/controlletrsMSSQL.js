@@ -3296,12 +3296,12 @@ const WBSDB = {
       `;
       let request = pool2.request();
       request.input('ItemCode', sql.NVarChar(100), ItemCode);
-  
+
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
         return res.status(404).send({ message: "No data found." });
       }
-  
+
       // Fetch QtyonHands from tbl_StockInventory or tbl_StockInventory_Location for each record
       const recordsWithQtyonHands = await Promise.all(
         data.recordsets[0].map(async (record) => {
@@ -3320,16 +3320,16 @@ const WBSDB = {
                 WHERE [ITEMID] = @ItemID AND [ITEMNAME] = @ItemName;
               `;
             }
-  
+
             const stockRequest = pool2.request();
             stockRequest.input('ItemID', sql.VarChar(50), record.ItemCode);
             stockRequest.input('ItemName', sql.VarChar(200), record.ItemDesc);
             if (record.BinLocation) {
               stockRequest.input('BinLocation', sql.VarChar(100), record.BinLocation);
             }
-  
+
             const stockData = await stockRequest.query(stockQuery);
-  
+
             // Add QtyonHands to the record, set to null if not found
             return {
               ...record,
@@ -3346,14 +3346,14 @@ const WBSDB = {
           }
         })
       );
-  
+
       return res.status(200).send(recordsWithQtyonHands);
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
-  
+
 
   async getOneMapBarcodeDataByItemCode(req, res, next) {
     try {
@@ -3431,7 +3431,7 @@ const WBSDB = {
       if (!binLocations || binLocations.length === 0) {
         return res.status(400).send({ message: "No bin locations provided." });
       }
-  
+
       // Step 1: Fetch data from tblMappedBarcodes
       let query = `
         WITH CTE AS (
@@ -3442,14 +3442,14 @@ const WBSDB = {
         )
         SELECT * FROM CTE WHERE rn = 1 ORDER BY ItemCode;
       `;
-  
+
       let request = pool2.request();
       binLocations.forEach((binLocation, index) => {
         request.input(`Param${index}`, sql.VarChar(200), binLocation);
       });
-  
+
       const data = await request.query(query);
-  
+
       // Step 2 and 3: Populate TotalOnhandQty in each record
       const recordsWithTotalOnhandQty = await Promise.all(
         data.recordsets[0].map(async (record) => {
@@ -3468,16 +3468,16 @@ const WBSDB = {
                 WHERE [ITEMID] = @ItemID AND [ITEMNAME] = @ItemName;
               `;
             }
-  
+
             const stockRequest = pool2.request();
             stockRequest.input('ItemID', sql.VarChar(50), record.ItemCode);
             stockRequest.input('ItemName', sql.VarChar(200), record.ItemDesc);
             if (record.BinLocation) {
               stockRequest.input('BinLocation', sql.VarChar(100), record.BinLocation);
             }
-  
+
             const stockData = await stockRequest.query(stockQuery);
-  
+
             // Add TotalOnhandQty to the record, set to null if not found
             return {
               ...record,
@@ -3494,18 +3494,18 @@ const WBSDB = {
           }
         })
       );
-  
+
       if (recordsWithTotalOnhandQty.length === 0) {
         return res.status(404).send({ message: "No data found." });
       }
-  
+
       return res.status(200).send(recordsWithTotalOnhandQty);
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
   },
-  
+
 
   async getDistinctMappedBarcodeBinLocations(req, res, next) {
     try {
@@ -7993,41 +7993,62 @@ const WBSDB = {
 
   async incrementQTYSCANNEDInJournalCountingOnlyCLByBinLocation(req, res) {
     try {
-      const { TRXUSERIDASSIGNED, BINLOCATION, TRXDATETIME } = req.body;
+        const { TRXUSERIDASSIGNED, BINLOCATION, TRXDATETIME } = req.body;
 
-      // Check if required fields are provided
-      if (!TRXUSERIDASSIGNED || !BINLOCATION || !TRXDATETIME) {
-        return res.status(400).json({ message: 'Missing required fields.' });
-      }
+        // Check if required fields are provided
+        if (!TRXUSERIDASSIGNED || !BINLOCATION || !TRXDATETIME) {
+            return res.status(400).json({ message: 'Missing required fields.' });
+        }
 
-      // Update QTYSCANNED by incrementing it by 1
-      const query = `
-        UPDATE [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
-        SET QTYSCANNED = ISNULL(QTYSCANNED,0) + 1
-        OUTPUT INSERTED.*
-        WHERE TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
-        AND BINLOCATION = @BINLOCATION
-        AND TRXDATETIME = @TRXDATETIME
-      `;
-      const request = pool2.request();
-      request.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
-      request.input('BINLOCATION', sql.NVarChar, BINLOCATION);
-      request.input('TRXDATETIME', sql.DateTime, TRXDATETIME);
-      const result = await request.query(query);
+        // Fetch the existing data
+        const selectQuery = `
+            SELECT QTYONHAND, QTYSCANNED
+            FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+            WHERE TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
+            AND BINLOCATION = @BINLOCATION
+            AND TRXDATETIME = @TRXDATETIME
+        `;
+        const selectRequest = pool2.request();
+        selectRequest.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        selectRequest.input('BINLOCATION', sql.NVarChar, BINLOCATION);
+        selectRequest.input('TRXDATETIME', sql.DateTime, TRXDATETIME);
+        const selectResult = await selectRequest.query(selectQuery);
 
-      // Check if any rows were affected
-      if (result.rowsAffected[0] === 0) {
-        return res.status(404).json({ message: 'No matching rows found.' });
-      }
+        if (selectResult.recordset.length === 0) {
+            return res.status(404).json({ message: 'No matching rows found.' });
+        }
 
-      // Return the updated data
-      const updatedData = result.recordset[0];
-      return res.status(200).json({ message: 'QTYSCANNED updated successfully.', data: updatedData });
+        const existingData = selectResult.recordset[0];
+
+        // Check if QTYONHAND and QTYSCANNED are equal
+        if (existingData.QTYONHAND === existingData.QTYSCANNED) {
+            return res.status(400).json({ message: 'QTYONHAND and QTYSCANNED are already equal.' });
+        }
+
+        // Update QTYSCANNED by incrementing it by 1
+        const updateQuery = `
+            UPDATE [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCL]
+            SET QTYSCANNED = ISNULL(QTYSCANNED, 0) + 1,
+            QTYDIFFERENCE = QTYONHAND - (ISNULL(QTYSCANNED, 0) + 1)
+            OUTPUT INSERTED.*
+            WHERE TRXUSERIDASSIGNED = @TRXUSERIDASSIGNED
+            AND BINLOCATION = @BINLOCATION
+            AND TRXDATETIME = @TRXDATETIME
+        `;
+        const updateRequest = pool2.request();
+        updateRequest.input('TRXUSERIDASSIGNED', sql.NVarChar, TRXUSERIDASSIGNED);
+        updateRequest.input('BINLOCATION', sql.NVarChar, BINLOCATION);
+        updateRequest.input('TRXDATETIME', sql.DateTime, TRXDATETIME);
+        const updateResult = await updateRequest.query(updateQuery);
+
+        // Return the updated data
+        const updatedData = updateResult.recordset[0];
+        return res.status(200).json({ message: 'QTYSCANNED updated successfully.', data: updatedData });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'An error occurred while updating QTYSCANNED.' });
+        console.error(error);
+        return res.status(500).json({ message: 'An error occurred while updating QTYSCANNED.' });
     }
-  },
+},
 
 
 

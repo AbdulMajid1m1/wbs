@@ -21,17 +21,19 @@ const PhysicalInventoryBinLocation = () => {
 
   const storedUser = localStorage.getItem('currentUser');
   const initialUser = storedUser ? JSON.parse(storedUser) : {};
-
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const [currentUser, setCurrentUser] = useState(initialUser);
-
+  const [itemCodeFilterList, setItemCodeFilterList] = useState([]);
   const [selectionType, setSelectionType] = useState('Serial');
   const [dataList, setDataList] = useState([]);
+  const [filterByItemDataList, setFilterByItemDataList] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [filteredDataList, setFilteredDataList] = useState([]);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   const [dataGridbinLocationsList, setDataGridbinLocationsList] = useState([]);
+  const [isBinFilteredEnabled, setIsBinFilteredEnabled] = useState(false);
   // to reset snakebar messages
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -51,6 +53,7 @@ const PhysicalInventoryBinLocation = () => {
         let data = response?.data;
         setDataList(data);
         setFilteredDataList(data);
+        setFilterByItemDataList(data);
         const dataGridbinLocationsList = Array.from(new Set(data?.map(item => item?.BINLOCATION))).filter(Boolean);
         setDataGridbinLocationsList(dataGridbinLocationsList);
       })
@@ -72,9 +75,12 @@ const PhysicalInventoryBinLocation = () => {
       let filteredData = dataList.filter(item => value.includes(item.BINLOCATION));
       console.log(filteredData);
       setFilteredDataList(filteredData);
+      setFilterByItemDataList(filteredData);
+      setIsBinFilteredEnabled(true);
       return;
     }
     setFilteredDataList(dataList);
+    setIsBinFilteredEnabled(false);
 
   };
 
@@ -126,7 +132,7 @@ const PhysicalInventoryBinLocation = () => {
           if (item.BINLOCATION === constructedData.BINLOCATION) {
             const qtyScanned = Number(item.QTYSCANNED);
             const qtyOnHand = Number(item.QTYONHAND);
-         
+
             const newQtyScanned = qtyScanned + 1;
             return {
               ...item,
@@ -149,7 +155,32 @@ const PhysicalInventoryBinLocation = () => {
     }
   };
 
+  const handleItemIdFilter = (event, value) => {
+    setSelectedItemId(value);
+  };
+  useEffect(() => {
 
+    filterData(selectedItemId);
+
+  }, [selectedItemId]);
+
+  const filterData = (itemId) => {
+    let newFilteredData = [...filterByItemDataList];
+
+    if (itemId) {
+      newFilteredData = newFilteredData.filter(item => item?.ITEMID === itemId);
+    }
+    setFilteredDataList(newFilteredData);
+  };
+
+  useEffect(() => {
+    console.log(filteredDataList);
+    const itemIdOptions = Array.from(new Set(filteredDataList?.map(item => item?.ITEMID))).filter(Boolean);
+    console.log(itemIdOptions);
+    setItemCodeFilterList(itemIdOptions);
+
+
+  }, [filteredDataList]);
 
   return (
     <>
@@ -249,6 +280,8 @@ const PhysicalInventoryBinLocation = () => {
 
             </div> */}
 
+
+
             {dataList?.length > 0 && (
               <div className="mt-6">
                 {/* <label htmlFor='enterscan' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Bin Locations<span className='text-[#FF0404]'>*</span></label> */}
@@ -303,6 +336,53 @@ const PhysicalInventoryBinLocation = () => {
 
                 </div>
               </div >
+            )}
+
+
+            {dataList?.length > 0 && isBinFilteredEnabled && (
+              <div className="mb-6 mt-6">
+                <label htmlFor="itemIdFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
+                <Autocomplete
+                  id="itemIdFilter"
+                  ref={autocompleteRef}
+                  key={`itemId ${autocompleteKey}`}
+                  options={itemCodeFilterList}
+                  getOptionLabel={(option) => option || ""}
+                  onChange={handleItemIdFilter}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Select Item ID to filter"
+
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
+              </div>
             )}
 
             <div className='mb-6'>

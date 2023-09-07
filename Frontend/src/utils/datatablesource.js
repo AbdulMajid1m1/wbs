@@ -2898,3 +2898,28 @@ export const ZoneDispacthingColumn = [
 
 
 ]
+
+
+
+
+
+export const WarehouseStockInventoryColumn = [
+  {
+    field: "ITEMID",
+    headerName: "ITEMID",
+    width: 180,
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEMNAME",
+    width: 320,
+  },
+  {
+    field: "QTY",
+    headerName: "QTY",
+    width: 180,
+  },
+
+
+
+]

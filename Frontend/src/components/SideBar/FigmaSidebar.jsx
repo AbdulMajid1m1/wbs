@@ -171,7 +171,7 @@ const FigmaSidebar = () => {
 
         
             {showWarehouseDropdown && (
-                <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
 
                     {/* MasterFiles Menu */}
                     <div className='main-images-container' onClick={() => setShowMasterFiles(!showMasterFiles)}>
@@ -185,7 +185,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showMasterFiles && (
-                      <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                      <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                           <div
                             className={`main-images-container ${selectedItem === '/itemscl' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/itemscl')}
@@ -253,7 +253,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {warehouseDelivery && (
-                      <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                      <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                          <div 
                             className={`main-images-container ${selectedItem === '/pickingcl' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/pickingcl')}
@@ -319,7 +319,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {printing && (
-                       <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                       <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                           <div
                             className={`main-images-container ${selectedItem === '/printinglabels' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/printinglabels')}  
@@ -370,7 +370,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {warehouseinventory && (
-                      <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                      <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                         <div
                             className={`main-images-container ${selectedItem === '/warehouseinventory' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/warehouseinventory')} 
@@ -433,7 +433,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {warehouseSetting && (
-                       <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                       <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                           <div
                             className={`main-images-container ${selectedItem === '/tblLocation' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/tblLocation')} 
@@ -509,7 +509,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {warehouseUtility && (
-                      <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                      <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                         <div
                             className={`main-images-container ${selectedItem === '/reallocation' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/reallocation')}          
@@ -609,7 +609,7 @@ const FigmaSidebar = () => {
             </div>
 
             {showMasterData && (
-                <div className='ml-0 md:ml-3 lg:ml-3 xl:ml-3 2xl:ml-3 3xl:ml-3'>
+                <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
 
                     <div
                         className={`main-images-container ${selectedItem === '/items' ? 'selected-item' : ''}`}
@@ -781,7 +781,7 @@ const FigmaSidebar = () => {
             </div>
 
             {wmsMobileApp && (
-                <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
 
                     <div className='main-images-container' onClick={() => navigate('/wmsmapping')}
                         onContextMenu={(event) =>
@@ -805,7 +805,7 @@ const FigmaSidebar = () => {
 
 
                     {showShipment && (
-                        <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                        <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                           <div className='main-images-container' onClick={() => {
                             // remove item from session storage
                             sessionStorage.removeItem('receiptsData');
@@ -853,7 +853,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showdelivery && (
-                     <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                     <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                          <div className='main-images-container' onClick={() => navigate('/pickinglistfrom')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/pickinglistfrom')
@@ -886,7 +886,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showbintobin && (
-                      <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                      <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                           <div className='main-images-container' onClick={() => navigate('/transferpage1')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/transferpage1')
@@ -928,7 +928,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showRma && (
-                     <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                     <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                         <div className='main-images-container' onClick={() => navigate('/rma')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/rma')
@@ -961,7 +961,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showInventory && (
-                    <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                    <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                        <div className='main-images-container' onClick={() => navigate('/wmsphysicalbinlocation')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/wmsphysicalbinlocation')
@@ -1004,7 +1004,7 @@ const FigmaSidebar = () => {
                     </div>
                     
                     {showUtility && (
-                      <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                      <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                         <div className='main-images-container' onClick={() => navigate('/itemallocation')}
                         onContextMenu={(event) =>
                             handleContextMenu(event, '/itemallocation')
@@ -1047,7 +1047,7 @@ const FigmaSidebar = () => {
                     </div>
 
                     {showControls && (
-                      <div className='ml-0 md:ml-3 lg:ml-6 xl:ml-6 2xl:ml-6 3xl:ml-6'>
+                      <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
                         <div className='main-images-container' onClick={() => navigate('/wmsinventory')}
                          onContextMenu={(event) =>
                             handleContextMenu(event, '/wmsinventory')

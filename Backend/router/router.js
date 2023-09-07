@@ -644,3 +644,9 @@ router.delete("/deleteDzoneData", checkAuthentication, WBSDB.deleteDzoneData);
 
 router.put("/updateRemainingQtyInTblShipmentCounter", checkAuthentication, WBSDB.updateRemainingQtyInTblShipmentCounter);
 
+// --------- tbl_StockInventory APIs end ---------
+router.get("/getAlltblStockInventory", checkAuthentication, WBSDB.getAlltblStockInventory);
+
+
+// --------- getAlltbltblStockInventoryLocation  APIs start ---------
+router.get("/getAlltbltblStockInventoryLocation", checkAuthentication, WBSDB.getAlltbltblStockInventoryLocation);

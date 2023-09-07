@@ -3706,48 +3706,7 @@ const WBSDB = {
       res.status(500).send({ message: error.message });
     }
   },
-  async getAlltblStockInventory(req, res, next) {
-    try {
 
-      let query = `
-            SELECT * FROM dbo.tbl_StockInventory
-          `;
-      let request = pool2.request();
-      const data = await request.query(query);
-
-      if (data.recordsets[0].length === 0) {
-        return res.status(404).send({ message: "No data found." });
-      }
-
-
-      return res.status(200).send(data.recordsets[0]);
-    }
-    catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
-    }
-  },
-  async getAlltbltblStockInventoryLocation(req, res, next) {
-    try {
-
-      let query = `
-            SELECT * FROM dbo.tbl_StockInventory_Location
-          `;
-      let request = pool2.request();
-      const data = await request.query(query);
-
-      if (data.recordsets[0].length === 0) {
-        return res.status(404).send({ message: "No data found." });
-      }
-
-
-      return res.status(200).send(data.recordsets[0]);
-    }
-    catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
-    }
-  },
   async getAllTblMappedBarcodesDeleted(req, res, next) {
     try {
 
@@ -9352,6 +9311,54 @@ const WBSDB = {
     }
   },
 
+  // tbl_StockInventory controller start
+  async getAlltblStockInventory(req, res, next) {
+    try {
+
+      let query = `
+            SELECT * FROM dbo.tbl_StockInventory
+          `;
+      let request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+
+      return res.status(200).send(data.recordsets[0]);
+    }
+    catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  // tbl_StockInventory_Location controller start
+  async getAlltbltblStockInventoryLocation(req, res, next) {
+    try {
+
+      let query = `
+            SELECT * FROM dbo.tbl_StockInventory_Location
+          `;
+      let request = pool2.request();
+      const data = await request.query(query);
+
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "No data found." });
+      }
+
+
+      return res.status(200).send(data.recordsets[0]);
+    }
+    catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+
+  
 
 }
 

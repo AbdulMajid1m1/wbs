@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { TblAllLocationColumn, WarehouseStockInventoryColumn } from '../../utils/datatablesource'
+import { WarehouseStockInventoryColumn, WarehouseStockInventoryLocationColumn, WarehouseWmsInventoryColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
+import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 
 
 const WarehouseStockInventory = () => {
-    const [alldata, setAllData] = useState([]);
+    const [data, setData] = useState([]);
     const [secondGridData, setSecondGridData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -16,34 +17,36 @@ const WarehouseStockInventory = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-
-    };
-
+    
+      };
 
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
 
-                const response = await userRequest.get("/getAlltblStockInventory")
+                userRequest.get("/getAlltblStockInventory")
+                    .then(response => {
+                        console.log(response?.data);
+                        setData(response?.data ?? [])
+                        setIsLoading(false)
 
-                console.log(response?.data);
-
-                setAllData(response?.data ?? [])
-                setIsLoading(false)
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        setIsLoading(false)
+                        setError(error?.response?.data?.message ?? "Something went wrong")
+                    });
 
             }
             catch (error) {
                 console.log(error);
-                setIsLoading(false)
-                setError(error?.response?.data?.message ?? "Something went wrong")
             }
         };
         getAllAssetsList();
-
-        const getMappedBarcodeDeleted = async () => {
+        const getAllWmsJournalCountingCLDets = async () => {
             try {
 
-                userRequest.get("/getAllTblLocationsCL")
+                userRequest.get("/getAlltbltblStockInventoryLocation")
                     .then(response => {
                         console.log(response?.data);
 
@@ -52,9 +55,8 @@ const WarehouseStockInventory = () => {
 
                     })
                     .catch(error => {
-                        console.error(error);
+                        console.error(error); 
                         setError(error?.response?.data?.message ?? "Something went wrong")
-
                     });
 
             }
@@ -62,63 +64,73 @@ const WarehouseStockInventory = () => {
                 console.log(error);
             }
         };
-        getMappedBarcodeDeleted();
-
-
+        getAllWmsJournalCountingCLDets();
     }, []);
 
     const handleRowClickInParent = (item) => {
         console.log(item);
         // filter data for second grid using item.ITEMID and JOURNALMOVEMENTCLID
         const filteredData = secondGridData.filter((data) => {
-            return data?.Remarks === item?.ITEMID
+            return data.ITEMID === item.ITEMID && data.JOURNALID === item.JOURNALID && data.TRXUSERIDASSIGNED === item.TRXUSERIDASSIGNED
         })
         console.log(filteredData);
         setFilteredData(filteredData)
     }
 
     return (
-
-
-
         <div>
 
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable
-                data={alldata}
-                title="STOCK INVENTORY ( Warehouse Operation )"
-                columnsName={WarehouseStockInventoryColumn}
-                backButton={true}
-                checkboxSelection={'disabled'}
-                uniqueId=""
-                handleRowClickInParent={handleRowClickInParent}
+            <UserDataTable data={data} title="STOCK INVENTORY ( Warehouse Operation )" 
+                columnsName={WarehouseStockInventoryColumn} backButton={true}
                 actionColumnVisibility={false}
                 buttonVisibility={false}
+                uniqueId={'wmsInventoryClId'}
+                checkboxSelection={'disabled'}
+                handleRowClickInParent={handleRowClickInParent}
                 loading={isLoading}
                 setIsLoading={setIsLoading}
-
-
+             
             />
+
             <div
                 style={{ height: '40px' }}
             ></div>
 
-            <UserDataTable data={filteredData} title="STOCK INVENTORY LOCATIONS ( Warehouse Operation )" columnsName={TblAllLocationColumn  } backButton={true}
+            <UserDataTable data={filteredData} title="STOCK INVENTORY LOCATIONS ( Warehouse Operation )" 
+                columnsName={WarehouseStockInventoryLocationColumn} backButton={true}
                 actionColumnVisibility={false}
-                uniqueId={"barcodeDeletedId"}
-                // checkboxSelection={true}
-
                 buttonVisibility={false}
+                uniqueId={'wmsInventoryClDetsId'}
                 loading={isLoading}
                 setIsLoading={setIsLoading}
-
+             
             />
 
+            {/* {isLoading &&
 
-        </div >
+                <div className='loading-spinner-background'
+                    style={{
+                        zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                        display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+
+
+                    }}
+                >
+                    <SyncLoader
+
+                        size={18}
+                        color={"#FFA500"}
+                        // height={4}
+                        loading={isLoading}
+                    />
+                </div>
+            } */}
+
+        </div>
     )
 }
 

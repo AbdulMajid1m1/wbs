@@ -2925,9 +2925,37 @@ export const WarehouseStockInventoryColumn = [
     width: 320,
   },
   {
-    field: "QTY",
-    headerName: "QTY",
+    field: "TotalOnhandQty",
+    headerName: "TOTAL ON HAND QTY",
+    width: 220,
+  },
+
+
+
+]
+
+
+
+export const WarehouseStockInventoryLocationColumn = [
+  {
+    field: "BinLocation",
+    headerName: "BIN LOCATION",
+    width: 220,
+  },
+  {
+    field: "ITEMID",
+    headerName: "ITEMID",
     width: 180,
+  },
+  {
+    field: "ITEMNAME",
+    headerName: "ITEMNAME",
+    width: 320,
+  },
+  {
+    field: "TotalOnhandQty",
+    headerName: "TOTAL ON HAND QTY",
+    width: 220,
   },
 
 

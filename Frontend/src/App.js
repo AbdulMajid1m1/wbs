@@ -117,6 +117,7 @@ import TblZoneDispatchingUpdate from './components/UpdatesItem/TblZoneDispatchin
 import AddNewRZone from './components/AddNew/AddNewRZone'
 import TblRZoneUpdate from './components/UpdatesItem/TblRZoneUpdate'
 import PrintingItemLabels from './pages/PrintingItemLabels/PrintingItemLabels'
+import WarehouseStockInventory from './pages/WarehouseStockInventory/WarehouseStockInventory'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -313,6 +314,7 @@ const App = () => {
 
 
                 {/*  <Route path='/user-accounts/:id/:name"' element={<AssignRoles />} /> */}
+                <Route path='/warehouse-stock-inventory' element={<WarehouseStockInventory />} />
 
 
 

@@ -59,7 +59,8 @@ const TruckMasterData = () => {
                     uniqueId="truckMasterId"
                     loading={isLoading}
                     setIsLoading={setIsLoading}
-                   
+                    printItemGtin={true}
+                    PrintGtin={"Truck Master Print"}
             />
 
             {/* {isLoading &&

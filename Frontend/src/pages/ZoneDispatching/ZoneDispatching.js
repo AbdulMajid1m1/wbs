@@ -60,6 +60,8 @@ const ZoneDispatching = () => {
                     uniqueId="zoneDispatchingId"
                     loading={isLoading}
                     setIsLoading={setIsLoading}
+                    printLocation={true}
+                    PrintBarCodeName={"Zone Dispatching Print"}
                          
             />
 

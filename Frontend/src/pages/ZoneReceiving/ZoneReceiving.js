@@ -60,6 +60,8 @@ const ZoneReceiving = () => {
                     uniqueId="zoneReceivingId"
                     loading={isLoading}
                     setIsLoading={setIsLoading}
+                    printLocation={true}
+                    PrintBarCodeName={"Zone Receiving Print"}
                          
             />
 

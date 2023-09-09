@@ -57,7 +57,7 @@ const UserDataTable = ({
   handleGenerateSerialPopUp,
   GenerateSerial,
   generateSerialPopUp,
-
+  printLocation,
 }) => {
   const navigate = useNavigate();
   const [qrcodeValue, setQRCodeValue] = useState('');
@@ -1374,7 +1374,7 @@ const UserDataTable = ({
 
     printWindow.document.write(html);
     const barcodeContainer = printWindow.document.getElementById('printBarcode');
-    const barcode = document.getElementById('printGtinId').cloneNode(true);
+    const barcode = document.getElementById('barcode').cloneNode(true);
     barcodeContainer.appendChild(barcode);
 
     const logoImg = new Image();
@@ -1393,6 +1393,94 @@ const UserDataTable = ({
     };
   }
 
+  // Location Page Print
+  const handleTblLocation = () => {
+    if (selectedRow.length === 0) {
+      setError('Please select a row to print.');
+      return;
+    }
+    const printWindow = window.open('', 'Print Window', 'height=400,width=800');
+    const html = '<html><head><title>Print Warehouse Bin Location</title>' +
+      '<style>' +
+      '@page { size: A4; margin: 0; }' +
+      ' body { margin: 0; }' +
+      '#main-qrcode { text-align: center; }' + 
+      '#main-barcode { height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;}' + 
+      '#itemcode { font-size: 50px; font-weight: 600; display: flex; justify-content: center;}' +
+      '</style>' +
+      '</head><body>' +
+      '<div id="main-TblBarcode"></div>' +
+      '</body></html>';
+
+    printWindow.document.write(html);
+    const barcodeContainer = printWindow.document.getElementById('main-TblBarcode');
+    const barcode = document.getElementById('barcode').cloneNode(true);
+    barcodeContainer.appendChild(barcode);
+
+      printWindow.print();
+      printWindow.close();
+      setTimeout(() => {
+        setSelectedRow([]);
+        setRowSelectionModel([]);
+
+      }, 500);
+  }
+
+  // Location Table Print
+  const PrintTblLocationPage = ({ selectedRow, index }) => {
+    return (
+      <div id="barcode">
+        <div id="main-barcode" key={index}>
+          <div id="" className='hidden'>
+            <div id='main-qrcode'>
+              <QRCodeSVG value={selectedRow.data.BIN} width="500" height="500" />
+            </div>
+            <div>
+              <p id="itemcode">{selectedRow.data.BIN}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+
+  // Zone Receving Table Print
+  const PrintZoneReceivingPage = ({ selectedRow, index }) => {
+    return (
+      <div id="barcode">
+        <div id="main-barcode" key={index}>
+          <div id="" className='hidden'>
+            <div id='main-qrcode'>
+              <QRCodeSVG value={selectedRow.data.RZONE} width="500" height="500" />
+            </div>
+            <div>
+              <p id="itemcode">{selectedRow.data.RZONE}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+
+  // Zone Dispatching Table Print
+  const PrintDispatchingPage = ({ selectedRow, index }) => {
+    return (
+      <div id="barcode">
+        <div id="main-barcode" key={index}>
+          <div id="" className='hidden'>
+            <div id='main-qrcode'>
+              <QRCodeSVG value={selectedRow.data.DZONE} width="500" height="500" />
+            </div>
+            <div>
+              <p id="itemcode">{selectedRow.data.DZONE}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const PrintLabelsBarCode = ({ selectedRow, index }) => {
     return (
@@ -1434,14 +1522,39 @@ const UserDataTable = ({
             <div id='inside-BRCode'>
               <Barcode value={selectedRow.data.GTIN} width={1} height={50} fontSize={14} />
             </div>
-            {/* <div id="gtinNo">
-              <p>{selectedRow?.data?.GTIN}</p>
-            </div> */}
           </div>
         </div>
       </div>
     );
   };
+
+
+  // Truck Master Table Print
+  const PrintTruckMasterPage = ({ selectedRow, index }) => {
+    return (
+      <div id="main-print">
+        <div id="" key={index}>
+          <div id="" className='hidden'>
+            <div id='header'>
+              <div>
+                <img src={logo} id='imglogo' alt='' />
+              </div>
+            </div>
+            <div>
+              <p id="itemcode">{selectedRow.data.BarcodeSerialNumber}</p>
+            </div>
+            <div id='inside-BRCode'>
+              <QRCodeSVG value={selectedRow.data.PlateNo} width="200" height="70" />
+            </div>
+            <div>
+              <p id="itemcode">{selectedRow.data.PlateNo}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
 
 
   return (
@@ -1530,6 +1643,7 @@ const UserDataTable = ({
             {printBarCode && <button onClick={handlePrintBarCode}>{PrintBarCodeName}</button>}
             {printItemBarCode && <button onClick={handlePrintItemBarcode}>{PrintBarCodeName}</button>}
             {printItemGtin && <button onClick={handlePrintGtin}>{PrintGtin}</button>}
+            {printLocation && <button onClick={handleTblLocation}>{PrintBarCodeName}</button>}
             {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>}
           </span>
         </div>
@@ -1731,7 +1845,11 @@ const UserDataTable = ({
                 {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
                     uniqueId === "PrintBarCode" || uniqueId === "PrintItemlabels" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
-                      uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> : null}
+                    uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> :
+                    uniqueId === "locationTableId" ? <PrintTblLocationPage selectedRow={selectedRow} index={index} /> : 
+                    uniqueId === "zoneReceivingId" ? <PrintZoneReceivingPage selectedRow={selectedRow} index={index} /> :
+                    uniqueId === "zoneDispatchingId" ? <PrintDispatchingPage selectedRow={selectedRow} index={index} /> : 
+                    uniqueId === "truckMasterId" ? <PrintTruckMasterPage selectedRow={selectedRow} index={index} /> : null}
 
               </div>
             ))}
@@ -1744,7 +1862,6 @@ const UserDataTable = ({
               <div id="printGtinId" className='hidden' key={index}>
                 {/* <PrintLabelsBarCode selectedRow={selectedRow} index={index} />  */}
                 <PrintLabelsGtin selectedRow={selectedRow} index={index} />
-
               </div>
             ))}
           </div>
@@ -1870,7 +1987,6 @@ const PrintingShipmentReceived = ({ selectedRow, index }) => {
 //     </div>
 //   );
 // };
-
 
 
 const PrintReturnSalesOrder = ({ selectedRow, index }) => {

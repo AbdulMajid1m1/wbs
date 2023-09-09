@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import UserDataTable from '../../components/UserDatatable/UserDataTable'
-import { AllItems, TblAllLocationColumn } from '../../utils/datatablesource'
+import { TblAllLocationColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
-import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 
 const TblAllLocations = () => {
@@ -60,7 +59,9 @@ const TblAllLocations = () => {
                 backButton={true}
                 uniqueId="locationTableId"
                 loading={isLoading}
-                setIsLoading={setIsLoading}    
+                setIsLoading={setIsLoading}
+                printLocation={true}
+                PrintBarCodeName={"Print Location"}    
             />
 
 

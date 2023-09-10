@@ -3376,6 +3376,26 @@ const WBSDB = {
     }
   },
 
+  async getAllDistinctItemCodesFromTblMappedBarcodes(req, res, next) {
+    try {
+      let query = `
+        SELECT DISTINCT ItemCode FROM dbo.tblMappedBarcodes
+      `;
+      let request = pool2.request();
+  
+      const result = await request.query(query);
+      if (result?.recordset?.length === 0) {
+        // No unique records found, send a specific message
+        return res.status(404).send({ message: 'No unique records found.' });
+      }
+      return res.status(200).send(result.recordset);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  },  
+
+
 
   async getOneMapBarcodeDataByItemCode(req, res, next) {
     try {

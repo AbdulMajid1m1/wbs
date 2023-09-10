@@ -382,6 +382,9 @@ router.delete("/deleteItemsReAllocationPickedByItemSerialNo", checkAuthenticatio
 
 
 router.get("/getAllTblStockMaster", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.getAllTblStockMaster);
+
+router.get("/getItemIdsbySearchText", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.getItemIdsbySearchText);
+
 router.get("/insertDataFromInventTableWmsToStockMaster", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.insertDataFromInventTableWmsToStockMaster);
 router.get("/insertDataFromTable1ToTable2", checkAuthentication, checkRole([roles[1], roles[36]]), WBSDB.insertDataFromTable1ToTable2);
 

@@ -29,6 +29,7 @@ const CustomToolbar = ({
     handleExport,
     handleExcelImport,
     TotalCount,
+    excelImport,
 }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [selectedFile, setSelectedFile] = React.useState(null);
@@ -46,7 +47,7 @@ const CustomToolbar = ({
         const file = event.target.files[0];
         if (file) {
             setSelectedFile(file.name);
-            // ... (your file handling code here)
+            handleExcelImport(file);
         }
     };
 
@@ -55,12 +56,15 @@ const CustomToolbar = ({
         fileInputRef.current.value = null;
     };
 
+
     return (
         <GridToolbarContainer>
             <GridToolbarColumnsButton />
             <GridToolbarFilterButton />
             <GridToolbarDensitySelector />
-            <IconButton color="primary" aria-label="Export" onClick={handleMenuOpen}>
+            <IconButton color="primary" aria-label="Export" onClick={handleMenuOpen}
+                style={{ borderRadius: 0, padding: '4px 5px' }}
+            >
                 <GetAppIcon />
                 <Typography variant="body2" color="primary">
                     Export
@@ -83,12 +87,16 @@ const CustomToolbar = ({
                     onClick={handleExport}
                 />
             </Menu>
-            <IconButton color="primary" component="span" onClick={() => fileInputRef.current.click()} aria-label="Import from Excel">
-                <FileUploadIcon />
-                <Typography variant="body2" color="primary">
-                    Import
-                </Typography>
-            </IconButton>
+            {excelImport && (
+                <IconButton
+                    style={{ borderRadius: 0, padding: '4px 5px' }}
+                    color="primary" component="span" onClick={() => fileInputRef.current.click()} aria-label="Import from Excel">
+                    <FileUploadIcon />
+                    <Typography variant="body2" color="primary">
+                        Import From Excel
+                    </Typography>
+                </IconButton>)
+            }
             <input
                 type="file"
                 ref={fileInputRef}
@@ -103,8 +111,10 @@ const CustomToolbar = ({
                         {selectedFile}
                     </Typography>
                     <IconButton size="small" onClick={removeSelectedFile} color="primary"
+
+                        style={{ marginBottom: '1px' }}
                     >
-                        <CloseIcon fontSize="small" />
+                        <CloseIcon fontSize="14px" />
                     </IconButton>
                 </div>
             )}

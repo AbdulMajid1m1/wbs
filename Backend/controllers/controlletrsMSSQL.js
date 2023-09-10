@@ -3382,7 +3382,7 @@ const WBSDB = {
         SELECT DISTINCT ItemCode FROM dbo.tblMappedBarcodes
       `;
       let request = pool2.request();
-  
+
       const result = await request.query(query);
       if (result?.recordset?.length === 0) {
         // No unique records found, send a specific message
@@ -3393,7 +3393,7 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
     }
-  },  
+  },
 
 
 
@@ -5252,6 +5252,33 @@ const WBSDB = {
 
     }
   },
+
+  async getItemIdsbySearchText(req, res, next) {
+
+    const { searchText } = req.query;
+    if (!searchText) {
+      return res.status(400).send({ message: 'searchText is required.' });
+    }
+
+    try {
+      let query = `
+      SELECT TOP 30 ITEMID, ITEMNAME, Length, Width, Height, Weight FROM dbo.tbl_Stock_Master
+      WHERE ITEMID LIKE @searchText
+      `;
+      let request = pool2.request();
+      request.input('searchText', sql.NVarChar, `%${searchText}%`);
+      const data = await request.query(query);
+      if (data.recordsets[0].length === 0) {
+        return res.status(404).send({ message: "N0 data found." });
+      }
+      return res.status(200).send(data.recordsets[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+
+    }
+  },
+
 
   async getTblStockMasterByItemId(req, res, next) {
 

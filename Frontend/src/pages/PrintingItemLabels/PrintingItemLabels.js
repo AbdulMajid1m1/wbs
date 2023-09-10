@@ -1,11 +1,15 @@
+import React, { useState, useEffect } from 'react';
 import "./PrintingItemLabels.css";
 import { useNavigate } from "react-router-dom";
 import logo from "../../images/alessalogo2.png"
 import Barcode from "react-barcode";
-import { useEffect, useState } from "react";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import { QRCodeSVG } from "qrcode.react";
-import { Autocomplete, CircularProgress, TextField } from "@mui/material";
+import userRequest from "../../utils/userRequest";
+import Autocomplete from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import axios from 'axios'; // Assuming you have Axios installed
 
 
 const PrintingItemLabels = () => {
@@ -15,11 +19,6 @@ const PrintingItemLabels = () => {
    const [userGtinData, setUserGtinData] = useState('');
    const [serialNumber, setSerialNumber] = useState('');
    const [itemCode, setItemCode] = useState('');
-   const [dataList, setDataList] = useState([{
-    "ITEMID": "100000000,",
-   }]);
-   const [open, setOpen] = useState(false);
-
  
    const resetSnakeBarMessages = () => {
     setError(null);
@@ -117,32 +116,77 @@ const PrintingItemLabels = () => {
     };
   }
  
-//   const [data, setData] = useState([]);
+  const [dataList, setDataList] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [isOptionSelected, setIsOptionSelected] = useState(false);
+  const [autocompleteLoading, setAutocompleteLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [itemDescription, setItemDescription] = useState('');
+  const [itemQuantity, setItemQuantity] = useState('');
 
-//   useEffect(() => {
-//     userRequest.get("/getAllTblStockMaster")
-//       .then((res) => {
-//         setData(res.data ?? []);
-//         console.log(res?.data);
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
-//   }, []);
-
-
-const [autocompleteLoading, setAutocompleteLoading] = useState(false);
-
-    const handleAutoCompleteInputChnage = async (event, newInputValue) => {
-    
+  const handleAutoCompleteInputChnage = async (event, newInputValue) => {
+    if (newInputValue) {
+      setAutocompleteLoading(true);
+  
+      try {
+        const response = await userRequest.get(`/getItemIdsbySearchText?searchText=${newInputValue}`);
+        const fetchedData = response.data;
+  
+        // Assuming the API response is an array of items with ITEMID and ITEMNAME properties
+        setDataList(fetchedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setAutocompleteLoading(false);
+      }
+    } else {
+      setDataList([]); // Clear the data if there's no input
     }
-    
-    const handleAutoComplete = async (event, value) => {
-        console.log('Selected value:');
-        console.log(value);
-       
-      };
+  };
 
+  console.log(selectedOption);
+
+
+  const handleGenerateSerial = async () => {
+    // console.log(data);
+    if (selectedOption == 0) {
+      setError("Please Select Any Item")
+      return;
+    }
+    if (itemDescription == 0) {
+        setError("Please Enter any Item Description")
+        return;
+      }
+    if (itemQuantity == 0) {
+        setError("Please Enter any Item Quantity")
+        return;
+      }
+
+    try {
+      const res = await userRequest.post('/generateSerialNumberforStockMasterAndInsertIntoMappedBarcode',
+        // ITEMNAME, Width, Height, Length, Weight
+        {
+          ITEMID: selectedOption?.ITEMID,
+          ITEMNAME: selectedOption?.ITEMNAME,
+          Width: selectedOption?.Width,
+          Height: selectedOption?.Height,
+          Length: selectedOption?.Length,
+          Weight: selectedOption?.Weight,  
+          SerialQTY: itemQuantity,
+        });
+      console.log(res?.data);
+      setMessage(res?.data?.message ?? "Serial Generated Successfully")
+      
+    }
+    catch (error) {
+      console.error(error);
+      setError(error?.response?.data?.message ?? "Something went wrong")
+    }
+
+    
+  }
+
+  
     return (
         <>
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -189,7 +233,7 @@ const [autocompleteLoading, setAutocompleteLoading] = useState(false);
             </span >
 
 
-          <div className="flex justify-center items-center w-full">
+          {/* <div className="flex justify-center items-center w-full"> */}
             <span
                 className="w-full"
             >
@@ -246,77 +290,76 @@ const [autocompleteLoading, setAutocompleteLoading] = useState(false);
                             <div className="right">      
                                 <form id="myForm" >
                                     <div className="formInput">
-                                    <div className="mb-6">
-                                        <label htmlFor="searchInput" className="text-[#00006A] text-center font-semibold"
-                                            style={{ marginBottom: "10px" }}
-                                           >Enter Select Item Code</label>
-
                                         <Autocomplete
                                             id="searchInput"
-                                            
                                             options={dataList}
-                                            getOptionLabel={(option) => `${option?.ITEMID} - ${option?.ITEMNAME}`}
-                                            onChange={handleAutoComplete}
+                                            getOptionLabel={(option) => option?.ITEMNAME} // Only display ITEMNAME in the dropdown
+                                            onChange={(event, newValue) => {
+                                                setSelectedOption(newValue); // Store the selected value in state
+                                                setIsOptionSelected(true);
+                                            }}
                                             onInputChange={(event, newInputValue) => handleAutoCompleteInputChnage(event, newInputValue)}
                                             loading={autocompleteLoading}
                                             sx={{ marginTop: '10px' }}
                                             open={open}
                                             onOpen={() => {
-                                            // setOpen(true);
+                                                setOpen(true);
                                             }}
                                             onClose={() => {
-                                            setOpen(false);
+                                                setOpen(false);
                                             }}
                                             renderOption={(props, option) => (
-                                            <li {...props}>
-                                                {option ? `${option?.ITEMID} - ${option?.ITEMNAME}` : 'No options'}
-                                            </li>
+                                                <li {...props}>
+                                                {option?.ITEMNAME}
+                                                </li>
                                             )}
-
                                             renderInput={(params) => (
-                                            <TextField
-                                                // required
+                                                <TextField
                                                 {...params}
-                                                label="Enter Select Item Code here"
+                                                label="Search Item Number or Description here"
                                                 InputProps={{
-                                                ...params.InputProps,
-                                                endAdornment: (
+                                                    ...params.InputProps,
+                                                    endAdornment: (
                                                     <>
-                                                    {autocompleteLoading ? <CircularProgress color="inherit" size={20} /> : null}
-                                                    {params.InputProps.endAdornment}
+                                                        {autocompleteLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                        {params.InputProps.endAdornment}
                                                     </>
-                                                ),
+                                                    ),
                                                 }}
                                                 sx={{
-                                                '& label.Mui-focused': {
+                                                    '& label.Mui-focused': {
                                                     color: '#00006A',
-                                                },
-                                                '& .MuiInput-underline:after': {
+                                                    },
+                                                    '& .MuiInput-underline:after': {
                                                     borderBottomColor: '#00006A',
-                                                },
-                                                '& .MuiOutlinedInput-root': {
+                                                    },
+                                                    '& .MuiOutlinedInput-root': {
                                                     '&:hover fieldset': {
-                                                    borderColor: '#000000',
+                                                        borderColor: '#000000',
                                                     },
                                                     '&.Mui-focused fieldset': {
-                                                    borderColor: '#000000',
+                                                        borderColor: '#000000',
                                                     },
-                                                },
+                                                    },
                                                 }}
-                                            />
+                                                />
                                             )}
+                                            />
 
-                                        />
-
-                                        </div>
 
                                         <label className="mt-5">Item Description<span className="text-red-500 font-semibold">*</span></label>
-                                        <input className="mt-2" type="text" placeholder="Item Description"/>
+                                        <input className="mt-2" type="text" onChange={(e) => setItemDescription(e.target.value)} placeholder="Item Description"/>
+
+                                        
+                                        <label className="mt-5">Enter Quantity<span className="text-red-500 font-semibold">*</span></label>
+                                        <input className="mt-2" type="Number" onChange={(e) => setItemQuantity(e.target.value)} placeholder="Item Quantity"/>
+
                                     </div>
                                     <div className="buttonAdd">
                                         <button
                                             style={{background: '#1E3B8B'}}
                                             type="button"
+                                            onClick={handleGenerateSerial}
                                         >Generate Serials</button>
                                     </div>
                                 </form>
@@ -328,7 +371,7 @@ const [autocompleteLoading, setAutocompleteLoading] = useState(false);
                 </div >
 
             </span >
-            </div>
+            
 
             <div id="main-print">
                 <div id="barcode" className='hidden'>

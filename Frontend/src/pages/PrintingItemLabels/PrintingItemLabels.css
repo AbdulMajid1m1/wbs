@@ -59,7 +59,7 @@
     justify-content: space-between;
 }
 .assetCategoryForm .newContainer .top .right form .formInput, .assetCategoryForm .newContainer .bottom .right form .formInput {
-    width: 100%;
+    width: 40%;
 }
 
 @media (max-width: 768px) {

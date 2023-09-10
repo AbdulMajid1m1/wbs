@@ -5,7 +5,7 @@ import Barcode from "react-barcode";
 import { useEffect, useState } from "react";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import { QRCodeSVG } from "qrcode.react";
-import userRequest from "../../utils/userRequest";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 
 
 const PrintingItemLabels = () => {
@@ -15,6 +15,11 @@ const PrintingItemLabels = () => {
    const [userGtinData, setUserGtinData] = useState('');
    const [serialNumber, setSerialNumber] = useState('');
    const [itemCode, setItemCode] = useState('');
+   const [dataList, setDataList] = useState([{
+    "ITEMID": "100000000,",
+   }]);
+   const [open, setOpen] = useState(false);
+
  
    const resetSnakeBarMessages = () => {
     setError(null);
@@ -126,6 +131,18 @@ const PrintingItemLabels = () => {
 //   }, []);
 
 
+const [autocompleteLoading, setAutocompleteLoading] = useState(false);
+
+    const handleAutoCompleteInputChnage = async (event, newInputValue) => {
+    
+    }
+    
+    const handleAutoComplete = async (event, value) => {
+        console.log('Selected value:');
+        console.log(value);
+       
+      };
+
     return (
         <>
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -229,14 +246,69 @@ const PrintingItemLabels = () => {
                             <div className="right">      
                                 <form id="myForm" >
                                     <div className="formInput">
-                                        <label className="mt-5">Enter/Select Item Code<span className="text-red-500 font-semibold">*</span></label>
-                                        <input className="mt-2" type="text" placeholder="Item Description"/>
-                                        {/* <select className="mt-2">
-                                            <option value="volvo">Select Item Code</option>
-                                            {data.map((item) => (
-                                                <option>{item.ITEMID}</option>
-                                            ))}
-                                        </select> */}
+                                    <div className="mb-6">
+                                        <label htmlFor="searchInput" className="text-[#00006A] text-center font-semibold"
+                                            style={{ marginBottom: "10px" }}
+                                           >Enter Select Item Code</label>
+
+                                        <Autocomplete
+                                            id="searchInput"
+                                            
+                                            options={dataList}
+                                            getOptionLabel={(option) => `${option?.ITEMID} - ${option?.ITEMNAME}`}
+                                            onChange={handleAutoComplete}
+                                            onInputChange={(event, newInputValue) => handleAutoCompleteInputChnage(event, newInputValue)}
+                                            loading={autocompleteLoading}
+                                            sx={{ marginTop: '10px' }}
+                                            open={open}
+                                            onOpen={() => {
+                                            // setOpen(true);
+                                            }}
+                                            onClose={() => {
+                                            setOpen(false);
+                                            }}
+                                            renderOption={(props, option) => (
+                                            <li {...props}>
+                                                {option ? `${option?.ITEMID} - ${option?.ITEMNAME}` : 'No options'}
+                                            </li>
+                                            )}
+
+                                            renderInput={(params) => (
+                                            <TextField
+                                                // required
+                                                {...params}
+                                                label="Enter Select Item Code here"
+                                                InputProps={{
+                                                ...params.InputProps,
+                                                endAdornment: (
+                                                    <>
+                                                    {autocompleteLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                    </>
+                                                ),
+                                                }}
+                                                sx={{
+                                                '& label.Mui-focused': {
+                                                    color: '#00006A',
+                                                },
+                                                '& .MuiInput-underline:after': {
+                                                    borderBottomColor: '#00006A',
+                                                },
+                                                '& .MuiOutlinedInput-root': {
+                                                    '&:hover fieldset': {
+                                                    borderColor: '#000000',
+                                                    },
+                                                    '&.Mui-focused fieldset': {
+                                                    borderColor: '#000000',
+                                                    },
+                                                },
+                                                }}
+                                            />
+                                            )}
+
+                                        />
+
+                                        </div>
 
                                         <label className="mt-5">Item Description<span className="text-red-500 font-semibold">*</span></label>
                                         <input className="mt-2" type="text" placeholder="Item Description"/>

@@ -157,7 +157,9 @@ const PrintingItemLabels = () => {
             </span >
 
 
+          {/* <div className="flex justify-center items-center w-full"> */}
             <span
+                className="w-full"
             >
                 <div className="assetCategoryForm">
                     <div className="newContainer">
@@ -195,6 +197,45 @@ const PrintingItemLabels = () => {
 
             </span >
 
+
+            {/* <span
+                className="w-full"
+            >
+                <div className="assetCategoryForm">
+                    <div className="newContainer">
+                        <div className="top">
+                            <span className="topSpan">
+                                <h1>Print / Generate Serial Number</h1>
+                            </span>
+                        </div>
+                        <div className="bottom">
+
+
+                            <div className="right">      
+                                <form id="myForm" >
+                                    <div className="formInput">
+                                        <label className="mt-5">Enter / Select Item Code<span className="text-red-500 font-semibold">*</span></label>
+                                        <input className="mt-2" type="text" placeholder="Enter / Select Item Code"/>
+
+                                        <label className="mt-5">Item Description<span className="text-red-500 font-semibold">*</span></label>
+                                        <input className="mt-2" type="text" placeholder="Item Description"/>
+                                    </div>
+                                    <div className="buttonAdd">
+                                        <button
+                                            style={{background: '#1E3B8B'}}
+                                            type="button"
+                                        >Generate Serials</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div >
+
+            </span > */}
+            {/* </div> */}
 
             <div id="main-print">
                 <div id="barcode" className='hidden'>

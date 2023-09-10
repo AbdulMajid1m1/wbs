@@ -648,5 +648,5 @@ router.put("/updateRemainingQtyInTblShipmentCounter", checkAuthentication, WBSDB
 router.get("/getAlltblStockInventory", checkAuthentication, WBSDB.getAlltblStockInventory);
 
 
-// --------- getAlltbltblStockInventoryLocation  APIs start ---------
+// --------- tbl_StockInventory_Location  APIs start ---------
 router.get("/getAlltbltblStockInventoryLocation", checkAuthentication, WBSDB.getAlltbltblStockInventoryLocation);

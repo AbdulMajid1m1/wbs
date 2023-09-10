@@ -2,9 +2,10 @@ import "./PrintingItemLabels.css";
 import { useNavigate } from "react-router-dom";
 import logo from "../../images/alessalogo2.png"
 import Barcode from "react-barcode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomSnakebar from "../../utils/CustomSnakebar";
 import { QRCodeSVG } from "qrcode.react";
+import userRequest from "../../utils/userRequest";
 
 
 const PrintingItemLabels = () => {
@@ -111,6 +112,20 @@ const PrintingItemLabels = () => {
     };
   }
  
+//   const [data, setData] = useState([]);
+
+//   useEffect(() => {
+//     userRequest.get("/getAllTblStockMaster")
+//       .then((res) => {
+//         setData(res.data ?? []);
+//         console.log(res?.data);
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   }, []);
+
+
     return (
         <>
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -157,7 +172,7 @@ const PrintingItemLabels = () => {
             </span >
 
 
-          {/* <div className="flex justify-center items-center w-full"> */}
+          <div className="flex justify-center items-center w-full">
             <span
                 className="w-full"
             >
@@ -198,7 +213,7 @@ const PrintingItemLabels = () => {
             </span >
 
 
-            {/* <span
+            <span
                 className="w-full"
             >
                 <div className="assetCategoryForm">
@@ -214,8 +229,14 @@ const PrintingItemLabels = () => {
                             <div className="right">      
                                 <form id="myForm" >
                                     <div className="formInput">
-                                        <label className="mt-5">Enter / Select Item Code<span className="text-red-500 font-semibold">*</span></label>
-                                        <input className="mt-2" type="text" placeholder="Enter / Select Item Code"/>
+                                        <label className="mt-5">Enter/Select Item Code<span className="text-red-500 font-semibold">*</span></label>
+                                        <input className="mt-2" type="text" placeholder="Item Description"/>
+                                        {/* <select className="mt-2">
+                                            <option value="volvo">Select Item Code</option>
+                                            {data.map((item) => (
+                                                <option>{item.ITEMID}</option>
+                                            ))}
+                                        </select> */}
 
                                         <label className="mt-5">Item Description<span className="text-red-500 font-semibold">*</span></label>
                                         <input className="mt-2" type="text" placeholder="Item Description"/>
@@ -234,8 +255,8 @@ const PrintingItemLabels = () => {
                     </div>
                 </div >
 
-            </span > */}
-            {/* </div> */}
+            </span >
+            </div>
 
             <div id="main-print">
                 <div id="barcode" className='hidden'>

@@ -134,14 +134,14 @@ const BinToBinInternal = () => {
 
   const handleAutoComplete = (event, value) => {
 
-    let itemCode = value?.trim();
-    if (!itemCode) {
-      setNewFilterData(data);
-      return;
-    }
-    console.log(value);
-    const newData = data.filter(item => item.ItemCode.trim() === itemCode);
-    setNewFilterData(newData);
+    // let itemCode = value?.trim();
+    // if (!itemCode) {
+    //   setNewFilterData(data);
+    //   return;
+    // }
+    // console.log(value);
+    // const newData = data.filter(item => item.ItemCode.trim() === itemCode);
+    // setNewFilterData(newData);
   };
 
   const handleBinLocation = (e) => {
@@ -261,14 +261,59 @@ const BinToBinInternal = () => {
               <div className='mb-6'>
                 <label htmlFor='itemcode'
                   className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan ItemID<span className='text-[#FF0404]'>*</span></label>
-                <div className='w-full flex'>
+                {/* <div className='w-full flex'>
                   <input
                     id="itemcode"
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
                     placeholder="Scan ItemID"
                     onChange={handleChangeItemCode}
                   />
-                </div>
+                </div> */}
+                <Autocomplete
+                  id="itemcode"
+                  options={Array.from(new Set(data.map((item) => item.ItemCode))).filter(Boolean)}
+                  getOptionLabel={(option) => option || ""}
+                  onChange={handleAutoComplete}
+
+                  // onChange={(event, value) => {
+                  //   if (value) {
+                  //     console.log(`Selected: ${value}`);
+
+                  //   }
+                  // }}
+                  onInputChange={(event, value) => {
+                    if (!value) {
+                      // perform operation when input is cleared
+                      console.log("Input cleared");
+
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        className: "text-white",
+                      }}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        style: { color: "white" },
+                      }}
+
+                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                      placeholder="Scan Item ID here"
+                      required
+                    />
+                  )}
+                  classes={{
+                    endAdornment: "text-white",
+                  }}
+                  sx={{
+                    '& .MuiAutocomplete-endAdornment': {
+                      color: 'white',
+                    },
+                  }}
+                />
 
                 <label htmlFor='transfer'
                   className="block mt-4 sm:text-lg text-xs font-medium text-[#00006A]">Scan Bin (FROM)<span className='text-[#FF0404]'>*</span></label>

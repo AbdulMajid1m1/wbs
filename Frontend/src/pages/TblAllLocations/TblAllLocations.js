@@ -44,6 +44,33 @@ const TblAllLocations = () => {
         getAllAssetsList();
     }, []);
 
+    const handleExcelImport = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            setIsLoading(true);
+            userRequest.post("/insertTblLocationsDataCL", formData)
+                .then((response) => {
+                    setIsLoading(false);
+                    console.log(response.data);
+                    setMessage("Successfully Added");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000)
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    setError(error?.response?.data?.message ?? "Failed to Add")
+                });
+        } catch (error) {
+            setIsLoading(false);
+            console.log(error);
+            setError("Failed to Add");
+        }
+    };
+
+
     return (
         <div>
 
@@ -51,17 +78,19 @@ const TblAllLocations = () => {
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-            <UserDataTable 
-                data={alldata} 
-                addNewNavigation="/tbl-new-location" 
-                title="TBL ALL LOCATIONS (Warehouse Operation)" 
-                columnsName={TblAllLocationColumn} 
+            <UserDataTable
+                data={alldata}
+                addNewNavigation="/tbl-new-location"
+                title="TBL ALL LOCATIONS (Warehouse Operation)"
+                columnsName={TblAllLocationColumn}
                 backButton={true}
                 uniqueId="locationTableId"
                 loading={isLoading}
                 setIsLoading={setIsLoading}
                 printLocation={true}
-                PrintBarCodeName={"Print Location"}    
+                PrintBarCodeName={"Print Location"}
+                handleExcelImport={handleExcelImport}
+                excelImport={true}
             />
 
 

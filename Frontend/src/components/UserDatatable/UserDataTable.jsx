@@ -58,6 +58,8 @@ const UserDataTable = ({
   GenerateSerial,
   generateSerialPopUp,
   printLocation,
+  handleExcelImport,
+  excelImport,
 }) => {
   const navigate = useNavigate();
   const [qrcodeValue, setQRCodeValue] = useState('');
@@ -1404,8 +1406,8 @@ const UserDataTable = ({
       '<style>' +
       '@page { size: A4; margin: 0; }' +
       ' body { margin: 0; }' +
-      '#main-qrcode { text-align: center; }' + 
-      '#main-barcode { height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;}' + 
+      '#main-qrcode { text-align: center; }' +
+      '#main-barcode { height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;}' +
       '#itemcode { font-size: 50px; font-weight: 600; display: flex; justify-content: center;}' +
       '</style>' +
       '</head><body>' +
@@ -1417,13 +1419,13 @@ const UserDataTable = ({
     const barcode = document.getElementById('barcode').cloneNode(true);
     barcodeContainer.appendChild(barcode);
 
-      printWindow.print();
-      printWindow.close();
-      setTimeout(() => {
-        setSelectedRow([]);
-        setRowSelectionModel([]);
+    printWindow.print();
+    printWindow.close();
+    setTimeout(() => {
+      setSelectedRow([]);
+      setRowSelectionModel([]);
 
-      }, 500);
+    }, 500);
   }
 
   // Location Table Print
@@ -1443,7 +1445,7 @@ const UserDataTable = ({
       </div>
     );
   };
-  
+
 
   // Zone Receving Table Print
   const PrintZoneReceivingPage = ({ selectedRow, index }) => {
@@ -1664,6 +1666,8 @@ const UserDataTable = ({
             toolbar: () => <CustomToolbar handlePdfExport={() => handlePdfExport(false)}
               handleExport={() => handleExport(false)}
               TotalCount={TotalCount}
+              handleExcelImport={handleExcelImport}
+              excelImport={excelImport}
             />
           }}
           // className="datatable"
@@ -1845,11 +1849,11 @@ const UserDataTable = ({
                 {uniqueId === "SERIALNUM" ? <PrintingShipmentReceived selectedRow={selectedRow} index={index} /> :
                   uniqueId === "PrintPalletBarcode" ? <PrintPalletBarCode selectedRow={selectedRow} index={index} /> :
                     uniqueId === "PrintBarCode" || uniqueId === "PrintItemlabels" ? <PrintLabelsBarCode selectedRow={selectedRow} index={index} /> :
-                    uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> :
-                    uniqueId === "locationTableId" ? <PrintTblLocationPage selectedRow={selectedRow} index={index} /> : 
-                    uniqueId === "zoneReceivingId" ? <PrintZoneReceivingPage selectedRow={selectedRow} index={index} /> :
-                    uniqueId === "zoneDispatchingId" ? <PrintDispatchingPage selectedRow={selectedRow} index={index} /> : 
-                    uniqueId === "truckMasterId" ? <PrintTruckMasterPage selectedRow={selectedRow} index={index} /> : null}
+                      uniqueId === "PrintReturnSalesOrder" ? <PrintReturnSalesOrder selectedRow={selectedRow} index={index} /> :
+                        uniqueId === "locationTableId" ? <PrintTblLocationPage selectedRow={selectedRow} index={index} /> :
+                          uniqueId === "zoneReceivingId" ? <PrintZoneReceivingPage selectedRow={selectedRow} index={index} /> :
+                            uniqueId === "zoneDispatchingId" ? <PrintDispatchingPage selectedRow={selectedRow} index={index} /> :
+                              uniqueId === "truckMasterId" ? <PrintTruckMasterPage selectedRow={selectedRow} index={index} /> : null}
 
               </div>
             ))}

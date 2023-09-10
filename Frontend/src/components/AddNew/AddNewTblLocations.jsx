@@ -73,6 +73,8 @@ const AddNewTblLocations = ({ inputs, title,
             [inputName]: value,
         });
     };
+
+
     return (
         <>
 

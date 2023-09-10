@@ -695,7 +695,7 @@ const FigmaSidebar = () => {
                             <p className='sidebar-text'>Sales Picking List</p>
                         </div>
 
-                        <div
+                        {/* <div
                             className={`main-images-container ${selectedItem === '/Picklistassign' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/Picklistassign')}         
                         // className='main-images-container' onClick={() => navigate('/Picklistassign')}
@@ -705,7 +705,7 @@ const FigmaSidebar = () => {
                         >
                             <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
                             <p className='sidebar-text'>Pick List</p>
-                        </div>
+                        </div> */}
 
                         <div
                             className={`main-images-container ${selectedItem === '/alldispatch' ? 'selected-item' : ''}`}

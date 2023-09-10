@@ -30,17 +30,40 @@ const BinToBinInternal = () => {
   const [selectionType, setSelectionType] = useState('Pallet');
   const [userInput, setUserInput] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-
+  const [itemCode, setItemCode] = useState('');
 
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
+  }
+
+  const handleChangeItemCode = (e) => {
+    setItemCode(e.target.value);
   }
 
   const handleForm = (e) => {
     e.preventDefault();
     setIsLoading(true)
 
-    userRequest.get(`/getmapBarcodeDataByBinLocation?BinLocation=${transferTag}`)
+    // userRequest.get(`/getmapBarcodeDataByBinLocation?BinLocation=${transferTag}`)
+    //   .then(response => {
+    //     console.log(response?.data);
+
+    //     setData(response?.data ?? []);
+    //     setNewFilterData(response?.data ?? []);
+    //     setIsLoading(false)
+    //     setMessage(response?.data?.message ?? 'Data Displayed');
+    //   })
+
+      userRequest.post(`/getMappedBarcodedsByItemCodeAndBinLocation`, 
+      {},
+        {
+          headers: {
+            // itemcode: "CV-950H SS220 BK",
+            itemcode: itemCode,
+            binlocation: transferTag
+          }
+        }
+      )
       .then(response => {
         console.log(response?.data);
 
@@ -236,8 +259,19 @@ const BinToBinInternal = () => {
 
             <form onSubmit={handleForm}>
               <div className='mb-6'>
+                <label htmlFor='itemcode'
+                  className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan ItemID<span className='text-[#FF0404]'>*</span></label>
+                <div className='w-full flex'>
+                  <input
+                    id="itemcode"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                    placeholder="Scan ItemID"
+                    onChange={handleChangeItemCode}
+                  />
+                </div>
+
                 <label htmlFor='transfer'
-                  className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Bin (FROM)<span className='text-[#FF0404]'>*</span></label>
+                  className="block mt-4 sm:text-lg text-xs font-medium text-[#00006A]">Scan Bin (FROM)<span className='text-[#FF0404]'>*</span></label>
                 <div className='w-full flex'>
                   <input
                     id="transfer"
@@ -245,18 +279,19 @@ const BinToBinInternal = () => {
                     placeholder="Scan Bin From"
                     onChange={handleChangeValue}
                   />
-                  <button
-                    type='submit'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm'
-                  >
-                    FIND
-                  </button>
-
                 </div>
+                <div className='flex justify-center items-center w-full mt-4'>
+                    <button
+                      type='submit'
+                      className='bg-[#F98E1A] hover:bg-[#edc498] w-[50%] text-[#fff] font-medium py-2 px-6 rounded-sm'
+                      >
+                      FIND
+                    </button>
+                  </div>
               </div>
             </form>
 
-            {data?.length > 0 && (
+            {/* {data?.length > 0 && (
 
 
 
@@ -308,7 +343,7 @@ const BinToBinInternal = () => {
                   }}
                 />
               </div>
-            )}
+            )} */}
 
             <div className='mb-6'>
               <div className='flex justify-between'>

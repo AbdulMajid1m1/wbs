@@ -2712,34 +2712,56 @@ const WBSDB = {
 
   async insertTblLocationsDataCL(req, res, next) {
     try {
-      const {
-        MAIN,
-        WAREHOUSE,
-        ZONE,
-        BIN,
-        ZONE_CODE,
-        ZONE_NAME,
-      } = req.query;
+      const { records } = req.body;
 
-      const query = `
-        INSERT INTO dbo.tbl_locations_CL
-          ( MAIN, WAREHOUSE, ZONE, BIN, ZONE_CODE, ZONE_NAME)
-        VALUES
-          (@MAIN, @WAREHOUSE, @ZONE, @BIN, @ZONE_CODE, @ZONE_NAME)
-      `;
+      if (!records) {
+        return res.status(400).send({ message: "Records are required." });
+      }
+      if (!Array.isArray(records)) {
+        return res.status(400).send({ message: "Records must be an array." });
+      }
+      if (records.length === 0) {
+        return res.status(400).send({ message: "Records array must not be empty." });
+      }
 
-      let request = pool2.request();
-      request.input('MAIN', sql.VarChar, MAIN);
-      request.input('WAREHOUSE', sql.VarChar, WAREHOUSE);
-      request.input('ZONE', sql.VarChar, ZONE);
-      request.input('BIN', sql.VarChar, BIN);
-      request.input('ZONE_CODE', sql.VarChar, ZONE_CODE);
-      request.input('ZONE_NAME', sql.VarChar, ZONE_NAME);
+      const transaction = new sql.Transaction(pool2);
 
-      await request.query(query);
+      // Begin the transaction
+      await transaction.begin();
+
+      for (let record of records) {
+        const { MAIN, WAREHOUSE, ZONE, BIN, ZONE_CODE, ZONE_NAME } = record;
+
+        const query = `
+          INSERT INTO dbo.tbl_locations_CL
+            ( MAIN, WAREHOUSE, ZONE, BIN, ZONE_CODE, ZONE_NAME)
+          VALUES
+            (@MAIN, @WAREHOUSE, @ZONE, @BIN, @ZONE_CODE, @ZONE_NAME)
+        `;
+
+        let request = transaction.request();
+        request.input('MAIN', sql.VarChar, MAIN);
+        request.input('WAREHOUSE', sql.VarChar, WAREHOUSE);
+        request.input('ZONE', sql.VarChar, ZONE);
+        request.input('BIN', sql.VarChar, BIN);
+        request.input('ZONE_CODE', sql.VarChar, ZONE_CODE);
+        request.input('ZONE_NAME', sql.VarChar, ZONE_NAME);
+
+        await request.query(query);
+      }
+
+      // Commit the transaction
+      await transaction.commit();
+
       res.status(201).send({ message: 'Location data inserted successfully.' });
     } catch (error) {
       console.log(error);
+
+      // If an error occurs, rollback the transaction
+      if (transaction) {
+        await transaction.rollback();
+      }
+
       res.status(500).send({ message: error.message });
     }
   },
@@ -4512,6 +4534,12 @@ const WBSDB = {
     try {
       const ItemCode = req.headers['itemcode']; // Get ItemSerialNo from headers
       const BinLoacation = req.headers['binlocation']; // Get ItemSerialNo from headers
+      if (!ItemCode) {
+        return res.status(400).send({ message: "ItemCode is required." });
+      }
+      if (!BinLoacation) {
+        return res.status(400).send({ message: "BinLoacation is required." });
+      }
       console.log(ItemCode);
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes

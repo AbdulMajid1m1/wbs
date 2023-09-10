@@ -30,36 +30,27 @@ const BinToBinInternal = () => {
   const [selectionType, setSelectionType] = useState('Pallet');
   const [userInput, setUserInput] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [itemCode, setItemCode] = useState('');
+  const [itemCode, setItemCode] = useState([]);
+  const [itemCodeValue, setItemCodeValue] = useState('');
 
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
   }
 
-  const handleChangeItemCode = (e) => {
-    setItemCode(e.target.value);
-  }
+  // const handleChangeItemCode = (e) => {
+  //   setItemCode(e.target.value);
+  // }
 
   const handleForm = (e) => {
     e.preventDefault();
     setIsLoading(true)
-
-    // userRequest.get(`/getmapBarcodeDataByBinLocation?BinLocation=${transferTag}`)
-    //   .then(response => {
-    //     console.log(response?.data);
-
-    //     setData(response?.data ?? []);
-    //     setNewFilterData(response?.data ?? []);
-    //     setIsLoading(false)
-    //     setMessage(response?.data?.message ?? 'Data Displayed');
-    //   })
 
       userRequest.post(`/getMappedBarcodedsByItemCodeAndBinLocation`, 
       {},
         {
           headers: {
             // itemcode: "CV-950H SS220 BK",
-            itemcode: itemCode,
+            itemcode: itemCodeValue,
             binlocation: transferTag
           }
         }
@@ -76,6 +67,7 @@ const BinToBinInternal = () => {
       .catch(error => {
         console.error(error);
         setIsLoading(false)
+        setNewFilterData([]);
         setError(error?.response.data?.message ?? 'Wrong Bin Scan');
 
       });
@@ -83,6 +75,20 @@ const BinToBinInternal = () => {
   }
 
 
+  useEffect(() => {
+    userRequest.get('/getAllDistinctItemCodesFromTblMappedBarcodes')
+      .then((response) => {
+        console.log(response?.data);
+        // Map the response data to extract ItemCode values
+        const itemCodes = response?.data?.map((item) => item.ItemCode) || [];
+        setItemCode(itemCodes);
+      })
+      .catch(error => {
+        console.error(error);
+        setError(error?.response?.data?.message || 'Wrong Bin Scan');
+      });
+  }, []);  
+  
   // define the function to filter data based on user input and selection type
   const filterData = () => {
     const filtered = newFilterData?.filter((item) => {
@@ -133,15 +139,9 @@ const BinToBinInternal = () => {
   };
 
   const handleAutoComplete = (event, value) => {
-
-    // let itemCode = value?.trim();
-    // if (!itemCode) {
-    //   setNewFilterData(data);
-    //   return;
-    // }
-    // console.log(value);
-    // const newData = data.filter(item => item.ItemCode.trim() === itemCode);
-    // setNewFilterData(newData);
+    console.log('Selected:', value);
+    setItemCodeValue(value);
+    
   };
 
   const handleBinLocation = (e) => {
@@ -271,7 +271,7 @@ const BinToBinInternal = () => {
                 </div> */}
                 <Autocomplete
                   id="itemcode"
-                  options={Array.from(new Set(data.map((item) => item.ItemCode))).filter(Boolean)}
+                  options={itemCode}
                   getOptionLabel={(option) => option || ""}
                   onChange={handleAutoComplete}
 

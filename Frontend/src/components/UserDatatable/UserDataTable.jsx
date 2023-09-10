@@ -1546,9 +1546,9 @@ const UserDataTable = ({
             <div id='inside-BRCode'>
               <QRCodeSVG value={selectedRow.data.PlateNo} width="200" height="70" />
             </div>
-            <div>
+            {/* <div>
               <p id="itemcode">{selectedRow.data.PlateNo}</p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

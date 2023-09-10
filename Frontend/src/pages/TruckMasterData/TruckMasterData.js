@@ -4,23 +4,24 @@ import { TruckMasterDataColumn } from '../../utils/datatablesource'
 import userRequest from "../../utils/userRequest"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
-
+import * as XLSX from 'xlsx';
 
 const TruckMasterData = () => {
     const [alldata, setAllData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
+    const [customLoader, setCustomLoader] = useState(false);
 
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
 
-     
+
     useEffect(() => {
         const getAllAssetsList = async () => {
             try {
@@ -46,24 +47,73 @@ const TruckMasterData = () => {
         };
         getAllAssetsList();
     }, []);
+    const handleExcelImport = async (file) => {
+        setCustomLoader(true);
+
+        try {
+            const bufferArray = await readFileAsync(file);
+            const data = await parseExcelData(bufferArray);
+
+            // Prepare the data for the API call
+            const requestData =
+                data.map((record) => ({
+                    PlateNo: record?.PlateNo,
+                    BarcodeSerialNumber: record?.BarcodeSerialNumber,
+                    TransportationCompanyName: record?.TransportationCompanyName,
+                }));
+
+
+            // Call the API to insert data
+            const response = await sendExcelDataToAPI(requestData);
+
+            console.log(response);
+            // append the new data to the existing data
+            setAllData((prevData) => [...prevData, ...data]);
+            setMessage("Successfully Added");
+        } catch (error) {
+            console.log(error);
+            setError(error?.response?.data?.message ?? "Something went wrong")
+
+        } finally {
+            setCustomLoader(false);
+        }
+    };
+
+    const readFileAsync = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsArrayBuffer(file);
+
+            fileReader.onload = (event) => {
+                resolve(event.target.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+
+    const parseExcelData = async (bufferArray) => {
+        const wb = XLSX.read(bufferArray, { type: "buffer" });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        return XLSX.utils.sheet_to_json(ws);
+    };
+
+    const sendExcelDataToAPI = async (data) => {
+        try {
+            const response = await userRequest.post('/insertTruckMasterData', data);
+            return response;
+
+        } catch (error) {
+            throw error;
+        }
+    };
 
     return (
         <div>
-
-            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
-            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
-
-            <UserDataTable data={alldata} addNewNavigation="/tbltrcuknew" title="Truck Master Data" 
-                columnsName={TruckMasterDataColumn} 
-                  backButton={true}
-                    uniqueId="truckMasterId"
-                    loading={isLoading}
-                    setIsLoading={setIsLoading}
-                    printItemGtin={true}
-                    PrintGtin={"Truck Master Print"}
-            />
-
-            {/* {isLoading &&
+            {customLoader &&
 
                 <div className='loading-spinner-background'
                     style={{
@@ -76,12 +126,28 @@ const TruckMasterData = () => {
                     <SyncLoader
 
                         size={18}
-                        color={"#FFA500"}
+                        color={"#0079FF"}
                         // height={4}
-                        loading={isLoading}
+                        loading={customLoader}
                     />
                 </div>
-            } */}
+            }
+            {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
+            {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
+            <UserDataTable data={alldata} addNewNavigation="/tbltrcuknew" title="Truck Master Data"
+                columnsName={TruckMasterDataColumn}
+                backButton={true}
+                uniqueId="truckMasterId"
+                loading={isLoading}
+                setIsLoading={setIsLoading}
+                printItemGtin={true}
+                PrintGtin={"Truck Master Print"}
+                handleExcelImport={handleExcelImport}
+                excelImport={true}
+            />
+
+
 
         </div>
     )

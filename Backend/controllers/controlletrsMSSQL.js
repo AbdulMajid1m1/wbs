@@ -2711,6 +2711,8 @@ const WBSDB = {
 
 
   async insertTblLocationsDataCL(req, res, next) {
+    let transaction;
+
     try {
       const { records } = req.body;
 
@@ -2724,7 +2726,7 @@ const WBSDB = {
         return res.status(400).send({ message: "Records array must not be empty." });
       }
 
-      const transaction = new sql.Transaction(pool2);
+      transaction = new sql.Transaction(pool2);
 
       // Begin the transaction
       await transaction.begin();
@@ -2764,7 +2766,8 @@ const WBSDB = {
 
       res.status(500).send({ message: error.message });
     }
-  },
+  }
+  ,
 
 
   async getAllTblLocationsCL(req, res, next) {
@@ -4729,26 +4732,57 @@ const WBSDB = {
 
 
   async insertIntoRzone(req, res, next) {
+    let transaction; // Declare transaction outside the try-catch block
+
     try {
-      const { RZONE } = req.body;
-      if (!RZONE) {
-        return res.status(400).send({ message: 'RZONE is required.' });
+      const { records } = req.body;
+
+      if (!records) {
+        return res.status(400).send({ message: 'Records are required.' });
       }
-      const query = `
-        INSERT INTO dbo.tbl_RZONES (RZONE)
-        VALUES (@RZONE);
-      `;
 
-      const request = pool2.request();
-      request.input('RZONE', sql.NVarChar, RZONE);
-      await request.query(query);
+      if (!Array.isArray(records)) {
+        return res.status(400).send({ message: 'Records must be an array.' });
+      }
 
-      res.status(201).send({ message: 'Record created successfully' });
+      if (records.length === 0) {
+        return res.status(400).send({ message: 'Records array must not be empty.' });
+      }
+
+      transaction = new sql.Transaction(pool2);
+
+      // Begin the transaction
+      await transaction.begin();
+
+      for (let record of records) {
+        const { RZONE } = record;
+
+        const query = `
+          INSERT INTO dbo.tbl_RZONES (RZONE)
+          VALUES (@RZONE);
+        `;
+
+        let request = transaction.request();
+        request.input('RZONE', sql.NVarChar, RZONE);
+        await request.query(query);
+      }
+
+      // Commit the transaction
+      await transaction.commit();
+
+      res.status(201).send({ message: 'Records created successfully' });
     } catch (error) {
       console.log(error);
+
+      // If an error occurs, rollback the transaction
+      if (transaction) {
+        await transaction.rollback();
+      }
+
       res.status(500).send({ message: error.message });
     }
-  },
+  }
+  ,
 
   async updateRzoneData(req, res) {
     try {
@@ -8148,7 +8182,7 @@ const WBSDB = {
       let request = pool2.request();
       const data = await request.query(query);
       if (data.recordsets[0].length === 0) {
-        return res.status(404).send({ message: "N0 data found." });
+        return res.status(404).send({ message: "No data found." });
       }
       return res.status(200).send(data.recordsets[0]);
     } catch (error) {
@@ -8160,11 +8194,17 @@ const WBSDB = {
   },
 
   async insertTruckMasterData(req, res, next) {
+    let transaction; // Declare transaction outside the try-catch block
+
     try {
       const truckMasterDataArray = req.body;
+
       if (!Array.isArray(truckMasterDataArray) || truckMasterDataArray.length === 0) {
         return res.status(400).send({ message: "Please provide data to insert." });
       }
+
+      transaction = new sql.Transaction(pool2);
+      await transaction.begin();
 
       for (let i = 0; i < truckMasterDataArray.length; i++) {
         const {
@@ -8175,15 +8215,16 @@ const WBSDB = {
 
         // Check if a record with the same BarcodeSerialNumber or PlateNo already exists
         let checkQuery = `
-          SELECT * FROM [WBSSQL].[dbo].[WMS_TruckMaster]
+          SELECT * FROM [dbo].[WMS_TruckMaster]
           WHERE BarcodeSerialNumber = @BarcodeSerialNumber OR PlateNo = @PlateNo
         `;
-        let checkRequest = pool2.request();
+        let checkRequest = transaction.request();
         checkRequest.input('BarcodeSerialNumber', sql.NVarChar, BarcodeSerialNumber);
         checkRequest.input('PlateNo', sql.NVarChar, PlateNo);
         let checkResult = await checkRequest.query(checkQuery);
         if (checkResult.recordset.length > 0) {
-          return res.status(400).send({ message: `A record with the with BarcodeSerialNumber ${BarcodeSerialNumber} or PlateNo ${PlateNo} already exists.` });
+          await transaction.rollback(); // Rollback the transaction if a duplicate record is found
+          return res.status(400).send({ message: `A record with the BarcodeSerialNumber ${BarcodeSerialNumber} or PlateNo ${PlateNo} already exists.` });
         }
 
         // Dynamic SQL query construction
@@ -8202,20 +8243,29 @@ const WBSDB = {
             (${values.join(', ')})
         `;
 
-        let request = pool2.request();
+        let request = transaction.request();
         request.input('PlateNo', sql.NVarChar, PlateNo);
         request.input('BarcodeSerialNumber', sql.NVarChar, BarcodeSerialNumber);
         request.input('TransportationCompanyName', sql.NVarChar, TransportationCompanyName);
         await request.query(query);
       }
 
+      // Commit the transaction if all records are inserted successfully
+      await transaction.commit();
+
       return res.status(201).send({ message: 'Records inserted into WMS_TruckMaster successfully' });
 
     } catch (error) {
       console.log(error);
+
+      if (transaction) {
+        await transaction.rollback(); // Rollback the transaction if an error occurs
+      }
+
       return res.status(500).send({ message: error.message });
     }
-  },
+  }
+  ,
 
   async deleteTruckMasterData(req, res, next) {
     try {
@@ -9234,28 +9284,58 @@ const WBSDB = {
 
     }
   },
-
   async insertIntoDzone(req, res, next) {
+    let transaction;
+
     try {
-      const { DZONE } = req.body;
-      if (!DZONE) {
-        return res.status(400).send({ message: 'DZONE is required.' });
+      const { records } = req.body;
+
+      if (!records) {
+        return res.status(400).send({ message: 'Records are required.' });
       }
-      const query = `
-      INSERT INTO dbo.tbl_DZONES (DZONE)
-      VALUES (@DZONE);
-    `;
 
-      const request = pool2.request();
-      request.input('DZONE', sql.NVarChar, DZONE);
-      await request.query(query);
+      if (!Array.isArray(records)) {
+        return res.status(400).send({ message: 'Records must be an array.' });
+      }
 
-      res.status(201).send({ message: 'Record created successfully' });
+      if (records.length === 0) {
+        return res.status(400).send({ message: 'Records array must not be empty.' });
+      }
+
+      transaction = new sql.Transaction(pool2);
+
+      // Begin the transaction
+      await transaction.begin();
+
+      for (let record of records) {
+        const { DZONE } = record;
+
+        const query = `
+          INSERT INTO dbo.tbl_DZONES (DZONE)
+          VALUES (@DZONE);
+        `;
+
+        let request = transaction.request();
+        request.input('DZONE', sql.NVarChar, DZONE);
+        await request.query(query);
+      }
+
+      // Commit the transaction
+      await transaction.commit();
+
+      res.status(201).send({ message: 'Records created successfully' });
     } catch (error) {
       console.log(error);
+
+      // If an error occurs, rollback the transaction
+      if (transaction) {
+        await transaction.rollback();
+      }
+
       res.status(500).send({ message: error.message });
     }
-  },
+  }
+  ,
 
   async updateDzoneData(req, res) {
     try {

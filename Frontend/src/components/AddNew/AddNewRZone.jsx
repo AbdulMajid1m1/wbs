@@ -12,7 +12,7 @@ const AddNewRZone = ({ inputs, title,
     const [isLoading, setIsLoading] = useState(false);
     // get selectedRow from session storage
     const selectedRow = JSON.parse(sessionStorage.getItem("selectedRow"));
-    console.log(selectedRow);
+
     const [formValues, setFormValues] = useState(selectedRow);
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
@@ -35,22 +35,21 @@ const AddNewRZone = ({ inputs, title,
 
             const data = {
                 RZONE: event.target.RZONE.value,
-              };
-            
-            userRequest.post('/insertIntoRzone', data)
-            .then((response) => {
-              setIsLoading(false);
-              console.log(response.data);
-              setMessage("Successfully Added");
-              setTimeout(() => {
-                navigate(-1)
-              }, 1000);
-            })
-            .catch((error) => {
-              setIsLoading(false);
-              console.log(error);
-              setError(error?.response?.data?.message ?? "Failed to Add");
-            });
+            };
+
+            userRequest.post('/insertIntoRzone', { "records": [data] })
+                .then((response) => {
+                    setIsLoading(false);
+                    setMessage("Successfully Added");
+                    setTimeout(() => {
+                        navigate(-1)
+                    }, 1000);
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    setError(error?.response?.data?.message ?? "Failed to Add");
+                });
         } catch (error) {
             setIsLoading(false);
             console.log(error);
@@ -80,7 +79,7 @@ const AddNewRZone = ({ inputs, title,
                 >
                     <BeatLoader
                         size={18}
-                        color={"#6439ff"}
+                        color={"#0079FF"}
                         // height={4}
                         loading={isLoading}
                     />
@@ -109,7 +108,7 @@ const AddNewRZone = ({ inputs, title,
 
 
                             <div className="right">
-                                
+
                                 <form onSubmit={handleSubmit} id="myForm" >
                                     {TblRzoneInput.map((input) => (
 
@@ -126,7 +125,7 @@ const AddNewRZone = ({ inputs, title,
 
                                     <div className="buttonAdd" >
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{ background: '#e69138' }}
                                             type="submit"
                                         >Save</button>
                                     </div>

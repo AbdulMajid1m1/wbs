@@ -75,6 +75,8 @@ const AddNewTblLocations = ({ inputs, title,
     };
 
 
+
+
     return (
         <>
 
@@ -90,7 +92,7 @@ const AddNewTblLocations = ({ inputs, title,
                 >
                     <BeatLoader
                         size={18}
-                        color={"#6439ff"}
+                        color={"#0079FF"}
                         // height={4}
                         loading={isLoading}
                     />

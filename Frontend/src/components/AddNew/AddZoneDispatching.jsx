@@ -35,22 +35,22 @@ const AddZoneDispatching = ({ inputs, title,
 
             const data = {
                 DZONE: event.target.DZONE.value,
-              };
-            
-            userRequest.post('/insertIntoDzone', data)
-            .then((response) => {
-              setIsLoading(false);
-              console.log(response.data);
-              setMessage("Successfully Added");
-              setTimeout(() => {
-                navigate(-1)
-              }, 1000);
-            })
-            .catch((error) => {
-              setIsLoading(false);
-              console.log(error);
-              setError(error?.response?.data?.message ?? "Failed to Add");
-            });
+            };
+
+            userRequest.post('/insertIntoDzone', { records: [data] })
+                .then((response) => {
+                    setIsLoading(false);
+                    console.log(response.data);
+                    setMessage("Successfully Added");
+                    setTimeout(() => {
+                        navigate(-1)
+                    }, 1000);
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.log(error);
+                    setError(error?.response?.data?.message ?? "Failed to Add");
+                });
         } catch (error) {
             setIsLoading(false);
             console.log(error);
@@ -80,7 +80,7 @@ const AddZoneDispatching = ({ inputs, title,
                 >
                     <BeatLoader
                         size={18}
-                        color={"#6439ff"}
+                        color={"#0079FF"}
                         // height={4}
                         loading={isLoading}
                     />
@@ -109,7 +109,7 @@ const AddZoneDispatching = ({ inputs, title,
 
 
                             <div className="right">
-                                
+
                                 <form onSubmit={handleSubmit} id="myForm" >
                                     {TblZoneDispatchingInput.map((input) => (
 
@@ -126,7 +126,7 @@ const AddZoneDispatching = ({ inputs, title,
 
                                     <div className="buttonAdd" >
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{ background: '#e69138' }}
                                             type="submit"
                                         >Save</button>
                                     </div>

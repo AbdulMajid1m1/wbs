@@ -234,8 +234,13 @@ router.get("/getStockMasterDataByItemId", checkAuthentication, checkRole([roles[
 // --------------- tblMappedBarcodes APIS Start ------
 
 router.get("/getAllTblMappedBarcodes", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[41]]), WBSDB.getAllTblMappedBarcodes);
+
 router.get("/getAllTblMappedBarcodesDeleted", checkAuthentication, WBSDB.getAllTblMappedBarcodesDeleted);
+
 router.get("/getLimitedTblMappedBarcodes", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[41]]), WBSDB.getLimitedTblMappedBarcodes);
+
+router.get("/getAllDistinctItemCodesFromTblMappedBarcodes", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[41]]), WBSDB.getAllDistinctItemCodesFromTblMappedBarcodes);
+
 
 router.post("/getAllTblMappedBarcodesByValueAndOperator", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[41]]), WBSDB.getAllTblMappedBarcodesByValueAndOperator);
 
@@ -286,6 +291,7 @@ router.delete("/deleteTblMappedBarcodesDataBySerialNumber", checkAuthentication,
 
 
 router.get("/getDistinctMappedBarcodeBinLocations", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[39]]), WBSDB.getDistinctMappedBarcodeBinLocations);
+
 router.get("/getDistinctMappedBarcodeItemIds", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[39]]), WBSDB.getDistinctMappedBarcodeItemIds);
 
 // ------------- tblMappedBarcodes APIS End -------- 

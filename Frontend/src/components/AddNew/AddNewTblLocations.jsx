@@ -11,7 +11,6 @@ const AddNewTblLocations = ({ inputs, title,
     const [isLoading, setIsLoading] = useState(false);
     // get selectedRow from session storage
     const selectedRow = JSON.parse(sessionStorage.getItem("selectedRow"));
-    console.log(selectedRow);
     const [formValues, setFormValues] = useState(selectedRow);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
@@ -40,12 +39,13 @@ const AddNewTblLocations = ({ inputs, title,
                 ZONE_CODE: event.target.ZONE_CODE.value,
                 ZONE_NAME: event.target.ZONE_NAME.value,
             };
-            console.log(data);
 
-            const queryParameters = new URLSearchParams(data).toString();
+
 
             userRequest.post(
-                `/insertTblLocationsDataCL?${queryParameters}`)
+                `/insertTblLocationsDataCL`,
+                { "records": [data] }
+            )
                 .then((response) => {
                     setIsLoading(false);
                     console.log(response.data);
@@ -134,7 +134,7 @@ const AddNewTblLocations = ({ inputs, title,
 
                                     <div className="buttonAdd" >
                                         <button
-                                            style={{background: '#e69138'}}
+                                            style={{ background: '#e69138' }}
                                             type="submit"
                                         >Save</button>
                                     </div>

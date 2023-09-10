@@ -6616,7 +6616,7 @@ const WBSDB = {
     try {
       const { SerialQTY, ITEMID, ITEMNAME, Width, Height, Length, Weight } = req.body;
       const currentDate = new Date();
-
+      let generatedSerials = [];
       // Fetch the last StockMasterSerialNo from TblSysNo using pool2
       const query = `SELECT TOP 1 StockMasterSerialNo AS StockMasterSerialNoLatest FROM TblSysNo ORDER BY StockMasterSerialNo DESC`;
       const result = await pool2.request().query(query);
@@ -6634,6 +6634,7 @@ const WBSDB = {
       for (let i = 0; i < SerialQTY; i++) {
         let currentSerial = ITEMID + "-" + String(StockMasterSerialNo + i).padStart(5, '0');
 
+        generatedSerials.push(currentSerial);
         const insertIntoMappedBarcode = `
                 INSERT INTO tblMappedBarcodes (ItemCode, ItemDesc, Width, Height, Length, Weight, ItemSerialNo, MapDate, [User])
                 VALUES (@ITEMID, @ITEMNAME, @Width, @Height, @Length, @Weight, @currentSerial, @mapDate, @user)
@@ -6667,7 +6668,7 @@ const WBSDB = {
       // Commit the transaction if all operations are successful
       await transaction.commit();
 
-      res.status(200).send({ message: "Serial numbers generated and inserted into mappedbarcode table successfully." });
+      res.status(200).send({ message: "Serial numbers generated and inserted into mappedbarcode table successfully.", generatedSerials });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: error.message });
@@ -9358,7 +9359,7 @@ const WBSDB = {
   },
 
 
-  
+
 
 }
 

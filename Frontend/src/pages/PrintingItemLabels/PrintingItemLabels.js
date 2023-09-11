@@ -220,10 +220,11 @@ const PrintingItemLabels = () => {
           setSerials(res?.data?.generatedSerials || []);
           setMessage(res?.data?.message || 'Serial Generated Successfully');
     
-          handlePrintSerialsPage();
+        //   handlePrintSerialsPage();
 
-            console.log('Serials:', serials);
-            
+            // console.log('Serials:', serials);
+            console.log('Serials:', res?.data?.generatedSerials);
+   
         } else {
           setError(res?.data?.message || 'No serials were generated');
         }
@@ -235,6 +236,13 @@ const PrintingItemLabels = () => {
     
   }
     
+// Use useEffect to perform actions after serials state is updated
+useEffect(() => {
+    if (serials.length > 0) {
+      handlePrintSerialsPage();
+    }
+  }, [serials]);
+
 
     return (
         <>

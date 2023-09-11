@@ -4646,17 +4646,17 @@ const WBSDB = {
     let transaction;
 
     try {
-      const { updates } = req.body;
+      const { records } = req.body;
 
-      if (!updates) {
+      if (!records) {
         return res.status(400).send({ message: 'Updates are required.' });
       }
 
-      if (!Array.isArray(updates)) {
+      if (!Array.isArray(records)) {
         return res.status(400).send({ message: 'Updates must be an array.' });
       }
 
-      if (updates.length === 0) {
+      if (records.length === 0) {
         return res.status(400).send({ message: 'Updates array must not be empty.' });
       }
 
@@ -4665,8 +4665,8 @@ const WBSDB = {
       transaction = new sql.Transaction(pool2);
       await transaction.begin();
 
-      for (let update of updates) {
-        const { oldBinLocation, newBinLocation, palletCode } = update;
+      for (let record of records) {
+        const { oldBinLocation, newBinLocation, palletCode } = record;
 
         if (!oldBinLocation || !newBinLocation || !palletCode) {
           return res.status(400).send({ message: 'oldBinLocation, newBinLocation, and palletCode are all required.' });

@@ -369,7 +369,7 @@ useEffect(() => {
                                 <form id="myForm" >
                                     <div className="formInput">
                                     <label className="mt-5"
-                                    >Search Item Number<span className="text-red-500 font-semibold">*</span></label>
+                                    >Search ItemID / Code<span className="text-red-500 font-semibold">*</span></label>
                                         <Autocomplete
                                             id="searchInput"
                                             options={dataList}
@@ -424,6 +424,7 @@ useEffect(() => {
                                                 }}
                                                 />
                                             )}
+                                            
                                             />
 
 

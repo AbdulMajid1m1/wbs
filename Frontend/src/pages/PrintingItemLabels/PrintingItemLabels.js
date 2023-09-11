@@ -147,8 +147,8 @@ const PrintingItemLabels = () => {
       printWindow.print();
       printWindow.close();
         setTimeout(() => {
-            // setItemCode('');
-            // setSerialNumber('');
+            setItemDescription('');
+            setItemQuantity('');
          }, 500);
         
     };
@@ -406,11 +406,11 @@ useEffect(() => {
 
 
                                         <label className="mt-5">Item Description<span className="text-red-500 font-semibold">*</span></label>
-                                        <input className="mt-2" type="text" onChange={(e) => setItemDescription(e.target.value)} placeholder="Item Description"/>
+                                        <input className="mt-2" type="text" value={itemDescription} onChange={(e) => setItemDescription(e.target.value)} placeholder="Item Description"/>
 
                                         
                                         <label className="mt-5">Enter Quantity<span className="text-red-500 font-semibold">*</span></label>
-                                        <input className="mt-2" type="Number" onChange={(e) => setItemQuantity(e.target.value)} placeholder="Item Quantity"/>
+                                        <input className="mt-2" type="Number" value={itemQuantity} onChange={(e) => setItemQuantity(e.target.value)} placeholder="Item Quantity"/>
 
                                     </div>
                                     <div className="buttonAdd">

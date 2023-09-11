@@ -58,7 +58,7 @@ const ZoneDispatching = () => {
             // Prepare the data for the API call
             const requestData = {
                 records: data.map((record) => ({
-                    RZONE: record?.DZONE,
+                    DZONE: record?.DZONE,
                 })),
             };
 

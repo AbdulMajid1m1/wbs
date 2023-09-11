@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa"
 import userRequest from '../../utils/userRequest';
@@ -13,6 +13,16 @@ import { Autocomplete, TextField } from '@mui/material';
 
 const BinToBinInternal = () => {
   const navigate = useNavigate();
+  const autocompleteRef = useRef(); // Ref to access the Autocomplete component
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const resetAutocomplete = () => {
+    // autocompleteRef.current?.value = ""; // Reset the input element
+    setItemCodeValue(""); // Reset the state variable
+
+    setAutocompleteKey(key => key + 1); // Update the key to reset the Autocomplete
+  };
+// Ref to access the Autocomplete input element
+const inputRef = useRef(null);
 
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -60,13 +70,13 @@ const BinToBinInternal = () => {
         setData(response?.data ?? []);
         setNewFilterData(response?.data ?? []);
         setIsLoading(false)
-        setMessage(response?.data?.message ?? 'Data Displayed');
       })
 
       .catch(error => {
         console.error(error);
         setIsLoading(false)
         setNewFilterData([]);
+        setData([]);
         setError(error?.response.data?.message ?? 'Wrong Bin Scan');
 
       });
@@ -112,27 +122,32 @@ const BinToBinInternal = () => {
 
   // reset function
   const resetDataOnUPdate = () => {
-    // remove the filtered data from the data state variable
-    const newData = data.filter((item) => {
-      if (selectionType === 'Pallet') {
-        return item.PalletCode !== userInput;
-      } else if (selectionType === 'Serial') {
-        return item.ItemSerialNo !== userInput;
-      } else {
-        return true;
-      }
-    });
-    setData(newData);
-    // reset the user input state variable
+    // reset everything
+    setData([]);
+    setNewFilterData([]);
+    setFilteredData([]);
+
     setUserInput("");
-    // trigger the filtering of data
+
     setUserInputSubmit(!userInputSubmit);
     // reset the scan location state variable
     setBinLocation("");
+    setTransferTag("");
+    if (inputRef.current) {
+      inputRef.current.focus();
+      
+      inputRef.current.value = "";
+      setItemCodeValue("");
+    }
+    
+
+
   };
 
+  
+
   const handleAutoComplete = (event, value) => {
-    console.log('Selected:', value);
+
     setItemCodeValue(value);
 
   };
@@ -141,36 +156,52 @@ const BinToBinInternal = () => {
     e.preventDefault();
 
     if (selectionType === 'Pallet') {
+      setIsLoading(true)
+      let apData = filteredData.map((item) => {
+        return {
+          "oldBinLocation": item.BinLocation,
+          "newBinLocation": binlocation,
+          "palletCode": item.PalletCode,
+        }
+      })
 
       userRequest.put('/updateMappedBarcodesBinLocationByPalletCode', {
-        "oldBinLocation": data[0].BinLocation,
-        "newBinLocation": binlocation,
-        "palletCode": filteredData[0].PalletCode,
+        "records": apData
       })
         .then(response => {
           console.log(response?.data)
           setMessage(response?.data?.message ?? 'Updated Successfully')
-
+          setIsLoading(false)
           resetDataOnUPdate();
         })
         .catch(error => {
           console.log(error)
           setError(error?.response?.data?.message ?? 'Update failed');
-
+          setIsLoading(false)
         })
     }
     else if (selectionType === 'Serial') {
+      setIsLoading(true)
+      let apData = filteredData.map((item) => {
+        return {
+          "oldBinLocation": item.BinLocation,
+          "newBinLocation": binlocation,
+          "serialNumber": item.ItemSerialNo,
+        }
+      })
+
+
       userRequest.put('/updateMappedBarcodesBinLocationBySerialNo', {
-        "oldBinLocation": data[0].BinLocation,
-        "newBinLocation": binlocation,
-        "serialNumber": filteredData[0].ItemSerialNo,
+        "records": apData
       })
         .then(response => {
           console.log(response?.data)
           setMessage(response?.data?.message ?? 'Updated Successfully')
+          setIsLoading(false)
           resetDataOnUPdate();
         })
         .catch(error => {
+          setIsLoading(false)
           console.log(error)
           setError(error?.response?.data?.message ?? 'Update failed');
 
@@ -248,26 +279,15 @@ const BinToBinInternal = () => {
               <div className='mb-6'>
                 <label htmlFor='itemcode'
                   className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan ItemID<span className='text-[#FF0404]'>*</span></label>
-                {/* <div className='w-full flex'>
-                  <input
-                    id="itemcode"
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                    placeholder="Scan ItemID"
-                    onChange={handleChangeItemCode}
-                  />
-                </div> */}
+
                 <Autocomplete
                   id="itemcode"
+                  value={itemCodeValue}
                   options={itemCode}
                   getOptionLabel={(option) => option || ""}
                   onChange={handleAutoComplete}
-
-                  // onChange={(event, value) => {
-                  //   if (value) {
-                  //     console.log(`Selected: ${value}`);
-
-                  //   }
-                  // }}
+                  ref={autocompleteRef}
+                  key={autocompleteKey}
                   onInputChange={(event, value) => {
                     if (!value) {
                       // perform operation when input is cleared
@@ -290,6 +310,7 @@ const BinToBinInternal = () => {
                       className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
                       placeholder="Scan Item ID here"
                       required
+                      inputRef={inputRef} 
                     />
                   )}
                   classes={{
@@ -307,6 +328,7 @@ const BinToBinInternal = () => {
                 <div className='w-full flex'>
                   <input
                     id="transfer"
+                    value={transferTag}
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
                     placeholder="Scan Bin From"
                     onChange={handleChangeValue}
@@ -323,59 +345,6 @@ const BinToBinInternal = () => {
               </div>
             </form>
 
-            {/* {data?.length > 0 && (
-
-
-
-              <div className="mb-6 mt-6">
-                <label htmlFor="zone" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
-                <Autocomplete
-                  id="zone"
-                  options={Array.from(new Set(data.map((item) => item.ItemCode))).filter(Boolean)}
-                  getOptionLabel={(option) => option || ""}
-                  onChange={handleAutoComplete}
-
-                  // onChange={(event, value) => {
-                  //   if (value) {
-                  //     console.log(`Selected: ${value}`);
-
-                  //   }
-                  // }}
-                  onInputChange={(event, value) => {
-                    if (!value) {
-                      // perform operation when input is cleared
-                      console.log("Input cleared");
-
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        className: "text-white",
-                      }}
-                      InputLabelProps={{
-                        ...params.InputLabelProps,
-                        style: { color: "white" },
-                      }}
-
-                      className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                      placeholder="Serach Container ID here"
-                      required
-                    />
-                  )}
-                  classes={{
-                    endAdornment: "text-white",
-                  }}
-                  sx={{
-                    '& .MuiAutocomplete-endAdornment': {
-                      color: 'white',
-                    },
-                  }}
-                />
-              </div>
-            )} */}
 
             <div className='mb-6'>
               <div className='flex justify-between'>

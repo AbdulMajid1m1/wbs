@@ -4586,56 +4586,119 @@ const WBSDB = {
 
   // Controller 1 - Update bin location based on Serial Number
   async updateMappedBarcodesBinLocationBySerialNo(req, res, next) {
+    let transaction;
     try {
-      const { oldBinLocation, newBinLocation, serialNumber } = req.body;
+      const { records } = req.body;
+
+      if (!records) {
+        return res.status(400).send({ message: 'Updates are required.' });
+      }
+
+      if (!Array.isArray(records)) {
+        return res.status(400).send({ message: 'Updates must be an array.' });
+      }
+
+      if (records.length === 0) {
+        return res.status(400).send({ message: 'Updates array must not be empty.' });
+      }
 
       // Your validation logic here
 
-      let request = pool2.request();
-      request.input('oldBinLocation', sql.NVarChar, oldBinLocation);
-      request.input('newBinLocation', sql.NVarChar, newBinLocation);
-      request.input('serialNumber', sql.NVarChar, serialNumber);
+      transaction = new sql.Transaction(pool2);
+      await transaction.begin();
 
-      // Update bin location
-      await request.query(`
+      for (let record of records) {
+        const { oldBinLocation, newBinLocation, serialNumber } = record;
+        if (!oldBinLocation || !newBinLocation || !serialNumber) {
+          return res.status(400).send({ message: 'oldBinLocation, newBinLocation and serialNumber are all required.' });
+        }
+        let request = transaction.request();
+        request.input('oldBinLocation', sql.NVarChar, oldBinLocation);
+        request.input('newBinLocation', sql.NVarChar, newBinLocation);
+        request.input('serialNumber', sql.NVarChar, serialNumber);
+
+        const updateQuery = `
           UPDATE dbo.tblMappedBarcodes
           SET BinLocation = @newBinLocation
-          WHERE BinLocation = @oldBinLocation AND ItemSerialNo = @serialNumber
-      `);
+          WHERE BinLocation = @oldBinLocation AND ItemSerialNo = @serialNumber;
+        `;
 
-      res.status(200).send({ message: 'Bin location updated successfully.' });
+        await request.query(updateQuery);
+      }
+
+      await transaction.commit();
+
+      res.status(200).send({ message: 'Bin locations updated successfully.' });
     } catch (error) {
       console.error(error);
+
+      if (transaction) {
+        await transaction.rollback();
+      }
+
       res.status(500).send({ message: error.message });
     }
   },
 
+
   // Controller 2 - Update bin location based on Pallet Code
   async updateMappedBarcodesBinLocationByPalletCode(req, res, next) {
+    let transaction;
+
     try {
-      const { oldBinLocation, newBinLocation, palletCode } = req.body;
+      const { updates } = req.body;
+
+      if (!updates) {
+        return res.status(400).send({ message: 'Updates are required.' });
+      }
+
+      if (!Array.isArray(updates)) {
+        return res.status(400).send({ message: 'Updates must be an array.' });
+      }
+
+      if (updates.length === 0) {
+        return res.status(400).send({ message: 'Updates array must not be empty.' });
+      }
 
       // Your validation logic here
 
-      let request = pool2.request();
-      request.input('oldBinLocation', sql.NVarChar, oldBinLocation);
-      request.input('newBinLocation', sql.NVarChar, newBinLocation);
-      request.input('palletCode', sql.NVarChar, palletCode);
+      transaction = new sql.Transaction(pool2);
+      await transaction.begin();
 
-      // Update bin location
-      await request.query(`
+      for (let update of updates) {
+        const { oldBinLocation, newBinLocation, palletCode } = update;
+
+        if (!oldBinLocation || !newBinLocation || !palletCode) {
+          return res.status(400).send({ message: 'oldBinLocation, newBinLocation, and palletCode are all required.' });
+        }
+
+        let request = transaction.request();
+        request.input('oldBinLocation', sql.NVarChar, oldBinLocation);
+        request.input('newBinLocation', sql.NVarChar, newBinLocation);
+        request.input('palletCode', sql.NVarChar, palletCode);
+
+        const updateQuery = `
           UPDATE dbo.tblMappedBarcodes
           SET BinLocation = @newBinLocation
-          WHERE BinLocation = @oldBinLocation AND PalletCode = @palletCode
-      `);
+          WHERE BinLocation = @oldBinLocation AND PalletCode = @palletCode;
+        `;
 
-      res.status(200).send({ message: 'Bin location updated successfully.' });
+        await request.query(updateQuery);
+      }
+
+      await transaction.commit();
+
+      res.status(200).send({ message: 'Bin locations updated successfully.' });
     } catch (error) {
       console.error(error);
+
+      if (transaction) {
+        await transaction.rollback();
+      }
+
       res.status(500).send({ message: error.message });
     }
-  }
-  ,
+  },
   async getItemInfoByPalletCode(req, res, next) {
     try {
       const PalletCode = req.headers['palletcode']; // Get ItemSerialNo from headers

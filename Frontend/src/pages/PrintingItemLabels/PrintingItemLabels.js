@@ -116,6 +116,45 @@ const PrintingItemLabels = () => {
     };
   }
  
+
+  const handlePrintSerialsPage = () => {
+    const printWindow = window.open('', 'Print Window', 'height=400,width=800');
+    const html = '<html><head><title>Serial Number</title>' +
+      '<style>' +
+      '@page { size: 3in 2in; margin: 0; }' +
+      'body { font-size: 13px; line-height: 0.1;}' +
+      '#header { display: flex; justify-content: center;}' +
+      '#imglogo {height: 40px; width: 100px;}' +
+      '#itemcode { font-size: 13px; font-weight: 600; display: flex; justify-content: center;}' +
+      '#inside-BRCode { display: flex; justify-content: center; align-items: center; padding: 1px;}' +
+      '#itemSerialNo { font-size: 13px; display: flex; justify-content: center; font-weight: 600; margin-top: 3px;}' +
+      '#Qrcodeserails { height: 100%; width: 100%;}' +
+      '</style>' +
+      '</head><body>' +
+      '<div id="printBarcode"></div>' +
+      '</body></html>';
+
+    printWindow.document.write(html);
+    const barcodeContainer = printWindow.document.getElementById('printBarcode');
+    const barcode = document.getElementById('main-pages').cloneNode(true);
+    barcodeContainer.appendChild(barcode);
+
+    const logoImg = new Image();
+    logoImg.src = logo;
+
+    logoImg.onload = function () {
+      printWindow.document.getElementById('imglogo').src = logoImg.src;
+      printWindow.print();
+      printWindow.close();
+        setTimeout(() => {
+            // setItemCode('');
+            // setSerialNumber('');
+         }, 500);
+        
+    };
+  }
+
+
   const [dataList, setDataList] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isOptionSelected, setIsOptionSelected] = useState(false);
@@ -123,7 +162,9 @@ const PrintingItemLabels = () => {
   const [open, setOpen] = useState(false);
   const [itemDescription, setItemDescription] = useState('');
   const [itemQuantity, setItemQuantity] = useState('');
+  const [serials, setSerials] = useState([]);
 
+ 
   const handleAutoCompleteInputChnage = async (event, newInputValue) => {
     if (newInputValue) {
       setAutocompleteLoading(true);
@@ -144,11 +185,10 @@ const PrintingItemLabels = () => {
     }
   };
 
-  console.log(selectedOption);
+//   console.log(selectedOption);
 
 
   const handleGenerateSerial = async () => {
-    // console.log(data);
     if (selectedOption == 0) {
       setError("Please Select Any Item")
       return;
@@ -174,19 +214,28 @@ const PrintingItemLabels = () => {
           Weight: selectedOption?.Weight,  
           SerialQTY: itemQuantity,
         });
-      console.log(res?.data);
-      setMessage(res?.data?.message ?? "Serial Generated Successfully")
-      
-    }
-    catch (error) {
-      console.error(error);
-      setError(error?.response?.data?.message ?? "Something went wrong")
-    }
+        console.log(res?.data);
 
+        if (res?.data?.generatedSerials && res?.data?.generatedSerials.length > 0) {
+          setSerials(res?.data?.generatedSerials || []);
+          setMessage(res?.data?.message || 'Serial Generated Successfully');
+    
+          handlePrintSerialsPage();
+
+            console.log('Serials:', serials);
+            
+        } else {
+          setError(res?.data?.message || 'No serials were generated');
+        }
+      } catch (error) {
+        console.error(error);
+        setError(error?.response?.data?.message || 'Something went wrong');
+      }
+    
     
   }
+    
 
-  
     return (
         <>
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
@@ -290,6 +339,7 @@ const PrintingItemLabels = () => {
                             <div className="right">      
                                 <form id="myForm" >
                                     <div className="formInput">
+                                    <label className="mt-5">Search Item Number<span className="text-red-500 font-semibold">*</span></label>
                                         <Autocomplete
                                             id="searchInput"
                                             options={dataList}
@@ -409,6 +459,25 @@ const PrintingItemLabels = () => {
                             <p>{serialNumber}</p>
                         </div>
                     </div>
+                    </div>
+
+
+                     <div id="main-pages">
+                        {serials.map((serial, index) => (
+                            <div id="Qrcodeserails" className="hidden" key={index}>
+                            <div id="header">
+                                <div>
+                                <img src={logo} id="imglogo" alt="" />
+                                </div>
+                            </div>
+                            <div id="inside-BRCode">
+                                <QRCodeSVG value={serial} width="170" height="70" />
+                            </div>
+                            <div id="itemSerialNo">
+                                <p>{serial}</p>
+                            </div>
+                            </div>
+                        ))}
                     </div>
         </>
     );

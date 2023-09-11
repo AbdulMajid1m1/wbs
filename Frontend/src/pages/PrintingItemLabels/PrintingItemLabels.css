@@ -156,3 +156,9 @@
     align-items: center;
     justify-content: center;
 }
+
+
+.custom-autocomplete .MuiAutocomplete-popupIndicator {
+    display: none; /* Hide the arrow icon */
+  }
+  

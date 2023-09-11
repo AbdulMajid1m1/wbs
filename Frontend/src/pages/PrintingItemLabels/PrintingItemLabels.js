@@ -378,6 +378,7 @@ useEffect(() => {
                                                 setSelectedOption(newValue); // Store the selected value in state
                                                 setIsOptionSelected(true);
                                             }}
+                                            className="custom-autocomplete" 
                                             onInputChange={(event, newInputValue) => handleAutoCompleteInputChnage(event, newInputValue)}
                                             loading={autocompleteLoading}
                                             sx={{ marginTop: '10px' }}
@@ -396,7 +397,7 @@ useEffect(() => {
                                             renderInput={(params) => (
                                                 <TextField
                                                 {...params}
-                                                label="Search Item Number or Description here"
+                                                label="Search ItemID / Code"
                                                 InputProps={{
                                                     ...params.InputProps,
                                                     endAdornment: (
@@ -424,7 +425,7 @@ useEffect(() => {
                                                 }}
                                                 />
                                             )}
-                                            
+                                            disableClearable={true}
                                             />
 
 

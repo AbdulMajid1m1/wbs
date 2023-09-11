@@ -52,18 +52,22 @@ const TblAllLocations = () => {
         try {
             const bufferArray = await readFileAsync(file);
             const data = await parseExcelData(bufferArray);
+        
+            // Filter out records that do not have a value for 'MAIN'
+            const validRecords = data.filter((record) => record.MAIN !== null);
+        
+            // Prepare the data for the API call
             const requestData = {
-                records: data
-                    .filter((record) => record.MAIN !== null)
-                    .map(({ MAIN, WAREHOUSE, ZONE, BIN, ZONE_CODE, ZONE_NAME }) => ({
-                        MAIN,
-                        WAREHOUSE,
-                        ZONE,
-                        BIN,
-                        ZONE_CODE,
-                        ZONE_NAME,
-                    })),
+                records: validRecords.map(({ MAIN, WAREHOUSE, ZONE, BIN, ZONE_CODE, ZONE_NAME }) => ({
+                    MAIN,
+                    WAREHOUSE,
+                    ZONE,
+                    BIN,
+                    ZONE_CODE,
+                    ZONE_NAME,
+                })),
             };
+        
             // Call the API to insert data
             const response = await sendExcelDataToAPI(requestData);
 

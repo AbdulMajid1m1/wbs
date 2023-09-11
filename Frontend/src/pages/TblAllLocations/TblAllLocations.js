@@ -48,14 +48,14 @@ const TblAllLocations = () => {
 
     const handleExcelImport = async (file) => {
         setCustomLoader(true);
-
+    
         try {
             const bufferArray = await readFileAsync(file);
             const data = await parseExcelData(bufferArray);
-        
+    
             // Filter out records that do not have a value for 'MAIN'
-            const validRecords = data.filter((record) => record.MAIN !== null);
-        
+            const validRecords = data.filter((record) => record.MAIN !== null && record.MAIN !== "");
+    
             // Prepare the data for the API call
             const requestData = {
                 records: validRecords.map(({ MAIN, WAREHOUSE, ZONE, BIN, ZONE_CODE, ZONE_NAME }) => ({
@@ -67,13 +67,13 @@ const TblAllLocations = () => {
                     ZONE_NAME,
                 })),
             };
-        
-            // Call the API to insert data
+    
+            // Call the API to insert data using validRecords
             const response = await sendExcelDataToAPI(requestData);
-
+    
             console.log(response);
             // append the new data to the existing data
-            setAllData((prevData) => [...prevData, ...data]);
+            setAllData((prevData) => [...prevData, ...validRecords]);
             setMessage("Successfully Added");
         } catch (error) {
             console.log(error);
@@ -82,39 +82,7 @@ const TblAllLocations = () => {
             setCustomLoader(false);
         }
     };
-
-    const readFileAsync = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsArrayBuffer(file);
-
-            fileReader.onload = (event) => {
-                resolve(event.target.result);
-            };
-
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-    };
-
-    const parseExcelData = async (bufferArray) => {
-        const wb = XLSX.read(bufferArray, { type: "buffer" });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        return XLSX.utils.sheet_to_json(ws);
-    };
-
-    const sendExcelDataToAPI = async (data) => {
-        try {
-            const response = await userRequest.post('/insertTblLocationsDataCL', data);
-            return response;
-
-        } catch (error) {
-            throw error;
-        }
-    };
-
+    
 
     return (
         <div>

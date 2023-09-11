@@ -9,7 +9,7 @@ import userRequest from "../../utils/userRequest";
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
-import axios from 'axios'; // Assuming you have Axios installed
+import { SyncLoader } from 'react-spinners';
 
 
 const PrintingItemLabels = () => {
@@ -163,6 +163,8 @@ const PrintingItemLabels = () => {
   const [itemDescription, setItemDescription] = useState('');
   const [itemQuantity, setItemQuantity] = useState('');
   const [serials, setSerials] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+ 
 
  
   const handleAutoCompleteInputChnage = async (event, newInputValue) => {
@@ -189,14 +191,11 @@ const PrintingItemLabels = () => {
 
 
   const handleGenerateSerial = async () => {
+    setIsLoading(true);
     if (selectedOption == 0) {
       setError("Please Select Any Item")
       return;
     }
-    if (itemDescription == 0) {
-        setError("Please Enter any Item Description")
-        return;
-      }
     if (itemQuantity == 0) {
         setError("Please Enter any Item Quantity")
         return;
@@ -215,6 +214,7 @@ const PrintingItemLabels = () => {
           SerialQTY: itemQuantity,
         });
         console.log(res?.data);
+        setIsLoading(false);
 
         if (res?.data?.generatedSerials && res?.data?.generatedSerials.length > 0) {
           setSerials(res?.data?.generatedSerials || []);
@@ -230,6 +230,7 @@ const PrintingItemLabels = () => {
         }
       } catch (error) {
         console.error(error);
+        setIsLoading(false);
         setError(error?.response?.data?.message || 'Something went wrong');
       }
     
@@ -248,6 +249,26 @@ useEffect(() => {
         <>
             {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
             {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
+
+
+            {isLoading &&
+                <div className='loading-spinner-background'
+                style={{
+                    zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+
+
+                }}
+                >
+                <SyncLoader
+
+                    size={18}
+                    color={"#FFA500"}
+                    // height={4}
+                    loading={isLoading}
+                />
+                </div>
+                }
 
             <span
             >
@@ -347,11 +368,12 @@ useEffect(() => {
                             <div className="right">      
                                 <form id="myForm" >
                                     <div className="formInput">
-                                    <label className="mt-5">Search Item Number<span className="text-red-500 font-semibold">*</span></label>
+                                    <label className="mt-5"
+                                    >Search Item Number<span className="text-red-500 font-semibold">*</span></label>
                                         <Autocomplete
                                             id="searchInput"
                                             options={dataList}
-                                            getOptionLabel={(option) => option?.ITEMNAME} // Only display ITEMNAME in the dropdown
+                                            getOptionLabel={(option) => option?.ITEMID} // Only display ITEMID in the dropdown
                                             onChange={(event, newValue) => {
                                                 setSelectedOption(newValue); // Store the selected value in state
                                                 setIsOptionSelected(true);
@@ -368,7 +390,7 @@ useEffect(() => {
                                             }}
                                             renderOption={(props, option) => (
                                                 <li {...props}>
-                                                {option?.ITEMNAME}
+                                                {option?.ITEMID}
                                                 </li>
                                             )}
                                             renderInput={(params) => (
@@ -406,11 +428,26 @@ useEffect(() => {
 
 
                                         <label className="mt-5">Item Description<span className="text-red-500 font-semibold">*</span></label>
-                                        <input className="mt-2" type="text" value={itemDescription} onChange={(e) => setItemDescription(e.target.value)} placeholder="Item Description"/>
+                                        <input className="mt-2" 
+                                            type="text" 
+                                                value={selectedOption?.ITEMNAME} 
+                                                    onChange={(e) => setItemDescription(e.target.value)} placeholder="Item Description"
+                                        />
 
                                         
                                         <label className="mt-5">Enter Quantity<span className="text-red-500 font-semibold">*</span></label>
-                                        <input className="mt-2" type="Number" value={itemQuantity} onChange={(e) => setItemQuantity(e.target.value)} placeholder="Item Quantity"/>
+                                        <input className="mt-2" 
+                                            type="number" 
+                                             value={itemQuantity} 
+                                            //   onChange={(e) => setItemQuantity(e.target.value)}
+                                            onChange={(e) => {
+                                                let newValue = parseInt(e.target.value, 10); // Parse the input value as an integer
+                                                newValue = isNaN(newValue) ? 0 : Math.max(newValue, 0); // Ensure it's not NaN and not negative
+                                                setItemQuantity(newValue);
+                                              }}
+                                              placeholder="Item Quantity"
+                                        
+                                        />
 
                                     </div>
                                     <div className="buttonAdd">

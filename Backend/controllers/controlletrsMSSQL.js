@@ -2764,7 +2764,7 @@ const WBSDB = {
         await transaction.rollback();
       }
 
-      res.status(500).send({ message: error.message });
+      return res.status(500).send({ message: error.message });
     }
   }
   ,

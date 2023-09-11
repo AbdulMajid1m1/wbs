@@ -73,7 +73,7 @@ const TblAllLocations = () => {
             setAllData((prevData) => [...prevData, ...data]);
             setMessage("Successfully Added");
         } catch (error) {
-            console.error("Error handling Excel import:", error);
+            console.log(error);
             setError(error?.response?.data?.message ?? "Something went wrong")
         } finally {
             setCustomLoader(false);

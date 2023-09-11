@@ -22,8 +22,11 @@ const uploadFolder = path.join(process.cwd(), "uploads"); // get the absolute pa
 app.use("/uploads", express.static(uploadFolder));
 import WBSDB from "./router/router.js";
 import { pool1ConnectPromise, pool2ConnectPromise } from "./config/connection.js";
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", WBSDB);
 const PORT = process.env.PORT || 3005;
 

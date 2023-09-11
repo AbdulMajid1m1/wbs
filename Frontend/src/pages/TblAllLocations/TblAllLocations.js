@@ -52,19 +52,18 @@ const TblAllLocations = () => {
         try {
             const bufferArray = await readFileAsync(file);
             const data = await parseExcelData(bufferArray);
-
-            // Prepare the data for the API call
             const requestData = {
-                records: data.map((record) => ({
-                    MAIN: record.MAIN,
-                    WAREHOUSE: record.WAREHOUSE,
-                    ZONE: record.ZONE,
-                    BIN: record.BIN,
-                    ZONE_CODE: record.ZONE_CODE,
-                    ZONE_NAME: record.ZONE_NAME,
-                })),
+                records: data
+                    .filter((record) => record.MAIN !== null)
+                    .map(({ MAIN, WAREHOUSE, ZONE, BIN, ZONE_CODE, ZONE_NAME }) => ({
+                        MAIN,
+                        WAREHOUSE,
+                        ZONE,
+                        BIN,
+                        ZONE_CODE,
+                        ZONE_NAME,
+                    })),
             };
-
             // Call the API to insert data
             const response = await sendExcelDataToAPI(requestData);
 

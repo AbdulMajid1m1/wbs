@@ -45,18 +45,17 @@ const BinToBinInternal = () => {
     e.preventDefault();
     setIsLoading(true)
 
-      userRequest.post(`/getMappedBarcodedsByItemCodeAndBinLocation`, 
+    userRequest.post(`/getMappedBarcodedsByItemCodeAndBinLocation`,
       {},
-        {
-          headers: {
-            // itemcode: "CV-950H SS220 BK",
-            itemcode: itemCodeValue,
-            binlocation: transferTag
-          }
+      {
+        headers: {
+          // itemcode: "CV-950H SS220 BK",
+          itemcode: itemCodeValue,
+          binlocation: transferTag
         }
-      )
+      }
+    )
       .then(response => {
-        console.log(response?.data);
 
         setData(response?.data ?? []);
         setNewFilterData(response?.data ?? []);
@@ -87,8 +86,8 @@ const BinToBinInternal = () => {
         console.error(error);
         setError(error?.response?.data?.message || 'Wrong Bin Scan');
       });
-  }, []);  
-  
+  }, []);
+
   // define the function to filter data based on user input and selection type
   const filterData = () => {
     const filtered = newFilterData?.filter((item) => {
@@ -110,12 +109,6 @@ const BinToBinInternal = () => {
     setFilteredData((prev) => [...prev, ...filtered]);
     setUserInput(""); // reset the user input state variable
   };
-
-  // use useEffect to trigger the filtering of data whenever the user input changes
-  // useEffect(() => {
-  //   filterData();
-  // }, [userInputSubmit, selectionType]);
-
 
   // reset function
   const resetDataOnUPdate = () => {
@@ -141,7 +134,7 @@ const BinToBinInternal = () => {
   const handleAutoComplete = (event, value) => {
     console.log('Selected:', value);
     setItemCodeValue(value);
-    
+
   };
 
   const handleBinLocation = (e) => {
@@ -152,18 +145,13 @@ const BinToBinInternal = () => {
       userRequest.put('/updateMappedBarcodesBinLocationByPalletCode', {
         "oldBinLocation": data[0].BinLocation,
         "newBinLocation": binlocation,
-        "palletCode": userInput
+        "palletCode": filteredData[0].PalletCode,
       })
         .then(response => {
           console.log(response?.data)
           setMessage(response?.data?.message ?? 'Updated Successfully')
 
           resetDataOnUPdate();
-
-
-
-
-
         })
         .catch(error => {
           console.log(error)
@@ -172,11 +160,10 @@ const BinToBinInternal = () => {
         })
     }
     else if (selectionType === 'Serial') {
-
       userRequest.put('/updateMappedBarcodesBinLocationBySerialNo', {
         "oldBinLocation": data[0].BinLocation,
         "newBinLocation": binlocation,
-        "serialNumber": userInput
+        "serialNumber": filteredData[0].ItemSerialNo,
       })
         .then(response => {
           console.log(response?.data)
@@ -326,13 +313,13 @@ const BinToBinInternal = () => {
                   />
                 </div>
                 <div className='flex justify-center items-center w-full mt-4'>
-                    <button
-                      type='submit'
-                      className='bg-[#F98E1A] hover:bg-[#edc498] w-[50%] text-[#fff] font-medium py-2 px-6 rounded-sm'
-                      >
-                      FIND
-                    </button>
-                  </div>
+                  <button
+                    type='submit'
+                    className='bg-[#F98E1A] hover:bg-[#edc498] w-[50%] text-[#fff] font-medium py-2 px-6 rounded-sm'
+                  >
+                    FIND
+                  </button>
+                </div>
               </div>
             </form>
 

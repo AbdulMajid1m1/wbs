@@ -6724,6 +6724,11 @@ const WBSDB = {
   async generateSerialNumberforStockMasterAndInsertIntoMappedBarcode(req, res, next) {
     try {
       const { SerialQTY, ITEMID, ITEMNAME, Width, Height, Length, Weight } = req.body;
+      // check if serial qty is provided and it is a type of number
+      if (!SerialQTY || typeof SerialQTY !== "number") {
+        return res.status(400).send({ message: "Please provide SerialQTY as a number." });
+      }
+
       const currentDate = new Date();
       let generatedSerials = [];
       // Fetch the last StockMasterSerialNo from TblSysNo using pool2
@@ -6732,7 +6737,7 @@ const WBSDB = {
       console.log(result.recordset[0])
       let StockMasterSerialNo = result.recordset[0]?.StockMasterSerialNoLatest;
       if (StockMasterSerialNo === undefined || StockMasterSerialNo === null) {
-        return res.status(500).send({ message: "StockMasterSerialNo is null" });
+        return res.status(500).send({ message: "StockMasterSerialNo is null in table TblSysNo" });
       }
 
       // Start a transaction for a consistent data insert

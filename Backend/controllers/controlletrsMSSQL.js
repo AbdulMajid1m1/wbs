@@ -4584,6 +4584,8 @@ const WBSDB = {
     }
   },
 
+
+
   // Controller 1 - Update bin location based on Serial Number
   async updateMappedBarcodesBinLocationBySerialNo(req, res, next) {
     let transaction;
@@ -4722,6 +4724,7 @@ const WBSDB = {
 
   async getMappedBarcodedsByPalletCodeAndBinLocation(req, res, next) {
     try {
+      
       const PalletCode = req.headers['palletcode']; // Get ItemSerialNo from headers
       const BinLoacation = req.headers['binlocation']; // Get ItemSerialNo from headers
       let query = `

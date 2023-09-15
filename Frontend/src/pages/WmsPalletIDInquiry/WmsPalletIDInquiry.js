@@ -32,8 +32,8 @@ const handleForm = (e) => {
       })
       //Show only one palletCode
     .then(response => {
-      const { GTIN, PalletCode } = response.data[0];
-      setData([{ GTIN, PalletCode }]);
+      const { GTIN, PalletCode, ItemCode, ItemSerialNo, BinLocation } = response.data[0];
+      setData([{ GTIN, PalletCode, ItemCode, ItemSerialNo, BinLocation }]);
     //   setMessage(response?.data?.message ?? 'Data Displayed');
       setIsLoading(false)
    
@@ -135,6 +135,9 @@ const handleForm = (e) => {
                             <tr>
                             <th>GTIN</th>
                             <th>Pallet Code</th>
+                            <th>ItemCode</th>
+                            <th>ItemSerialNo</th>
+                            <th>BinLocation</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -142,11 +145,34 @@ const handleForm = (e) => {
                             <tr key={index}>
                                 <td>{item.GTIN}</td>
                                 <td>{item.PalletCode}</td>
+                                <td>{item.ItemCode}</td>
+                                <td>{item.ItemSerialNo}</td>
+                                <td>{item.BinLocation}</td>
                             </tr>
                             ))}
                         </tbody>
                     </table>
-                </div>  
+                </div>
+
+                <div className='mb-6 flex justify-between'>
+                  <button
+                    type='button'
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
+                    <span className='flex justify-center items-center'
+                    >
+                      <p>Scan Again</p>
+                    </span>
+                  </button>
+
+                  <button
+                    type='button'
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
+                    <span className='flex justify-center items-center'
+                    >
+                      <p>Transfer Location</p>
+                    </span>
+                  </button>
+                </div>
             </div>         
         </div>
       </div>

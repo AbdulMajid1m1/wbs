@@ -81,6 +81,18 @@
     height: 25px;
   }
 
+  .table-location-generate2 table thead tr th:nth-child(1),
+  .table-location-generate2 table thead tr th:nth-child(2),
+  .table-location-generate2 table thead tr th:nth-child(3),
+  .table-location-generate2 table thead tr th:nth-child(4),
+  .table-location-generate2 table thead tr th:nth-child(5)
+  {
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .table-location-generate2 table tbody tr td:nth-child(1),
   .table-location-generate2 table tbody tr td:nth-child(2),
   .table-location-generate2 table tbody tr td:nth-child(3),

@@ -99,6 +99,11 @@ console.log(palletCode);
 
 
 const handleChangePalletCode = () => {
+    if(binlocation === '' || binlocation === null || binlocation === undefined){
+        setError('Please select a Bin location');
+        return;
+    } 
+
     setIsLoading(true)
     const requestBody = {
       records: [
@@ -116,6 +121,10 @@ const handleChangePalletCode = () => {
         setMessage(response?.data?.message ?? 'Bin locations updated successfully.');
         setIsLoading(false)
         
+
+        setTimeout(() => {
+            navigate(-1)
+            }, 2000);
       })
       .catch((error) => {
         console.error(error);
@@ -175,7 +184,7 @@ const handleChangePalletCode = () => {
             </div>
 
         
-              <div className='mb-6'>
+              <div className='mt-4'>
                 <label htmlFor='palletId'
                   className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">PalletID/Code<span className='text-[#FF0404]'>*</span></label>
                 <div className='w-full flex'>

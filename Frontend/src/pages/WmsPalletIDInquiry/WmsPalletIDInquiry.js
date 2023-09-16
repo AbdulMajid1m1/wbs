@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import icon from "../../images/close.png"
 import "./WmsPalletIDInquiry.css";
@@ -7,6 +7,7 @@ import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
 import userRequest from '../../utils/userRequest';
 
+
 const WmsPalletIDInquiry = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
@@ -14,6 +15,7 @@ const WmsPalletIDInquiry = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [serial, setSerial] = useState('');
+  const inputRef = useRef(null);
 
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -37,6 +39,9 @@ const handleForm = (e) => {
     //   setMessage(response?.data?.message ?? 'Data Displayed');
       setIsLoading(false)
    
+      //Save the palletCode in sesstionStorage
+      sessionStorage.setItem('PalletCode', PalletCode);
+
     })
 
     // Show Multiple PalletCode
@@ -56,6 +61,25 @@ const handleForm = (e) => {
       setData([])
     });
   };
+
+
+  const handleScanAgain = () => {
+    setSerial('')
+    setData([])
+    inputRef.current.focus();
+  }
+
+
+  const handleTransferLocation = () => {
+    if (data.length > 0 && data[0].PalletCode) {
+      // PalletCode is not empty, navigate to the next screen with the PalletCode parameter
+      navigate('/palletIdtransfer');
+    } else {
+      // PalletCode is empty, display an error message
+      setError("PalletID/Code is EMPTY, not allowed to Transfer");
+    }
+  };
+  
 
   return (
     <>
@@ -112,9 +136,11 @@ const handleForm = (e) => {
                 <div className='w-full flex'>
                   <input
                     id="serial"
+                    value={serial}
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
                     placeholder="Scan Serial Number"
                     onChange={(e) => setSerial(e.target.value)}
+                    ref={inputRef}
                   />
                   <button
                     type='submit'
@@ -156,7 +182,8 @@ const handleForm = (e) => {
 
                 <div className='mb-6 flex justify-between'>
                   <button
-                    type='button'
+                    onClick={handleScanAgain}
+                    // type='button'
                     className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
                     <span className='flex justify-center items-center'
                     >
@@ -165,7 +192,8 @@ const handleForm = (e) => {
                   </button>
 
                   <button
-                    type='button'
+                    onClick={handleTransferLocation}
+                    // type='button'
                     className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
                     <span className='flex justify-center items-center'
                     >

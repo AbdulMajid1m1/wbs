@@ -118,6 +118,7 @@ import AddNewRZone from './components/AddNew/AddNewRZone'
 import TblRZoneUpdate from './components/UpdatesItem/TblRZoneUpdate'
 import PrintingItemLabels from './pages/PrintingItemLabels/PrintingItemLabels'
 import WarehouseStockInventory from './pages/WarehouseStockInventory/WarehouseStockInventory'
+import PalletIDTransferLocation from './pages/WmsPalletIDInquiry/PalletIDTransferLocation'
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
@@ -201,6 +202,7 @@ const App = () => {
         <Route path='/secondItemunallocation' element={<SecondItemUnAllocation />} />
 
         <Route path='/palletIdInquiry' element={<WmsPalletIDInquiry />} />
+        <Route path='/palletIdtransfer' element={<PalletIDTransferLocation />} />
 
 
         <Route

@@ -24,7 +24,7 @@ const WmsProfitLossLast = () => {
   };
   const storedData = sessionStorage.getItem('JournalRowData');
   const parsedData = JSON.parse(storedData);
-  console.log("parsedData")
+  
   console.log(parsedData)
 
 

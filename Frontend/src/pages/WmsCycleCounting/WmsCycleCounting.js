@@ -6,6 +6,7 @@ import "./WmsCycleCounting.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { Autocomplete, TextField } from '@mui/material';
 
 const WmsCycleCounting = () => {
   const navigate = useNavigate();
@@ -13,7 +14,11 @@ const WmsCycleCounting = () => {
 
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [journalIdFilter, setJournalIdFilter] = useState(null);
+  const [itemIdFilter, setItemIdFilter] = useState(null);
+
   const [journalRowIndex, setJournalRowIndex] = useState(JSON.parse(sessionStorage.getItem('PickingRowIndex')) || '');
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
@@ -34,14 +39,14 @@ const WmsCycleCounting = () => {
   const handleChangeValue = (e) => {
     setTransferTag(e.target.value);
   }
-  
+
   useEffect(() => {
     setIsLoading(true);
     // userRequest.get('/getWmsJournalMovementClByAssignedToUserId')
     userRequest.get('/getWmsJournalCountingCLByAssignedToUserId')
       .then((response) => {
-        console.log(response);
         setData(response?.data);
+        setFilteredData(response?.data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -85,6 +90,34 @@ const WmsCycleCounting = () => {
       });
   }
 
+  const handleFilterChange = (filterType, event, value) => {
+    console.log(filterType, value);
+    let newJournalIdFilter = journalIdFilter;
+    let newItemIdFilter = itemIdFilter;
+
+    if (filterType === 'journalId') {
+      newJournalIdFilter = value;
+      setJournalIdFilter(value);
+    } else if (filterType === 'itemId') {
+      newItemIdFilter = value;
+      setItemIdFilter(value);
+    }
+
+    let newFilteredData = [...data];
+
+    if (newJournalIdFilter) {
+      newFilteredData = newFilteredData.filter(item => item?.JOURNALID === newJournalIdFilter);
+    }
+    if (newItemIdFilter) {
+      newFilteredData = newFilteredData.filter(item => item?.ITEMID === newItemIdFilter);
+    }
+    console.log(newFilteredData);
+
+    setFilteredData(newFilteredData);
+  }
+
+
+
 
   return (
     <>
@@ -112,9 +145,9 @@ const WmsCycleCounting = () => {
         </div>
       }
 
-      <div className="before:animate-pulse before:bg-gradient-to-b "  style={{ minHeight: '550px' }}>
+      <div className="before:animate-pulse before:bg-gradient-to-b " style={{ minHeight: '550px' }}>
         <div className="w-full h-auto sm:px-5 flex items-center justify-center absolute">
-          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg"  style={{ minHeight: '550px' }}>
+          <div className="w-full sm:w-1/2 lg:2/3 px-6 bg-gray-400 bg-opacity-20 bg-clip-padding backdrop-filter backdrop-blur-sm text-white z-50 py-4  rounded-lg" style={{ minHeight: '550px' }}>
             <div className="w-full font-semibold p-6 shadow-xl rounded-md text-black bg-[#F98E1A] text-xl mb:2 md:mb-5">
 
               <div className='flex justify-between items-center gap-2 text-xs sm:text-xl'>
@@ -136,6 +169,93 @@ const WmsCycleCounting = () => {
 
             <div className=''>
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
+            </div>
+
+
+
+            <div className="mb-6 mt-6">
+              <label htmlFor="journalMovementjournalIdFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Journal Id</label>
+              <Autocomplete
+                id="journalMovementjournalIdFilter"
+                options={Array.from(new Set(data?.map(item => item?.JOURNALID))).filter(Boolean)}
+                getOptionLabel={(option) => option || ""}
+                onChange={(event, value) => handleFilterChange('journalId', event, value)}
+
+                onInputChange={(event, value) => {
+                  if (!value) {
+                    // perform operation when input is cleared
+                    console.log("Input cleared");
+
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      className: "text-white",
+                    }}
+                    InputLabelProps={{
+                      ...params.InputLabelProps,
+                      style: { color: "white" },
+                    }}
+
+                    className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                    placeholder="Select Journal Id to filter"
+
+                  />
+                )}
+                classes={{
+                  endAdornment: "text-white",
+                }}
+                sx={{
+                  '& .MuiAutocomplete-endAdornment': {
+                    color: 'white',
+                  },
+                }}
+              />
+            </div>
+
+            <div className="mb-6 mt-6">
+              <label htmlFor="journalMovementitemIdFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
+              <Autocomplete
+                id="journalMovementitemIdFilter"
+                options={Array.from(new Set(data?.map(item => item?.ITEMID))).filter(Boolean)}
+                getOptionLabel={(option) => option || ""}
+                onChange={(event, value) => handleFilterChange('itemId', event, value)}
+                onInputChange={(event, value) => {
+                  if (!value) {
+                    // perform operation when input is cleared
+                    console.log("Input cleared");
+
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      className: "text-white",
+                    }}
+                    InputLabelProps={{
+                      ...params.InputLabelProps,
+                      style: { color: "white" },
+                    }}
+
+                    className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                    placeholder="Select Item Id to filter"
+
+                  />
+                )}
+                classes={{
+                  endAdornment: "text-white",
+                }}
+                sx={{
+                  '& .MuiAutocomplete-endAdornment': {
+                    color: 'white',
+                  },
+                }}
+              />
             </div>
 
             <div className='mt-6'>
@@ -164,7 +284,7 @@ const WmsCycleCounting = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, index) => (
+                    {filteredData?.map((item, index) => (
                       <tr key={index} onClick={() => handleRowClick(item, index)}
                         style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
                       >
@@ -197,14 +317,14 @@ const WmsCycleCounting = () => {
 
               <div className='mt-6'>
                 <div className='w-full flex justify-end place-items-end'>
-  
+
                   <div>
                     <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                     <input
                       id="totals"
                       className="bg-gray-50 font-semibold text-center placeholder:text-[#00006A] border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Totals"
-                      value={data.length}
+                      value={filteredData?.length}
                     />
                   </div>
                 </div>

@@ -6,6 +6,7 @@ import "./WmsProfitLoss.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
+import { Autocomplete, TextField } from '@mui/material';
 
 const WmsProfitLoss = () => {
   const navigate = useNavigate();
@@ -13,9 +14,15 @@ const WmsProfitLoss = () => {
 
   const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [journalIdFilter, setJournalIdFilter] = useState(null);
+  const [itemIdFilter, setItemIdFilter] = useState(null);
+
   const [journalRowIndex, setJournalRowIndex] = useState(JSON.parse(sessionStorage.getItem('PickingRowIndex')) || '');
+
   const [binlocation, setBinLocation] = useState('');
+
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
 
@@ -35,13 +42,13 @@ const WmsProfitLoss = () => {
     setTransferTag(e.target.value);
   }
 
-  
+
   useEffect(() => {
     setIsLoading(true);
     userRequest.get('/getWmsJournalProfitLostCLByAssignedToUserId')
       .then((response) => {
-        console.log(response);
         setData(response?.data);
+        setFilteredData(response?.data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -50,32 +57,6 @@ const WmsProfitLoss = () => {
       });
   }, []);
 
-
-  const handleForm = (e) => {
-    e.preventDefault();
-    setIsLoading(true)
-
-    userRequest.get(`/getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=${transferTag}`)
-      .then(response => {
-        console.log(response?.data);
-
-        setData(response?.data ?? []);
-        // sessionStorage.setItem('allJournalRows', JSON.stringify(response?.data ?? []));
-        // sessionStorage.setItem('rmaRows', JSON.stringify(response?.data ?? []));
-        sessionStorage.setItem('profitloss', JSON.stringify(response?.data ?? []));
-        setIsLoading(false)
-        setMessage(response?.data?.message ?? 'Show All data');
-
-      })
-
-      .catch(error => {
-        console.error(error);
-        setIsLoading(false)
-        setError(error?.response?.data?.message ?? 'Wrong Route ID');
-
-      });
-
-  }
 
   const handleRowClick = (item, index) => {
     // save data in session storage
@@ -112,6 +93,34 @@ const WmsProfitLoss = () => {
         // alert(error)
       });
   }
+
+
+  const handleFilterChange = (filterType, event, value) => {
+    console.log(filterType, value);
+    let newJournalIdFilter = journalIdFilter;
+    let newItemIdFilter = itemIdFilter;
+
+    if (filterType === 'journalId') {
+      newJournalIdFilter = value;
+      setJournalIdFilter(value);
+    } else if (filterType === 'itemId') {
+      newItemIdFilter = value;
+      setItemIdFilter(value);
+    }
+
+    let newFilteredData = [...data];
+
+    if (newJournalIdFilter) {
+      newFilteredData = newFilteredData.filter(item => item?.JOURNALID === newJournalIdFilter);
+    }
+    if (newItemIdFilter) {
+      newFilteredData = newFilteredData.filter(item => item?.ITEMID === newItemIdFilter);
+    }
+    console.log(newFilteredData);
+
+    setFilteredData(newFilteredData);
+  }
+
 
 
   return (
@@ -166,26 +175,90 @@ const WmsProfitLoss = () => {
               <h2 className='text-[#00006A] text-center font-semibold'>Current Logged in User ID:<span className='text-[#FF0404]' style={{ "marginLeft": "5px" }}>{currentUser?.UserID}</span></h2>
             </div>
 
-            {/* <form onSubmit={handleForm}>
-              <div className='mb-6'>
-                <label htmlFor='profit' className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Profit Loss<span className='text-[#FF0404]'>*</span></label>
-                <div className='w-full flex'>
-                  <input
-                    id="profit"
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
-                    placeholder="Profit Loss"
-                    onChange={handleChangeValue}
-                  />
-                  <button
-                    type='submit'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm'
-                  >
-                    FIND
-                  </button>
-                </div>
-              </div>
-            </form> */}
+            <div className="mb-6 mt-6">
+              <label htmlFor="journalMovementjournalIdFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Journal Id</label>
+              <Autocomplete
+                id="journalMovementjournalIdFilter"
+                options={Array.from(new Set(data?.map(item => item?.JOURNALID))).filter(Boolean)}
+                getOptionLabel={(option) => option || ""}
+                onChange={(event, value) => handleFilterChange('journalId', event, value)}
 
+                onInputChange={(event, value) => {
+                  if (!value) {
+                    // perform operation when input is cleared
+                    console.log("Input cleared");
+
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      className: "text-white",
+                    }}
+                    InputLabelProps={{
+                      ...params.InputLabelProps,
+                      style: { color: "white" },
+                    }}
+
+                    className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                    placeholder="Select Journal Id to filter"
+
+                  />
+                )}
+                classes={{
+                  endAdornment: "text-white",
+                }}
+                sx={{
+                  '& .MuiAutocomplete-endAdornment': {
+                    color: 'white',
+                  },
+                }}
+              />
+            </div>
+
+            <div className="mb-6 mt-6">
+              <label htmlFor="journalMovementitemIdFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
+              <Autocomplete
+                id="journalMovementitemIdFilter"
+                options={Array.from(new Set(data?.map(item => item?.ITEMID))).filter(Boolean)}
+                getOptionLabel={(option) => option || ""}
+                onChange={(event, value) => handleFilterChange('itemId', event, value)}
+                onInputChange={(event, value) => {
+                  if (!value) {
+                    // perform operation when input is cleared
+                    console.log("Input cleared");
+
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      className: "text-white",
+                    }}
+                    InputLabelProps={{
+                      ...params.InputLabelProps,
+                      style: { color: "white" },
+                    }}
+
+                    className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
+                    placeholder="Select Item Id to filter"
+
+                  />
+                )}
+                classes={{
+                  endAdornment: "text-white",
+                }}
+                sx={{
+                  '& .MuiAutocomplete-endAdornment': {
+                    color: 'white',
+                  },
+                }}
+              />
+            </div>
             <div className='mt-6'>
               <label className='text-[#00006A] font-semibold'>List of Profit and Loss<span className='text-[#FF0404]'>*</span></label>
               {/* // creae excel like Tables  */}
@@ -193,7 +266,7 @@ const WmsProfitLoss = () => {
                 <table>
                   <thead>
                     <tr>
-                    <th>ITEMID</th>
+                      <th>ITEMID</th>
                       <th>ITEMNAME</th>
                       <th>QTY</th>
                       <th>LEDGERACCOUNTIDOFFSET</th>
@@ -212,7 +285,7 @@ const WmsProfitLoss = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, index) => (
+                    {filteredData?.map((item, index) => (
                       <tr key={index} onClick={() => handleRowClick(item, index)}
 
                         style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
@@ -248,6 +321,7 @@ const WmsProfitLoss = () => {
               <div className='mt-6'>
                 <div className='w-full flex justify-between place-items-end'>
                   {/* <div>
+                  
                   <button
                     type='submit'
                     className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm w-full'>
@@ -263,7 +337,7 @@ const WmsProfitLoss = () => {
                       id="totals"
                       className="bg-gray-50 font-semibold text-center placeholder:text-[#00006A] border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Totals"
-                      value={data.length}
+                      value={filteredData?.length}
                     />
                   </div>
                 </div>

@@ -15,8 +15,8 @@ const JournalProfitLost = () => {
     const resetSnakeBarMessages = () => {
         setError(null);
         setMessage(null);
-    
-      };
+
+    };
 
 
 
@@ -24,22 +24,18 @@ const JournalProfitLost = () => {
         const getAllAssetsList = async () => {
             try {
 
-                userRequest.get("/getAllWmsJournalProfitLost")
-                    .then(response => {
-                        console.log(response?.data);
-                        setData(response?.data ?? [])
-                        setIsLoading(false)
+                const response = await userRequest.get("/getAllWmsJournalProfitLost")
 
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        setIsLoading(false)
-                        setError(error?.response?.data?.message ?? "Something went wrong")
-                    });
-
+                console.log(response?.data);
+                setData(response?.data ?? [])
             }
             catch (error) {
                 console.log(error);
+                setError(error?.response?.data?.message ?? "Something went wrong")
+
+            }
+            finally {
+                setIsLoading(false)
             }
         };
         getAllAssetsList();
@@ -59,7 +55,7 @@ const JournalProfitLost = () => {
                 UserName="Journal Profit User"
                 loading={isLoading}
                 setIsLoading={setIsLoading}
-            
+
             />
 
             {/* {isLoading &&

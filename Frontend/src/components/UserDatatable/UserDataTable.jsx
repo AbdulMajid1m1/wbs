@@ -1134,7 +1134,10 @@ const UserDataTable = ({
             .then(response => {
               // Handle the response from the API if needed
               console.log(response.data);
+              setSelectedRow([]);
+              setRowSelectionModel([]);
               setMessage(response?.data?.message || 'Picklist assigned to user successfully')
+              // empty the selected row
             })
             .catch(error => {
               // Handle any errors that occur during the request
@@ -1170,6 +1173,8 @@ const UserDataTable = ({
             .then(response => {
               // Handle the response from the API if needed
               console.log(response.data);
+              setSelectedRow([]);
+              setRowSelectionModel([]);
               setMessage(response?.data?.message || 'Journal Profit Lost to user successfully')
             })
             .catch(error => {
@@ -1206,6 +1211,8 @@ const UserDataTable = ({
             .then(response => {
               // Handle the response from the API if needed
               console.log(response.data);
+              setSelectedRow([]);
+              setRowSelectionModel([]);
               setMessage(response?.data?.message || 'Journal Profit Lost to user successfully')
             })
             .catch(error => {

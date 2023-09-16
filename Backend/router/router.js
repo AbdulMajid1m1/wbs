@@ -283,6 +283,8 @@ router.post("/insertIntoMappedBarcodeOrUpdateBySerialNo", checkAuthentication, c
 
 router.put("/updateMappedBarcodesBinLocationByPalletCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.updateMappedBarcodesBinLocationByPalletCode);
 
+router.put("/updateMappedBarcodesByPalletCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.updateMappedBarcodesByPalletCode);
+
 router.post("/getItemInfoByPalletCode", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getItemInfoByPalletCode);
 
 router.post("/getMappedBarcodedsByPalletCodeAndBinLocation", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.getMappedBarcodedsByPalletCodeAndBinLocation);

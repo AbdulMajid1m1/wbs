@@ -33,13 +33,10 @@ const palletCode = sessionStorage.getItem('PalletCode');
 console.log(palletCode);
 
 
-// const handleForm = (e) => {
-    // setIsLoading(true)
-    // e.preventDefault();
     useEffect(() => {
     userRequest.post('/getItemInfoByPalletCode', {}, {
         headers: {
-          itemserialno: palletCode
+          palletCode: palletCode
         }
       })
       //Show only one palletCode
@@ -152,29 +149,29 @@ console.log(palletCode);
               </div>
             </div>
 
-            <form onSubmit={handleForm}>
+            {/* <form onSubmit={handleForm}> */}
               <div className='mb-6'>
                 <label htmlFor='palletId'
                   className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">PalletID/Code<span className='text-[#FF0404]'>*</span></label>
                 <div className='w-full flex'>
                   <input
                     id="palletId"
-                    value={palletCodeId}
+                    value={palletCode}
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
                     placeholder="Scan PalletID or Pallet Code"
                     onChange={(e) => setPalletCodeId(e.target.value)}
                     ref={inputRef}
                   />
-                  <button
+                  {/* <button
                     type='submit'
                     className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm'
                   >
                     FIND
-                  </button>
+                  </button> */}
 
                 </div>
               </div>
-            </form>
+            {/* </form> */}
 
          
                {/* Table to display GTIN and Pallet Code */}

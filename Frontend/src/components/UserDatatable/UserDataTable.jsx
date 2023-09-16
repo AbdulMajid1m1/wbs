@@ -69,7 +69,6 @@ const UserDataTable = ({
   const [shipmentIdSearch, setShipmentIdSearch] = useState("");
   const [containerIdSearch, setContainerIdSearch] = useState("");
   const [expectedStatusSearch, setExpectedStatusSearch] = useState("");
-  const [updatedRows, setUpdatedRows] = useState([]);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [muiFilteredData, setMuiFilteredData] = useState([]);
@@ -317,27 +316,6 @@ const UserDataTable = ({
   };
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const newRows = await Promise.all(selectedRow.map(async (row) => {
-        try {
-          const response = await userRequest.get(`/getStockMasterDataByItemId?ITEMID=${row.data.ITEMID}`);
-          const itemGroup = response?.data[0]?.GROUPNAME; // add optional chaining
-          console.log(response)
-          return { ...row, itemGroup: itemGroup || '' }; // add a fallback value for itemGroup
-
-        } catch (error) {
-          console.log("this is error in userdata table in useeffect with uniqueId")
-          console.log(error);
-        }
-        return row; // if the API call fails, return the original row
-      }));
-
-      setUpdatedRows(newRows);
-    };
-
-    fetchData();
-  }, [selectedRow]);
 
 
   const handlePrint = () => {
@@ -1963,34 +1941,6 @@ const PrintingShipmentReceived = ({ selectedRow, index }) => {
     </div>
   );
 };
-
-
-
-
-// const PrintLabelsBarCode = ({ selectedRow, index }) => {
-//   return (
-//     <div>
-//       <div id="barcode" key={index}>
-//         <div id="barcode" className='hidden'>
-//           <div id='header'>
-//             <div>
-//               <img src={logo} id='imglogo' alt='' />
-//             </div>
-//           </div>
-//           <div id="itemcode">
-//               <p>{selectedRow.data.ItemCode}</p>
-//           </div>
-//           <div id='inside-BRCode'>
-//             <QRCodeSVG value={selectedRow.data.ItemSerialNo} width={100} height={70} />
-//           </div>
-//           <div id="itemcode">
-//               <p>{selectedRow.data.ItemSerialNo}</p>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
 
 
 const PrintReturnSalesOrder = ({ selectedRow, index }) => {

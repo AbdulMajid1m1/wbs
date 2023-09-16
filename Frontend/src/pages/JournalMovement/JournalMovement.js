@@ -26,7 +26,6 @@ const JournalMovement = () => {
 
                 userRequest.get("/getAllWmsJournalMovement")
                     .then(response => {
-                        console.log(response?.data);
                         setData(response?.data ?? [])
                         setIsLoading(false)
 

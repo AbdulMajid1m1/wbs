@@ -4666,7 +4666,7 @@ const WBSDB = {
 
       transaction = new sql.Transaction(pool2);
       await transaction.begin();
-
+      let rowsUpdated = 0; // Initialize a counter for updated rows
       for (let record of records) {
         const { oldBinLocation, newBinLocation, palletCode } = record;
 
@@ -4685,12 +4685,95 @@ const WBSDB = {
           WHERE BinLocation = @oldBinLocation AND PalletCode = @palletCode;
         `;
 
-        await request.query(updateQuery);
+        let result = await request.query(updateQuery);
+        if (result.rowsAffected[0] > 0) {
+
+          rowsUpdated++;
+        }
       }
 
       await transaction.commit();
+      if (rowsUpdated === 0) {
+        // If no rows were updated, send a relevant message
+        res.status(404).send({ message: 'No rows were updated.' });
+      } else {
+        res.status(200).send({ message: 'Bin locations updated successfully.' });
+      }
+    } catch (error) {
+      console.error(error);
 
-      res.status(200).send({ message: 'Bin locations updated successfully.' });
+      if (transaction) {
+        await transaction.rollback();
+      }
+
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  async updateMappedBarcodesByPalletCode(req, res, next) {
+    let transaction;
+
+    try {
+      const { records } = req.body;
+
+      if (!records) {
+        return res.status(400).send({ message: 'Updates are required.' });
+      }
+
+      if (!Array.isArray(records)) {
+        return res.status(400).send({ message: 'Updates must be an array.' });
+      }
+
+      if (records.length === 0) {
+        return res.status(400).send({ message: 'Updates array must not be empty.' });
+      }
+
+      // Your validation logic here
+
+      transaction = new sql.Transaction(pool2);
+      await transaction.begin();
+      let rowsUpdated = 0; // Initialize a counter for updated rows
+      let errors = []; // Array to hold error messages
+      for (let i = 0; i < records.length; i++) {
+        const { newBinLocation, palletCode } = records[i];;
+
+        if (!newBinLocation || !palletCode) {
+          return res.status(400).send({ message: 'newBinLocation, and palletCode are all required.' });
+        }
+
+        let request = transaction.request();
+        request.input('newBinLocation', sql.NVarChar, newBinLocation);
+        request.input('palletCode', sql.NVarChar, palletCode);
+
+        const updateQuery = `
+          UPDATE dbo.tblMappedBarcodes
+          SET BinLocation = @newBinLocation
+          WHERE PalletCode = @palletCode;
+        `;
+
+        let result = await request.query(updateQuery);
+        if (result.rowsAffected[0] > 0) {
+
+          rowsUpdated++;
+        }
+        else {
+          errors.push(`Record ${i}: No rows were updated for palletCode ${palletCode}.`);
+        }
+      }
+
+      await transaction.commit();
+      if (rowsUpdated === 0) {
+        // If no rows were updated, send a relevant message
+        res.status(404).send({ message: 'No rows were updated.', errors });
+      } else {
+        if (errors?.length === 0) {
+
+          return res.status(200).send({ message: 'Bin locations updated successfully.' });
+        }
+        else {
+          return res.status(200).send({ message: 'Bin locations updated successfully.', errors });
+        }
+      }
     } catch (error) {
       console.error(error);
 
@@ -4724,7 +4807,7 @@ const WBSDB = {
 
   async getMappedBarcodedsByPalletCodeAndBinLocation(req, res, next) {
     try {
-      
+
       const PalletCode = req.headers['palletcode']; // Get ItemSerialNo from headers
       const BinLoacation = req.headers['binlocation']; // Get ItemSerialNo from headers
       let query = `

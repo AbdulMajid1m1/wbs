@@ -129,10 +129,10 @@ const handleForm = (e) => {
             </div>
 
             <form onSubmit={handleForm}>
-              <div className='mb-6'>
+              <div className='mt-4'>
                 <label htmlFor='serial'
                   className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial Number<span className='text-[#FF0404]'>*</span></label>
-                <div className='w-full flex'>
+                <div className='w-full flex mb-4'>
                   <input
                     id="serial"
                     value={serial}
@@ -182,8 +182,7 @@ const handleForm = (e) => {
                 <div className='mb-6 flex justify-between'>
                   <button
                     onClick={handleScanAgain}
-                    // type='button'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[30%]'>
                     <span className='flex justify-center items-center'
                     >
                       <p>Scan Again</p>
@@ -193,7 +192,7 @@ const handleForm = (e) => {
                   <button
                     onClick={handleTransferLocation}
                     // type='button'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[35%]'>
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[35%]'>
                     <span className='flex justify-center items-center'
                     >
                       <p>Change Pallet Location</p>

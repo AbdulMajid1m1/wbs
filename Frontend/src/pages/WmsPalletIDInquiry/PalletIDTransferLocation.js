@@ -303,7 +303,7 @@ const handleChangePalletCode = () => {
                   <button
                     onClick={() => navigate(-1)}
                     // type='button'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[30%]'>
                     <span className='flex justify-center items-center'
                     >
                       <p>Scan Again</p>
@@ -313,7 +313,7 @@ const handleChangePalletCode = () => {
                   <button
                     onClick={handleChangePalletCode}
                     // type='button'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[30%]'>
                     <span className='flex justify-center items-center'
                     >
                       <p>Transfer Location</p>

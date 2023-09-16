@@ -72,7 +72,6 @@ const handleForm = (e) => {
 
   const handleTransferLocation = () => {
     if (data.length > 0 && data[0].PalletCode) {
-      // PalletCode is not empty, navigate to the next screen with the PalletCode parameter
       navigate('/palletIdtransfer');
     } else {
       // PalletCode is empty, display an error message
@@ -194,10 +193,10 @@ const handleForm = (e) => {
                   <button
                     onClick={handleTransferLocation}
                     // type='button'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
+                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[35%]'>
                     <span className='flex justify-center items-center'
                     >
-                      <p>Transfer Location</p>
+                      <p>Change Pallet Location</p>
                     </span>
                   </button>
                 </div>

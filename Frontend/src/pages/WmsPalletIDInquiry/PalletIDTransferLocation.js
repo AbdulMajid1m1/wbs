@@ -98,7 +98,32 @@ console.log(palletCode);
 //   console.log(binlocation)
 
 
-
+const handleChangePalletCode = () => {
+    setIsLoading(true)
+    const requestBody = {
+      records: [
+        {
+          newBinLocation: binlocation,
+          palletCode: palletCode,
+        },
+      ],
+    };
+  
+    userRequest
+      .put('/updateMappedBarcodesByPalletCode', requestBody)
+      .then((response) => {
+        console.log(response?.data);
+        setMessage(response?.data?.message ?? 'Bin locations updated successfully.');
+        setIsLoading(false)
+        
+      })
+      .catch((error) => {
+        console.error(error);
+        setError(error?.response?.data?.message ?? 'Error updating bin locations.');
+        setIsLoading(false)
+      });
+  };
+  
 
 
   return (
@@ -149,7 +174,7 @@ console.log(palletCode);
               </div>
             </div>
 
-            {/* <form onSubmit={handleForm}> */}
+        
               <div className='mb-6'>
                 <label htmlFor='palletId'
                   className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">PalletID/Code<span className='text-[#FF0404]'>*</span></label>
@@ -162,17 +187,8 @@ console.log(palletCode);
                     onChange={(e) => setPalletCodeId(e.target.value)}
                     ref={inputRef}
                   />
-                  {/* <button
-                    type='submit'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 px-6 rounded-sm'
-                  >
-                    FIND
-                  </button> */}
-
                 </div>
               </div>
-            {/* </form> */}
-
          
                {/* Table to display GTIN and Pallet Code */}
                 <div className="table-location-generate2">
@@ -286,7 +302,7 @@ console.log(palletCode);
                   </button>
 
                   <button
-                    // onClick={handleTransferLocation}
+                    onClick={handleChangePalletCode}
                     // type='button'
                     className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
                     <span className='flex justify-center items-center'

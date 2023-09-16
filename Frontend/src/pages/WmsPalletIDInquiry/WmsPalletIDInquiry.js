@@ -130,10 +130,10 @@ const WmsPalletIDInquiry = () => {
             </div>
 
             <form onSubmit={handleForm}>
-              <div className='mb-6'>
+              <div className='mt-4'>
                 <label htmlFor='serial'
                   className="block mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial Number<span className='text-[#FF0404]'>*</span></label>
-                <div className='w-full flex'>
+                <div className='w-full flex mb-4'>
                   <input
                     id="serial"
                     value={serial}
@@ -154,37 +154,10 @@ const WmsPalletIDInquiry = () => {
             </form>
 
 
-            {/* Table to display GTIN and Pallet Code */}
-            <div className="table-location-generate2">
-              <table>
-                <thead>
-                  <tr>
-                    <th>GTIN</th>
-                    <th>Pallet Code</th>
-                    <th>ItemCode</th>
-                    <th>ItemSerialNo</th>
-                    <th>BinLocation</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.GTIN}</td>
-                      <td>{item.PalletCode}</td>
-                      <td>{item.ItemCode}</td>
-                      <td>{item.ItemSerialNo}</td>
-                      <td>{item.BinLocation}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
             <div className='mb-6 flex justify-between'>
               <button
                 onClick={handleScanAgain}
-                // type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[30%]'>
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[30%]'>
                 <span className='flex justify-center items-center'
                 >
                   <p>Scan Again</p>
@@ -194,7 +167,7 @@ const WmsPalletIDInquiry = () => {
               <button
                 onClick={handleTransferLocation}
                 // type='button'
-                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] font-medium py-2 rounded-sm w-[35%]'>
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[35%]'>
                 <span className='flex justify-center items-center'
                 >
                   <p>Change Pallet Location</p>

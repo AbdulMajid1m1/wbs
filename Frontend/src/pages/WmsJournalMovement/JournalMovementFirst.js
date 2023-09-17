@@ -319,11 +319,9 @@ const JournalMovementFirst = () => {
 
             <form >
 
-
               <div className='mt-6'>
                 <div className='w-full flex justify-end place-items-end'>
-
-                  <div>
+                  <div className='flex justify-center items-center gap-2'>
                     <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
                     <input
                       id="totals"
@@ -333,6 +331,84 @@ const JournalMovementFirst = () => {
                     />
                   </div>
                 </div>
+
+
+
+                {/* New Input Added Serial Number */}
+                <div className="mb-6">
+                  <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
+                  <input
+                    id="scan"
+                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder={'Scan Serial'}
+                    // value={userInput}
+                    // onChange={(e) => setUserInput(e.target.value)}
+                    // onBlur={handleInputUser}
+
+                  />
+                </div>
+
+                {/* New Table Added */}
+                <div className='mt-6'>
+                  <div className="table-location-generate1">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>ITEMID</th>
+                          <th>ITEMNAME</th>
+                          <th>QTY</th>
+                          <th>LEDGERACCOUNTIDOFFSET</th>
+                          <th>JOURNALID</th>
+                          <th>TRANSDATE</th>
+                          <th>INVENTSITEID</th>
+                          <th>INVENTLOCATIONID</th>
+                          <th>CONFIGID</th>
+                          <th>WMSLOCATIONID</th>
+                          <th>TRXDATETIME</th>
+                          <th>TRXUSERIDASSIGNED</th>
+                          <th>TRXUSERIDASSIGNEDBY</th>
+                          <th>ITEMSERIALNO</th>
+                          <th>QTYSCANNED</th>
+                          <th>QTYDIFFERENCE</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredData?.map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.ITEMID}</td>
+                            <td>{item.ITEMNAME}</td>
+                            <td>{item.QTY}</td>
+                            <td>{item.LEDGERACCOUNTIDOFFSET}</td>
+                            <td>{item.JOURNALID}</td>
+                            <td>{item.TRANSDATE}</td>
+                            <td>{item.INVENTSITEID}</td>
+                            <td>{item.INVENTLOCATIONID}</td>
+                            <td>{item.CONFIGID}</td>
+                            <td>{item.WMSLOCATIONID}</td>
+                            <td>{item.TRXDATETIME}</td>
+                            <td>{item.TRXUSERIDASSIGNED}</td>
+                            <td>{item.TRXUSERIDASSIGNEDBY}</td>
+                            <td>{item.ITEMSERIALNO}</td>
+                            <td>{item.QTYSCANNED}</td>
+                            <td>{item.QTYDIFFERENCE}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+
+                {/* New Table Length  */}
+                <div className='flex justify-end items-center gap-2 mt-6'>
+                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                  <input
+                    id="totals"
+                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Totals"
+                    value={filteredData.length}
+                  />
+              </div>
 
               </div>
             </form>

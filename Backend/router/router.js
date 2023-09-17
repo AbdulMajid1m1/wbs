@@ -571,7 +571,6 @@ router.post("/insertIntoWmsJournalCountingOnlyCLDets", checkAuthentication, chec
 
 router.get("/getAllWmsJournalCountingOnlyCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingOnlyCLDets);
 
-router.post("/validateItemSerialNumberForJournalCountingOnlyCLDets", checkAuthentication, checkRole([roles[37], roles[38]]), WBSDB.validateItemSerialNumberForJournalCountingOnlyCLDets);
 
 
 

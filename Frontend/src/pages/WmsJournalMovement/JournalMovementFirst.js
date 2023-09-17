@@ -166,6 +166,8 @@ const JournalMovementFirst = () => {
       });
 
       setFilteredData(newFilteredData);
+      e.target.value = "";
+      e.target.focus();
 
     }
     catch (error) {

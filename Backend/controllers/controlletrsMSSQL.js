@@ -8296,46 +8296,46 @@ const WBSDB = {
 
 
 
-  async validateItemSerialNumberForJournalCountingOnlyCLDets(req, res, next) {
-    try {
-      const { itemSerialNo } = req.body;
+  // async validateItemSerialNumberForJournalCountingOnlyCLDets(req, res, next) {
+  //   try {
+  //     const { itemSerialNo } = req.body;
 
-      if (!itemSerialNo) {
-        return res.status(400).send({ message: "Please provide an itemSerialNo." });
-      }
+  //     if (!itemSerialNo) {
+  //       return res.status(400).send({ message: "Please provide an itemSerialNo." });
+  //     }
 
-      let query = `
-        SELECT * FROM [WBSSQL].[dbo].[tblMappedBarcodes]
-        WHERE ItemSerialNo=@itemSerialNo
-      `;
+  //     let query = `
+  //       SELECT * FROM [WBSSQL].[dbo].[tblMappedBarcodes]
+  //       WHERE ItemSerialNo=@itemSerialNo
+  //     `;
 
-      let request = pool2.request();
-      request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
-      const data = await request.query(query);
+  //     let request = pool2.request();
+  //     request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
+  //     const data = await request.query(query);
 
-      if (data.recordset.length === 0) {
-        return res.status(404).send({ message: "Serial number not exist in mapped barcode." });
-      }
+  //     if (data.recordset.length === 0) {
+  //       return res.status(404).send({ message: "Serial number not exist in mapped barcode." });
+  //     }
 
-      query = `
-        SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCLDets]
-        WHERE ITEMSERIALNO=@itemSerialNo
-      `;
+  //     query = `
+  //       SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_Counting_OnlyCLDets]
+  //       WHERE ITEMSERIALNO=@itemSerialNo
+  //     `;
 
-      request = pool2.request();
-      request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
-      const data2 = await request.query(query);
+  //     request = pool2.request();
+  //     request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
+  //     const data2 = await request.query(query);
 
-      if (data2.recordset.length !== 0) {
-        return res.status(400).send({ message: "The serial number already exists." });
-      }
+  //     if (data2.recordset.length !== 0) {
+  //       return res.status(400).send({ message: "The serial number already exists." });
+  //     }
 
-      return res.status(200).send({ message: 'Serial number is validated.', data: data?.recordsets[0] });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).send({ message: error.message });
-    }
-  },
+  //     return res.status(200).send({ message: 'Serial number is validated.', data: data?.recordsets[0] });
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(500).send({ message: error.message });
+  //   }
+  // },
 
 
 

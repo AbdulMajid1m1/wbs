@@ -130,7 +130,7 @@ const WmsProfitLoss = () => {
 
 
 
-  
+
   const handleSerialScan = async (e) => {
     let itemSerialNo = e.target.value;
     if (!itemSerialNo) {
@@ -191,6 +191,8 @@ const WmsProfitLoss = () => {
       });
 
       setFilteredData(newFilteredData);
+      e.target.value = "";
+      e.target.focus();
 
     }
     catch (error) {
@@ -398,7 +400,7 @@ const WmsProfitLoss = () => {
                         style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
 
                       > */}
-                     {filteredData?.map((item, index) => (
+                    {filteredData?.map((item, index) => (
                       <tr key={index}
                       >
                         <td>{item.ITEMID}</td>
@@ -443,18 +445,18 @@ const WmsProfitLoss = () => {
               </div>
 
 
-                {/* New Input Added Serial Number */}
-                <div className="mb-6">
-                  <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
-                  <input
-                    id="scan"
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder={'Scan Serial'}
-                    onBlur={(e) => { handleSerialScan(e) }}
-                  />
-                </div>
+              {/* New Input Added Serial Number */}
+              <div className="mb-6">
+                <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="scan"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder={'Scan Serial'}
+                  onBlur={(e) => { handleSerialScan(e) }}
+                />
+              </div>
 
-              
+
               {/* New Table Added */}
               <div className='mt-6'>
                 <div className="table-location-generate1">
@@ -505,17 +507,17 @@ const WmsProfitLoss = () => {
                   </table>
 
                 </div>
-             </div>
+              </div>
 
-             {/* New Table Length  */}
-             <div className='flex justify-end items-center gap-2 mt-6'>
-                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                  <input
-                    id="totals"
-                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Totals"
-                    value={insertedData?.length}
-                  />
+              {/* New Table Length  */}
+              <div className='flex justify-end items-center gap-2 mt-6'>
+                <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="totals"
+                  className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Totals"
+                  value={insertedData?.length}
+                />
               </div>
 
             </form>

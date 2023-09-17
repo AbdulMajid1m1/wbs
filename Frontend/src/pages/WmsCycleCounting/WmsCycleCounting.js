@@ -131,7 +131,6 @@ const WmsCycleCounting = () => {
     if (!itemSerialNo) {
       return;
     }
-    console.log(itemSerialNo)
     setIsLoading(true);
     try {
 
@@ -186,6 +185,8 @@ const WmsCycleCounting = () => {
       });
 
       setFilteredData(newFilteredData);
+      e.target.value = "";
+      e.target.focus();
 
     }
     catch (error) {
@@ -393,7 +394,7 @@ const WmsCycleCounting = () => {
                       <tr key={index} onClick={() => handleRowClick(item, index)}
                         style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
                       > */}
-                     {filteredData?.map((item, index) => (
+                    {filteredData?.map((item, index) => (
                       <tr key={index}
                       >
                         <td>{item.ITEMID}</td>
@@ -440,16 +441,16 @@ const WmsCycleCounting = () => {
 
 
               {/* New Input Added Serial Number */}
-               <div className="mb-6">
-                  <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
-                  <input
-                    id="scan"
-                    className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder={'Scan Serial'}
-                    onBlur={(e) => { handleSerialScan(e) }}
+              <div className="mb-6">
+                <label htmlFor='scan' className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Scan Serial#<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="scan"
+                  className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder={'Scan Serial'}
+                  onBlur={(e) => { handleSerialScan(e) }}
 
-                  />
-                </div>
+                />
+              </div>
 
 
               {/* New Table Added */}
@@ -507,13 +508,13 @@ const WmsCycleCounting = () => {
 
               {/* New Table Length  */}
               <div className='flex justify-end items-center gap-2 mt-6'>
-                  <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
-                  <input
-                    id="totals"
-                    className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Totals"
-                    value={insertedData?.length}
-                  />
+                <label htmlFor='totals' className="block mb-2 sm:text-lg text-xs font-medium text-center text-[#00006A]">Totals<span className='text-[#FF0404]'>*</span></label>
+                <input
+                  id="totals"
+                  className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Totals"
+                  value={insertedData?.length}
+                />
               </div>
 
             </form>

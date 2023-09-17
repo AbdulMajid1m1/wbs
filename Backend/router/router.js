@@ -518,9 +518,10 @@ router.put("/updateWmsJournalProfitLostClQtyScanned", checkAuthentication, check
 // ---- WMS_Journal_ProfitLost_CLDets APIS Start ----
 
 router.get("/getAllWmsJournalProfitLostClDets", checkAuthentication, WBSDB.getAllWmsJournalProfitLostClDets);
+
 router.post("/insertJournalProfitLostClDets", checkAuthentication, WBSDB.insertJournalProfitLostClDets);
 
-
+router.post("/validateItemSerialNumberForJournalProfitLostCLDets", checkAuthentication, WBSDB.validateItemSerialNumberForJournalProfitLostCLDets);
 
 /// ---------- WMS_Journal_Counting and CL API Start ----
 router.get("/getAllWmsJournalCounting", checkAuthentication, WBSDB.getAllWmsJournalCounting);
@@ -541,6 +542,8 @@ router.put("/updateWmsJournalCountingCLQtyScanned", checkAuthentication, checkRo
 router.get("/getAllWmsJournalCountingCLDets", checkAuthentication, WBSDB.getAllWmsJournalCountingCLDets);
 
 router.post("/insertWMSJournalCountingCLDets", checkAuthentication, checkRole([roles[49]]), WBSDB.insertWMSJournalCountingCLDets);
+
+router.post("/validateItemSerialNumberForJournalCountingOnlyCLDets", checkAuthentication, checkRole([roles[49]]), WBSDB.validateItemSerialNumberForJournalCountingOnlyCLDets);
 
 
 // -------------- WMS_Journal_Counting_OnlyCL API Start --------------

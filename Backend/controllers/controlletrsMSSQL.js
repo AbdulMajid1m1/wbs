@@ -7488,6 +7488,48 @@ const WBSDB = {
     }
   },
 
+  async validateItemSerialNumberForJournalProfitLostCLDets(req, res, next) {
+    try {
+      const { itemSerialNo } = req.body;
+
+      if (!itemSerialNo) {
+        return res.status(400).send({ message: "Please provide an itemSerialNo." });
+      }
+
+      let query = `
+        SELECT * FROM [WBSSQL].[dbo].[tblMappedBarcodes]
+        WHERE ItemSerialNo=@itemSerialNo
+      `;
+
+      let request = pool2.request();
+      request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
+      const data = await request.query(query);
+
+      if (data.recordset.length === 0) {
+        return res.status(404).send({ message: "Serial number not exist in mapped barcode." });
+      }
+
+      query = `
+        SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_ProfitLost_CLDets]
+        WHERE ITEMSERIALNO=@itemSerialNo
+      `;
+
+      request = pool2.request();
+      request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
+      const data2 = await request.query(query);
+
+      if (data2.recordset.length !== 0) {
+        return res.status(400).send({ message: "This serial number already exists in WMS_Journal_ProfitLost_CLDets." });
+      }
+
+      return res.status(200).send({ message: 'Serial number is validated.', data: data?.recordsets[0] });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
+    }
+  },
+
+
   async insertJournalProfitLostClDets(req, res, next) {
     try {
       const journalProfitLostDataArray = req.body;
@@ -7788,6 +7830,46 @@ const WBSDB = {
       console.log(error);
       res.status(500).send({ message: error.message });
 
+    }
+  },
+  async validateItemSerialNumberForJournalCountingOnlyCLDets(req, res, next) {
+    try {
+      const { itemSerialNo } = req.body;
+
+      if (!itemSerialNo) {
+        return res.status(400).send({ message: "Please provide an itemSerialNo." });
+      }
+
+      let query = `
+        SELECT * FROM [WBSSQL].[dbo].[tblMappedBarcodes]
+        WHERE ItemSerialNo=@itemSerialNo
+      `;
+
+      let request = pool2.request();
+      request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
+      const data = await request.query(query);
+
+      if (data.recordset.length === 0) {
+        return res.status(404).send({ message: "Serial number not exist in mapped barcode." });
+      }
+
+      query = `
+        SELECT * FROM [WBSSQL].[dbo].[WMS_Journal_Counting_CLDets]
+        WHERE ITEMSERIALNO=@itemSerialNo
+      `;
+
+      request = pool2.request();
+      request.input('itemSerialNo', sql.NVarChar, itemSerialNo);
+      const data2 = await request.query(query);
+
+      if (data2.recordset.length !== 0) {
+        return res.status(400).send({ message: "This serial number already exists in WMS_Journal_Counting_CLDets." });
+      }
+
+      return res.status(200).send({ message: 'Serial number is validated.', data: data?.recordsets[0] });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: error.message });
     }
   },
 

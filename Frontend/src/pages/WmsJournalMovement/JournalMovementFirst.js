@@ -16,7 +16,6 @@ const JournalMovementFirst = () => {
   const navigate = useNavigate();
 
 
-  const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
   const [filteredData, setFilteredData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
@@ -37,10 +36,6 @@ const JournalMovementFirst = () => {
 
   };
 
-
-  const handleChangeValue = (e) => {
-    setTransferTag(e.target.value);
-  }
 
   useEffect(() => {
     setIsLoading(true);

@@ -6,7 +6,12 @@ import "./WmsProfitLoss.css";
 import undo from "../../images/undo.png"
 import { SyncLoader } from 'react-spinners';
 import CustomSnakebar from '../../utils/CustomSnakebar';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, Checkbox } from '@mui/material';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+
+const iconMui = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const WmsProfitLoss = () => {
   const navigate = useNavigate();
@@ -114,7 +119,7 @@ const WmsProfitLoss = () => {
       newFilteredData = newFilteredData.filter(item => item?.JOURNALID === newJournalIdFilter);
     }
     if (newItemIdFilter) {
-      newFilteredData = newFilteredData.filter(item => item?.ITEMID === newItemIdFilter);
+      newFilteredData = newFilteredData.filter(item => newItemIdFilter.includes(item?.ITEMID));
     }
     console.log(newFilteredData);
 
@@ -222,14 +227,25 @@ const WmsProfitLoss = () => {
               <label htmlFor="journalMovementitemIdFilter" className="mb-2 sm:text-lg text-xs font-medium text-[#00006A]">Filter By Item Id</label>
               <Autocomplete
                 id="journalMovementitemIdFilter"
+                multiple
+                disableCloseOnSelect
                 options={Array.from(new Set(data?.map(item => item?.ITEMID))).filter(Boolean)}
                 getOptionLabel={(option) => option || ""}
                 onChange={(event, value) => handleFilterChange('itemId', event, value)}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={iconMui}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option}
+                  </li>
+                )}
                 onInputChange={(event, value) => {
                   if (!value) {
-                    // perform operation when input is cleared
                     console.log("Input cleared");
-
                   }
                 }}
                 renderInput={(params) => (
@@ -243,10 +259,8 @@ const WmsProfitLoss = () => {
                       ...params.InputLabelProps,
                       style: { color: "white" },
                     }}
-
                     className="bg-gray-50 border border-gray-300 text-white text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5"
                     placeholder="Select Item Id to filter"
-
                   />
                 )}
                 classes={{
@@ -259,6 +273,7 @@ const WmsProfitLoss = () => {
                 }}
               />
             </div>
+
             <div className='mt-6'>
               <label className='text-[#00006A] font-semibold'>List of Profit and Loss<span className='text-[#FF0404]'>*</span></label>
               {/* // creae excel like Tables  */}

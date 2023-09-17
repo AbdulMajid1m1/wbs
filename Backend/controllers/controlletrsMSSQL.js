@@ -7186,7 +7186,7 @@ const WBSDB = {
       const data2 = await request.query(query);
 
       if (data2.recordset.length !== 0) {
-        return res.status(400).send({ message: "The serial number already exists in WMS_Journal_Movement_CLDets." });
+        return res.status(400).send({ message: "This serial number already exists in WMS_Journal_Movement_CLDets." });
       }
 
       return res.status(200).send({ message: 'Serial number is validated.', data: data?.recordsets[0] });

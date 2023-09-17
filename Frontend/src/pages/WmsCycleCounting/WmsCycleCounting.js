@@ -9,6 +9,8 @@ import CustomSnakebar from '../../utils/CustomSnakebar';
 import { Autocomplete, TextField, Checkbox } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Swal from 'sweetalert2';
+
 
 const iconMui = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -22,6 +24,7 @@ const WmsCycleCounting = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [journalIdFilter, setJournalIdFilter] = useState(null);
+  const [insertedData, setInsertedData] = useState([]);
   const [itemIdFilter, setItemIdFilter] = useState(null);
 
   const [journalRowIndex, setJournalRowIndex] = useState(JSON.parse(sessionStorage.getItem('PickingRowIndex')) || '');
@@ -61,39 +64,39 @@ const WmsCycleCounting = () => {
   }, []);
 
 
-  const handleRowClick = (item, index) => {
-    // save data in session storage
+  // const handleRowClick = (item, index) => {
+  //   // save data in session storage
 
-    // sessionStorage.setItem('PickingRowData', JSON.stringify(item));
-    sessionStorage.setItem('CycleRowData', JSON.stringify(item));
-    sessionStorage.setItem('CycleRowIndex', index);
-    // sessionStorage.setItem('PickingRowIndex', index);
-    navigate('/cyclecountinglast')
-  }
+  //   // sessionStorage.setItem('PickingRowData', JSON.stringify(item));
+  //   sessionStorage.setItem('CycleRowData', JSON.stringify(item));
+  //   sessionStorage.setItem('CycleRowIndex', index);
+  //   // sessionStorage.setItem('PickingRowIndex', index);
+  //   navigate('/cyclecountinglast')
+  // }
 
 
-  const handleBinLocation = (e) => {
-    e.preventDefault();
-    console.log(data[0].BinLocation)
-    console.log(binlocation)
+  // const handleBinLocation = (e) => {
+  //   e.preventDefault();
+  //   console.log(data[0].BinLocation)
+  //   console.log(binlocation)
 
-    userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
-      headers: {
-        'oldbinlocation': data[0].BinLocation,
-        'newbinlocation': binlocation
-      }
-    })
-      .then((response) => {
-        console.log(response);
-        setMessage(response?.data?.message);
-        // alert('done')
-      })
-      .catch((error) => {
-        console.log(error);
-        setError(error.response?.data?.message);
-        // alert(error)
-      });
-  }
+  //   userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
+  //     headers: {
+  //       'oldbinlocation': data[0].BinLocation,
+  //       'newbinlocation': binlocation
+  //     }
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //       setMessage(response?.data?.message);
+  //       // alert('done')
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setError(error.response?.data?.message);
+  //       // alert(error)
+  //     });
+  // }
 
   const handleFilterChange = (filterType, event, value) => {
     console.log(filterType, value);
@@ -119,6 +122,94 @@ const WmsCycleCounting = () => {
     console.log(newFilteredData);
 
     setFilteredData(newFilteredData);
+  }
+
+
+
+  const handleSerialScan = async (e) => {
+    let itemSerialNo = e.target.value;
+    if (!itemSerialNo) {
+      return;
+    }
+    console.log(itemSerialNo)
+    setIsLoading(true);
+    try {
+
+      const { data: validationData } = await userRequest.post("/validateItemSerialNumberForJournalCountingOnlyCLDets", { itemSerialNo });
+      const mappedData = validationData?.data?.[0];
+
+      const foundRecord = filteredData?.find(item => item.ITEMID.trim() === mappedData.ItemCode.trim());
+
+      if (!foundRecord) {
+        // setError(`MappedBarcode ItemID: ${mappedData.ItemCode} not found in the list!`);
+        // show message using swal
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: `MappedBarcode ItemID: ${mappedData.ItemCode} not found in the list!`,
+          // change button text to Scan Again
+          confirmButtonText: 'Scan Again',
+          confirmButtonColor: '#FFA500',
+
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // clear the input field
+            e.target.value = "";
+            e.target.focus();
+          }
+        })
+        return;
+      }
+
+      const updateDataResponse = await userRequest.put("/updateWmsJournalCountingCLQtyScanned", {
+        ITEMID: foundRecord?.ITEMID,
+        JOURNALID: foundRecord?.JOURNALID,
+        TRXUSERIDASSIGNED: foundRecord?.TRXUSERIDASSIGNED,
+
+      });
+
+      const dataToInsert = updateDataResponse?.data?.updatedRow;
+
+      dataToInsert.ITEMSERIALNO = itemSerialNo;
+
+      const insertResponse = await userRequest.post("/insertWMSJournalCountingCLDets", [dataToInsert]);
+      console.log(insertResponse);
+      setMessage(insertResponse?.data?.message ?? "Insertion Successful!");
+      setInsertedData(prevState => [...prevState, dataToInsert]);
+
+      // replace the found record with updated record
+      const newFilteredData = filteredData.map(item => {
+        if (item.ITEMID.trim() === dataToInsert.ITEMID.trim()) {
+          return dataToInsert;
+        }
+        return item;
+      });
+
+      setFilteredData(newFilteredData);
+
+    }
+    catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `Error: ${error.response?.data?.message ?? error.message ?? "Something went wrong!"}`,
+        confirmButtonText: 'Scan Again',
+        confirmButtonColor: '#FFA500',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // clear the input field
+          e.target.value = "";
+          // focus on the input field
+          e.target.focus();
+        }
+      })
+
+    }
+    finally {
+      setIsLoading(false);
+    }
+
   }
 
 
@@ -292,7 +383,7 @@ const WmsCycleCounting = () => {
                       <th>TRXDATETIME</th>
                       <th>TRXUSERIDASSIGNED</th>
                       <th>TRXUSERIDASSIGNEDBY</th>
-                      <th>ITEMSERIALNO</th>
+                      {/* <th>ITEMSERIALNO</th> */}
                       <th>QTYSCANNED</th>
                       <th>QTYDIFFERENCE</th>
                     </tr>
@@ -318,7 +409,7 @@ const WmsCycleCounting = () => {
                         <td>{item.TRXDATETIME}</td>
                         <td>{item.TRXUSERIDASSIGNED}</td>
                         <td>{item.TRXUSERIDASSIGNEDBY}</td>
-                        <td>{item.ITEMSERIALNO}</td>
+                        {/* <td>{item.ITEMSERIALNO}</td> */}
                         <td>{item.QTYSCANNED}</td>
                         <td>{item.QTYDIFFERENCE}</td>
                       </tr>
@@ -355,9 +446,7 @@ const WmsCycleCounting = () => {
                     id="scan"
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder={'Scan Serial'}
-                    // value={userInput}
-                    // onChange={(e) => setUserInput(e.target.value)}
-                    // onBlur={handleInputUser}
+                    onBlur={(e) => { handleSerialScan(e) }}
 
                   />
                 </div>
@@ -371,8 +460,9 @@ const WmsCycleCounting = () => {
                       <tr>
                         <th>ITEMID</th>
                         <th>ITEMNAME</th>
+                        <th>ITEMSERIALNO</th>
                         <th>QTY</th>
-                        <th>LEDGERACCOUNTIDOFFSET</th>
+                        <th>LEDGER ACCOUNT ID OFFSET</th>
                         <th>JOURNALID</th>
                         <th>TRANSDATE</th>
                         <th>INVENTSITEID</th>
@@ -382,17 +472,17 @@ const WmsCycleCounting = () => {
                         <th>TRXDATETIME</th>
                         <th>TRXUSERIDASSIGNED</th>
                         <th>TRXUSERIDASSIGNEDBY</th>
-                        <th>ITEMSERIALNO</th>
                         <th>QTYSCANNED</th>
                         <th>QTYDIFFERENCE</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredData?.map((item, index) => (
+                      {insertedData?.map((item, index) => (
                         <tr key={index}
                         >
                           <td>{item.ITEMID}</td>
                           <td>{item.ITEMNAME}</td>
+                          <td>{item.ITEMSERIALNO}</td>
                           <td>{item.QTY}</td>
                           <td>{item.LEDGERACCOUNTIDOFFSET}</td>
                           <td>{item.JOURNALID}</td>
@@ -404,7 +494,6 @@ const WmsCycleCounting = () => {
                           <td>{item.TRXDATETIME}</td>
                           <td>{item.TRXUSERIDASSIGNED}</td>
                           <td>{item.TRXUSERIDASSIGNEDBY}</td>
-                          <td>{item.ITEMSERIALNO}</td>
                           <td>{item.QTYSCANNED}</td>
                           <td>{item.QTYDIFFERENCE}</td>
                         </tr>
@@ -423,7 +512,7 @@ const WmsCycleCounting = () => {
                     id="totals"
                     className="bg-gray-50 font-semibold text-center border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[30%] p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Totals"
-                    value={filteredData.length}
+                    value={insertedData?.length}
                   />
               </div>
 

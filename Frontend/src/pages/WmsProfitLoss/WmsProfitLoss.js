@@ -386,7 +386,7 @@ const WmsProfitLoss = () => {
                       <th>TRXDATETIME</th>
                       <th>TRXUSERIDASSIGNED</th>
                       <th>TRXUSERIDASSIGNEDBY</th>
-                      <th>ITEMSERIALNO</th>
+                      {/* <th>ITEMSERIALNO</th> */}
                       <th>QTYSCANNED</th>
                       <th>QTYDIFFERENCE</th>
                     </tr>
@@ -414,7 +414,7 @@ const WmsProfitLoss = () => {
                         <td>{item.TRXDATETIME}</td>
                         <td>{item.TRXUSERIDASSIGNED}</td>
                         <td>{item.TRXUSERIDASSIGNEDBY}</td>
-                        <td>{item.ITEMSERIALNO}</td>
+                        {/* <td>{item.ITEMSERIALNO}</td> */}
                         <td>{item.QTYSCANNED}</td>
                         <td>{item.QTYDIFFERENCE}</td>
                       </tr>
@@ -463,8 +463,9 @@ const WmsProfitLoss = () => {
                       <tr>
                         <th>ITEMID</th>
                         <th>ITEMNAME</th>
+                        <th>ITEMSERIALNO</th>
                         <th>QTY</th>
-                        <th>LEDGERACCOUNTIDOFFSET</th>
+                        <th>LEDGER ACCOUNT ID OFFSET</th>
                         <th>JOURNALID</th>
                         <th>TRANSDATE</th>
                         <th>INVENTSITEID</th>
@@ -474,7 +475,6 @@ const WmsProfitLoss = () => {
                         <th>TRXDATETIME</th>
                         <th>TRXUSERIDASSIGNED</th>
                         <th>TRXUSERIDASSIGNEDBY</th>
-                        <th>ITEMSERIALNO</th>
                         <th>QTYSCANNED</th>
                         <th>QTYDIFFERENCE</th>
                       </tr>
@@ -485,6 +485,7 @@ const WmsProfitLoss = () => {
                         >
                           <td>{item.ITEMID}</td>
                           <td>{item.ITEMNAME}</td>
+                          <td>{item.ITEMSERIALNO}</td>
                           <td>{item.QTY}</td>
                           <td>{item.LEDGERACCOUNTIDOFFSET}</td>
                           <td>{item.JOURNALID}</td>
@@ -496,7 +497,6 @@ const WmsProfitLoss = () => {
                           <td>{item.TRXDATETIME}</td>
                           <td>{item.TRXUSERIDASSIGNED}</td>
                           <td>{item.TRXUSERIDASSIGNEDBY}</td>
-                          <td>{item.ITEMSERIALNO}</td>
                           <td>{item.QTYSCANNED}</td>
                           <td>{item.QTYDIFFERENCE}</td>
                         </tr>

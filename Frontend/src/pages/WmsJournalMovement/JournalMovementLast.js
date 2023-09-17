@@ -255,7 +255,7 @@ const WmsProfitLossLast = () => {
                           }}
 
                           className="bg-gray-50 border border-gray-300 text-[#00006A] text-xs rounded-lg focus:ring-blue-500
-                      p-1.5 md:p-2.5 placeholder:text-[#00006A]"
+                          p-1.5 md:p-2.5 placeholder:text-[#00006A]"
                           placeholder="FROM"
                           required
                         />

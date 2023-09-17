@@ -41,11 +41,6 @@ const PhysicalInventoryBinLocation = () => {
 
   };
 
-
-
-
-  const [options, setOptions] = useState([]);
-
   useEffect(() => {
     userRequest.get('/getWmsJournalCountingOnlyCLByAssignedToUserId')
       .then(response => {
@@ -169,9 +164,7 @@ const PhysicalInventoryBinLocation = () => {
   };
 
   useEffect(() => {
-    console.log(filteredDataList);
     const itemIdOptions = Array.from(new Set(filteredDataList?.map(item => item?.ITEMID))).filter(Boolean);
-    console.log(itemIdOptions);
     setItemCodeFilterList(itemIdOptions);
 
 

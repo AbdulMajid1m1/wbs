@@ -9,6 +9,7 @@ import CustomSnakebar from '../../utils/CustomSnakebar';
 import { Autocomplete, TextField, Checkbox } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Swal from 'sweetalert2';
 
 const iconMui = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -16,13 +17,12 @@ const JournalMovementFirst = () => {
   const navigate = useNavigate();
 
 
-  const [transferTag, setTransferTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
-  const [filteredData, setFilteredData] = useState(JSON.parse(sessionStorage.getItem('')) || []);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [insertedData, setInsertedData] = useState([]);
   const [journalIdFilter, setJournalIdFilter] = useState(null);
   const [itemIdFilter, setItemIdFilter] = useState(null);
-  const [journalRowIndex, setJournalRowIndex] = useState(JSON.parse(sessionStorage.getItem('PickingRowIndex')) || '');
   const [binlocation, setBinLocation] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -37,10 +37,6 @@ const JournalMovementFirst = () => {
 
   };
 
-
-  const handleChangeValue = (e) => {
-    setTransferTag(e.target.value);
-  }
 
   useEffect(() => {
     setIsLoading(true);
@@ -58,15 +54,7 @@ const JournalMovementFirst = () => {
   }, []);
 
 
-  const handleRowClick = (item, index) => {
-    // save data in session storage
 
-    // sessionStorage.setItem('PickingRowData', JSON.stringify(item));
-    sessionStorage.setItem('JournalRowData', JSON.stringify(item));
-    sessionStorage.setItem('JournalRowIndex', index);
-    // sessionStorage.setItem('PickingRowIndex', index);
-    navigate('/journallast')
-  }
 
 
   const handleBinLocation = (e) => {
@@ -118,13 +106,106 @@ const JournalMovementFirst = () => {
   }
 
 
+  const handleSerialScan = async (e) => {
+    let itemSerialNo = e.target.value;
+    if (!itemSerialNo) {
+      return;
+    }
+    console.log(itemSerialNo)
+    setIsLoading(true);
+    try {
+
+      const { data: validationData } = await userRequest.post("/validateItemSerialNumberForJournalMovementCLDets", { itemSerialNo });
+      const mappedData = validationData?.data?.[0];
+
+      const foundRecord = filteredData?.find(item => item.ITEMID.trim() === mappedData.ItemCode.trim());
+
+      if (!foundRecord) {
+        // setError(`MappedBarcode ItemID: ${mappedData.ItemCode} not found in the list!`);
+        // show message using swal
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: `MappedBarcode ItemID: ${mappedData.ItemCode} not found in the list!`,
+          // change button text to Scan Again
+          confirmButtonText: 'Scan Again',
+          confirmButtonColor: '#FFA500',
+
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // clear the input field
+            e.target.value = "";
+            e.target.focus();
+          }
+        })
+        return;
+      }
+
+      const updateDataResponse = await userRequest.put("/updateWmsJournalMovementClQtyScanned", {
+        ITEMID: foundRecord?.ITEMID,
+        JOURNALID: foundRecord?.JOURNALID,
+        TRXUSERIDASSIGNED: foundRecord?.TRXUSERIDASSIGNED,
+
+      });
+
+      const dataToInsert = updateDataResponse?.data?.updatedRow;
+
+      dataToInsert.ITEMSERIALNO = itemSerialNo;
+
+      const insertResponse = await userRequest.post("/insertJournalMovementCLDets", [dataToInsert]);
+      console.log(insertResponse);
+      setMessage(insertResponse?.data?.message ?? "Insertion Successful!");
+      setInsertedData(prevState => [...prevState, dataToInsert]);
+
+      // replace the found record with updated record
+      const newFilteredData = filteredData.map(item => {
+        if (item.ITEMID.trim() === dataToInsert.ITEMID.trim()) {
+          return dataToInsert;
+        }
+        return item;
+      });
+
+      setFilteredData(newFilteredData);
+
+    }
+    catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `Error: ${error.response?.data?.message ?? error.message ?? "Something went wrong!"}`,
+        confirmButtonText: 'Scan Again',
+        confirmButtonColor: '#FFA500',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // clear the input field
+          e.target.value = "";
+          // focus on the input field
+          e.target.focus();
+        }
+      })
+
+    }
+    finally {
+      setIsLoading(false);
+    }
+
+  }
+
+
+
+
+
+
+
   return (
     <>
       {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
       {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
-      {isLoading &&
+      {
+        isLoading &&
 
         <div className='loading-spinner-background'
           style={{
@@ -273,6 +354,8 @@ const JournalMovementFirst = () => {
                       <th>ITEMID</th>
                       <th>ITEMNAME</th>
                       <th>QTY</th>
+                      <th>QTYSCANNED</th>
+                      <th>QTYDIFFERENCE</th>
                       <th>LEDGERACCOUNTIDOFFSET</th>
                       <th>JOURNALID</th>
                       <th>TRANSDATE</th>
@@ -283,19 +366,18 @@ const JournalMovementFirst = () => {
                       <th>TRXDATETIME</th>
                       <th>TRXUSERIDASSIGNED</th>
                       <th>TRXUSERIDASSIGNEDBY</th>
-                      <th>ITEMSERIALNO</th>
-                      <th>QTYSCANNED</th>
-                      <th>QTYDIFFERENCE</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredData?.map((item, index) => (
-                      <tr key={index} onClick={() => handleRowClick(item, index)}
-                        style={journalRowIndex == index ? { backgroundColor: '#F98E1A' } : {}}
+                      <tr key={index}
+
                       >
                         <td>{item.ITEMID}</td>
                         <td>{item.ITEMNAME}</td>
                         <td>{item.QTY}</td>
+                        <td>{item.QTYSCANNED}</td>
+                        <td>{item.QTYDIFFERENCE}</td>
                         <td>{item.LEDGERACCOUNTIDOFFSET}</td>
                         <td>{item.JOURNALID}</td>
                         <td>{item.TRANSDATE}</td>
@@ -306,9 +388,6 @@ const JournalMovementFirst = () => {
                         <td>{item.TRXDATETIME}</td>
                         <td>{item.TRXUSERIDASSIGNED}</td>
                         <td>{item.TRXUSERIDASSIGNEDBY}</td>
-                        <td>{item.ITEMSERIALNO}</td>
-                        <td>{item.QTYSCANNED}</td>
-                        <td>{item.QTYDIFFERENCE}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -341,10 +420,7 @@ const JournalMovementFirst = () => {
                     id="scan"
                     className="bg-gray-50 font-semibold border border-[#00006A] text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 md:p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder={'Scan Serial'}
-                    // value={userInput}
-                    // onChange={(e) => setUserInput(e.target.value)}
-                    // onBlur={handleInputUser}
-
+                    onBlur={(e) => { handleSerialScan(e) }}
                   />
                 </div>
 
@@ -354,29 +430,31 @@ const JournalMovementFirst = () => {
                     <table>
                       <thead>
                         <tr>
-                          <th>ITEMID</th>
-                          <th>ITEMNAME</th>
+                          <th>ITEM ID</th>
+                          <th>ITEM NAME</th>
+                          <th>ITEM SERIAL NO</th>
                           <th>QTY</th>
-                          <th>LEDGERACCOUNTIDOFFSET</th>
+                          <th>LEDGER ACCOUNT ID OFFSET</th>
                           <th>JOURNALID</th>
                           <th>TRANSDATE</th>
                           <th>INVENTSITEID</th>
-                          <th>INVENTLOCATIONID</th>
+                          <th>INVENT LOCATION ID</th>
                           <th>CONFIGID</th>
                           <th>WMSLOCATIONID</th>
                           <th>TRXDATETIME</th>
                           <th>TRXUSERIDASSIGNED</th>
                           <th>TRXUSERIDASSIGNEDBY</th>
-                          <th>ITEMSERIALNO</th>
+
                           <th>QTYSCANNED</th>
                           <th>QTYDIFFERENCE</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {filteredData?.map((item, index) => (
+                        {insertedData?.map((item, index) => (
                           <tr key={index}>
                             <td>{item.ITEMID}</td>
                             <td>{item.ITEMNAME}</td>
+                            <td>{item.ITEMSERIALNO}</td>
                             <td>{item.QTY}</td>
                             <td>{item.LEDGERACCOUNTIDOFFSET}</td>
                             <td>{item.JOURNALID}</td>
@@ -388,7 +466,7 @@ const JournalMovementFirst = () => {
                             <td>{item.TRXDATETIME}</td>
                             <td>{item.TRXUSERIDASSIGNED}</td>
                             <td>{item.TRXUSERIDASSIGNEDBY}</td>
-                            <td>{item.ITEMSERIALNO}</td>
+
                             <td>{item.QTYSCANNED}</td>
                             <td>{item.QTYDIFFERENCE}</td>
                           </tr>
@@ -408,7 +486,7 @@ const JournalMovementFirst = () => {
                     placeholder="Totals"
                     value={filteredData.length}
                   />
-              </div>
+                </div>
 
               </div>
             </form>

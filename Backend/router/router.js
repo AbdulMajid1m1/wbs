@@ -293,7 +293,7 @@ router.post("/getMappedBarcodedsByItemCodeAndBinLocation", checkAuthentication, 
 
 
 
-router.delete("/deleteTblMappedBarcodesDataBySerialNumber", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.deleteTblMappedBarcodesDataBySerialNumber);
+router.post("/deleteTblMappedBarcodesDataBySerialNumber", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35]]), WBSDB.deleteTblMappedBarcodesDataBySerialNumber);
 
 
 router.get("/getDistinctMappedBarcodeBinLocations", checkAuthentication, checkRole([roles[13], roles[32], roles[33], roles[34], roles[35], roles[39]]), WBSDB.getDistinctMappedBarcodeBinLocations);

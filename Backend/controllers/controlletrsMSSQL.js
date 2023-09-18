@@ -4453,7 +4453,7 @@ const WBSDB = {
 
   async checkBarcodeValidityByItemSerialNo(req, res, next) {
     try {
-      const ItemSerialNo = req.headers['itemserialno']; // Get ItemSerialNo from headers
+      const ItemSerialNo = req.body.itemserialno; // Get ItemSerialNo from headers
       console.log(ItemSerialNo);
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes
@@ -4474,7 +4474,8 @@ const WBSDB = {
 
   async getItemInfoByItemSerialNo(req, res, next) {
     try {
-      const ItemSerialNo = req.headers['itemserialno']; // Get ItemSerialNo from headers
+      // const ItemSerialNo =  decodeURIComponent(req.headers['itemserialno']);
+      const ItemSerialNo = req.body.itemserialno;
       console.log(ItemSerialNo);
       if (!ItemSerialNo) {
         return res.status(400).send({ message: "itemserialno is required." });
@@ -4518,8 +4519,8 @@ const WBSDB = {
 
   async getMappedBarcodedsByItemSerialNoAndBinLocation(req, res, next) {
     try {
-      const ItemSerialNo = req.headers['itemserialno']; // Get ItemSerialNo from headers
-      const BinLoacation = req.headers['binlocation']; // Get ItemSerialNo from headers
+      const ItemSerialNo = req.body.itemserialno; // Get ItemSerialNo from headers
+      const BinLoacation = req.body.binlocation; // Get ItemSerialNo from headers
       console.log(ItemSerialNo);
       let query = `
         SELECT * FROM dbo.tblMappedBarcodes
@@ -4833,9 +4834,10 @@ const WBSDB = {
 
   async deleteTblMappedBarcodesDataBySerialNumber(req, res, next) {
     try {
-      const ItemSerialNo = req.headers['itemserialno'];
+      console.log(req.body);
+      const { ItemSerialNo } = req.body;
       if (!ItemSerialNo) {
-        return res.status(400).send({ message: 'itemserialno is required.' });
+        return res.status(400).send({ message: 'ItemSerialNo is required.' });
       }
 
       const deleteQuery = `

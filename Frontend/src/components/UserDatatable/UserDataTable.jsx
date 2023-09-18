@@ -455,13 +455,12 @@ const UserDataTable = ({
             console.log(rowdata.SERIALNUM)
             console.log(response);
 
-            const mappedbarcodeRes = await userRequest.delete(
+            const mappedbarcodeRes = await userRequest.post(
               "/deleteTblMappedBarcodesDataBySerialNumber",
               {
-                headers: {
-                  "itemserialno": rowdata?.SERIALNUM,
-                },
+                ItemSerialNo: rowdata?.SERIALNUM, // Send data in the request body
               }
+
             );
             console.log(mappedbarcodeRes?.data);
 
@@ -557,13 +556,11 @@ const UserDataTable = ({
         // call the api to delete the data from the Mapped table
         case "ItemCode":
           try {
-            const response = await userRequest.delete(
-              "deleteTblMappedBarcodesDataBySerialNumber",
+            console.log(rowdata?.ItemSerialNo)
+            const response = await userRequest.post(
+              "/deleteTblMappedBarcodesDataBySerialNumber",
               {
-                headers: {
-                  ...userRequest.defaults.headers,
-                  itemserialno: rowdata?.ItemSerialNo,
-                },
+                ItemSerialNo: rowdata?.ItemSerialNo, // Send data in the request body
               }
             );
 

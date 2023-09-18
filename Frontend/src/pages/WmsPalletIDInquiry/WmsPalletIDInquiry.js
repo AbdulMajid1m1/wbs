@@ -24,42 +24,33 @@ const WmsPalletIDInquiry = () => {
   };
 
 
-const handleForm = (e) => {
-    setIsLoading(true)
+  const handleForm = async (e) => {
     e.preventDefault();
-    userRequest.post('/getItemInfoByItemSerialNo', {}, {
-        headers: {
-          itemserialno: serial
-        }
+    setIsLoading(true)
+    // const encodedSerial = encodeURIComponent(serial);
+
+    try {
+
+
+      const response = await userRequest.post('/getItemInfoByItemSerialNo', { itemserialno: serial }, {
       })
       //Show only one palletCode
-    .then(response => {
+
       const { GTIN, PalletCode, ItemCode, ItemSerialNo, BinLocation } = response.data[0];
       setData([{ GTIN, PalletCode, ItemCode, ItemSerialNo, BinLocation }]);
-    //   setMessage(response?.data?.message ?? 'Data Displayed');
-      setIsLoading(false)
-   
+      //   setMessage(response?.data?.message ?? 'Data Displayed');
+
       //Save the palletCode in sesstionStorage
       sessionStorage.setItem('PalletCode', PalletCode);
-
-    })
-
-    // Show Multiple PalletCode
-    // .then(response => {
-    //     const extractedData = response.data.map(item => ({
-    //       GTIN: item.GTIN,
-    //       PalletCode: item.PalletCode
-    //     }));
-    //     setData(extractedData);
-    //     setIsLoading(false)
-    //   })
-
-    .catch(error => {
+    } catch (error) {
       console.log(error);
-      setError(error?.response.data?.message);
-      setIsLoading(false)
+      setError(error?.response.data?.message ?? 'Something went wrong');
       setData([])
-    });
+    }
+    finally {
+      setIsLoading(false)
+    }
+
   };
 
 
@@ -78,7 +69,7 @@ const handleForm = (e) => {
       setError("PalletID/Code is EMPTY, not allowed to Transfer");
     }
   };
-  
+
 
   return (
     <>
@@ -152,54 +143,54 @@ const handleForm = (e) => {
               </div>
             </form>
 
-         
-               {/* Table to display GTIN and Pallet Code */}
-                <div className="table-location-generate2">
-                    <table>
-                        <thead>
-                            <tr>
-                            <th>GTIN</th>
-                            <th>Pallet Code</th>
-                            <th>ItemCode</th>
-                            <th>ItemSerialNo</th>
-                            <th>BinLocation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.GTIN}</td>
-                                <td>{item.PalletCode}</td>
-                                <td>{item.ItemCode}</td>
-                                <td>{item.ItemSerialNo}</td>
-                                <td>{item.BinLocation}</td>
-                            </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
 
-                <div className='mb-6 flex justify-between'>
-                  <button
-                    onClick={handleScanAgain}
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[30%]'>
-                    <span className='flex justify-center items-center'
-                    >
-                      <p>Scan Again</p>
-                    </span>
-                  </button>
+            {/* Table to display GTIN and Pallet Code */}
+            <div className="table-location-generate2">
+              <table>
+                <thead>
+                  <tr>
+                    <th>GTIN</th>
+                    <th>Pallet Code</th>
+                    <th>ItemCode</th>
+                    <th>ItemSerialNo</th>
+                    <th>BinLocation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.GTIN}</td>
+                      <td>{item.PalletCode}</td>
+                      <td>{item.ItemCode}</td>
+                      <td>{item.ItemSerialNo}</td>
+                      <td>{item.BinLocation}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-                  <button
-                    onClick={handleTransferLocation}
-                    // type='button'
-                    className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[35%]'>
-                    <span className='flex justify-center items-center'
-                    >
-                      <p>Change Pallet Location</p>
-                    </span>
-                  </button>
-                </div>
-            </div>         
+            <div className='mb-6 flex justify-between'>
+              <button
+                onClick={handleScanAgain}
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[30%]'>
+                <span className='flex justify-center items-center'
+                >
+                  <p>Scan Again</p>
+                </span>
+              </button>
+
+              <button
+                onClick={handleTransferLocation}
+                // type='button'
+                className='bg-[#F98E1A] hover:bg-[#edc498] text-[#fff] sm:text-lg text-xs font-medium py-2 rounded-sm w-[35%]'>
+                <span className='flex justify-center items-center'
+                >
+                  <p>Change Pallet Location</p>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>

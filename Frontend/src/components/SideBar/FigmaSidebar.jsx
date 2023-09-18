@@ -686,7 +686,7 @@ const FigmaSidebar = () => {
 
                     {masterDelivery && (
                        <div className='ml-0 md:ml-3 lg:ml-7 xl:ml-7 2xl:ml-7 3xl:ml-7'>
-                          <div
+                          {/* <div
                             className={`main-images-container ${selectedItem === '/pickingsales' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/pickingsales')}       
                         // className='main-images-container' onClick={() => navigate('/pickingsales')}
@@ -696,9 +696,9 @@ const FigmaSidebar = () => {
                         >
                             <img src={items} className='main-inside-image' alt='' />
                             <p className='sidebar-text'>Sales Picking List</p>
-                        </div>
+                        </div> */}
 
-                        {/* <div
+                        <div
                             className={`main-images-container ${selectedItem === '/Picklistassign' ? 'selected-item' : ''}`}
                             onClick={() => handleItemClick('/Picklistassign')}         
                         // className='main-images-container' onClick={() => navigate('/Picklistassign')}
@@ -708,7 +708,7 @@ const FigmaSidebar = () => {
                         >
                             <img src={picklist} className='main-inside-image rounded-full bg-white' alt='' />
                             <p className='sidebar-text'>Pick List</p>
-                        </div> */}
+                        </div>
 
                         <div
                             className={`main-images-container ${selectedItem === '/alldispatch' ? 'selected-item' : ''}`}

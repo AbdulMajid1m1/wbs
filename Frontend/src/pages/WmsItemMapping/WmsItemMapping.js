@@ -217,7 +217,7 @@ const WmsItemMapping = () => {
     if (userserial === "" || !userserial) return;
     try {
       const encodedSerial = encodeURIComponent(userserial);
-      const res = await userRequest.post('/getItemInfoByItemSerialNo', { itemserialno: encodeURIComponent },
+      const res = await userRequest.post('/getItemInfoByItemSerialNo', {}, { headers: { itemserialno: encodedSerial } },
 
       );
       Swal.fire({

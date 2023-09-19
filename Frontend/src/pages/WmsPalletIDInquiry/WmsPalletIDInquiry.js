@@ -30,8 +30,7 @@ const WmsPalletIDInquiry = () => {
     const encodedSerial = encodeURIComponent(serial);
 
     try {
-      const response = await userRequest.post('/getItemInfoByItemSerialNo', { itemserialno: encodeURIComponent }, {
-      })
+      const response = await userRequest.post('/getItemInfoByItemSerialNo', {}, { headers: { "itemserialno": encodedSerial } })
       //Show only one palletCode
 
       const { GTIN, PalletCode, ItemCode, ItemSerialNo, BinLocation } = response.data[0];

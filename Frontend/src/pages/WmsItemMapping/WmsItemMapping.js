@@ -178,7 +178,7 @@ const WmsItemMapping = () => {
 
     console.log(newInputValue);
     setSearchText(newInputValue);
-   
+
     try {
 
       // Cancel any pending requests
@@ -216,9 +216,10 @@ const WmsItemMapping = () => {
   const handleBlur = async () => {
     if (userserial === "" || !userserial) return;
     try {
-      const res = await userRequest.post('/getItemInfoByItemSerialNo', {}, {
-        headers: { itemserialno: userserial }
-      });
+      const encodedSerial = encodeURIComponent(userserial);
+      const res = await userRequest.post('/getItemInfoByItemSerialNo', { itemserialno: encodeURIComponent },
+
+      );
       Swal.fire({
         title: 'Serial No. already exists',
         text: "Do you want to update the data?",
@@ -327,7 +328,7 @@ const WmsItemMapping = () => {
 
               <Autocomplete
                 id="searchInput"
-                
+
                 options={dataList}
                 getOptionLabel={(option) => `${option?.ITEMID} - ${option?.ITEMNAME}`}
                 onChange={handleAutoComplete}

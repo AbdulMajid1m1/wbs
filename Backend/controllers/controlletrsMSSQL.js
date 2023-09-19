@@ -4474,8 +4474,8 @@ const WBSDB = {
 
   async getItemInfoByItemSerialNo(req, res, next) {
     try {
-      // const ItemSerialNo =  decodeURIComponent(req.headers['itemserialno']);
-      const ItemSerialNo = req.body.itemserialno;
+      // const ItemSerialNo = req.body.itemserialno;
+      const ItemSerialNo =  decodeURIComponent(req.headers['itemserialno']);
       console.log(ItemSerialNo);
       if (!ItemSerialNo) {
         return res.status(400).send({ message: "itemserialno is required." });

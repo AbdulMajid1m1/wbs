@@ -142,10 +142,10 @@ const TransferID = () => {
       //  check if the scanned value is already in the table
 
       console.log("scan" + scanInputValue + "bin" + selectedOption)
-      // userRequest.get(`/getShipmentRecievedCLDataBySerialNumberAndBinLocation?serialNumber=${scanInputValue}&binLocation=${selectedOption}`)
+      const encodedSerial = encodeURIComponent(scanInputValue);
       userRequest.post("/getItemInfoByItemSerialNo", {}, {
         headers: {
-          itemserialno: scanInputValue,
+          itemserialno: encodedSerial,
 
         }
       })

@@ -27,12 +27,10 @@ const WmsPalletIDInquiry = () => {
   const handleForm = async (e) => {
     e.preventDefault();
     setIsLoading(true)
-    // const encodedSerial = encodeURIComponent(serial);
+    const encodedSerial = encodeURIComponent(serial);
 
     try {
-
-
-      const response = await userRequest.post('/getItemInfoByItemSerialNo', { itemserialno: serial }, {
+      const response = await userRequest.post('/getItemInfoByItemSerialNo', { itemserialno: encodeURIComponent }, {
       })
       //Show only one palletCode
 

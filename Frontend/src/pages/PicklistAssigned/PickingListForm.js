@@ -108,28 +108,28 @@ const PickingListForm = () => {
   }
 
 
-  const handleBinLocation = (e) => {
-    e.preventDefault();
-    console.log(data[0].BinLocation)
-    console.log(binlocation)
+  // const handleBinLocation = (e) => {
+  //   e.preventDefault();
+  //   console.log(data[0].BinLocation)
+  //   console.log(binlocation)
 
-    userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
-      headers: {
-        'oldbinlocation': data[0].BinLocation,
-        'newbinlocation': binlocation
-      }
-    })
-      .then((response) => {
-        console.log(response);
-        setMessage(response?.data?.message);
-        // alert('done')
-      })
-      .catch((error) => {
-        console.log(error);
-        setError(error.response?.data?.message);
-        // alert(error)
-      });
-  }
+  //   userRequest.put('/updateTblMappedBarcodeBinLocation', {}, {
+  //     headers: {
+  //       'oldbinlocation': data[0].BinLocation,
+  //       'newbinlocation': binlocation
+  //     }
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //       setMessage(response?.data?.message);
+  //       // alert('done')
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setError(error.response?.data?.message);
+  //       // alert(error)
+  //     });
+  // }
 
 
   return (

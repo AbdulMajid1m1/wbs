@@ -427,7 +427,9 @@ router.get("/getAllWmsSalesPickingListClFromWBSByPickingRouteId", checkAuthentic
 
 // packingsliptable_CL APIS Start -----
 router.post("/insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl);
+
 router.get("/getPackingSlipTableClByItemIdAndPackingSlipId", checkAuthentication, WBSDB.getPackingSlipTableClByItemIdAndPackingSlipId);
+
 router.post("/insertIntoPackingSlipTableCl", checkAuthentication, WBSDB.insertIntoPackingSlipTableCl);
 
 

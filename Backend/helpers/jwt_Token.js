@@ -36,6 +36,7 @@ const t = {
     return new Promise(async (resolve, reject) => {
       await jwt.verify(token, jwtSecret, (err, info) => {
         if (err) {
+          console.log("this is the error")
           console.log(err);
           error.status = httpStatus.UNAUTHORIZED;
           error.message = err.message;

@@ -201,7 +201,7 @@ const Registration = () => {
                   onChange={(e) => setUserLocation(e.target.value)}
                   className=" pl-2 w-full outline-none border-none" type="text" placeholder="User Location"
                   required
-                />
+                />   
               </div>
 
               <button

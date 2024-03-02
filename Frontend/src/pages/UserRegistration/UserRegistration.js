@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import alessa from "../../images/alessalogo2.png"
+import gtrackNewLogo from "../../images/gtrackNewLogo.png"
 import "../UserRegistration/UserRegistration.css"
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
@@ -107,8 +108,8 @@ const Registration = () => {
 
           </div>
           <div className="w-full mx-auto px-20 flex-col items-center space-y-6">
-            <h1 className="text-white font-bold text-4xl font-sans">Alessa User Registration</h1>
-            <p className="text-white mt-1">Warehouse Management System v.2.0</p>
+            <h1 className="text-white font-bold text-4xl font-sans">GS1 Traceability System</h1>
+            <p className="text-white mt-1">User Login Screen</p>
           </div>
         </div>
 
@@ -119,10 +120,12 @@ const Registration = () => {
               onSubmit={handleSubmit}
               className="bg-white rounded-md shadow-2xl p-5">
               <div className='flex justify-center '>
-                <img src={alessa} className='h-24 w-auto' alt='' />
+                {/* <img src={alessa} className='h-24 w-auto' alt='' /> */}
+                <img src={gtrackNewLogo} className='h-24 w-auto' alt='' />
               </div>
               {/* <h1 className="text-gray-800 font-bold text-2xl mb-1">Hello Again!</h1> */}
-              <p className="text-sm font-normal text-gray-600 mb-6">Welcome Back WBS</p>
+              {/* <p className="text-sm font-normal text-gray-600 mb-6">Welcome Back WBS</p> */}
+              <p className="text-sm font-normal text-gray-600 mb-6">Welcome Back GS1</p>
 
               <div className="flex items-center border-2 mb-4 py-2 px-3 rounded-2xl">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

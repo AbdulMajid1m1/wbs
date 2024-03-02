@@ -27,6 +27,16 @@ module.exports = {
         '3xl': '1836px',
         // => @media (min-width: 1280px) { ... }
     },
+    colors: {
+      'gtrack-primary': '#FF693A',    // Main Color
+      'gtrack-secondary': '#021F69',  
+      // 'border-color': '#8E9CAB',
+      // 'digital-color': '#A9A9A9',  
+      // 'capture': '#E02266',  
+      // 'share': '#1DAE11',  
+      // 'orange': '#F98E1A',
+      // 'cpanel': '#F28C28',
+    },
   },
 }
 }

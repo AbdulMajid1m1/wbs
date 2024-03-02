@@ -1,6 +1,7 @@
 import React from 'react'
 import "../Login/Login.css"
 import alessa from "../../images/alessalogo2.png"
+import gtrackNewLogo from "../../images/gtrackNewLogo.png"
 import axios from 'axios'
 import baseUrl from '../../utils/config'
 import { useNavigate } from 'react-router-dom'
@@ -52,8 +53,10 @@ const Login = () => {
 
           </div>
           <div className="w-full mx-auto px-20 flex-col items-center space-y-6">
-            <h1 className="text-white font-bold text-4xl font-sans">Alessa User Login</h1>
-            <p className="text-white mt-1">Warehouse Management System v.2.0</p>
+            {/* <h1 className="text-white font-bold text-4xl font-sans">Alessa User Login</h1> */}
+            <h1 className="text-white font-bold text-4xl font-sans">GS1 Traceability System</h1>
+            {/* <p className="text-white mt-1">Warehouse Management System v.2.0</p> */}
+            <p className="text-white mt-1">User Login Screen</p>
           </div>
         </div>
 
@@ -64,10 +67,11 @@ const Login = () => {
               onSubmit={handleSubmit}
               className="bg-white rounded-md shadow-2xl p-5">
               <div className='flex justify-center '>
-                <img src={alessa} className='h-24 w-auto' alt='' />
+                {/* <img src={alessa} className='h-24 w-auto' alt='' /> */}
+                <img src={gtrackNewLogo} className='h-24 w-auto object-contain' alt='' />
               </div>
               {/* <h1 className="text-gray-800 font-bold text-2xl mb-1">Hello Again!</h1> */}
-              <p className="text-sm font-normal text-gray-600 mb-8">Welcome Back WBS</p>
+              <p className="text-sm font-normal text-gray-600 mb-8">Welcome Back GS1</p>
               <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />

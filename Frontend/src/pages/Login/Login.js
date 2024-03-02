@@ -69,7 +69,7 @@ const Login = () => {
               <div className='flex justify-center '>
                 {/* <img src={alessa} className='h-24 w-auto' alt='' /> */}
                 <img src={gtrackNewLogo} className='h-24 w-auto object-contain' alt='' />
-              </div>
+              </div>  
               {/* <h1 className="text-gray-800 font-bold text-2xl mb-1">Hello Again!</h1> */}
               <p className="text-sm font-normal text-gray-600 mb-8">Welcome Back GS1</p>
               <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">

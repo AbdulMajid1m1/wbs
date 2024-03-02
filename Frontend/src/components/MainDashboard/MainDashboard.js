@@ -35,7 +35,8 @@ const MainComponent = () => {
     const getAllExpectedShipments = async () => {
       try {
 
-        userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
+        // userRequest.get("/getAllShipmentDataFromtShipmentReceivingCL")
+        userRequest.get("/getAllShipmentDataFromtShipmentReceiving")
           .then(response => {
             console.log(response.data)
             setNewExpectedShipments(response.data)
@@ -56,7 +57,8 @@ const MainComponent = () => {
     const getNewItemsDispatch = async () => {
       try {
 
-        userRequest.get("/getAllTblDispatchingData")
+        // userRequest.get("/getAllTblDispatchingData")
+        userRequest.get("/getAllPackingSlips")
           .then(response => {
             // response.data == "no data available" ? setNewItemsDispatch([]) : setNewItemsDispatch(response.data);
             setNewItemsDispatch(response.data)
@@ -78,7 +80,8 @@ const MainComponent = () => {
     const getNewTransferOrder = async () => {
       try {
 
-        userRequest.get("/getAllExpectedTransferOrder")
+        // userRequest.get("/getAllExpectedTransferOrder")
+        userRequest.get("/getAllTblShipmentPalletizing")
           .then(response => {
             // response.data == "no data available" ? setNewTransferOrder([]) : setNewTransferOrder(response.data);
             setNewTransferOrder(response.data)

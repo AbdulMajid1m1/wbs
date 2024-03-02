@@ -93,7 +93,8 @@ const Login = () => {
 
               </div>
 
-              <button type="submit" className="block w-full bg-[#FFA500] mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
+              {/* <button type="submit" className="block w-full bg-[#FFA500] mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2" */}
+              <button type="submit" className="block w-full bg-gtrack-secondary mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
               // onClick={(e) => {
               //   e.preventDefault()
               //   window.location.href = "/items"

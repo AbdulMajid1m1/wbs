@@ -206,7 +206,8 @@ const Registration = () => {
 
               <button
                 type="submit"
-                className="block w-full bg-[#FFA500] mt-5 py-2 rounded-2xl hover:bg-[#7b663e] hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-0"
+                // className="block w-full bg-[#FFA500] mt-5 py-2 rounded-2xl hover:bg-[#7b663e] hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-0"
+                className="block w-full bg-gtrack-secondary mt-5 py-2 rounded-2xl hover:bg-[#7b663e] hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-0"
               >Register</button>
 
             </form>

@@ -54,7 +54,7 @@ const Login = () => {
           </div>
           <div className="w-full mx-auto px-20 flex-col items-center space-y-6">
             {/* <h1 className="text-white font-bold text-4xl font-sans">Alessa User Login</h1> */}
-            <h1 className="text-white font-bold text-4xl font-sans">GS1 Traceability System</h1>
+            <h1 className="text-white font-bold text-4xl font-sans">GS1 Supply Chain System</h1>
             {/* <p className="text-white mt-1">Warehouse Management System v.2.0</p> */}
             <p className="text-white mt-1">User Login Screen</p>
           </div>

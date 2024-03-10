@@ -122,7 +122,7 @@ import PalletIDTransferLocation from './pages/WmsPalletIDInquiry/PalletIDTransfe
 
 const WithoutSideBarLayout = ({ children }) => {
   return { children };
-};
+};  
 
 const MainLayout = ({ children }) => {
   return (
